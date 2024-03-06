@@ -1,5 +1,11 @@
 @charset "UTF-8";
 
+// Fonts for Core Design Kit
+@import "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;300;400;500;600;700&display=swap";
+
+// New set of variables from Core Design Kit
+@import "~prestakit/scss/root";
+
 //Compass is required to pre-compile this stylesheets to .css
 @import "~bourbon/app/assets/stylesheets/bourbon";
 

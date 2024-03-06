@@ -81,7 +81,7 @@ $text-color: $gray;
 $FontPathOpenSans: "../node_modules/open-sans-fonts/open-sans";
 $url-font-content-name: "Open Sans" !default;
 $url-font-headings-name: "Open Sans" !default;
-$font-family-sans-serif: $url-font-content-name, helvetica, arial, sans-serif;
+$font-family-sans-serif: var(--#{$cdk}font-family-primary);
 $headings-font-family: $url-font-headings-name, helvetica, arial, sans-serif;
 $font-size-base: 12px;
 $line-height-base: 1.428571429;
