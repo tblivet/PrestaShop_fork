@@ -1,17 +1,6 @@
 .btn {
-  display: inline-flex;
-  gap: var(--#{$cdk}size-4);
-  align-items: center;
-  justify-content: center;
   white-space: normal;
 
-  i {
-    &.material-icons {
-      font-size: var(--#{$cdk}size-20);
-    }
-  }
-
-  // Default
   &.btn-default {
     &:focus,
     &.focus {
@@ -19,13 +8,11 @@
       background-color: var(--#{$cdk}primary-300);
       border-color: var(--#{$cdk}primary-800);
     }
-
     &:hover {
       color: var(--#{$cdk}primary-800);
       background-color: var(--#{$cdk}primary-200);
       border-color: var(--#{$cdk}primary-800);
     }
-
     &:active,
     &.active,
     .open > &.dropdown-toggle {
@@ -44,47 +31,32 @@
     }
   }
 
-  // Secondary
   &.btn-secondary {
     @include button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
   }
 
-  // Group
   &-group {
-    > .btn {
-      display: block;
-      height: 100%;
-    }
-
-    .btn {
-      &:not(.btn-default):not(.btn-link) {
-        &.dropdown-toggle {
-          &:not(:first-child){
-            margin-left: var(--#{$cdk}size-0);
-            border-left-color: var(--#{$cdk}white);
-          }
-        }
+    .btn-default {
+      i {
+        display: block;
+        width: 20px;
+        height: 20px;
+        margin-right: 2px;
+        font-size: 16px;
       }
 
-      &-default {
-        &:hover {
-          color: var(--#{$cdk}white);
-          background: var(--#{$cdk}primary-800);
-          border-color: var(--#{$cdk}primary-800);
-        }
+      &:hover {
+        color: $btn-primary-color;
+        background: $primary-light-color;
+        border-color: $primary-light-color;
+      }
 
-        &:focus,
-        &:active {
-          color: var(--#{$cdk}white);
-          background: var(--#{$cdk}primary-800);
-          border-color: var(--#{$cdk}primary-800);
-        }
-
-        &:focus:active {
-          color: var(--#{$cdk}white);
-          background: var(--#{$cdk}primary-700);
-          border-color: var(--#{$cdk}primary-700);
-        }
+      &:focus,
+      &:active {
+        color: $btn-primary-color;
+        background: $btn-primary-active-bg;
+        border-color: $btn-primary-active-bg;
+        box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
       }
     }
   }

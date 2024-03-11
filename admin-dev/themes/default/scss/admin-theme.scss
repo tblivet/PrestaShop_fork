@@ -6,6 +6,7 @@
 // New set of variables from Core Design Kit
 @import "~prestakit/scss/root";
 
+
 //Compass is required to pre-compile this stylesheets to .css
 @import "~bourbon/app/assets/stylesheets/bourbon";
 
@@ -81,14 +82,6 @@
   @import "partials/helpers";
   @import "partials/commons";
   @import "partials/alerts";
-  @import "partials/badges";
-  @import "partials/dropdowns";
-  @import "partials/tooltips";
-  @import "partials/popovers";
-  @import "partials/pagination";
-  @import "partials/navs";
-  @import "partials/panels";
-  @import "partials/input-groups";
   @import "partials/labels";
   @import "partials/progress-bars";
   @import "partials/tables";
