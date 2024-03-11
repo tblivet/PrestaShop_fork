@@ -1,22 +1,13 @@
 //form
-.form-control {
-  &:hover {
-    border-color: var(--#{$cdk}primary-800);
-  }
-}
-
-label {
-  &,
-  &.control-label {
-    font-size: var(--#{$cdk}size-14);
-    font-weight: 500;
-    color: $main-color;
-  }
+label.control-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: $main-color;
 }
 
 label.control-label span.label-tooltip {
   padding: 0 5px;
-  font-size: var(--#{$cdk}size-14);
+  font-size: 14px;
   color: $main-color;
   text-decoration: none;
   border: none;
@@ -24,10 +15,25 @@ label.control-label span.label-tooltip {
 
 label.required::before {
   position: relative;
-  font-size: var(--#{$cdk}size-14);
-  line-height: var(--#{$cdk}size-12);
-  color: var(--#{$cdk}red-500);
+  font-size: 14px;
+  line-height: 12px;
+  color: #f00;
   content: "*";
+}
+
+.tooltip {
+  font-family: $font-family-sans-serif;
+  font-size: 12px;
+  white-space: normal;
+
+  &-inner {
+    padding: 10px;
+    background-color: $main-color;
+  }
+
+  &.top .tooltip-arrow {
+    border-top-color: $main-color;
+  }
 }
 
 select.input-tiny,
@@ -39,30 +45,6 @@ input[type="password"].input-tiny {
 
 textarea {
   resize: none;
-}
-
-.form-control[disabled],
-.form-control[readonly],
-input[disabled][type="password"],
-input[disabled][type="search"],
-input[disabled][type="text"],
-input[readonly][type="password"],
-input[readonly][type="search"],
-input[readonly][type="text"],
-select[disabled],
-select[readonly],
-textarea[disabled],
-textarea[readonly],
-fieldset[disabled] .form-control,
-fieldset[disabled] input[type="password"],
-fieldset[disabled] input[type="search"],
-fieldset[disabled] input[type="text"],
-fieldset[disabled] select,
-fieldset[disabled] textarea {
-  &:hover {
-    background-color: var(--#{$cdk}primary-300);
-    border-color: var(--#{$cdk}primary-300);
-  }
 }
 
 textarea:focus,
@@ -82,7 +64,7 @@ input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus {
   background-color: $input-focus-background;
-  border-color: $input-border-focus;
+  border-color: $input-focus-border;
   @include box-shadow(none);
 }
 
@@ -104,10 +86,68 @@ input[type="color"]:hover,
 .uneditable-input:hover {
   background-color: $input-focus-background;
 }
-
 //buttons
+.btn {
+  .caret {
+    border-top-color: $gray-dark !important;
+  }
+
+  &:hover {
+    .caret {
+      border-top-color: #fff !important;
+    }
+  }
+
+  /* &.btn-default {
+    i {
+      color: $gray;
+    }
+
+    &:hover {
+      color: #fff;
+      background-color: $brand-primary;
+      border-color: darken($brand-primary, 10%);
+      @include box-shadow(none);
+
+      i {
+        color: #fff;
+      }
+    }
+  } */
+
+  /* &.btn-primary {
+    i {
+      color: #fff;
+    }
+    color: #fff;
+    text-transform: uppercase;
+    background-color: $brand-primary;
+
+    &:hover {
+      background-color: darken($brand-primary, 10%);
+      @include box-shadow(none);
+    }
+  } */
+
+  /* &.btn-default[disabled] {
+    color: $gray-light;
+    background-color: lighten($gray-light, 35%);
+    border-color: $gray-light;
+  } */
+}
+
 .dropdown-menu {
   @include text-align(left);
+
+  > li a {
+    padding: 5px 10px;
+
+    &:hover {
+      i {
+        color: #fff;
+      }
+    }
+  }
 }
 
 .btn-group-action {
@@ -125,15 +165,15 @@ input[type="color"]:hover,
       display: inline-block;
       float: none;
       text-decoration: none;
-
-      i {
-        font-size: var(--#{$cdk}size-14);
-      }
     }
 
     > a:first-child {
       @include margin-right(-3px);
     }
+
+    i {
+      font-size: 14px;
+    }//form file upload
   }
 }
 
@@ -152,25 +192,25 @@ input[type="color"]:hover,
 }
 
 .tt-query {
-  border-radius: 0;
+  @include border-right-radius(3px!important);
 }
 
 .tt-dropdown-menu {
   font-size: 0.9em;
   text-transform: none;
-  background-color: var(--#{$cdk}white);
-  border: solid 1px var(--#{$cdk}primary-400);
+  background-color: #fff;
+  border: solid 1px #ccc;
 }
 
 .tt-suggestions {
-  padding: 0 var(--#{$cdk}size-6);
-  box-shadow: var(--#{$cdk}box-shadow-md);
+  padding: 0 6px;
+  @include box-shadow(rgba(black,0.25) 0 1px 4px);
 }
 
 .tt-suggestion p {
   padding: 0 !important;
   margin: 0 !important;
-  border-bottom: solid 1px var(--#{$cdk}primary-400);
+  border-bottom: solid 1px #ccc;
 }
 
 .tt-suggestion:last-child p {
@@ -181,10 +221,10 @@ input[type="color"]:hover,
   min-height: 30px;
   padding: 0 3px;
   overflow: auto;
-  background-color: var(--#{$cdk}white);
-  border: solid 1px var(--#{$cdk}primary-400);
-  border-radius: 0;
-  box-shadow: var(--#{$cdk}box-shadow-md);
+  background-color: #fff;
+  border: solid 1px #ccc;
+  @include border-radius(3px);
+  @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset);
 
   span {
     @include float(left);
@@ -194,10 +234,10 @@ input[type="color"]:hover,
     display: inline-block;
     padding: 2px 5px;
     margin: 3px;
-    color: var(--#{$cdk}white);
+    color: #fff;
     background-color: lighten($brand-primary, 15%);
     border: 1px solid $brand-primary;
-    border-radius: 0;
+    border-radius: 2px;
 
     > a {
       font-weight: 700;
@@ -302,17 +342,4 @@ input[type="tel"] {
     margin-bottom: 0;
     vertical-align: middle;
   }
-}
-
-// Feedback states
-.has-success {
-  @include form-control-validation($state-success-text, $state-success-text, $state-success-bg);
-}
-
-.has-warning {
-  @include form-control-validation($state-warning-text, $state-warning-text, $state-warning-bg);
-}
-
-.has-error {
-  @include form-control-validation($state-danger-text, $state-danger-text, $state-danger-bg);
 }
