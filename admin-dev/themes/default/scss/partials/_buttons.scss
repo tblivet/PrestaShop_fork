@@ -1,32 +1,38 @@
 .btn {
-  font-weight: 600;
   white-space: normal;
 
   &.btn-default {
-    &,
-    i {
-      color: $medium-gray;
-      transition: 0.25s ease-out;
+    &:focus,
+    &.focus {
+      color: var(--#{$cdk}primary-800);
+      background-color: var(--#{$cdk}primary-300);
+      border-color: var(--#{$cdk}primary-800);
     }
-
     &:hover {
-      color: $btn-secondary-color;
-      background-color: $btn-secondary-hover;
-      border-color: $btn-secondary-hover;
+      color: var(--#{$cdk}primary-800);
+      background-color: var(--#{$cdk}primary-200);
+      border-color: var(--#{$cdk}primary-800);
     }
-
     &:active,
-    &:focus {
-      color: $btn-secondary-color;
-      background-color: $btn-secondary-active-color;
-      border-color: $btn-secondary-active-color !important;
-      outline: none;
-      box-shadow: 0 0 0 0.2rem rgba($btn-secondary-active-color, 0.5);
+    &.active,
+    .open > &.dropdown-toggle {
+      color: var(--#{$cdk}primary-800);
+      background-color: var(--#{$cdk}primary-200);
+      background-image: none;
+      border-color: var(--#{$cdk}primary-800);
 
-      i {
-        color: $btn-secondary-color;
+      &:hover,
+      &:focus,
+      &.focus {
+        color: var(--#{$cdk}primary-800);
+        background-color: var(--#{$cdk}primary-300);
+        border-color: var(--#{$cdk}primary-800);
       }
     }
+  }
+
+  &.btn-secondary {
+    @include button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
   }
 
   &-group {
@@ -52,30 +58,6 @@
         border-color: $btn-primary-active-bg;
         box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
       }
-    }
-  }
-
-  &-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: $btn-primary-color;
-    background: $primary-color;
-    border-color: $primary-color;
-
-    &:hover {
-      color: $btn-primary-color;
-      background: $primary-light-color;
-      border-color: $primary-light-color;
-    }
-
-    &:focus,
-    &:active {
-      color: $btn-primary-color;
-      background: $btn-primary-active-bg;
-      // stylelint-disable-next-line
-      border-color: $btn-primary-active-bg !important;
-      box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
     }
   }
 }

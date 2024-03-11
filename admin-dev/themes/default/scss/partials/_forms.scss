@@ -98,7 +98,7 @@ input[type="color"]:hover,
     }
   }
 
-  &.btn-default {
+  /* &.btn-default {
     i {
       color: $gray;
     }
@@ -113,9 +113,9 @@ input[type="color"]:hover,
         color: #fff;
       }
     }
-  }
+  } */
 
-  &.btn-primary {
+  /* &.btn-primary {
     i {
       color: #fff;
     }
@@ -127,13 +127,13 @@ input[type="color"]:hover,
       background-color: darken($brand-primary, 10%);
       @include box-shadow(none);
     }
-  }
+  } */
 
-  &.btn-default[disabled] {
+  /* &.btn-default[disabled] {
     color: $gray-light;
     background-color: lighten($gray-light, 35%);
     border-color: $gray-light;
-  }
+  } */
 }
 
 .dropdown-menu {
