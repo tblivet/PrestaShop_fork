@@ -6,12 +6,12 @@
 // New set of variables from Core Design Kit
 @import "~prestakit/scss/root";
 
+
 //Compass is required to pre-compile this stylesheets to .css
 @import "~bourbon/app/assets/stylesheets/bourbon";
 
 @import "modules/colors";
 @import "modules/variables";
-@import "modules/mixins";
 
 @import "vendor/bi-app/bi-app-ltr";
 
@@ -21,6 +21,8 @@
 //Bootstrap Core : Variables + Mixins + Reset + Print
 @import "vendor/bootstrap-sass/variables";
 @import "vendor/bootstrap-sass/mixins";
+// Mixin and mixin override
+@import "modules/mixins";
 @import "vendor/bootstrap-sass/normalize";
 
 //import fonts
@@ -78,6 +80,9 @@
 // stylelint-disable-next-line
 .bootstrap {	//Partials
   @import "partials/commons";
+  @import "partials/alerts";
+  @import "partials/labels";
+  @import "partials/progress-bars";
   @import "partials/tables";
   @import "partials/tree";
   @import "partials/forms";

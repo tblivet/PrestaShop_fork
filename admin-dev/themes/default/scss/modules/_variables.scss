@@ -1,7 +1,7 @@
 // PrestaShop Admin Theme Colors
-$main-color: #363a41 !default;
-$primary-color: #25b9d7 !default;
-$primary-light-color: #7cd5e7 !default;
+$main-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
+$primary-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
+$primary-light-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
 $secondary-color: $greenPrestashop !default;
 $bg-content-color: #eff1f2 !default;
 
@@ -40,28 +40,43 @@ $card-border-color: #dbe6e9;
 $card-icon-color: #6c868e;
 
 // Brand colors
-$brand-primary: $primary-color !default;
+$brand-primary: $primary-color;
 
-$brand-success: #72c279 !default;
-$brand-warning: #fbbb22 !default;
-$brand-danger: #e08f95 !default;
-$brand-info: #25b9d7 !default;
+$brand-success: map-get($map: $cdk-green, $key: "green-500");
+$brand-warning: map-get($map: $cdk-yellow, $key: "yellow-500");
+$brand-danger: map-get($map: $cdk-red, $key: "red-500");
+$brand-info: map-get($map: $cdk-blue, $key: "blue-500");
 
-$alert-success-bg: #cbf2d4 !default;
-$alert-success-text: #363a41 !default;
-$alert-success-border: #53d572 !default;
+// Alerts
+$alert-border-radius: map-get($map: $cdk-size, $key: "size-0");
 
-$alert-info-bg: #beeaf3 !default;
-$alert-info-text: #363a41 !default;
-$alert-info-border: #25b9d7 !default;
+$alert-success-bg: map-get($map: $cdk-green, $key: "green-50");
+$alert-success-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-success-border: map-get($map: $cdk-green, $key: "green-500");
 
-$alert-warning-bg: #fffbd3 !default;
-$alert-warning-text: #363a41 !default;
-$alert-warning-border: #fab000 !default;
+$alert-info-bg: map-get($map: $cdk-blue, $key: "blue-50");
+$alert-info-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-info-border: map-get($map: $cdk-blue, $key: "blue-500");
 
-$alert-danger-bg: #fbc6c3 !default;
-$alert-danger-text: #363a41 !default;
-$alert-danger-border: #f44336 !default;
+$alert-warning-bg: map-get($map: $cdk-yellow, $key: "yellow-50");
+$alert-warning-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-warning-border: map-get($map: $cdk-yellow, $key: "yellow-500");
+
+$alert-danger-bg: map-get($map: $cdk-red, $key: "red-50");
+$alert-danger-text: map-get($map: $cdk-primary, $key: "primary-800");
+$alert-danger-border: map-get($map: $cdk-red, $key: "red-500");
+
+// Progress bars
+$progress-bg: map-get($map: $cdk-primary, $key: "primary-400");
+
+// Breadcrumbs
+$breadcrumb-padding-vertical: map-get($map: $cdk-size, $key: "size-5");
+$breadcrumb-padding-horizontal: map-get($map: $cdk-size, $key: "size-5");
+
+$breadcrumb-bg: transparent;
+$breadcrumb-color: map-get($map: $cdk-primary, $key: "primary-700");
+$breadcrumb-active-color: map-get($map: $cdk-primary, $key: "primary-800");
+$breadcrumb-separator: ">";
 
 // Sidebar
 $sidebar-menu-color: #bebebe !default;
@@ -91,7 +106,9 @@ $headings-font-weight: 400;
 // Components
 $padding-base-vertical: 8px;
 $padding-base-horizontal: 16px;
-$border-radius-base: 4px;
+$border-radius-base: map-get($map: $cdk-size, $key: "size-0");
+$border-radius-large: map-get($map: $cdk-size, $key: "size-0");
+$border-radius-small: map-get($map: $cdk-size, $key: "size-0");
 
 // Tables
 
@@ -100,17 +117,38 @@ $table-bg-accent: #f9f9f9;
 $table-bg-hover: #edf7fb;
 
 // Buttons
-$btn-default-color: $main-color;
-$btn-default-bg: #fff;
-$btn-default-border: #bbcdd2;
-$btn-primary-color: #fff;
-$btn-primary-bg: $primary-color;
-$btn-primary-border: $primary-color;
-$btn-primary-active-bg: #21a6c1;
+$btn-font-weight:                600;
 
-$btn-secondary-hover: #889da2;
-$btn-secondary-active-color: #889da2;
-$btn-secondary-color: #fff;
+$btn-default-color:              map-get($map: $cdk-primary, $key: "primary-800");
+$btn-default-bg:                 map-get($map: $cdk-common, $key: "white");
+$btn-default-border:             map-get($map: $cdk-primary, $key: "primary-800");
+
+$btn-primary-color:              map-get($map: $cdk-common, $key: "white");
+$btn-primary-bg:                 map-get($map: $cdk-primary, $key: "primary-800");
+$btn-primary-border:             map-get($map: $cdk-primary, $key: "primary-800");
+$btn-primary-active-bg:          map-get($map: $cdk-primary, $key: "primary-700");
+
+$btn-secondary-color:            map-get($map: $cdk-primary, $key: "primary-800");
+$btn-secondary-bg:               map-get($map: $cdk-primary, $key: "primary-500");
+$btn-secondary-border:           map-get($map: $cdk-primary, $key: "primary-500");
+
+$btn-success-color:              map-get($map: $cdk-common, $key: "white");
+$btn-success-bg:                 $brand-success;
+$btn-success-border:             $brand-success;
+
+$btn-info-color:                 map-get($map: $cdk-common, $key: "white");
+$btn-info-bg:                    $brand-info;
+$btn-info-border:                $brand-info;
+
+$btn-warning-color:              map-get($map: $cdk-common, $key: "white");
+$btn-warning-bg:                 $brand-warning;
+$btn-warning-border:             $brand-warning;
+
+$btn-danger-color:               map-get($map: $cdk-common, $key: "white");
+$btn-danger-bg:                  $brand-danger;
+$btn-danger-border:              $brand-danger;
+
+$btn-link-disabled-color:        map-get($map: $cdk-primary, $key: "primary-500");
 
 // Forms
 $input-bg: #fff;
