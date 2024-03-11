@@ -130,15 +130,15 @@
 
         &:hover {
           color: #fff;
-          background: $btn-secondary-hover;
-          border-color: $btn-secondary-hover;
+          background: var(--#{$cdk}primary-500);
+          border-color: var(--#{$cdk}primary-500);
         }
 
         &:focus,
         &:active {
           color: #fff;
-          background: $btn-secondary-active-color;
-          border-color: $btn-secondary-active-color;
+          background: var(--#{$cdk}primary-800);
+          border-color: var(--#{$cdk}primary-800);
           box-shadow: 0 0 0 0.2rem rgba(108, 134, 142, 0.5);
         }
 
