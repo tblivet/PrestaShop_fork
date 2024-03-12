@@ -2,7 +2,7 @@
 $main-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
 $primary-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
 $primary-light-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
-$secondary-color: $greenPrestashop !default;
+$secondary-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
 $bg-content-color: #eff1f2 !default;
 
 $contrasted-dark-default: #333;
@@ -12,8 +12,8 @@ $contrasted-lightness-threshold: 10%;
 $bg-page-head-color: $secondary-color;
 $bg-panel-heading-color: hsl(hue($secondary-color), 10, 90);
 
-$badge-notif-color: $greenPrestashop;
-$brand-addons: $pinkPrestashop;
+$badge-notif-color: map-get($map: $cdk-primary, $key: "primary-800");
+$brand-addons: map-get($map: $cdk-primary, $key: "primary-800");
 
 $font-family-mono: "Open Sans", helvetica, arial, sans-serif;
 
@@ -98,7 +98,7 @@ $url-font-content-name: "Open Sans" !default;
 $url-font-headings-name: "Open Sans" !default;
 $font-family-sans-serif: var(--#{$cdk}font-family-primary);
 $headings-font-family: $url-font-headings-name, helvetica, arial, sans-serif;
-$font-size-base: 12px;
+$font-size-base: 14px;
 $line-height-base: 1.428571429;
 $line-height-computed: floor($font-size-base * $line-height-base);
 $headings-font-weight: 400;
@@ -111,10 +111,10 @@ $border-radius-large: map-get($map: $cdk-size, $key: "size-0");
 $border-radius-small: map-get($map: $cdk-size, $key: "size-0");
 
 // Tables
+$table-bg-accent:               map-get($map: $cdk-primary, $key: "primary-300");
+$table-bg-hover:                map-get($map: $cdk-primary, $key: "primary-400");
 
-// $table-bg: transparent  overall background-color
-$table-bg-accent: #f9f9f9;
-$table-bg-hover: #edf7fb;
+$table-border-color:            map-get($map: $cdk-primary, $key: "primary-300");
 
 // Buttons
 $btn-font-weight:                600;
@@ -157,9 +157,16 @@ $input-group-addon-bg: #f5f8f9;
 $input-border: #bbcdd2;
 $input-focus-background: #f4fcfd;
 $input-focus-border: $primary-color;
+
 // Dropdowns
-$dropdown-link-hover-color: #fff;
-$dropdown-link-hover-bg: $brand-primary;
+$dropdown-border: map-get($map: $cdk-common, $key: "white");
+$dropdown-fallback-border: map-get($map: $cdk-common, $key: "white");
+$dropdown-divider-bg: map-get($map: $cdk-primary, $key: "primary-400");
+
+$dropdown-link-hover-color: map-get($map: $cdk-primary, $key: "primary-800");
+$dropdown-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
+
+
 
 // Grid system
 $grid-gutter-width: 10px;
