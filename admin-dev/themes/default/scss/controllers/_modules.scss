@@ -165,7 +165,7 @@ td.module_inactive {
 }
 
 .module-badge-bought {
-  background-color: $greenPrestashop;
+  background-color: var(--#{$cdk}primary-800);
 }
 
 .categoriesTitle {

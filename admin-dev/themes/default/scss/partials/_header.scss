@@ -579,51 +579,6 @@ $search-border-color: #bbcdd2;
   @extend .hidden-xs;
   @extend .hidden-sm;
   font-size: 13px;
-
-  .dropdown {
-    > a,
-    > a:focus {
-      color: $header-text-color !important;
-      background-color: transparent !important;
-    }
-
-    > a {
-      .material-icons {
-        margin-left: -5px;
-        font-size: 20px;
-      }
-    }
-
-    > a:hover {
-      color: $toolbar-buttons-hover-color !important;
-    }
-  }
-
-  .dropdown-menu {
-    > li {
-      a {
-        padding: 7px 15px;
-
-        &:hover {
-          color: #fff;
-        }
-
-        .material-icons {
-          margin-right: $navbar-padding-horizontal;
-        }
-
-        &:not(:hover) {
-          .material-icons {
-            color: #6c868e;
-          }
-        }
-      }
-    }
-
-    .material-icons {
-      font-size: 1.125rem;
-    }
-  }
 }
 
 #ajax_running {

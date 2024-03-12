@@ -16,3 +16,10 @@ body {
 .theme-showcase .navbar .container {
   width: auto;
 }
+
+/* Tools */
+.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
