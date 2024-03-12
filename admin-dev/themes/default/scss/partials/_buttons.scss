@@ -36,27 +36,34 @@
   }
 
   &-group {
-    .btn-default {
-      i {
-        display: block;
-        width: 20px;
-        height: 20px;
-        margin-right: 2px;
-        font-size: 16px;
+    .btn {
+      &:not(.btn-default):not(.btn-link) {
+        &.dropdown-toggle {
+          &:not(:first-child){
+            margin-left: var(--#{$cdk}size-0);
+            border-left-color: var(--#{$cdk}white);
+          }
+        }
       }
 
-      &:hover {
-        color: $btn-primary-color;
-        background: $primary-light-color;
-        border-color: $primary-light-color;
-      }
-
-      &:focus,
-      &:active {
-        color: $btn-primary-color;
-        background: $btn-primary-active-bg;
-        border-color: $btn-primary-active-bg;
-        box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+      &-default {
+        &:hover {
+          color: var(--#{$cdk}white);
+          background: var(--#{$cdk}primary-800);
+          border-color: var(--#{$cdk}primary-800);
+        }
+  
+        &:focus,
+        &:active {
+          color: var(--#{$cdk}white);
+          background: var(--#{$cdk}primary-800);
+          border-color: var(--#{$cdk}primary-800);
+        }
+        &:focus:active {
+          color: var(--#{$cdk}white);
+          background: var(--#{$cdk}primary-700);
+          border-color: var(--#{$cdk}primary-700);
+        }
       }
     }
   }

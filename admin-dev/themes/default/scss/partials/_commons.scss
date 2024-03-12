@@ -52,7 +52,7 @@
 }
 
 .text-orange {
-  color: $amber;
+  color: var(--#{$cdk}yellow-500);
 }
 
 .badge {
@@ -131,6 +131,7 @@
   border: solid 1px $border-color;
 
   &::before {
+    content: "#{$icon}";
     position: absolute;
     top: 13px;
     display: block;
@@ -139,29 +140,28 @@
     font-size: 24px;
     color: $border-color;
     @include left(15px);
-    @extend .icon;
-    @extend .#{$icon};
+    @extend .material-icons;
   }
 }
 
 .alert.alert-warning {
-  @include alert-panel(icon-exclamation-circle, $brand-warning, $alert-warning-border);
+  @include alert-panel("\e002", $brand-warning, $alert-warning-border);
 }
 
 .alert.alert-danger {
-  @include alert-panel(icon-exclamation-triangle, $brand-danger, $alert-danger-border);
+  @include alert-panel("\e000", $brand-danger, $alert-danger-border);
 }
 
 .alert.alert-success {
-  @include alert-panel(icon-check-circle, $brand-success, $alert-success-border);
+  @include alert-panel("\e86c", $brand-success, $alert-success-border);
 }
 
 .alert.alert-info {
-  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  @include alert-panel("\e88e", $brand-info, $alert-info-border);
 }
 
 .alert.alert-addons {
-  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  @include alert-panel("\e887", $brand-info, $alert-info-border);
   background-color: $alert-info-bg;
 
   a,
@@ -171,7 +171,7 @@
 }
 
 .alert.alert-onboarding {
-  @include alert-panel(icon-question-circle, $brand-info, $alert-info-border);
+  @include alert-panel("\e887", $brand-info, $alert-info-border);
   padding: 20px 20px 20px 160px;
   background-color: $alert-info-bg;
   border: solid 2px $brand-info;
@@ -248,7 +248,7 @@
 }
 
 .alert.alert-message {
-  @include alert-panel(icon-comment, $brand-warning);
+  @include alert-panel("\e0ca", $brand-warning);
   background-color: #fff;
   border: solid 2px $brand-warning;
 }
