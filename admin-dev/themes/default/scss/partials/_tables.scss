@@ -1,18 +1,14 @@
 .table {
-  margin-bottom: 5px;
-  border-spacing: 0 2px 0 0;
-  border-collapse: separate;
-
   thead {
     > tr > th {
-      font-weight: 500;
+      font-weight: 400;
       vertical-align: top;
       border: none;
-      border-bottom: solid 1px darken(#cae5f4, 10%);
+      border-bottom: 2px solid var(--#{$cdk}primary-800);
 
-      span.title_box {
+      .title_box {
         display: block;
-        color: #656565;
+        color: var(--#{$cdk}primary-800);
         word-wrap: nowrap;
         white-space: nowrap;
 
@@ -22,15 +18,14 @@
 
         a {
           text-decoration: none;
-        }
-
-        a.active {
-          color: #000;
+          .active {
+            color: var(--#{$cdk}primary-800);
+          }
         }
 
         .label-tooltip {
-          padding: 0 5px;
-          color: #3586ae;
+          padding: 0 var(--#{$cdk}size-4);
+          color: var(--#{$cdk}blue-500);
           background-color: lighten(#d8edf7, 5%);
           border: none;
           border-bottom: solid 1px #d8edf7;
@@ -162,36 +157,8 @@
 
   .btn-group-action,
   .btn-group {
-    a,
-    button {
-      @extend .btn-default;
-      // stylelint-disable-next-line
-      display: inline-flex !important;
-      align-items: center;
-
-      i {
-        // stylelint-disable-next-line
-        height: 17px !important;
-      }
-    }
-
-    .dropdown-menu {
-      padding: 0;
-
-      a {
-        width: 100%;
-        padding: 0.5rem 1rem;
-      }
-
-      .divider {
-        margin: 0;
-      }
-    }
-
-    a {
-      i {
-        margin-right: 3px;
-      }
+    .btn {
+      white-space: nowrap;
     }
   }
 }
@@ -406,61 +373,6 @@ tr.highlighted td {
 
     .btn-group {
       float: none !important;
-    }
-  }
-
-  .table-responsive {
-    width: 100%;
-    margin-bottom: ($line-height-computed * 0.75);
-    overflow-x: auto;
-    overflow-y: hidden;
-    border: 1px solid $table-border-color;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
-    -webkit-overflow-scrolling: touch;
-
-    > .table {
-      margin-bottom: 0;
-
-      > thead,
-      > tbody,
-      > tfoot {
-        > tr {
-          > th,
-          > td {
-            white-space: nowrap;
-          }
-        }
-      }
-    }
-
-    > .table-bordered {
-      border: 0;
-
-      > thead,
-      > tbody,
-      > tfoot {
-        > tr {
-          > th:first-child,
-          > td:first-child {
-            @include border-left(0);
-          }
-
-          > th:last-child,
-          > td:last-child {
-            @include border-right(0);
-          }
-        }
-      }
-
-      > tbody,
-      > tfoot {
-        > tr:last-child {
-          > th,
-          > td {
-            border-bottom: 0;
-          }
-        }
-      }
     }
   }
 }
