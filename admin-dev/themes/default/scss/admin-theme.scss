@@ -10,7 +10,6 @@
 //Compass is required to pre-compile this stylesheets to .css
 @import "~bourbon/app/assets/stylesheets/bourbon";
 
-@import "modules/colors";
 @import "modules/variables";
 
 @import "vendor/bi-app/bi-app-ltr";
@@ -29,6 +28,7 @@
 @import "~open-sans-fonts/open-sans-regular";
 @import "~open-sans-fonts/open-sans-semibold";
 @import "~open-sans-fonts/open-sans-bold";
+@import "font";
 
 //Bootstrap's rules applied only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
 .bootstrap {	//Core CSS
@@ -81,6 +81,7 @@
 .bootstrap {	//Partials
   @import "partials/commons";
   @import "partials/alerts";
+  @import "partials/dropdowns";
   @import "partials/labels";
   @import "partials/progress-bars";
   @import "partials/tables";
