@@ -1,0 +1,24 @@
+.nav-tabs {
+  border-bottom: none;
+
+  > li {
+    > a {
+      border: none;
+      border-top: 3px solid transparent;
+
+      &:hover {
+        background-color: $nav-link-hover-bg;
+      }
+    }
+
+    // Active state, and its :hover to override normal :hover
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        border: none;
+        border-top: 3px solid var(--#{$cdk}primary-800);
+      }
+    }
+  }
+}

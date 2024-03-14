@@ -41,12 +41,6 @@
   padding-top: 15px;
 }
 
-.thumbnail,
-.img-thumbnail {
-  background-color: #fff;
-  border-color: #ccc !important;
-}
-
 .highlight {
   background-color: #f7e69f;
 }
@@ -56,13 +50,6 @@
 }
 
 .badge {
-  padding: 1px 5px;
-  font-size: 1em;
-  font-weight: 500;
-  line-height: inherit;
-  letter-spacing: 0.0625em;
-  background-color: $brand-primary;
-
   &.badge-info {
     background-color: $brand-info;
   }
@@ -80,7 +67,7 @@
   }
 
   &.badge-critical {
-    background-color: darken($brand-danger, 15%);
+    background-color: var(--#{$cdk}red-700);
   }
 }
 
@@ -91,31 +78,6 @@
   &.label-inactive {
     background-color: #999;
   }//tabs
-}
-
-.nav-tabs {
-  border-bottom: none;
-
-  li .badge {
-    color: #666;
-    background-color: #fff;
-    border: solid 2px #eee;
-  }
-
-  li a {
-    font-family: $headings-font-family;
-    font-size: 1.1em;
-    font-weight: 300;
-    text-transform: uppercase;
-  }
-
-  li.active {
-    a,
-    a:hover,
-    a:focus {
-      background-color: #fff;
-    }
-  }
 }
 
 .table tr.parent td {

@@ -1,5 +1,12 @@
 .btn {
   white-space: normal;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--#{$cdk}size-4);
+
+  .material-icons {
+    font-size: var(--#{$cdk}size-20);
+  }
 
   &.btn-default {
     &:focus,
@@ -36,6 +43,10 @@
   }
 
   &-group {
+    > .btn {
+      height: 100%;
+    }
+
     .btn {
       &:not(.btn-default):not(.btn-link) {
         &.dropdown-toggle {
