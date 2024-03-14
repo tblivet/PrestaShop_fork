@@ -1,8 +1,17 @@
 //form
-label.control-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: $main-color;
+.form-control {
+  &:hover {
+    border-color: var(--#{$cdk}primary-800);
+  }
+}
+
+label {
+  &,
+  &.control-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: $main-color;
+  }
 }
 
 label.control-label span.label-tooltip {
@@ -47,6 +56,30 @@ textarea {
   resize: none;
 }
 
+.form-control[disabled],
+.form-control[readonly],
+input[disabled][type=password],
+input[disabled][type=search],
+input[disabled][type=text],
+input[readonly][type=password],
+input[readonly][type=search],
+input[readonly][type=text],
+select[disabled],
+select[readonly],
+textarea[disabled],
+textarea[readonly],
+fieldset[disabled] .form-control,
+fieldset[disabled] input[type=password],
+fieldset[disabled] input[type=search],
+fieldset[disabled] input[type=text],
+fieldset[disabled] select,
+fieldset[disabled] textarea {
+  &:hover {
+    border-color: var(--#{$cdk}primary-300);
+    background-color: var(--#{$cdk}primary-300);
+  }
+}
+
 textarea:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -64,7 +97,7 @@ input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus {
   background-color: $input-focus-background;
-  border-color: $input-focus-border;
+  border-color: $input-border-focus;
   @include box-shadow(none);
 }
 
@@ -86,6 +119,7 @@ input[type="color"]:hover,
 .uneditable-input:hover {
   background-color: $input-focus-background;
 }
+
 //buttons
 .btn {
   /* .caret {
@@ -332,4 +366,15 @@ input[type="tel"] {
     margin-bottom: 0;
     vertical-align: middle;
   }
+}
+
+// Feedback states
+.has-success {
+  @include form-control-validation($state-success-text, $state-success-text, $state-success-bg);
+}
+.has-warning {
+  @include form-control-validation($state-warning-text, $state-warning-text, $state-warning-bg);
+}
+.has-error {
+  @include form-control-validation($state-danger-text, $state-danger-text, $state-danger-bg);
 }
