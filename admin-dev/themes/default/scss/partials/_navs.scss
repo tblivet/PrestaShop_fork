@@ -3,39 +3,21 @@
 
   > li {
     > a {
-      color: var(--#{$cdk}primary-600);
       border: none;
       border-top: 3px solid transparent;
 
       &:hover {
-        color: var(--#{$cdk}primary-800);
-        background-color: transparent;
-        border: none;
-        border-color: transparent;
-        border-top: 3px solid transparent;
+        background-color: $nav-link-hover-bg;
       }
     }
 
     // Active state, and its :hover to override normal :hover
     &.active > a {
       &,
+      &:hover,
       &:focus {
         border: none;
         border-top: 3px solid var(--#{$cdk}primary-800);
-      }
-
-      &:hover {
-        border: none;
-        border-top: 3px solid var(--#{$cdk}primary-800);
-      }
-    }
-  }
-
-  // Custom
-  &#custom-address-fields {
-    > li {
-      > a {
-        padding-inline: var(--#{$cdk}size-12);
       }
     }
   }
