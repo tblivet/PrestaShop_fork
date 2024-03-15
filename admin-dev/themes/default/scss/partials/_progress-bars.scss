@@ -1,7 +1,8 @@
 .progress {
   box-shadow: none;
-}
+  height: var(--#{$cdk}size-16);
 
-.progress-bar {
-  box-shadow: none;
+  &-bar {
+    box-shadow: none;
+  }
 }

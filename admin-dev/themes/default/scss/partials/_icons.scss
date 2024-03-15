@@ -645,19 +645,20 @@
 //Toolbar
 [class^="process-icon-"] {
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 18px;
   margin: 0 auto;
-  font-size: 28px;
+  font-size: 18px;
   background: transparent;
   background-position: center;
-  background-size: 26px;
+  background-size: 14px;
   @extend .icon;
   @extend .icon-2x;
   @extend .icon-fw;
 }
 
-#content {
+#content,
+.panel {
   .process-icon-save,
   .process-icon-save-and-stay,
   .process-icon-save-and-preview {

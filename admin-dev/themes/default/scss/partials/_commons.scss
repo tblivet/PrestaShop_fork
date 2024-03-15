@@ -49,28 +49,6 @@
   color: var(--#{$cdk}yellow-500);
 }
 
-.badge {
-  &.badge-info {
-    background-color: $brand-info;
-  }
-
-  &.badge-success {
-    background-color: $brand-success;
-  }
-
-  &.badge-warning {
-    background-color: $brand-warning;
-  }
-
-  &.badge-danger {
-    background-color: $brand-danger;
-  }
-
-  &.badge-critical {
-    background-color: var(--#{$cdk}red-700);
-  }
-}
-
 .label {
   font-size: 12px;
   font-weight: 400;
@@ -196,16 +174,6 @@
 
   hr {
     border-color: lighten($brand-info, 30%);
-  }
-
-  .progress {
-    @include border-radius(3em);
-    height: 2em;
-    box-shadow: none;
-  }
-
-  .progress-bar {
-    box-shadow: none;
   }
 }
 

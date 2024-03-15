@@ -4,8 +4,10 @@
   align-items: center;
   gap: var(--#{$cdk}size-4);
 
-  .material-icons {
-    font-size: var(--#{$cdk}size-20);
+  i {
+    &.material-icons {
+      font-size: var(--#{$cdk}size-20);
+    }
   }
 
   &.btn-default {
