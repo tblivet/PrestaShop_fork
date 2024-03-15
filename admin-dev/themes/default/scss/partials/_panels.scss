@@ -67,7 +67,7 @@ $component: panel;
       padding-inline: map-get($map: $cdk-size, $key: "size-24");
       
       *:is(.panel) {
-        padding-block: map-get($map: $cdk-size, $key: "size-24");
+        padding: map-get($map: $cdk-size, $key: "size-24");
       }
     }
   }
