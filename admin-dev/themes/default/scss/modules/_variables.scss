@@ -105,7 +105,7 @@ $toolbar-buttons-hover-color: #40c9ed;
 
 // Scaffolding
 $body-bg: $bg-content-color;
-$text-color: $gray;
+$text-color: map-get($map: $cdk-primary, $key: "primary-800");
 
 // Typography
 $FontPathOpenSans: "../node_modules/open-sans-fonts/open-sans";
@@ -229,12 +229,50 @@ $nav-tabs-justified-active-link-border-color: map-get($map: $cdk-primary, $key: 
 $nav-pills-active-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-800");
 $nav-pills-active-link-hover-color: map-get($map: $cdk-common, $key: "white");
 
+// List group
+$list-group-bg: map-get($map: $cdk-common, $key: "white");
+$list-group-border: map-get($map: $cdk-primary, $key: "primary-400");
+
+$list-group-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$list-group-active-color: map-get($map: $cdk-common, $key: "white");
+$list-group-active-bg: map-get($map: $cdk-primary, $key: "primary-800");
+$list-group-active-border: map-get($map: $cdk-primary, $key: "primary-200");
+$list-group-active-text-color: map-get($map: $cdk-common, $key: "white");
+
+$list-group-disabled-color: map-get($map: $cdk-primary, $key: "primary-500");
+$list-group-disabled-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$list-group-disabled-text-color: map-get($map: $cdk-primary, $key: "primary-500");
+
+$list-group-link-color: map-get($map: $cdk-primary, $key: "primary-800");
+$list-group-link-hover-color: map-get($map: $cdk-primary, $key: "primary-700");
+$list-group-link-heading-color: map-get($map: $cdk-primary, $key: "primary-800");
+
+// Panels
+$panel-bg: map-get($map: $cdk-common, $key: "white");
+$panel-body-padding: map-get($map: $cdk-size, $key: "size-24");
+$panel-heading-padding: map-get($map: $cdk-size, $key: "size-24");
+$panel-footer-padding: map-get($map: $cdk-size, $key: "size-24");
+
+$panel-default-text: map-get($map: $cdk-primary, $key: "primary-800");
+$panel-default-border: map-get($map: $cdk-primary, $key: "primary-400");
+$panel-default-heading-bg: map-get($map: $cdk-common, $key: "white");
+
+$panel-inner-border: map-get($map: $cdk-primary, $key: "primary-400");
+$panel-footer-bg: map-get($map: $cdk-common, $key: "white");
+
+$panel-primary-text: map-get($map: $cdk-common, $key: "white");
+$panel-primary-border: map-get($map: $cdk-primary, $key: "primary-800");
+$panel-primary-heading-bg: map-get($map: $cdk-primary, $key: "primary-800");
+
+// Wells
+$well-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$well-border: map-get($map: $cdk-primary, $key: "primary-400");
+
 // Grid system
 $grid-gutter-width: 10px;
 
 // Basics of a navbar
 $navbar-height: 40px;
-$well-bg: #fcfdfe;
 
 // Media queries breakpoints
 // Tiny screen / phone
