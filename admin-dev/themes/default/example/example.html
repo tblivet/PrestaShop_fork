@@ -1,7 +1,7 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
+<head>
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -22,6 +22,8 @@
   <body>
     <button id="switch_btn_styles" onclick="switchStylesheet()">Switch Stylesheet</button>
 
+    <div id="summary"></div>
+
     <div class="bootstrap">
       <div class="container theme-showcase" role="main">
         <!-- Alerts -->
@@ -36,34 +38,34 @@
         <!-- Buttons -->
         <include-html path="./components/buttons.html"></include-html>
         
+        <!-- Panel (Cards)-->
+        <include-html path="./components/panels.html"></include-html>
+        <include-html path="./components/panels-complex.html"></include-html>
+
         <!-- Dropdowns -->
         <include-html path="./components/dropdowns.html"></include-html>
+
+        <!-- Forms -->
+        <include-html path="./components/forms.html"></include-html>
         
         <!-- Tables -->
         <include-html path="./components/tables.html"></include-html>
         <include-html path="./components/tables-complex.html"></include-html>
 
-        <!-- Forms -->
-        <include-html path="./components/forms.html"></include-html>
-        
         <!-- Thumbnails -->
         <include-html path="./components/thumbnails.html"></include-html>
         
         <!-- Badges -->
         <include-html path="./components/badges.html"></include-html>
         
-        <!-- Navs -->
-        <include-html path="./components/navs.html"></include-html>
-
-        <!-- Progress bars -->
-        <include-html path="./components/progress-bars.html"></include-html>
-        
         <!-- List group -->
         <include-html path="./components/list-group.html"></include-html>
+
+        <!-- Navs -->
+        <include-html path="./components/navs.html"></include-html>
         
-        <!-- Panel -->
-        <include-html path="./components/panels.html"></include-html>
-        <include-html path="./components/panels-complex.html"></include-html>
+        <!-- Progress bars -->
+        <include-html path="./components/progress-bars.html"></include-html>
         
         <!-- Wells -->
         <include-html path="./components/wells.html"></include-html>
@@ -76,71 +78,8 @@
     
     <!-- Add Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
-    
-    <!-- Web Component to include html chunks -->
-    <script>
-			// Extend the HTMLElement class to create the web component
-			class IncludeHTML extends HTMLElement {
 
-				/**
-				 * Get and render external HTML
-				 * @param  {String} path The path to the external HTML
-				 */
-				async #getHTML (path) {
-
-					// Get the page
-					let request = await fetch(path);
-					if (!request.ok) return;
-
-					// Get the HTML
-					this.innerHTML = await request.text();
-
-				}
-
-				/**
-				 * The class constructor object
-				 */
-				constructor () {
-
-					// Always call super first in constructor
-					super();
-
-					// Get the source HTML to load
-					let path = this.getAttribute('path');
-					if (!path) return;
-
-					// Render HTML
-					this.#getHTML(path);
-
-				}
-
-			}
-
-			// Define the new web component
-			if ('customElements' in window) {
-				customElements.define('include-html', IncludeHTML);
-			}
-		</script>
-
-    <!-- Switch theme style -->
-    <script>
-      function switchStylesheet() {
-        // Get the link element with the ID 'defaultStylesheet'
-        const defaultStylesheet = document.getElementById('default_stylesheet');
-        const switchButton = document.getElementById('switch_btn_styles');
-        
-        switchButton.classList.toggle('active');
-
-        // Check if the default stylesheet is currently 'default.css'
-        if (defaultStylesheet.getAttribute('href') === 'http://127.0.0.1:1010/theme.css') {
-            // If so, change it to 'alternate.css'
-            defaultStylesheet.setAttribute('href', 'http://127.0.0.1:1000/default-old.css');
-        } else {
-            // If not, change it back to 'default.css'
-            defaultStylesheet.setAttribute('href', 'http://127.0.0.1:1010/theme.css');
-        }
-      }
-
-    </script>
+    <!-- Add example JS -->
+    <script src="http://127.0.0.1:1000/example.js"></script>
   </body>
 </html>

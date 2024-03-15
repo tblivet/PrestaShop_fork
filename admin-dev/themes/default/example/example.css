@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   padding: 0;
   background-color: #ffffff;
@@ -49,6 +53,47 @@ body {
     
     &:hover {
       background-color: rgb(203, 245, 204);
+    }
+  }
+}
+
+/* Summary */
+#summary {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  min-width: 140px;
+  font-size: 0.875rem;
+  padding-block: 0.5rem;
+  color: #333333;
+  background-color: #f3f3f3;
+  border-radius: 0.5rem;
+  border: none;
+  
+  ul {
+    display: flex;
+    gap: 0.125rem;
+    flex-direction: column;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      color: #333333;
+      text-decoration: none;
+      transition: all 0.3s;
+      padding: 0.125rem 0.5rem;
+      border-left: 3px solid transparent;
+
+      &:hover {
+        color: blue;
+      }
+
+      &:active,
+      &.active {
+        color: blue;
+        border-color: blue;
+      }
     }
   }
 }
