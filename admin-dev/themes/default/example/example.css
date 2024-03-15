@@ -86,3 +86,11 @@ h2, h3, h4, h5, h6 {
   flex-wrap: wrap;
   gap: 1rem;
 }
+
+.h-spacer {
+  margin-right: 1rem;
+}
+
+.v-spacer {
+  margin-bottom: 1rem;
+}
