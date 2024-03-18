@@ -3,17 +3,11 @@ $main-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
 $primary-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
 $primary-light-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
 $secondary-color: map-get($map: $cdk-primary, $key: "primary-800") !default;
-$bg-content-color: #eff1f2 !default;
+$bg-content-color: map-get($map: $cdk-primary, $key: "primary-200") !default;
 
-$contrasted-dark-default: #333;
-$contrasted-light-default: #fff;
+$contrasted-dark-default: map-get($map: $cdk-primary, $key: "primary-800");
+$contrasted-light-default: map-get($map: $cdk-common, $key: "white");
 $contrasted-lightness-threshold: 10%;
-
-$bg-page-head-color: $secondary-color;
-$bg-panel-heading-color: hsl(hue($secondary-color), 10, 90);
-
-$badge-notif-color: map-get($map: $cdk-primary, $key: "primary-800");
-$brand-addons: map-get($map: $cdk-primary, $key: "primary-800");
 
 $font-family-mono: "Open Sans", helvetica, arial, sans-serif;
 
@@ -23,9 +17,29 @@ $fa-css-prefix: icon;
 $icon-size-base: 14px;
 
 // Tooltips
-$tooltip-opacity: 1;
-$tooltip-bg: #555;
+$tooltip-opacity: 0.9;
+$tooltip-bg: map-get($map: $cdk-primary, $key: "primary-800");
 $tooltip-max-width: 250px;
+
+$tooltip-arrow-width: map-get($map: $cdk-size, $key: "size-8");
+$tooltip-arrow-color: $tooltip-bg;
+
+// Popovers
+$popover-bg: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.9);
+$popover-max-width: 250px;
+
+$popover-border-color: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.9);
+$popover-fallback-border-color: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.9);
+
+$popover-title-bg: transparent;
+
+$popover-arrow-width: map-get($map: $cdk-size, $key: "size-10");
+$popover-arrow-color: $popover-bg;
+
+$popover-arrow-outer-width: map-get($map: $cdk-size, $key: "size-12");
+$popover-arrow-outer-color: transparent;
+$popover-arrow-outer-fallback-color: transparent;
+
 
 // Bootstrap variables
 $gray-darker: lighten(#000, 13.5%);
@@ -100,8 +114,8 @@ $sidebar-menu-hover-color: #fff !default;
 $sidebar-menu-bg-hover-color: #282b30;
 
 // Toolbar
-$toolbar-buttons-color: #2eacce;
-$toolbar-buttons-hover-color: #40c9ed;
+$toolbar-buttons-color: map-get($map: $cdk-blue, $key: "blue-500");
+$toolbar-buttons-hover-color: map-get($map: $cdk-blue, $key: "blue-700");
 
 // Scaffolding
 $body-bg: $bg-content-color;
@@ -109,14 +123,25 @@ $text-color: map-get($map: $cdk-primary, $key: "primary-800");
 
 // Typography
 $FontPathOpenSans: "../node_modules/open-sans-fonts/open-sans";
-$url-font-content-name: "Open Sans" !default;
-$url-font-headings-name: "Open Sans" !default;
+$url-font-content-name: var(--#{$cdk}font-family-primary);
+$url-font-headings-name: var(--#{$cdk}font-family-primary);
 $font-family-sans-serif: var(--#{$cdk}font-family-primary);
-$headings-font-family: $url-font-headings-name, helvetica, arial, sans-serif;
+$headings-font-family: var(--#{$cdk}font-family-primary);
 $font-size-base: 14px;
 $line-height-base: 1.428571429;
 $line-height-computed: floor($font-size-base * $line-height-base);
 $headings-font-weight: 400;
+
+$font-size-h1:            map-get($map: $cdk-size, $key: "size-24");
+$font-size-h2:            map-get($map: $cdk-size, $key: "size-20");
+$font-size-h3:            map-get($map: $cdk-size, $key: "size-16");
+$font-size-h4:            map-get($map: $cdk-size, $key: "size-14");
+$font-size-h5:            map-get($map: $cdk-size, $key: "size-14");
+$font-size-h6:            map-get($map: $cdk-size, $key: "size-14");
+
+$headings-font-weight:    700;
+$headings-line-height:    1.2;
+$headings-color:          map-get($map: $cdk-primary, $key: "primary-800");
 
 // Components
 $padding-base-vertical: 8px;

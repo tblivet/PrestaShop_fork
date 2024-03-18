@@ -34,6 +34,7 @@ if ("customElements" in window) {
   customElements.define("include-html", IncludeHTML);
 }
 
+// New / Old theme switch
 function switchStylesheet() {
   // Get the link element with the ID 'defaultStylesheet'
   const defaultStylesheet = document.getElementById("default_stylesheet");
@@ -105,6 +106,16 @@ const observer = new MutationObserver(function (mutationsList) {
       // If new nodes are added, recreate summary
       createSummary();
     }
+
+    // Init Tooltips
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+    
+    // Init Popovers
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+    })
   }
 });
 
