@@ -1,16 +1,16 @@
 .popover {
   padding: var(--#{$cdk}size-8);
-  color: var(--#{$cdk}white);
   box-shadow: var(--#{$cdk}box-shadow-md);
-
+  color: var(--#{$cdk}white);
+  
   &-title {
+    color: var(--#{$cdk}white);
     padding: 0;
     font-weight: 700;
-    color: var(--#{$cdk}white);
   }
-
+  
   &-content {
-    padding: 0;
     color: var(--#{$cdk}white);
+    padding: 0;
   }
 }

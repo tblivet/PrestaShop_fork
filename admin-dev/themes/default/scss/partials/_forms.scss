@@ -30,21 +30,6 @@ label.required::before {
   content: "*";
 }
 
-.tooltip {
-  font-family: $font-family-sans-serif;
-  font-size: 12px;
-  white-space: normal;
-
-  &-inner {
-    padding: 10px;
-    background-color: $main-color;
-  }
-
-  &.top .tooltip-arrow {
-    border-top-color: $main-color;
-  }
-}
-
 select.input-tiny,
 input[type="text"].input-tiny,
 input[type="password"].input-tiny {
