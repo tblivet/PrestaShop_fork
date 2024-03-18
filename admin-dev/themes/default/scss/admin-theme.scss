@@ -79,10 +79,14 @@
 
 // stylelint-disable-next-line
 .bootstrap {	//Partials
+  @import "partials/helpers";
   @import "partials/commons";
   @import "partials/alerts";
   @import "partials/badges";
   @import "partials/dropdowns";
+  @import "partials/tooltips";
+  @import "partials/popovers";
+  @import "partials/pagination";
   @import "partials/navs";
   @import "partials/panels";
   @import "partials/input-groups";
@@ -117,13 +121,15 @@
 //Plug-ins
 @import "partials/tinymce";
 @import "partials/growl";
-@import "partials/chosen";
+// @TODO : confirm if not needed
+//@import "partials/chosen";
 @import "partials/ladda";
 @import "partials/date-picker";
 @import "partials/select2";
 
 //Backward compatibility
-@import "partials/backward";
+// @TODO : confirm if not needed
+// @import "partials/backward";
 
 //Print support
 @import "partials/print";
