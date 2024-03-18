@@ -132,6 +132,13 @@
     @include text-align(right);
   }
 
+  tr.parent {
+    td {
+      background-color: var(--#{$cdk}primary-300) !important;
+      border-bottom: 1px solid var(--#{$cdk}primary-500) !important;
+    }
+  }
+
   td.actions {
     @include text-align(right);
     padding-right: var(--#{$cdk}size-4);
