@@ -10,6 +10,7 @@
     }
   }
 
+  // Default
   &.btn-default {
     &:focus,
     &.focus {
@@ -40,10 +41,12 @@
     }
   }
 
+  // Secondary
   &.btn-secondary {
     @include button-variant($btn-secondary-color, $btn-secondary-bg, $btn-secondary-border);
   }
 
+  // Group
   &-group {
     > .btn {
       height: 100%;

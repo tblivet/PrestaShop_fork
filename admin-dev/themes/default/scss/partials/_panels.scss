@@ -43,6 +43,12 @@ $component: panel;
 
   &-footer {
     @extend .clearfix;
+    margin-top: var(--#{$cdk}size-16);
+    padding-inline: var(--#{$cdk}size-20) !important;
+
+    .btn {
+      margin-inline: var(--#{$cdk}size-4);
+    }
   }
 
   &:not(
