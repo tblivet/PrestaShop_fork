@@ -1,6 +1,6 @@
 //migrationfromfont-awesomev3tov4
 [class^="icon-"] {
-  font-size: 14px;
+  font-size: var(--#{$cdk}size-14);
   @extend .icon;
 }
 
@@ -645,10 +645,10 @@
 //Toolbar
 [class^="process-icon-"] {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: var(--#{$cdk}size-18);
+  height: var(--#{$cdk}size-18);
   margin: 0 auto;
-  font-size: 18px;
+  font-size: var(--#{$cdk}size-18);
   background: transparent;
   background-position: center;
   background-size: 14px;
@@ -837,8 +837,8 @@
   .process-icon-loading {
     @extend .icon-spin;
     @extend .icon-circle-o-notch;
-    font-size: 20px;
-    line-height: 30px;
+    font-size: var(--#{$cdk}size-20);
+    line-height: var(--#{$cdk}size-30);
   }
 
   .process-icon-cart {

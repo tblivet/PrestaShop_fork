@@ -1,5 +1,6 @@
-$header-text-color: #4e6167;
-$search-border-color: #bbcdd2;
+// @TODO
+$header-text-color: var(--#{$cdk}primary-800);
+$search-border-color: var(--#{$cdk}primary-400);
 
 #header {
   z-index: 20;
