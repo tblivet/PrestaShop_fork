@@ -121,3 +121,23 @@ const observer = new MutationObserver(function (mutationsList) {
 
 // Start observing the document body for changes in children
 observer.observe(document.body, { childList: true });
+
+// Timeout to init growl element
+window.setTimeout(() => {
+  const triggerGrowl = document.getElementById("show_growl");
+  const triggerGrowlMessageOnly = document.getElementById("show_growl_message");
+  
+  triggerGrowl.addEventListener('click', function() {
+    $.growl({ title: "Growl", message: "The kitten is awake!" });
+    $.growl.error({ message: "The kitten is attacking!" });
+    $.growl.notice({ message: "The kitten is cute!" });
+    $.growl.warning({ message: "The kitten is ugly!" });
+  });
+
+  triggerGrowlMessageOnly.addEventListener('click', function() {
+    $.growl({ title: "", message: "The kitten is awake!" });
+    $.growl.error({ title: "", message: "The kitten is attacking!" });
+    $.growl.notice({ title: "", message: "The kitten is cute!" });
+    $.growl.warning({ title: "", message: "The kitten is ugly!" });
+  });
+}, 2000);

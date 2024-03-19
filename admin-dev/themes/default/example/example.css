@@ -1,9 +1,14 @@
+html,
+body {
+  height: auto;
+}
+
 html {
   scroll-behavior: smooth;
+  padding: 0 0 2rem 0;
 }
 
 body {
-  padding: 0;
   background-color: #ffffff;
 }
 
@@ -60,6 +65,7 @@ body {
 /* Summary */
 #summary {
   position: fixed;
+  z-index: 9;
   left: 1rem;
   top: 1rem;
   min-width: 140px;
@@ -122,6 +128,15 @@ h2, h3, h4, h5, h6 {
     padding-bottom: 0.5rem;
     margin-top: 1.25rem;
     border-color: #eeeeee;
+  }
+}
+
+h3 {
+  &.custom {
+    color: #333;
+    padding-bottom: 0.5rem;
+    margin-top: 1rem;
+    border: none;
   }
 }
 
