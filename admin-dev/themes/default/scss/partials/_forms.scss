@@ -8,7 +8,7 @@
 label {
   &,
   &.control-label {
-    font-size: 14px;
+    font-size: var(--#{$cdk}size-14);
     font-weight: 500;
     color: $main-color;
   }
@@ -16,7 +16,7 @@ label {
 
 label.control-label span.label-tooltip {
   padding: 0 5px;
-  font-size: 14px;
+  font-size: var(--#{$cdk}size-14);
   color: $main-color;
   text-decoration: none;
   border: none;
@@ -24,9 +24,9 @@ label.control-label span.label-tooltip {
 
 label.required::before {
   position: relative;
-  font-size: 14px;
-  line-height: 12px;
-  color: #f00;
+  font-size: var(--#{$cdk}size-14);
+  line-height: var(--#{$cdk}size-12);
+  color: var(--#{$cdk}red-500);
   content: "*";
 }
 
@@ -106,55 +106,6 @@ input[type="color"]:hover,
 }
 
 //buttons
-.btn {
-  /* .caret {
-    border-top-color: $gray-dark !important;
-  }
-
-  &:hover {
-    .caret {
-      border-top-color: #fff !important;
-    }
-  } */
-
-  /* &.btn-default {
-    i {
-      color: $gray;
-    }
-
-    &:hover {
-      color: #fff;
-      background-color: $brand-primary;
-      border-color: darken($brand-primary, 10%);
-      @include box-shadow(none);
-
-      i {
-        color: #fff;
-      }
-    }
-  } */
-
-  /* &.btn-primary {
-    i {
-      color: #fff;
-    }
-    color: #fff;
-    text-transform: uppercase;
-    background-color: $brand-primary;
-
-    &:hover {
-      background-color: darken($brand-primary, 10%);
-      @include box-shadow(none);
-    }
-  } */
-
-  /* &.btn-default[disabled] {
-    color: $gray-light;
-    background-color: lighten($gray-light, 35%);
-    border-color: $gray-light;
-  } */
-}
-
 .dropdown-menu {
   @include text-align(left);
 }
@@ -181,7 +132,7 @@ input[type="color"]:hover,
     }
 
     i {
-      font-size: 14px;
+      font-size: var(--#{$cdk}size-14);
     }//form file upload
   }
 }
@@ -201,25 +152,25 @@ input[type="color"]:hover,
 }
 
 .tt-query {
-  @include border-right-radius(3px!important);
+  border-radius: 0;
 }
 
 .tt-dropdown-menu {
   font-size: 0.9em;
   text-transform: none;
-  background-color: #fff;
-  border: solid 1px #ccc;
+  background-color: var(--#{$cdk}white);
+  border: solid 1px var(--#{$cdk}primary-400);
 }
 
 .tt-suggestions {
-  padding: 0 6px;
-  @include box-shadow(rgba(black,0.25) 0 1px 4px);
+  padding: 0 var(--#{$cdk}size-6);
+  box-shadow: var(--#{$cdk}box-shadow-md);
 }
 
 .tt-suggestion p {
   padding: 0 !important;
   margin: 0 !important;
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid 1px var(--#{$cdk}primary-400);
 }
 
 .tt-suggestion:last-child p {
@@ -230,10 +181,10 @@ input[type="color"]:hover,
   min-height: 30px;
   padding: 0 3px;
   overflow: auto;
-  background-color: #fff;
-  border: solid 1px #ccc;
-  @include border-radius(3px);
-  @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset);
+  background-color: var(--#{$cdk}white);
+  border: solid 1px var(--#{$cdk}primary-400);
+  border-radius: 0;
+  box-shadow: var(--#{$cdk}box-shadow-md);
 
   span {
     @include float(left);
@@ -243,10 +194,10 @@ input[type="color"]:hover,
     display: inline-block;
     padding: 2px 5px;
     margin: 3px;
-    color: #fff;
+    color: var(--#{$cdk}white);
     background-color: lighten($brand-primary, 15%);
     border: 1px solid $brand-primary;
-    border-radius: 2px;
+    border-radius: 0;
 
     > a {
       font-weight: 700;
