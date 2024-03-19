@@ -64,17 +64,27 @@ $component: panel;
     .#{$component}-heading {
       border-bottom: none;
     }
+
+    &:not(:has(.#{$component}-heading, .#{$component}-body, .#{$component}-footer)) {
+      padding: map-get($map: $cdk-size, $key: "size-24");
+    }
   }
 
   &:has(.#{$component}-footer) {
     padding: 0;
 
-    > *:not(.#{$component}-heading, .#{$component}-body) {
+    > *:not(.#{$component}-heading, .#{$component}-body, .alert) {
       padding-inline: map-get($map: $cdk-size, $key: "size-24");
       
       *:is(.panel) {
-        padding: map-get($map: $cdk-size, $key: "size-24");
+        &:not(:has(.#{$component}-footer)) {
+          padding: map-get($map: $cdk-size, $key: "size-24");
+        }
       }
+    }
+    
+    > .alert {
+      margin-inline: map-get($map: $cdk-size, $key: "size-24");
     }
   }
 

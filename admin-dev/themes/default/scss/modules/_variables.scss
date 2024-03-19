@@ -233,7 +233,7 @@ $dropdown-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
 
 // Navs
 $nav-link-padding: map-get($map: $cdk-size, $key: "size-16") map-get($map: $cdk-size, $key: "size-20");
-$nav-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$nav-link-hover-bg: map-get($map: $cdk-common, $key: "white");
 
 $nav-disabled-link-color: map-get($map: $cdk-primary, $key: "primary-400");
 $nav-disabled-link-hover-color: map-get($map: $cdk-primary, $key: "primary-400");
@@ -331,23 +331,23 @@ $container-desktop: 940px;
 $container-large-desktop: 1170px;
 
 // Menu
-$gray-dark-menu: #363a41;
+$gray-dark-menu: map-get($map: $cdk-common, $key: "white");
 $widthSidebarNav: 210px;
 $paddingLeftPageClosed: 4.0625rem;
 $paddingLeftMobile: 0.625rem;
 $widthSidebarSubmenu: 200px;
 $menu-item-size: 34px;
 $min-height: 950px;
-$gray-dark-link: #fff;
-$gray-dark-link-hover: #fff;
+$gray-dark-link: map-get($map: $cdk-primary, $key: "primary-800");
+$gray-dark-link-hover: map-get($map: $cdk-primary, $key: "primary-700");
 $size-navbar-width: 13.13rem;
 $size-navbar-width-mini: 3.125rem;
 $size-header-height: 2.5rem;
 $header-mobile-padding-y: 0.625rem;
-$medium-gray: #6c868e;
-$gray-medium: $medium-gray;
-$gray-dark-active-menu: #22252a;
-$gray-dark-title: #98aab0;
+$medium-gray: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-medium: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-dark-active-menu:  map-get($map: $cdk-primary, $key: "primary-200");
+$gray-dark-title: map-get($map: $cdk-blue, $key: "blue-500");
 $gray-dark-secondary-link: #b6c3c7;
 $gray-dark-logout: #ff7a7a;
 

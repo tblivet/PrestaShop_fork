@@ -174,7 +174,7 @@
 }
 
 tr.highlighted td {
-  color: #fff;
+  color: var(--#{$cdk}white);
   background-color: $brand-primary !important;
 }
 
@@ -190,7 +190,7 @@ tr.highlighted td {
   display: inline-block;
   width: 30px;
   font-size: 1.3em;
-  color: rgba(#fff, 0.8);
+  color: rgba(var(--#{$cdk}white), 0.8);
   text-align: center;
   @include border-radius(3px);
 
