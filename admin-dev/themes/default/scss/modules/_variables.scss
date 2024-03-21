@@ -332,6 +332,7 @@ $container-large-desktop: 1170px;
 
 // Menu
 $gray-dark-menu: map-get($map: $cdk-common, $key: "white");
+$sidebar-menu-bg: map-get($map: $cdk-common, $key: "white");
 $widthSidebarNav: 210px;
 $paddingLeftPageClosed: 4.0625rem;
 $paddingLeftMobile: 0.625rem;
@@ -340,9 +341,9 @@ $menu-item-size: 34px;
 $min-height: 950px;
 $gray-dark-link: map-get($map: $cdk-primary, $key: "primary-800");
 $gray-dark-link-hover: map-get($map: $cdk-primary, $key: "primary-700");
-$size-navbar-width: 13.13rem;
-$size-navbar-width-mini: 3.125rem;
-$size-header-height: 2.5rem;
+$size-navbar-width: map-get($map: $cdk-size, $key: "size-208");
+$size-navbar-width-mini: map-get($map: $cdk-size, $key: "size-52");
+$size-header-height: 3.25rem;
 $header-mobile-padding-y: 0.625rem;
 $medium-gray: map-get($map: $cdk-primary, $key: "primary-400");
 $gray-medium: map-get($map: $cdk-primary, $key: "primary-400");
