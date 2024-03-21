@@ -5,13 +5,12 @@
   left: 0;
   z-index: 499;
   width: 100%;
-  padding: 0 0 0 210px;
+  padding: 0 0 0 var(--#{$cdk}size-208);
   margin: 0;
   color: #363a41;
   background-color: #fff;
   border-bottom: #dfdfdf 1px solid;
-
-  transition: padding-left 0.5s ease-out;
+  transition: padding-left var(--#{$cdk}transition-default-duration);
 
   .mobile & {
     top: 2.5rem;
