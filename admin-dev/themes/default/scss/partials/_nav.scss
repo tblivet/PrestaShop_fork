@@ -1,16 +1,11 @@
-// @TODO
-
 // Header naviguation bar
 #header_infos {
   .js-mobile-menu {
     display: none;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    float: left;
-    padding-top: 0;
-    margin-right: 0.6rem;
-    margin-left: 0.6rem;
-    font-size: 1.8rem;
+    padding: var(--#{$cdk}size-8);
+    font-size: var(--#{$cdk}size-24);
     cursor: pointer;
 
     @include media-breakpoint-down(md) {
