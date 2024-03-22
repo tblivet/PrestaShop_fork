@@ -297,7 +297,7 @@ $well-border: map-get($map: $cdk-primary, $key: "primary-400");
 $grid-gutter-width: 10px;
 
 // Basics of a navbar
-$navbar-height: 40px;
+$navbar-height: 52px;
 
 // Media queries breakpoints
 // Tiny screen / phone
@@ -343,8 +343,8 @@ $gray-dark-link: map-get($map: $cdk-primary, $key: "primary-800");
 $gray-dark-link-hover: map-get($map: $cdk-primary, $key: "primary-700");
 $size-navbar-width: map-get($map: $cdk-size, $key: "size-208");
 $size-navbar-width-mini: map-get($map: $cdk-size, $key: "size-52");
-$size-header-height: 3.25rem;
-$header-mobile-padding-y: 0.625rem;
+$size-header-height: map-get($map: $cdk-size, $key: "size-52");
+$header-mobile-padding-y: map-get($map: $cdk-size, $key: "size-10");
 $medium-gray: map-get($map: $cdk-primary, $key: "primary-400");
 $gray-medium: map-get($map: $cdk-primary, $key: "primary-400");
 $gray-dark-active-menu:  map-get($map: $cdk-primary, $key: "primary-200");
