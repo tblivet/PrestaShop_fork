@@ -10,7 +10,7 @@
   color: #363a41;
   background-color: #fff;
   border-bottom: #dfdfdf 1px solid;
-  transition: padding-left var(--#{$cdk}transition-default-duration);
+  transition: padding-left var(--#{$cdk}default-transition-duration);
 
   .mobile & {
     top: 2.5rem;
