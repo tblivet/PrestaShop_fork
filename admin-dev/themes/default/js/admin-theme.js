@@ -510,4 +510,22 @@ $(() => {
 
     $('#modal-shipping').modal();
   });
+
+  // Function to update padding of the target element
+  function updatePadding() {
+    const targetElement = document.querySelector('#content.bootstrap');
+    const referenceElement = document.querySelector('#content.bootstrap .page-head');
+
+    if (!targetElement || !referenceElement) return;
+
+    const referenceHeight = referenceElement.offsetHeight + 16;
+    targetElement.style.paddingTop = `${referenceHeight}px`;
+    targetElement.style.paddingBottom = `${referenceHeight}px`;
+  }
+
+  // Initial padding update
+  updatePadding();
+
+  // Update padding when the window is resized
+  window.addEventListener('resize', updatePadding);
 });
