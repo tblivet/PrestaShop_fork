@@ -44,8 +44,8 @@
 
   .dropdown {
     display: inline-flex;
-    gap: var(--#{$cdk}size-8);
     align-items: center;
+    gap: var(--#{$cdk}size-8);
     height: 100%;
     padding: 0;
     margin: 0;
@@ -58,13 +58,13 @@
     }
 
     .dropdown-toggle {
-      display: flex;
-      gap: var(--#{$cdk}size-8);
-      align-items: center;
       height: 100%;
-      padding: var(--#{$cdk}size-8);
+      display: flex;
+      align-items: center;
+      gap: var(--#{$cdk}size-8);
       color: var(--#{$cdk}header-text-color);
-
+      padding: var(--#{$cdk}size-8);
+      
       &:hover,
       &:focus {
         color: var(--#{$cdk}header-text-color-hover);
@@ -92,8 +92,8 @@
 
     .all-stores {
       a {
-        font-weight: 600;
         text-transform: uppercase;
+        font-weight: 600;
       }
     }
 
@@ -102,9 +102,9 @@
         color: var(--#{$cdk}primary-500);
 
         &::before {
+          content: "\e1a0";
           @extend .material-icons;
           font-size: var(--#{$cdk}size-14);
-          content: "\e1a0";
         }
       }
     }
@@ -120,16 +120,16 @@
             color: var(--#{$cdk}white);
 
             i {
-              color: currentcolor;
+              color: currentColor;
             }
           }
-        }
+        }  
       }
 
       a {
         &.link-shop {
-          margin: 0 0 0 auto;
           border: 1px solid var(--#{$cdk}primary-800);
+          margin: 0 0 0 auto;
         }
       }
     }

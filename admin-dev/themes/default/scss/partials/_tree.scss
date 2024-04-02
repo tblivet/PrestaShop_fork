@@ -1,12 +1,12 @@
 // @TODO
 .tree-panel-heading-controls {
   margin: 0 0 var(--#{$cdk}size-16) 0;
-
+  
   .tree-actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--#{$cdk}size-4);
-
+    
     .pull-right {
       order: 10;
     }
@@ -14,9 +14,9 @@
 }
 
 .tree {
+  list-style: none;
   padding: 0 0 0 var(--#{$cdk}size-16);
   margin: 0;
-  list-style: none;
 
   input {
     margin: 0;
@@ -78,9 +78,9 @@
   display: inline-block;
 
   .twitter-typeahead {
+    padding: 0 0 0 var(--#{$cdk}size-4);
     position: relative;
     top: var(--#{$cdk}size-1);
-    padding: 0 0 0 var(--#{$cdk}size-4);
   }
 
   .tt-hint {
@@ -89,13 +89,13 @@
     color: var(--#{$cdk}primary-300);
   }
 
-  .search-field[type="text"]{
+  .search-field[type=text]{
     margin: 0;
   }
 }
 
 .tree-panel-label-title {
-  padding: 0 0 0 var(--#{$cdk}size-8);
   margin: 0;
   font-weight: 400;
+  padding: 0 0 0 var(--#{$cdk}size-8);
 }

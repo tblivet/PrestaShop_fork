@@ -150,7 +150,7 @@
 
   tr.myDragClass {
     padding: var(--#{$cdk}size-10);
-    background-color: #eee;
+    background-color: var(--#{$cdk}primary-300);
 
     td {
       color: var(--#{$cdk}white);
@@ -383,7 +383,7 @@ tr.highlighted td {
       padding-right: var(--#{$cdk}size-16);
       font-size: 0.9em;
       font-style: italic;
-      color: #aaa;
+      color: var(--#{$cdk}primary-600);
       text-align: right;
       white-space: nowrap;
       border-right: 1px solid var(--#{$cdk}primary-400);
