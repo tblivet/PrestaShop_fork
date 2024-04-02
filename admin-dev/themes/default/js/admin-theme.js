@@ -512,21 +512,15 @@ $(() => {
   });
 
   // Function to update padding of the target element
-  const prefixName = 'cdk';
-
   function updatePadding() {
-    const offset = 16;
     const targetElement = document.querySelector('#content.bootstrap');
     const referenceElement = document.querySelector('#content.bootstrap .page-head');
 
     if (!targetElement || !referenceElement) return;
 
-    const referenceHeight = referenceElement.offsetHeight + offset;
-
-    const pageHead = `--${prefixName}-page-head-height`;
-    const pageHeadWithTabs = `--${prefixName}-page-head-with-tabs-height`;
-    document.documentElement.style.setProperty(pageHead, `${referenceHeight}px`);
-    document.documentElement.style.setProperty(pageHeadWithTabs, `${referenceHeight}px`);
+    const referenceHeight = referenceElement.offsetHeight + 16;
+    targetElement.style.paddingTop = `${referenceHeight}px`;
+    targetElement.style.paddingBottom = `${referenceHeight}px`;
   }
 
   // Initial padding update

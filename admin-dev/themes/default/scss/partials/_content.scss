@@ -40,7 +40,7 @@ body {
 #main {
   z-index: 10;
   width: 100%;
-  padding: 50px 0 60px;
+  padding: var(--#{$cdk}header-height) 0 var(--#{$cdk}size-60);
 }
 
 #content.bootstrap {
