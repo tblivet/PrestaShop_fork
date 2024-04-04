@@ -25,7 +25,7 @@
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
-			<img id="logo" src="{$img_dir}prestashop@2x.png" width="123px" height="24px" alt="PrestaShop" />
+			<img id="logo" src="{$img_dir}prestashop@2x.png" width="128" height="auto" alt="PrestaShop" loading="lazy" />
 		</h1>
 		<div id="error" class="hide alert alert-danger">
 		{if isset($errors)}
@@ -48,10 +48,12 @@
 		<div class="alert alert-warning">{$warningSslMessage}</div>
 		{/if}
 	</div>
-	<div id="shop-img"><img src="{$img_dir}preston-login@2x.png" alt="{$shop_name}" width="69.5px" height="118.5px" /></div>
 	<div class="flip-container">
 		<div class="flipper">
 			<div class="front front_login panel" {if isset($reset_token) && isset($id_employee)}style="display:none;"{/if}>
+				<div class="shop-img">
+					<img src="{$img_dir}prestashop@2x.png" alt="{$shop_name}" width="200" height="22" loading="lazy" />
+				</div>
 				<h4 id="shop_name">{$shop_name}</h4>
 				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 				<form action="#" id="login_form" method="post">
@@ -119,6 +121,9 @@
 			{/if}
 
 			<div class="back panel">
+				<div class="shop-img">
+					<img src="{$img_dir}prestashop@2x.png" alt="{$shop_name}" width="200" height="22" loading="lazy" />
+				</div>
 				<h4 id="forgot_name">{l s='Forgot your password?' d='Admin.Global'}</h4>
 				<form action="#" id="forgot_password_form" method="post">
 					<div class="form-group">
@@ -174,7 +179,7 @@
 				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
 			</a>
 		</p>
-		<p class="text-center">
+		<p class="social-links text-center">
 			<a class="link-social link-twitter _blank" href="https://twitter.com/PrestaShop" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>

@@ -519,8 +519,11 @@ $(() => {
     if (!targetElement || !referenceElement) return;
 
     const referenceHeight = referenceElement.offsetHeight + 16;
-    targetElement.style.paddingTop = `${referenceHeight}px`;
-    targetElement.style.paddingBottom = `${referenceHeight}px`;
+
+    var pageHead = "--cdk-page-head-height";
+    var pageHeadWithTabs = "--cdk-page-head-with-tabs-height";
+    document.documentElement.style.setProperty(pageHead, `${referenceHeight}px`);
+    document.documentElement.style.setProperty(pageHeadWithTabs, `${referenceHeight}px`);
   }
 
   // Initial padding update
