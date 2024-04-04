@@ -1,4 +1,3 @@
-// @TODO
 html,
 body {
   height: 100%;
@@ -6,27 +5,22 @@ body {
 }
 
 body {
-  font-family: $font-family-base;
+  font-family: var(--#{$cdk}font-family-primary);
   font-size: $font-size-base;
   font-weight: 400;
   line-height: $line-height-base;
   color: $text-color;
   background-color: $body-bg;
 
-  // @TODO try to handle page-head better
   &.mobile {
     #content.bootstrap {
-      @media (max-width: $screen-lg) {
-        padding-left: $paddingLeftMobile;
-      }
-
       .page-head {
         h2.page-title {
-          padding-left: $paddingLeftMobile;
+          padding-left: var(--#{$cdk}size-16);
         }
 
         h4.page-subtitle {
-          @include left($paddingLeftMobile);
+          @include left(var(--#{$cdk}size-16));
         }
 
         ul.page-breadcrumb {
@@ -44,30 +38,19 @@ body {
 }
 
 #content.bootstrap {
-  padding: 95px 15px 0 225px;
-
-  input,
-  button,
-  textarea,
-  select {
-    font-family: $font-family-mono;
-  }
+  padding: var(--#{$cdk}page-head-height) var(--#{$cdk}size-16) 0 calc(var(--#{$cdk}sidebar-width) + var(--#{$cdk}size-16));
 
   &.with-tabs {
-    padding-top: 160px;
+    padding-top: var(--#{$cdk}page-head-with-tabs-height);
   }
-
-  @include transition-property(margin);
-  @include transition-duration(0.4s);
-  @include transition-timing-function(ease-out);
 
   form .alert {
     clear: both;
   }
 
   .mobile & {
-    padding: 95px 5px 0;
-    @include margin-left(0!important);
+    padding: var(--#{$cdk}page-head-with-tabs-height) var(--#{$cdk}size-16) var(--#{$cdk}size-16) var(--#{$cdk}size-16);
+    margin: 0;
   }
 
   .help-block {
@@ -77,37 +60,11 @@ body {
   .nav.nav-tabs li.active a {
     z-index: 99;
   }
-
-  .breadcrumb {
-    background-color: #fff;
-    border: solid 1px darken($bg-content-color, 10%);
-  }
-
-  .panel.panel-sm {
-    padding: 8px !important;
-
-    .panel-heading {
-      margin: -8px -8px 10px;
-      font-size: 13px;
-
-      @include ltr () {
-        padding-left: 8px;
-      }
-
-      @include rtl () {
-        padding-right: 8px;
-      }
-    }
-
-    .form-group {
-      margin-bottom: 8px;
-    }
-  }
 }
 
 .data-focus {
   &.data-focus-primary {
-    color: #fff;
+    color: var(--#{$cdk}white);
     background-color: $brand-primary;
     @include border-radius(10px);
   }
@@ -127,7 +84,7 @@ body.display-modal {
   #main {
     padding: 0;
     margin: 0;
-    background: #f8f8f8;
+    background: var(--#{$cdk}primary-200);
   }
 }
 
@@ -152,19 +109,13 @@ body.display-modal {
     .alert {
       text-align: left;
     }
-    //todo: remove temp fix for bootstrap RC1 -> final
-  }
-}
-
-#header {
-  .panel-footer {
-    height: 40px !important;
-    margin: 15px 0 0 !important;
   }
 }
 
 #main.helpOpen {
   width: 70%;
+  float: left;
+
   @media (max-width: $screen-lg) {
     width: 100%;
   }
@@ -176,30 +127,22 @@ body.display-modal {
   float: right;
   width: 30%;
   padding: 0;
-  margin: 0;
-  margin-top: 181px;
-  margin-bottom: 50px;
+  margin: calc(var(--#{$cdk}page-head-with-tabs-height) + var(--#{$cdk}header-height)) 0 0 0;
   overflow-x: hidden;
-  background-color: #fff;
+  background-color: var(--#{$cdk}white);
 
   @media (max-width: $screen-lg) {
     display: none;
   }
 }
 
-.page-topbar {
-  #help-container {
-    margin-top: 140px;
-  }
-}
-
 .page-sidebar-closed {
   &:not(.mobile) {
     #content {
-      padding-left: $paddingLeftPageClosed;
+      padding-left: calc(var(--#{$cdk}sidebar-width-collapse) + var(--#{$cdk}size-16));
 
       .page-head {
-        padding-left: $paddingLeftPageClosed - 0.9375rem;
+        padding-left: var(--#{$cdk}sidebar-width-collapse);
       }
     }
   }
@@ -212,7 +155,7 @@ div[data-role="search-panels"] {
       top: 2px;
       left: 10px;
       font-family: "Material Icons", sans-serif;
-      color: #bbcdd2;
+      color: var(--#{$cdk}primary-500);
       content: "\e89e";
       opacity: 0.7;
     }
