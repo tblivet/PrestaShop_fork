@@ -25,7 +25,7 @@
 
         .label-tooltip {
           padding: 0 var(--#{$cdk}size-4);
-          color: var(--#{$cdk}blue-500);
+          color: var(--#{$cdk}ocean-blue-700);
           background-color: var(--#{$cdk}primary-200);
           border: none;
           border-bottom: solid var(--#{$cdk}size-1) var(--#{$cdk}primary-200);
@@ -34,9 +34,9 @@
     }
 
     > tr.filter > th {
-      background-color: var(--#{$cdk}blue-50);
+      background-color: var(--#{$cdk}primary-100);
       border-width: var(--#{$cdk}size-1);
-      border-color: var(--#{$cdk}blue-300);
+      border-color: var(--#{$cdk}ocean-blue-500);
       vertical-align: middle;
 
       input[type="text"].filter,
@@ -77,7 +77,7 @@
     }
 
     > tr:hover > td {
-      background-color: var(--#{$cdk}blue-50);
+      background-color: var(--#{$cdk}ocean-blue-50);
     }
   }
 
@@ -271,7 +271,7 @@ tr.highlighted td {
       height: var(--#{$cdk}size-60);
       text-align: center;
       border-width: var(--#{$cdk}size-1) !important;
-      border-color: var(--#{$cdk}blue-300) !important;
+      border-color: var(--#{$cdk}ocean-blue-500) !important;
     }
 
     th .fixed-width-md {
