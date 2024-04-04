@@ -105,7 +105,7 @@
 						<input name="reset_confirm" type="password" id="reset_confirm" class="form-control" value="" tabindex="2" placeholder="&#xf084 {l s='Confirm password' d='Admin.Login.Feature'}" />
 					</div>
 					<div class="panel-footer">
-						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="3">
+						<button class="btn btn-primary pull-right" name="submitLogin" type="submit" tabindex="3">
 							<i class="icon-ok text-success"></i>
 							{l s='Reset password' d='Admin.Login.Feature'}
 						</button>
@@ -134,11 +134,9 @@
 					</div>
 					<div class="panel-footer">
 						<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">
-							<i class="icon-caret-left"></i>
 							{l s='Cancel' d='Admin.Actions'}
 						</button>
-						<button id="reset-password-button" class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
-							<i class="icon-ok text-success"></i>
+						<button id="reset-password-button" class="btn btn-primary pull-right" name="submitLogin" type="submit" tabindex="6">
 							{l s='Send reset link' d='Admin.Login.Feature'}
 						</button>
 					</div>
