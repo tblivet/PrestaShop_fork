@@ -1,4 +1,3 @@
-// @TODO
 .page-head {
   position: fixed;
   top: var(--#{$cdk}header-height);
@@ -12,78 +11,84 @@
   border-bottom: 1px solid var(--#{$cdk}primary-400);
   transition: padding-left var(--#{$cdk}default-transition-duration);
 
+  // Remove padding because menu is hide
+  @include media-breakpoint-down(md) {
+    padding: 0;
+  }
+
   &.with-tabs {
     border-bottom: none;
-    //height: 140px;
   }
   
+  // Edit structure
   > .wrapper {
-    padding-left: var(--#{$cdk}size-16);
-  }
-  
-  @include media-breakpoint-down(md) {
-    padding: var(--#{$cdk}size-8) 0 0 0;
+    display: grid;
+    gap: var(--#{$cdk}size-8);
+    grid-template-columns: auto auto;
+    padding: var(--#{$cdk}size-16);
 
-    &.with-tabs {
-      //height: auto;
-    }
-  }
-
-  .page-title {
-    position: relative;
-    float: left;
-    padding: 0;
-    margin: 0 0 var(--#{$cdk}size-16) 0;
-    clear: left;
-    font-size: var(--#{$cdk}size-32);
-    font-weight: 600;
-    white-space: nowrap;
-
-    @at-root .adminmodules & {
-      margin: 0 0 1.25rem;
+    &::before,
+    &::after {
+      display: none;
     }
 
-    a {
-      border-bottom: dotted 1px var(--#{$cdk}white);
-
-      &:hover {
-        color: var(--#{$cdk}primary-800);
-        border-color: var(--#{$cdk}primary-800);
+    &:has(.page-subtitle) {
+      .toolbarBox {
+        grid-row: 1 / span 3;
       }
     }
-  }
 
-  a {
-    color: var(--#{$cdk}white);
-    text-decoration: none;
-  }
-
-  // @TODO
-  h4.page-subtitle {
-    @include float(left);
-    position: absolute;
-    margin-top: 60px;
-    font-family: $url-font-content-name;
-    @include left($widthSidebarNav + 17px);
-    @media (max-width: $screen-tablet) {
-      @include left(70px);
+    .breadcrumb,
+    .page-title,
+    .page-subtitle {
+      grid-column: 1;
+      margin: 0;
+      padding: 0;
     }
 
-    @at-root .adminmodules & {
-      margin-top: 67px;
+    .btn-toolbar {
+      margin: 0;
     }
-  }
+    
+    .toolbarBox {
+      grid-column: 2;
+      grid-row: 1 / span 2;
+      justify-content: end;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--#{$cdk}size-8);
+    }
 
-  .toolbarBox {
-    @media (max-width: $screen-tablet) {
-      width: 100%;
+    .dropdown-toolbar {
+      @extend .btn;
+      @extend .btn-default;
+      display: none !important;
+      float: right;
+      margin: 0;
+
+      @media (max-width: $screen-sm) {
+        display: inline-flex !important;
+      }
     }
 
     .nav-pills {
-      padding-right: var(--#{$cdk}size-12);
+      display: flex !important;
+      gap: var(--#{$cdk}size-8);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      padding: 0;
+
+      &::before,
+      &::after {
+        display: none;
+      }
 
       li {
-        margin: var(--#{$cdk}size-2) var(--#{$cdk}size-4);
+        margin: 0;
+      }
+
+      &.collapse {
+        display: flex !important;
       }
 
       .toolbar_btn {
@@ -111,33 +116,62 @@
           }
         }
       }
+    }
 
-      @media (max-width: $screen-sm) {
-        padding-block: var(--#{$cdk}size-8);
+    @media (max-width: $screen-sm) {
+      .btn-toolbar {
+        &:has(.dropdown-toolbar) {
+          display: grid;
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+          justify-items: end;
+        }
       }
-    }
-    
-    .btn-toolbar {
-      justify-content: flex-end;
-      margin: 0;
-    }
 
-    .dropdown-toolbar {
-      @extend .btn;
-      @extend .btn-default;
-      display: none !important;
-      float: right;
-      margin: var(--#{$cdk}size-2) var(--#{$cdk}size-16) var(--#{$cdk}size-2) var(--#{$cdk}size-0) !important;
+      .toolbarBox {
+        grid-row: 1 / span 1;
+      }
 
-      @media (max-width: $screen-sm) {
-        display: inline-flex !important;
+      .nav-pills {
+        &.collapse {
+          display: none !important;
+        }
+
+        &.collapsing,
+        &.in {
+          display: flex !important;
+          padding: var(--#{$cdk}size-8) 0 0 0;
+        }
       }
     }
   }
 
+  .page-title {
+    position: relative;
+    float: left;
+    padding: 0;
+    margin: 0 0 var(--#{$cdk}size-12) 0;
+    clear: left;
+    font-size: var(--#{$cdk}size-32);
+    font-weight: 600;
+    white-space: nowrap;
+
+    a {
+      border-bottom: dotted 1px var(--#{$cdk}white);
+
+      &:hover {
+        color: var(--#{$cdk}primary-800);
+        border-color: var(--#{$cdk}primary-800);
+      }
+    }
+  }
+
+  .page-subtitle {
+    margin: 0;
+  }
+
   ul.page-breadcrumb {
     float: left;
-    padding: var(--#{$cdk}size-8) 0;
+    padding: 0 0 var(--#{$cdk}size-8) 0;
     margin: 0;
     font-size: var(--#{$cdk}size-12);
     line-height: 1.5;
