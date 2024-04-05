@@ -49,7 +49,7 @@
     .btn-toolbar {
       margin: 0;
     }
-    
+
     .toolbarBox {
       grid-column: 2;
       grid-row: 1 / span 2;
@@ -112,7 +112,7 @@
           }
 
           &.process-icon-loading {
-            line-height: 1;
+            line-height: 1 !important;
           }
         }
       }
