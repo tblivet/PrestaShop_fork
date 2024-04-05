@@ -91,8 +91,11 @@
 			</div>
 			{if isset($reset_token) && isset($id_employee)}
 			<div class="front front_reset panel">
+				<div class="shop-img">
+					<img src="{$img_dir}prestashop@2x.png" alt="{$shop_name}" width="200" height="22" loading="lazy" />
+				</div>
+				<h4 id="reset_name">{l s='Reset your password' d='Admin.Login.Feature'}</h4>
 				<form action="#" id="reset_password_form" method="post">
-					<h4 id="reset_name">{l s='Reset your password' d='Admin.Login.Feature'}</h4>
 					<div class="form-group">
 						<label class="control-label" for="reset_passwd">
 							{l s='New password' d='Admin.Login.Feature'}
@@ -116,7 +119,7 @@
 					<input type="hidden" name="reset_email" id="reset_email" value="{$reset_email|escape:'html':'UTF-8'}" />
 				</form>
 			</div>
-			<div class="back back_reset">
+			<div class="back panel back_reset">
 				<h4 id="reset_confirm_name">{l s='Your password has been successfully changed.'}<br/><br/>{l s='You will be redirected to the login page in a few seconds.' d='Admin.Login.Notification'}</h4>
 			</div>
 			{/if}
@@ -144,7 +147,7 @@
 				</form>
 			</div>
 
-			<div class="front forgot_confirm" style="display: none">
+			<div class="front panel forgot_confirm" style="display: none">
 				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.' d='Admin.Login.Notification'}<br/><br/>{l s='If this email address has been registered in our store, you will receive a link to reset your password.' d='Admin.Login.Notification'}</h4>
 			</div>
 		</div>
