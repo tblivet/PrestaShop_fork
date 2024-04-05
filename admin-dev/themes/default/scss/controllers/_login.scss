@@ -46,7 +46,9 @@
     box-shadow: var(--#{$cdk}box-shadow-md);
 
     &.back {
-      padding-bottom: 0;
+      &:not(.back_reset) {
+        padding-bottom: 0;
+      }
     }
   }
 
@@ -76,9 +78,17 @@
     padding: var(--#{$cdk}size-40);
     transition: 0.6s;
     @include backface-visibility(hidden);
+
+    &.front_login {
+      padding-bottom: var(--#{$cdk}size-16);
+    }
     
     @media screen and (max-width: $screen-phone) {
       padding: var(--#{$cdk}size-30) var(--#{$cdk}size-16);
+
+      &.front_login {
+        padding-bottom: var(--#{$cdk}size-16);
+      }
     }
   }
 
@@ -113,7 +123,8 @@
   }
   
   #shop_name,
-  #forgot_name {
+  #forgot_name,
+  #reset_name {
     margin: var(--#{$cdk}size-16) 0 0 0;
     color: var(--#{$cdk}primary-500);
     font-weight: 400;
@@ -129,6 +140,43 @@
 
   #error {
     margin-top: var(--#{$cdk}size-16);
+  }
+
+  .front_reset {
+    padding-bottom: 0;
+  
+    #reset_password_form {
+      padding: var(--#{$cdk}size-16) 0 0 0;
+    
+      .panel-footer {
+        margin: 0 calc(-1 * var(--#{$cdk}size-40));
+      }
+    }
+
+    @media screen and (max-width: $screen-phone) {
+      padding-bottom: 0;
+
+      .panel-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--#{$cdk}size-16);
+        padding: var(--#{$cdk}size-16) !important;
+        margin: 0 calc(-1 * var(--#{$cdk}size-16)) !important;
+  
+        &::before,
+        &::after {
+          display: none;
+        }
+  
+        .btn {
+          flex-grow: 1;
+          flex-shrink: 0;
+          margin: 0;
+          justify-content: center;
+          white-space: normal;
+        }
+      }
+    }
   }
 }
 
