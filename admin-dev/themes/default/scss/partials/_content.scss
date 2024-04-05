@@ -15,14 +15,6 @@ body {
   &.mobile {
     #content.bootstrap {
       .page-head {
-        h2.page-title {
-          padding-left: var(--#{$cdk}size-16);
-        }
-
-        h4.page-subtitle {
-          @include left(var(--#{$cdk}size-16));
-        }
-
         ul.page-breadcrumb {
           display: none;
         }
