@@ -99,7 +99,7 @@
         right: calc(-1 * var(--#{$cdk}size-16));
         border: var(--#{$cdk}size-16) solid transparent;
         border-right: 0;
-        border-left: var(--#{$cdk}size-14)x solid var(--#{$cdk}white);
+        border-left: var(--#{$cdk}size-14) x solid var(--#{$cdk}white);
 
         &::after {
           position: absolute;

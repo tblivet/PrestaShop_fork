@@ -9,7 +9,7 @@
 
   .shop-img {
     text-align: center;
-    
+
     img {
       max-width: 100%;
       height: auto;
@@ -30,8 +30,8 @@
 }
 
 #submit_login {
-  width: 100%;
   justify-content: center;
+  width: 100%;
 }
 
 #login-panel {
@@ -82,7 +82,7 @@
     &.front_login {
       padding-bottom: var(--#{$cdk}size-16);
     }
-    
+
     @media screen and (max-width: $screen-phone) {
       padding: var(--#{$cdk}size-30) var(--#{$cdk}size-16);
 
@@ -121,13 +121,13 @@
     font-family: $font-family-sans-serif;
     text-align: center;
   }
-  
+
   #shop_name,
   #forgot_name,
   #reset_name {
     margin: var(--#{$cdk}size-16) 0 0 0;
-    color: var(--#{$cdk}primary-500);
     font-weight: 400;
+    color: var(--#{$cdk}primary-500);
   }
 
   #login_form {
@@ -144,10 +144,10 @@
 
   .front_reset {
     padding-bottom: 0;
-  
+
     #reset_password_form {
       padding: var(--#{$cdk}size-16) 0 0 0;
-    
+
       .panel-footer {
         margin: 0 calc(-1 * var(--#{$cdk}size-40));
       }
@@ -162,17 +162,17 @@
         gap: var(--#{$cdk}size-16);
         padding: var(--#{$cdk}size-16) !important;
         margin: 0 calc(-1 * var(--#{$cdk}size-16)) !important;
-  
+
         &::before,
         &::after {
           display: none;
         }
-  
+
         .btn {
           flex-grow: 1;
           flex-shrink: 0;
-          margin: 0;
           justify-content: center;
+          margin: 0;
           white-space: normal;
         }
       }
@@ -189,10 +189,10 @@
 
   .social-links {
     display: flex;
+    gap: var(--#{$cdk}size-8);
     align-items: center;
     justify-content: center;
-    gap: var(--#{$cdk}size-8);
-    
+
     i {
       font-size: var(--#{$cdk}size-18);
     }
@@ -204,10 +204,10 @@
   top: var(--#{$cdk}size-16);
   left: var(--#{$cdk}size-16);
   display: flex;
-  align-items: center;
-  color: var(--#{$cdk}primary-800);
   gap: var(--#{$cdk}size-4);
+  align-items: center;
   font-size: var(--#{$cdk}size-16);
+  color: var(--#{$cdk}primary-800);
 
   &-shop {
     font-weight: 600;
@@ -235,7 +235,7 @@
   .panel-footer {
     margin: 0 calc(-1 * var(--#{$cdk}size-40));
   }
-  
+
   @media screen and (max-width: $screen-phone) {
     .panel-footer {
       display: flex;
@@ -252,8 +252,8 @@
       .btn {
         flex-grow: 1;
         flex-shrink: 0;
-        margin: 0;
         justify-content: center;
+        margin: 0;
         white-space: normal;
       }
     }

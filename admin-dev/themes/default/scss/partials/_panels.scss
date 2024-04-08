@@ -5,7 +5,7 @@ $component: panel;
   box-shadow: none;
 
   &-heading,
-  & > h3 {
+  > h3 {
     display: flex;
     gap: map-get($map: $cdk-size, $key: "size-16");
     align-items: center;
@@ -14,12 +14,12 @@ $component: panel;
     margin: map-get($map: $cdk-size, $key: "size-0");
     font-size: map-get($map: $cdk-size, $key: "size-24");
     font-weight: 600;
-    
+
     > i {
       font-size: map-get($map: $cdk-size, $key: "size-24");
     }
   }
-  
+
   &-title {
     font-size: map-get($map: $cdk-size, $key: "size-24");
     font-weight: 600;
@@ -30,7 +30,7 @@ $component: panel;
     gap: map-get($map: $cdk-size, $key: "size-12");
     align-items: center;
     margin: 0 0 0 auto;
-    
+
     .list-toolbar-btn {
       color: map-get($map: $cdk-primary, $key: "primary-500");
 
@@ -43,8 +43,8 @@ $component: panel;
 
   &-footer {
     @extend .clearfix;
-    margin-top: var(--#{$cdk}size-16);
     padding-inline: var(--#{$cdk}size-20) !important;
+    margin-top: var(--#{$cdk}size-16);
 
     .btn {
       margin-inline: var(--#{$cdk}size-4);
@@ -52,13 +52,13 @@ $component: panel;
   }
 
   &:not(
-    .#{$component}-default,
-    .#{$component}-primary,
-    .#{$component}-success,
-    .#{$component}-info,
-    .#{$component}-warning,
-    .#{$component}-danger
-  ) {
+  .#{$component}-default,
+  .#{$component}-primary,
+  .#{$component}-success,
+  .#{$component}-info,
+  .#{$component}-warning,
+  .#{$component}-danger
+) {
     @extend .#{$component}-default;
 
     .#{$component}-heading {
@@ -75,14 +75,14 @@ $component: panel;
 
     > *:not(.#{$component}-heading, .#{$component}-body, .alert) {
       padding-inline: map-get($map: $cdk-size, $key: "size-24");
-      
+
       *:is(.panel) {
         &:not(:has(.#{$component}-footer)) {
           padding: map-get($map: $cdk-size, $key: "size-24");
         }
       }
     }
-    
+
     > .alert {
       margin-inline: map-get($map: $cdk-size, $key: "size-24");
     }
@@ -91,7 +91,7 @@ $component: panel;
   &:has(.#{$component}-heading, > h3) {
     &:not(:has(.#{$component}-footer, .#{$component}-body)) {
       padding: map-get($map: $cdk-size, $key: "size-24");
-      
+
       .#{$component}-heading,
       .#{$component} > h3
       .#{$component}-body {
@@ -104,8 +104,8 @@ $component: panel;
       }
     }
   }
-  
-  &:not(:has( > *)) {
+
+  &:not(:has(> *)) {
     padding: map-get($map: $cdk-size, $key: "size-24");
   }
 }
