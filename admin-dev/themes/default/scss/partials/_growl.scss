@@ -39,8 +39,8 @@ $duration: 0.3s;
 
 .growl {
   position: relative;
-  opacity: 1;
   box-shadow: var(--#{$cdk}box-shadow-lg);
+  opacity: 1;
   @include transition(all $duration ease-in-out);
 
   &.#{$namespace}-incoming {
@@ -57,14 +57,14 @@ $duration: 0.3s;
     padding-right: 3rem;
     margin: 10px;
   }
-  
+
   &.#{$namespace}-medium {
     width: 250px;
     padding: 15px;
     padding-right: 3rem;
     margin: 10px;
   }
-  
+
   &.#{$namespace}-large {
     width: 300px;
     padding: 15px;
@@ -74,37 +74,37 @@ $duration: 0.3s;
 
   &.#{$namespace}-default {
     color: var(--#{$cdk}primary-800);
-    border: 1px solid var(--#{$cdk}blue-500);
     background: var(--#{$cdk}blue-50);
+    border: 1px solid var(--#{$cdk}blue-500);
   }
 
   &.#{$namespace}-error {
     color: var(--#{$cdk}primary-800);
-    border: 1px solid var(--#{$cdk}red-500);
     background: var(--#{$cdk}red-50);
+    border: 1px solid var(--#{$cdk}red-500);
   }
 
   &.#{$namespace}-notice {
     color: var(--#{$cdk}primary-800);
-    border: 1px solid var(--#{$cdk}green-500);
     background: var(--#{$cdk}green-50);
+    border: 1px solid var(--#{$cdk}green-500);
   }
 
   &.#{$namespace}-warning {
     color: var(--#{$cdk}primary-800);
-    border: 1px solid var(--#{$cdk}yellow-500);
     background: var(--#{$cdk}yellow-50);
+    border: 1px solid var(--#{$cdk}yellow-500);
   }
 
   .#{$namespace}-close {
-    font-family: helvetica, verdana, sans-serif;
     position: absolute;
+    top: 50%;
     right: 1.125rem;
+    font-family: helvetica, verdana, sans-serif;
     font-size: 1.6rem;
     font-weight: 300;
     line-height: 1;
     cursor: pointer;
-    top: 50%;
     transform: translateY(-50%);
   }
 

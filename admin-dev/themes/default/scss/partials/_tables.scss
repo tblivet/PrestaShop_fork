@@ -18,6 +18,7 @@
 
         a {
           text-decoration: none;
+
           .active {
             color: var(--#{$cdk}primary-800);
           }
@@ -34,10 +35,10 @@
     }
 
     > tr.filter > th {
-      background-color: var(--#{$cdk}primary-100);
-      border-width: var(--#{$cdk}size-1);
-      border-color: var(--#{$cdk}ocean-blue-500);
       vertical-align: middle;
+      background-color: var(--#{$cdk}primary-100);
+      border-color: var(--#{$cdk}ocean-blue-500);
+      border-width: var(--#{$cdk}size-1);
 
       input[type="text"].filter,
       input[type="password"].filter {
@@ -94,10 +95,10 @@
     .dragGroup {
       position: relative;
       width: var(--#{$cdk}size-80);
+      padding: var(--#{$cdk}size-4) var(--#{$cdk}size-4) var(--#{$cdk}size-4) var(--#{$cdk}size-28);
       font-size: $icon-size-base;
       text-align: center;
       cursor: move;
-      padding: var(--#{$cdk}size-4) var(--#{$cdk}size-4) var(--#{$cdk}size-4) var(--#{$cdk}size-28);
       transition: all 0.3s;
 
       &:hover {
@@ -109,11 +110,11 @@
         @extend .icon;
         @extend .icon-arrows;
         position: absolute;
+        top: 50%;
+        left: var(--#{$cdk}size-6);
         display: block;
         width: var(--#{$cdk}size-16);
         height: var(--#{$cdk}size-16);
-        top: 50%;
-        left: var(--#{$cdk}size-6);
         transform: translateY(-7px);
       }
 
@@ -234,7 +235,7 @@ tr.highlighted td {
 @media (max-width: $screen-sm-max) {
   .table-responsive-row {
     overflow: visible;
-    
+
     table,
     thead,
     tbody,
@@ -252,15 +253,15 @@ tr.highlighted td {
         float: left;
         width: 70%;
         margin-bottom: var(--#{$cdk}size-8);
-  
+
         &:first-child {
           width: 30%;
-  
+
           th {
             width: 100% !important;
           }
         }
-  
+
         &:first-child:last-child {
           display: none;
         }
@@ -270,8 +271,8 @@ tr.highlighted td {
     th {
       height: var(--#{$cdk}size-60);
       text-align: center;
-      border-width: var(--#{$cdk}size-1) !important;
       border-color: var(--#{$cdk}ocean-blue-500) !important;
+      border-width: var(--#{$cdk}size-1) !important;
     }
 
     th .fixed-width-md {
@@ -376,11 +377,11 @@ tr.highlighted td {
     td::before {
       position: absolute;
       top: 0;
-      height: 100%;
       left: 0;
       width: 30%;
-      padding-left: var(--#{$cdk}size-8);
+      height: 100%;
       padding-right: var(--#{$cdk}size-16);
+      padding-left: var(--#{$cdk}size-8);
       font-size: 0.9em;
       font-style: italic;
       color: var(--#{$cdk}primary-600);
