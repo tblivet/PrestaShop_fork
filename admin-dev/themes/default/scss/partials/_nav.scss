@@ -29,14 +29,15 @@
   //transition: var(--#{$cdk}default-transition);
 
   // CSS var
-  /*--#{$cdk}sidebar-category-color: var(--#{$cdk}primary-500);
+
+  /* --#{$cdk}sidebar-category-color: var(--#{$cdk}primary-500);
   --#{$cdk}sidebar-icon-color: var(--#{$cdk}primary-800);
   --#{$cdk}sidebar-icon-active: var(--#{$cdk}blue-500);
   --#{$cdk}sidebar-link-color: var(--#{$cdk}primary-800);
   --#{$cdk}sidebar-link-color-hover: var(--#{$cdk}blue-500);
   --#{$cdk}sidebar-link-bg-active: var(--#{$cdk}primary-200);
   --#{$cdk}sidebar-link-lvl-one-bg-active: var(--#{$cdk}primary-300);
-  --#{$cdk}sidebar-submenu-bg: var(--#{$cdk}primary-200);*/
+  --#{$cdk}sidebar-submenu-bg: var(--#{$cdk}primary-200); */
 
   --#{$cdk}sidebar-category-color: var(--#{$cdk}primary-500);
   --#{$cdk}sidebar-icon-color: var(--#{$cdk}primary-800);
@@ -66,21 +67,21 @@
     .logo-container {
       display: flex;
       align-items: center;
-      color: var(--#{$cdk}primary-800);
       justify-content: space-between;
       padding: var(--#{$cdk}size-4) var(--#{$cdk}size-4) var(--#{$cdk}size-4) var(--#{$cdk}size-16);
+      color: var(--#{$cdk}primary-800);
       border-bottom: 1px solid var(--#{$cdk}primary-400);
 
       &__close {
-        line-height: 1;
         padding: var(--#{$cdk}size-8);
+        line-height: 1;
         cursor: pointer;
       }
 
       &__header {
         display: flex;
-        align-items: center;
         gap: var(--#{$cdk}size-16);
+        align-items: center;
       }
 
       .logo {
@@ -122,8 +123,8 @@
 
       @include media-breakpoint-down(md) {
         display: flex;
-        align-items: center;
         gap: var(--#{$cdk}size-16);
+        align-items: center;
         color: var(--#{$cdk}primary-800);
       }
 
@@ -166,8 +167,8 @@
 
     &.link-levelone-active {
       > .link {
-        color: var(--#{$cdk}sidebar-link-color-active);
         font-weight: 700;
+        color: var(--#{$cdk}sidebar-link-color-active);
         background: var(--#{$cdk}sidebar-link-lvl-one-bg-active);
       }
     }
@@ -192,8 +193,8 @@
     &.link-active,
     &.-hover {
       > .link {
-        color: var(--#{$cdk}sidebar-link-color-active);
         font-weight: 700;
+        color: var(--#{$cdk}sidebar-link-color-active);
         background: var(--#{$cdk}sidebar-link-lvl-one-bg-active);
         transition: background var(--#{$cdk}default-transition-duration);
       }
@@ -222,11 +223,11 @@
     }
 
     #header_logout {
+      column-gap: var(--#{$cdk}size-8);
       align-items: center;
       margin-top: var(--#{$cdk}size-32);
-      color: var(--#{$cdk}red-500);
       font-weight: 700;
-      column-gap: var(--#{$cdk}size-8);
+      color: var(--#{$cdk}red-500);
       transition: var(--#{$cdk}default-transition);
 
       &:hover {
@@ -234,7 +235,7 @@
       }
 
       i {
-        color: currentColor;
+        color: currentcolor;
       }
     }
 
@@ -284,7 +285,7 @@
   font-weight: 700;
   line-height: 1;
   border-bottom: 1px solid var(--#{$cdk}primary-300);
-  
+
   > .title {
     color: var(--#{$cdk}sidebar-category-color);
   }
@@ -299,15 +300,15 @@
   text-align: right;
   cursor: pointer;
   transition: color var(--#{$cdk}default-transition-duration);
-  
+
   &:hover {
     color: var(--#{$cdk}sidebar-link-bg-active);
   }
-  
+
   .material-icons {
-    color: currentColor;
     font-size: var(--#{$cdk}size-24);
     line-height: 1;
+    color: currentcolor;
   }
 
   @include media-breakpoint-down(md) {
@@ -323,16 +324,18 @@
   }
 
   .menu-collapse {
-    text-align: center;
     padding: var(--#{$cdk}size-8);
+    text-align: center;
     transform: rotate(180deg);
   }
 
   .link-levelone {
     > .link {
       justify-content: center;
+
       > span {
         display: none;
+
         &.open {
           > .submenu {
             display: none;
@@ -360,8 +363,8 @@
     }
 
     .main-menu {
-      overflow: hidden;
       padding: var(--#{$cdk}size-4);
+      overflow: hidden;
 
       .category-title {
         padding-top: 0;
@@ -393,8 +396,8 @@
 
         .link-leveltwo {
           > .link {
-            padding: var(--#{$cdk}size-8) var(--#{$cdk}size-12);
             justify-content: start;
+            padding: var(--#{$cdk}size-8) var(--#{$cdk}size-12);
           }
         }
       }

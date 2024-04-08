@@ -105,8 +105,8 @@ body.display-modal {
 }
 
 #main.helpOpen {
-  width: 70%;
   float: left;
+  width: 70%;
 
   @media (max-width: $screen-lg) {
     width: 100%;
