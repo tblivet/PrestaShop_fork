@@ -19,12 +19,12 @@
   &.with-tabs {
     border-bottom: none;
   }
-  
+
   // Edit structure
   > .wrapper {
     display: grid;
-    gap: var(--#{$cdk}size-8);
     grid-template-columns: auto auto;
+    gap: var(--#{$cdk}size-8);
     padding: var(--#{$cdk}size-16);
 
     &::before,
@@ -42,8 +42,8 @@
     .page-title,
     .page-subtitle {
       grid-column: 1;
-      margin: 0;
       padding: 0;
+      margin: 0;
     }
 
     .btn-toolbar {
@@ -51,12 +51,12 @@
     }
 
     .toolbarBox {
-      grid-column: 2;
-      grid-row: 1 / span 2;
-      justify-content: end;
       display: flex;
       flex-wrap: wrap;
+      grid-row: 1 / span 2;
+      grid-column: 2;
       gap: var(--#{$cdk}size-8);
+      justify-content: end;
     }
 
     .dropdown-toolbar {
@@ -73,8 +73,8 @@
 
     .nav-pills {
       display: flex !important;
-      gap: var(--#{$cdk}size-8);
       flex-wrap: wrap;
+      gap: var(--#{$cdk}size-8);
       justify-content: flex-end;
       padding: 0;
 
@@ -106,7 +106,7 @@
           &.btn-primary {
             background-color: transparent !important;
           }
-          
+
           &.switch_demo {
             width: auto;
           }
@@ -217,7 +217,7 @@
         line-height: 1;
         color: var(--#{$cdk}primary-700);
         vertical-align: middle;
-        
+
         &:hover {
           color: var(--#{$cdk}primary-800);
         }
