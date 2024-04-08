@@ -1,4 +1,3 @@
-// @TODO
 :root {
   --#{$cdk}header-text-color: var(--#{$cdk}white);
   --#{$cdk}header-text-color-hover: var(--#{$cdk}ocean-blue-500);
@@ -17,8 +16,8 @@
   position: fixed;
   z-index: 503;
   display: flex;
-  align-items: stretch;
   gap: var(--#{$cdk}size-4);
+  align-items: stretch;
   width: 100%;
   height: $size-header-height;
   padding: 0 var(--#{$cdk}size-16);
@@ -45,24 +44,24 @@
   }
 
   #shop_version {
-    color: var(--#{$cdk}header-version-color);
-    font-size: var(--#{$cdk}size-12);
     align-self: center;
-    margin: 0 var(--#{$cdk}size-4) 0 var(--#{$cdk}size-12);
     padding: var(--#{$cdk}size-4) var(--#{$cdk}size-8) var(--#{$cdk}size-2) var(--#{$cdk}size-8);
+    margin: 0 var(--#{$cdk}size-4) 0 var(--#{$cdk}size-12);
+    font-size: var(--#{$cdk}size-12);
+    color: var(--#{$cdk}header-version-color);
     background-color: var(--#{$cdk}header-version-bg);
     border-radius: var(--#{$cdk}size-12);
-    
+
     // hide if viewport <= tablet portrait size
     @media (max-width: breakpoint-max("md")) {
       display: none;
     }
   }
 
-  > .component {    
-    color: var(--#{$cdk}header-text-color);
+  > .component {
     margin: 0;
     font-size: var(--#{$cdk}size-14);
+    color: var(--#{$cdk}header-text-color);
 
     .dropdown-toggle {
       color: var(--#{$cdk}header-text-color);
@@ -75,11 +74,11 @@
       }
 
       .material-icons {
-        color: currentColor;
         font-size: var(--#{$cdk}size-24);
+        color: currentcolor;
       }
     }
-    
+
     // hide on very small screens
     &.hide-mobile-sm {
       @media (max-width: breakpoint-max("sm")) {
@@ -88,23 +87,17 @@
     }	// disable bootstrap styling
   }
 
-  .header-list {
-    margin: 0;
-    padding: 0;
-    font-size: var(--#{$cdk}size-14);
-  }
-
   .shop-state {
     display: inline-flex;
-    align-items: center;
     gap: var(--#{$cdk}size-8);
+    align-items: center;
     height: $navbar-height;
     padding: var(--#{$cdk}size-8);
     margin: 0;
     font-size: var(--#{$cdk}size-14);
     line-height: 1;
     color: var(--#{$cdk}header-text-color);
-    
+
     &:hover,
     &:active,
     &:focus {
@@ -152,6 +145,10 @@
   }
 
   .header-list {
+    padding: 0;
+    margin: 0;
+    font-size: var(--#{$cdk}size-14);
+
     li {
       display: block;
       list-style: none;
@@ -205,8 +202,8 @@
 
           &-profile {
             display: block;
-            clear: both;
             padding: var(--#{$cdk}size-16) 0 0 0;
+            clear: both;
             text-align: center;
           }
         }
@@ -220,15 +217,15 @@
         padding: var(--#{$cdk}size-8);
         line-height: 1;
       }
-      
+
       .dropdown-menu {
         min-width: var(--#{$cdk}size-256);
         padding: var(--#{$cdk}size-16);
 
         .divider {
           width: 100%;
-          clear: both;
           margin: var(--#{$cdk}size-16) 0;
+          clear: both;
           border-top: 1px solid var(--#{$cdk}primary-400);
         }
 
@@ -236,8 +233,8 @@
           margin: 0;
 
           &.username {
-            max-width: calc(100% - var(--#{$cdk}size-48));
             display: inline-block;
+            max-width: calc(100% - var(--#{$cdk}size-48));
             padding: var(--#{$cdk}size-4) 0 var(--#{$cdk}size-4) var(--#{$cdk}size-16);
             margin: 0;
             font-weight: 700;
@@ -249,7 +246,7 @@
             &[target="_blank"]::after {
               position: relative;
               font-family: "Material Icons", sans-serif;
-              color: currentColor;
+              color: currentcolor;
               content: "\e89e";
             }
 
@@ -260,12 +257,12 @@
 
               &:hover {
                 i {
-                  color: currentColor;
+                  color: currentcolor;
                 }
               }
 
               i {
-                color: currentColor;
+                color: currentcolor;
               }
             }
           }
@@ -300,9 +297,9 @@
 
   #bo_query {
     padding-inline: var(--#{$cdk}size-8) var(--#{$cdk}size-32);
+    color: var(--#{$cdk}search-color);
     border: 1px solid var(--#{$cdk}search-border-color);
     border-left: none;
-    color: var(--#{$cdk}search-color);
 
     &::placeholder {
       color: var(--#{$cdk}primary-600);
@@ -317,15 +314,15 @@
       display: flex;
 
       .input-group-btn {
-        border: none;
         width: auto;
+        border: none;
 
         .btn-default {
+          align-items: center;
+          justify-content: center;
+          padding: 0 var(--#{$cdk}size-8) 0 var(--#{$cdk}size-8);
           border: 1px solid var(--#{$cdk}search-border-color);
           border-right: none;
-          padding: 0 var(--#{$cdk}size-8) 0 var(--#{$cdk}size-8);
-          justify-content: center;
-          align-items: center;
 
           &:active,
           &:hover,
@@ -419,8 +416,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: var(--#{$cdk}size-18);
     min-width: var(--#{$cdk}size-18);
+    height: var(--#{$cdk}size-18);
     padding: 0 var(--#{$cdk}size-2);
     line-height: 1;
     color: var(--#{$cdk}white);
@@ -465,8 +462,8 @@
           text-align: center;
 
           .nav-link {
-            white-space: nowrap;
             margin: 0;
+            white-space: nowrap;
           }
         }
       }
@@ -501,8 +498,8 @@
 
         .notif {
           display: flex;
-          align-items: center;
           gap: var(--#{$cdk}size-4);
+          align-items: center;
           width: 100%;
           padding: var(--#{$cdk}size-8);
 
