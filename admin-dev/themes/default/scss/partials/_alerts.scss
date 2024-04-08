@@ -3,7 +3,7 @@
   p {
     color: var(--#{$cdk}primary-800);
   }
-  
+
   a {
     text-decoration: underline;
   }
@@ -23,7 +23,6 @@
   border: solid 1px $border-color;
 
   &::before {
-    content: "#{$icon}";
     position: absolute;
     top: 13px;
     display: block;
@@ -31,6 +30,7 @@
     height: 25px;
     font-size: 24px;
     color: $border-color;
+    content: "#{$icon}";
     @include left(15px);
     @extend .material-icons;
   }

@@ -195,7 +195,7 @@
     border-right-color: var(--#{$cdk}white);
   }
   @include right(0);
-  @include margin-right(calc(-1 *var(--#{$cdk}size-6)));
+  @include margin-right(calc(-1 * var(--#{$cdk}size-6)));
 }
 //Timeline
 $time-icon-size: 40px;

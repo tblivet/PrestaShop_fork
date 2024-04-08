@@ -134,13 +134,15 @@
   .open > &.dropdown-toggle {
     color: $color;
     background-color: lighten($background, 10%);
-        border-color: lighten($border, 10%);
+    border-color: lighten($border, 10%);
   }
+
   &:active,
   &.active,
   .open > &.dropdown-toggle {
     background-image: none;
   }
+
   &.disabled,
   &[disabled],
   fieldset[disabled] & {
@@ -150,7 +152,7 @@
     &:active,
     &.active {
       background-color: $background;
-          border-color: $border;
+      border-color: $border;
     }
   }
 
@@ -178,15 +180,16 @@
   &.radio-inline label,
   &.checkbox-inline label  {
     color: $text-color;
-    
+
     label {
       color: $text-color;
     }
   }
   // Set the border and box shadow on specific inputs to match
   .form-control {
-    border-color: $border-color;
     background-color: $background-color;
+    border-color: $border-color;
+
     &:focus {
       border-color: darken($border-color, 10%);
     }
