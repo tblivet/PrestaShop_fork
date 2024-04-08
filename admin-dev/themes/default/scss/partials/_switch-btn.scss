@@ -44,7 +44,7 @@
       width: 18px;
       height: 18px;
       content: "";
-      background:  var(--#{$cdk}white);
+      background: var(--#{$cdk}white);
       @include border-radius(50%);
       @include transition(0.25s ease-out);
     }

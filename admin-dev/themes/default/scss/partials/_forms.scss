@@ -43,25 +43,25 @@ textarea {
 
 .form-control[disabled],
 .form-control[readonly],
-input[disabled][type=password],
-input[disabled][type=search],
-input[disabled][type=text],
-input[readonly][type=password],
-input[readonly][type=search],
-input[readonly][type=text],
+input[disabled][type="password"],
+input[disabled][type="search"],
+input[disabled][type="text"],
+input[readonly][type="password"],
+input[readonly][type="search"],
+input[readonly][type="text"],
 select[disabled],
 select[readonly],
 textarea[disabled],
 textarea[readonly],
 fieldset[disabled] .form-control,
-fieldset[disabled] input[type=password],
-fieldset[disabled] input[type=search],
-fieldset[disabled] input[type=text],
+fieldset[disabled] input[type="password"],
+fieldset[disabled] input[type="search"],
+fieldset[disabled] input[type="text"],
 fieldset[disabled] select,
 fieldset[disabled] textarea {
   &:hover {
-    border-color: var(--#{$cdk}primary-300);
     background-color: var(--#{$cdk}primary-300);
+    border-color: var(--#{$cdk}primary-300);
   }
 }
 
@@ -308,9 +308,11 @@ input[type="tel"] {
 .has-success {
   @include form-control-validation($state-success-text, $state-success-text, $state-success-bg);
 }
+
 .has-warning {
   @include form-control-validation($state-warning-text, $state-warning-text, $state-warning-bg);
 }
+
 .has-error {
   @include form-control-validation($state-danger-text, $state-danger-text, $state-danger-bg);
 }
