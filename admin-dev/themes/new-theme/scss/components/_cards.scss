@@ -9,7 +9,6 @@
   background-color: $card-bg;
   border: $card-border-width solid $card-border-color;
   @include border-radius($card-border-radius);
-  box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
 }
 
 .card-block {
@@ -71,9 +70,8 @@
 .card-header {
   padding: $card-spacer-y $card-spacer-x;
   font-weight: 600;
-  line-height: 1.5rem; // same as material icons
+  line-height: 1.5rem;
   background-color: $card-cap-bg;
-  border-bottom: $card-border-width solid $card-border-color;
 
   .card-header-title {
     font-weight: 600;
@@ -85,9 +83,9 @@
   }
 
   .material-icons {
-    margin-right: 5px;
-    color: $medium-gray;
-    vertical-align: text-bottom;
+    margin-right: var(--#{$cdk}size-6);
+    color: var(--#{$cdk}primary-500);
+    vertical-align: top;
   }
 
   h3 {
