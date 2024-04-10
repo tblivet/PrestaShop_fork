@@ -105,7 +105,7 @@
 // Main Layout
 body {
   direction: ltr;
-  background: $background-grey;
+  background: var(--#{$cdk}primary-200);
 }
 
 // To put into the PrestaKit
