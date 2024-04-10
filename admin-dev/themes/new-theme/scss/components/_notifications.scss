@@ -115,7 +115,7 @@
           text-align: center;
 
           &::after {
-            font-family: "Material Icons", Arial, Helvetica, sans-serif;
+            font-family: var(--#{$cdk}font-family-material-icons);
             font-size: 5.625rem;
             color: $gray-light;
             content: "\E7F5";
@@ -193,7 +193,7 @@
   .mobile & {
     .nav-link::before {
       display: none;
-      font-family: "Material Icons", Arial, Helvetica, sans-serif;
+      font-family: var(--#{$cdk}font-family-material-icons);
       font-size: 30px;
       color: $gray-dark;
     }

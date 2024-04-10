@@ -750,7 +750,7 @@ $header-text-color: #4e6167 !default;
         &[target="_blank"]::after {
           position: relative;
           top: 2px;
-          font-family: "Material Icons", sans-serif;
+          font-family: var(--#{$cdk}font-family-material-icons);
           color: #bbcdd2;
           content: "\e89e";
           opacity: 0.7;

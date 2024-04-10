@@ -245,7 +245,7 @@
           a {
             &[target="_blank"]::after {
               position: relative;
-              font-family: "Material Icons", sans-serif;
+              font-family: var(--#{$cdk}font-family-material-icons);
               color: currentcolor;
               content: "\e89e";
             }
@@ -484,7 +484,7 @@
             text-align: center;
 
             &::before {
-              font-family: "Material Icons", sans-serif;
+              font-family: var(--#{$cdk}font-family-material-icons);
               font-size: var(--#{$cdk}size-56);
               color: var(--#{$cdk}primary-400);
               content: "\E7F5";
