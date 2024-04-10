@@ -34,7 +34,7 @@
     }
 
     .product th {
-      background-color: var(--#{$cdk}primary-200);
+      background-color: #f8f8f8;
     }
 
     $order-details-text-padding-left: 34px;
@@ -150,7 +150,7 @@
 
   .employee-icon {
     color: var(--#{$cdk}primary-800);
-
+    
     &::before {
       font-family: var(--#{$cdk}font-family-material-icons);
       content: "account_circle";
@@ -215,7 +215,7 @@
 
         .message {
           padding: 0.7rem;
-          box-shadow: var(--#{$cdk}box-shadow-md);
+          box-shadow: 0 6px 12px 0 $background-grey;
         }
       }
 

@@ -28,9 +28,8 @@
     position: absolute;
     top: 1px;
     right: 0;
-    bottom: 1px;
     flex-direction: column;
-    line-height: 1;
+    line-height: 17px;
     cursor: pointer;
   }
 
@@ -46,29 +45,19 @@
     }
   }
 
-  .ps-number-up,
-  .ps-number-down {
-    height: 50%;
-  }
-
   .ps-number-up::before {
     position: relative;
-    display: block;
-    height: 100%;
     font-family: var(--#{$cdk}font-family-material-icons);
-    font-size: var(--#{$cdk}size-20);
-    line-height: 100%;
+    font-size: 20px;
     color: $gray-dark;
     content: "\E5C7";
   }
 
   .ps-number-down::before {
     position: relative;
-    display: block;
-    height: 100%;
+    bottom: 6px;
     font-family: var(--#{$cdk}font-family-material-icons);
-    font-size: var(--#{$cdk}size-20);
-    line-height: 100%;
+    font-size: 20px;
     color: $gray-dark;
     content: "\E5C5";
   }
