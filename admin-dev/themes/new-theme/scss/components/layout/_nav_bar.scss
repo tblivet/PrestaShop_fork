@@ -101,7 +101,7 @@
       top: 5rem;
       left: 75%;
       display: none;
-      font-family: "Material Icons", sans-serif;
+      font-family: var(--#{$cdk}font-family-material-icons);
       font-size: 1.5rem;
       color: $white;
       pointer-events: none;
@@ -210,7 +210,7 @@
 
       &::after {
         margin-left: 0.625rem;
-        font-family: "Material Icons", Arial, Helvetica, sans-serif;
+        font-family: var(--#{$cdk}font-family-material-icons);
         font-size: 1.25rem;
         line-height: 1.375rem;
         vertical-align: bottom;

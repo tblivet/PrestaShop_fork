@@ -2156,7 +2156,7 @@ $product-page-padding-bottom: 80px !default;
 
       &::after {
         float: right;
-        font-family: "Material Icons", Arial, Helvetica, sans-serif;
+        font-family: var(--#{$cdk}font-family-material-icons);
         content: "\E316";
       }
 
@@ -2209,7 +2209,7 @@ $product-page-padding-bottom: 80px !default;
 
               .pretty-checkbox {
                 &.not-color::before {
-                  font-family: "Material Icons", Arial, Helvetica, sans-serif;
+                  font-family: var(--#{$cdk}font-family-material-icons);
                   content: "\E5CA";
                   background: $primary;
                 }
