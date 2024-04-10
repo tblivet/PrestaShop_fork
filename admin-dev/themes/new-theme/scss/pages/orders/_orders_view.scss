@@ -78,7 +78,9 @@
     }
 
     .tab-content {
-      border: 1px solid var(--#{$cdk}primary-400);
+      border: 1px solid #dbe6e9;
+      @include border-radius(5px);
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.06);
     }
   }
 
@@ -187,7 +189,7 @@
       margin: 0.1rem 0;
       font-size: 0.875rem;
       font-weight: 600;
-      color: var(--#{$cdk}primary-600);
+      color: #6c868e;
       white-space: normal;
       background: #fff;
       @include border-radius(1000px);
@@ -377,22 +379,6 @@
   }
 }
 
-@include media-breakpoint-down(lg) {
-  #order-view-page {
-    .right-column .tab-content,
-    #orderProductsPanel {
-      table {
-        display: block;
-        overflow: auto;
-
-        &.table-empty {
-          display: table;
-        }
-      }
-    }
-  }
-}
-
 @include media-breakpoint-down(sm) {
   .adminorders {
     .header-toolbar {
@@ -486,7 +472,7 @@
     .order-actions {
       justify-content: center;
 
-      #update_order_status_action_form {
+      #update_order_status_action_form {        
         .input-group {
           gap: var(--#{$cdk}size-8);
         }
