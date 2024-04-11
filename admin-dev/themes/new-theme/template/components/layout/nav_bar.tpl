@@ -30,7 +30,7 @@
 
   <div class="nav-bar-overflow">
     <div class="logo-container">
-      <div class="d-flex align-items-center">
+      <div class="logo-container__header">
         <a id="header_logo" class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
         <span id="shop_version" class="header-version">{$ps_version}</span>
       </div>
