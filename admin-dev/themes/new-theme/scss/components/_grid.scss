@@ -38,30 +38,21 @@ table.grid-ordering-column tr.position-row-while-drag {
   .position-drag-handle:hover,
   .btn,
   .btn::after,
-  .btn .material-icons,
-  a,
-  a::after {
-    // stylelint-disable-next-line
-    color: var(--#{$cdk}white) !important;
+  .btn .material-icons {
+    color: var(--#{$cdk}white);
   }
 }
 
 .js-drag-handle {
   cursor: move;
-
-  &:hover {
-    .material-icons {
-      color: var(--#{$cdk}ocean-blue-700);
-    }
-  }
 }
 
 .position-drag-handle {
-  color: var(--#{$cdk}ocean-blue-500);
+  color: var(--#{$cdk}primary-500);
   visibility: hidden;
 
   &:hover {
-    color: var(--#{$cdk}ocean-blue-700);
+    color: var(--#{$cdk}primary-800);
   }
 }
 
@@ -86,22 +77,12 @@ table.grid-ordering-column tr.position-row-while-drag {
     }
 
     &:hover {
-      color: var(--#{$cdk}primary-800);
-      text-decoration: none;
-
-      &::after {
-        color: currentcolor;
-      }
+      color: $primary;
     }
-  }
-
-  .btn-group-inline {
-    gap: var(--#{$cdk}size-4);
   }
 
   .btn.tooltip-link {
     display: flex;
-    flex-grow: 0;
     align-items: center;
   }
 }
@@ -139,7 +120,7 @@ table .column-filters {
 
             ~ .form-control {
               display: inline-block;
-              // stylelint-disable-next-line
+              /* stylelint-disable-next-line */
               width: calc(100% - 32px);
             }
           }
@@ -161,17 +142,17 @@ table .column-filters {
         }
 
         &.preview-open {
-          background-color: var(--#{$cdk}ocean-blue-50);
+          background-color: #e9f8fb;
         }
 
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: var(--#{$cdk}primary-200);
+          background: $gray-250;
 
           td {
-            color: var(--#{$cdk}white);
-            background: var(--#{$cdk}primary-800);
+            color: $white;
+            background: #67868e;
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -180,8 +161,7 @@ table .column-filters {
             i.material-icons,
             a,
             a::after {
-              // stylelint-disable-next-line
-              color: var(--#{$cdk}white) !important;
+              color: $white;
             }
           }
         }
@@ -200,8 +180,9 @@ table .column-filters {
 
             @at-root {
               #{$tr}:hover .draggable-column {
-                // stylelint-disable-next-line
-                color: var(--#{$cdk}ocean-blue-500) !important;
+                /* stylelint-disable declaration-no-important */
+                color: #15b7d7 !important;
+                /* stylelint-enable declaration-no-important */
               }
             }
           }
@@ -291,25 +272,6 @@ table .column-filters {
 
           &.date_time-type {
             word-break: normal;
-          }
-
-          &.identifier-type {
-            line-height: var(--#{$cdk}size-24);
-            vertical-align: middle;
-
-            .preview-toggle {
-              display: inline-block;
-              line-height: 1;
-              vertical-align: middle;
-
-              i {
-                vertical-align: middle;
-              }
-            }
-          }
-
-          &.shop_list-type {
-            min-width: var(--#{$cdk}size-144);
           }
         }
       }

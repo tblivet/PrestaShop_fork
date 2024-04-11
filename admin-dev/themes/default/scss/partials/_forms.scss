@@ -125,15 +125,15 @@ input[type="color"]:hover,
       display: inline-block;
       float: none;
       text-decoration: none;
+
+      i {
+        font-size: var(--#{$cdk}size-14);
+      }
     }
 
     > a:first-child {
       @include margin-right(-3px);
     }
-
-    i {
-      font-size: var(--#{$cdk}size-14);
-    }//form file upload
   }
 }
 
