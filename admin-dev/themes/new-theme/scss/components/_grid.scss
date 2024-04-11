@@ -25,21 +25,13 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  color: $white;
+  color: var(--#{$cdk}white);
   background: none;
-  box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: var(--#{$cdk}box-shadow-md);
   transform: translate(5px, 10px);
 
   td {
-    background-color: $medium-gray;
-  }
-
-  td:first-child {
-    @include border-left-radius(3px);
-  }
-
-  td:last-child {
-    @include border-right-radius(3px);
+    background-color: var(--#{$cdk}primary-800);
   }
 
   .position-drag-handle,
@@ -47,7 +39,7 @@ table.grid-ordering-column tr.position-row-while-drag {
   .btn,
   .btn::after,
   .btn .material-icons {
-    color: $white;
+    color: var(--#{$cdk}white);
   }
 }
 
@@ -56,11 +48,11 @@ table.grid-ordering-column tr.position-row-while-drag {
 }
 
 .position-drag-handle {
-  color: $gray-medium;
+  color: var(--#{$cdk}primary-500);
   visibility: hidden;
 
   &:hover {
-    color: $primary;
+    color: var(--#{$cdk}primary-800);
   }
 }
 
@@ -78,7 +70,7 @@ table.grid-ordering-column tr.position-row-while-drag {
   a.dropdown-toggle,
   button.dropdown-toggle,
   .dropdown-toggle {
-    color: $gray-medium;
+    color: var(--#{$cdk}primary-500);
 
     &::after {
       content: "more_vert";
@@ -141,7 +133,7 @@ table .column-filters {
         $tr: &;
 
         &:hover {
-          background: #fafbfc;
+          background: var(--#{$cdk}ocean-blue-50);
         }
 
         &.preview-row,
