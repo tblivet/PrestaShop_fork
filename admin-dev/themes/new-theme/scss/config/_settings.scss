@@ -55,3 +55,23 @@ $sidebar-primary-link-color: $white;
 $sidebar-secondary-link-color: #b6c3c7;
 $sidebar-title-color: #98aab0;
 $sidebar-logout-color: #ff7a7a;
+
+// Menu
+$gray-dark-menu: map-get($map: $cdk-common, $key: "white");
+$sidebar-menu-bg: map-get($map: $cdk-common, $key: "white");
+$widthSidebarNav: 210px;
+$paddingLeftPageClosed: 4.0625rem;
+$paddingLeftMobile: 0.625rem;
+$widthSidebarSubmenu: 200px;
+$menu-item-size: 34px;
+$min-height: 950px;
+$gray-dark-link: map-get($map: $cdk-primary, $key: "primary-800");
+$gray-dark-link-hover: map-get($map: $cdk-primary, $key: "primary-700");
+$size-navbar-width: map-get($map: $cdk-size, $key: "size-208");
+$size-navbar-width-mini: map-get($map: $cdk-size, $key: "size-52");
+$size-header-height: map-get($map: $cdk-size, $key: "size-52");
+$header-mobile-padding-y: map-get($map: $cdk-size, $key: "size-10");
+$medium-gray: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-medium: map-get($map: $cdk-primary, $key: "primary-400");
+$gray-dark-active-menu:  map-get($map: $cdk-primary, $key: "primary-200");
+$gray-dark-title: map-get($map: $cdk-blue, $key: "blue-500");
