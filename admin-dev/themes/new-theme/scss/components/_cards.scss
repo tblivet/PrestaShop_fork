@@ -72,6 +72,10 @@
   font-weight: 600;
   line-height: 1.5rem;
   background-color: $card-cap-bg;
+  
+  .badge {
+    vertical-align: middle;
+  }
 
   .card-header-title {
     font-weight: 600;
