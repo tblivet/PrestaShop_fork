@@ -142,7 +142,7 @@ table .column-filters {
         }
 
         &.preview-open {
-          background-color: #e9f8fb;
+          background-color: var(--#{$cdk}ocean-blue-50);
         }
 
         // styling for row that is being dragged
@@ -272,6 +272,21 @@ table .column-filters {
 
           &.date_time-type {
             word-break: normal;
+          }
+
+          &.identifier-type {
+            line-height: var(--#{$cdk}size-24);
+            vertical-align: middle;
+
+            .preview-toggle {
+              display: inline-block;
+              vertical-align: middle;
+              line-height: 1;
+
+              i {
+                vertical-align: middle;
+              }
+            }
           }
         }
       }
