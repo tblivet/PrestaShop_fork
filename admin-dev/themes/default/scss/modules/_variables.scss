@@ -349,8 +349,6 @@ $medium-gray: map-get($map: $cdk-primary, $key: "primary-400");
 $gray-medium: map-get($map: $cdk-primary, $key: "primary-400");
 $gray-dark-active-menu:  map-get($map: $cdk-primary, $key: "primary-200");
 $gray-dark-title: map-get($map: $cdk-blue, $key: "blue-500");
-$gray-dark-secondary-link: #b6c3c7;
-$gray-dark-logout: #ff7a7a;
 
 // use rems to ensure homogeneity on all zoom scales
 $grid-breakpoints: (xs: 0, sm: 34em, md: 48em, lg: 64em, xl: 81.25em);
