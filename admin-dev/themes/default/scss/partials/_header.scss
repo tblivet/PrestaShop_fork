@@ -129,6 +129,16 @@
     font-weight: 500;
     line-height: 1.5;
     color: var(--#{$cdk}header-text-color);
+    
+    &:hover {
+      color: var(--#{$cdk}ocean-blue-500);
+      text-decoration: none;
+    }
+
+    &:focus,
+    &:active {
+      text-decoration: none;
+    }
 
     > .material-icons {
       font-size: var(--#{$cdk}size-20);

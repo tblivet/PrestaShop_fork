@@ -153,8 +153,8 @@ span.twitter-typeahead {
 // setting dropdown button
 .dropdown-toggle.tool-button {
   &::after {
-    font-size: 1.375rem;
-    color: $medium-gray;
+    font-size: var(--#{$cdk}size-24);
+    color: var(--#{$cdk}primary-500);
     content: "settings";
   }
 }
