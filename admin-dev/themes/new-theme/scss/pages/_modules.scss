@@ -879,7 +879,7 @@ form#importDropzone {
     }
 
     .dropdown-toggle.dropdown-toggle-dots:hover::after {
-      color: #25b9d7;
+      color: var(--#{$cdk}ocean-blue-500);
     }
   }
 
