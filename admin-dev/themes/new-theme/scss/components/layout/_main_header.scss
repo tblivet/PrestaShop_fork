@@ -112,6 +112,7 @@ $header-text-color: var(--#{$cdk}white) !default;
 
   .ajax-spinner {
     position: absolute;
+    z-index: 9;
     top: 0;
     left: 0;
     z-index: 9;
