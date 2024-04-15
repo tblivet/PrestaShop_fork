@@ -22,15 +22,16 @@ $info-block-background: #f3f3f3;
 $widget-border-color: #e7e7e7;
 $alert-warning-bg: #fffbd3;
 
-$light-blue: #e9f8fb;
-$light-gray: #fafbfc;
+$light-blue: var(--#{$cdk}ocean-blue-50);
+$light-gray: var(--#{$cdk}primary-100);
 
 // Multishop
-$multishop-header-default-color: #383c43;
-$multishop-header-default-background: #ebebeb;
-$multishop-header-allshop-color: $white;
-$multishop-header-allshop-background: #25b9d7;
-$multishop-selector-selected-background: #e2f5f9;
+$multishop-header-default-color: var(--#{$cdk}primary-800);
+$multishop-header-default-color-hover: var(--#{$cdk}primary-700);
+$multishop-header-default-background: var(--#{$cdk}primary-300);
+$multishop-header-allshop-color: var(--#{$cdk}white);
+$multishop-header-allshop-background: var(--#{$cdk}ocean-blue-500);
+$multishop-selector-selected-background: var(--#{$cdk}primary-400);
 
 // Sizes
 $size-navbar-width: 13.13rem;
