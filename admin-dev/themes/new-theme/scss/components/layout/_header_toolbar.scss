@@ -21,17 +21,16 @@
     .title-row {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--#{$cdk}size-16);
       align-items: center;
       justify-content: space-between;
+      gap: var(--#{$cdk}size-16);
 
       &::after {
         content: none;
       }
 
       @include media-breakpoint-down(sm) {
-        padding-block: var(--#{$cdk}size-12);
-        margin-block: 0;
+        margin-block: var(--#{$cdk}size-12);
       }
     }
   }
@@ -130,13 +129,6 @@
 
         &:empty {
           border: none;
-        }
-
-        &:not(:empty) {
-          min-width: var(--#{$cdk}size-18);
-          height: var(--#{$cdk}size-18);
-          padding-inline: var(--#{$cdk}size-4);
-          line-height: 1;
         }
       }
     }

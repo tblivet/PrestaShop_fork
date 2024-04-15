@@ -39,19 +39,10 @@ $component-name: header-multishop;
     right: 1rem;
     z-index: 1002;
     display: flex;
-    gap: var(--#{$cdk}size-16);
+    gap: var(--#{$cdk}size-8);
     transform: translateY(-50%);
 
-    svg {
-      path {
-        // stylelint-disable-next-line
-        -webkit-mask: none !important;
-        // stylelint-disable-next-line
-        mask: none !important;
-      }
-    }
-
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(sm) {
       a {
         font-size: 0;
 
@@ -96,11 +87,11 @@ $component-name: header-multishop;
     gap: var(--#{$cdk}size-4);
     align-items: center;
     justify-content: center;
-    font-size: var(--#{$cdk}size-12);
+    font-size: var(--#{$cdk}size-14);
     line-height: 1;
     color: var(--#{$cdk}white);
     transition: var(--#{$cdk}default-transition);
-
+    
     i {
       font-size: var(--#{$cdk}size-20);
       color: currentcolor;
@@ -173,8 +164,7 @@ $component-name: header-multishop;
   .product-shops-action {
     svg {
       width: var(--#{$cdk}size-18);
-      height: var(--#{$cdk}size-20);
-      margin-top: -3px;
+      margin-left: var(--#{$cdk}size-10);
     }
   }
 }
