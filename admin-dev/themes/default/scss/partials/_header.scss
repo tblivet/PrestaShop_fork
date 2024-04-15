@@ -25,6 +25,10 @@
   color: var(--#{$cdk}header-text-color);
   background: var(--#{$cdk}header-bg);
 
+  .mobile & {
+    padding: 0 var(--cdk-size-8);
+  }
+  
   .material-icons {
     position: relative;
     vertical-align: middle;

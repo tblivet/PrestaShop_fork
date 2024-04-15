@@ -1,0 +1,15 @@
+.tooltip {
+  &-inner {
+    color: var(--#{$cdk}white);
+    
+    > p {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    p {
+      color: var(--#{$cdk}white);
+    }
+  }
+}
