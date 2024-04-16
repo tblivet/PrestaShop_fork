@@ -150,7 +150,8 @@
   }
 
   #header_shopname,
-  #debug-mode {
+  #debug-mode,
+  #maintenance-mode {
     @include media-breakpoint-down(lg) {
       > span {
         display: none;
