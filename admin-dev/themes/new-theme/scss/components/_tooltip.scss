@@ -11,5 +11,9 @@
     p {
       color: var(--#{$cdk}white);
     }
+
+    .text-nowrap {
+      white-space: normal !important;
+    }
   }
 }
