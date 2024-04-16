@@ -28,6 +28,13 @@
       }
     }
   }
+  @at-root .multishop-enabled.mobile & {
+    &.-notoolbar {
+      .header-toolbar {
+        margin: 0;
+      }
+    }
+  }
 }
 
 #main-div {
