@@ -77,13 +77,23 @@ table.grid-ordering-column tr.position-row-while-drag {
     }
 
     &:hover {
-      color: $primary;
+      color: var(--#{$cdk}primary-800);
+      text-decoration: none;
+
+      &::after {
+        color: currentcolor;
+      }
     }
+  }
+
+  .btn-group-inline {
+    gap: var(--#{$cdk}size-4);
   }
 
   .btn.tooltip-link {
     display: flex;
     align-items: center;
+    flex-grow: 0;
   }
 }
 
@@ -148,11 +158,11 @@ table .column-filters {
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: $gray-250;
+          background: var(--#{$cdk}primary-200);
 
           td {
-            color: $white;
-            background: #67868e;
+            color: var(--#{$cdk}white);
+            background: var(--#{$cdk}primary-800);
             transform: translate(5px, 10px);
 
             // make all icons and links white
@@ -161,7 +171,13 @@ table .column-filters {
             i.material-icons,
             a,
             a::after {
-              color: $white;
+              color: var(--#{$cdk}white);
+            }
+            
+            &.column-name {
+              a {
+                color: var(--#{$cdk}white) !important;
+              }
             }
           }
         }
@@ -181,7 +197,7 @@ table .column-filters {
             @at-root {
               #{$tr}:hover .draggable-column {
                 /* stylelint-disable declaration-no-important */
-                color: #15b7d7 !important;
+                color: var(--#{$cdk}ocean-blue-500) !important;
                 /* stylelint-enable declaration-no-important */
               }
             }
