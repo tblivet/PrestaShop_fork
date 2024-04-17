@@ -10,7 +10,7 @@ $component-name: multishop-modal;
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: calc(100vh - var(--#{$cdk}header-height) - 36px);
+  height: calc(100vh - var(--#{$cdk}header-height) - var(--#{$cdk}multishop-bar-height));
   pointer-events: all;
   background: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.8);
   opacity: 1;
