@@ -30,7 +30,8 @@
       }
 
       @include media-breakpoint-down(sm) {
-        margin-block: var(--#{$cdk}size-12);
+        padding-block: var(--#{$cdk}size-12);
+        margin-block: 0;
       }
     }
   }
