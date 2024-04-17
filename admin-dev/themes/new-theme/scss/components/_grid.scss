@@ -38,21 +38,29 @@ table.grid-ordering-column tr.position-row-while-drag {
   .position-drag-handle:hover,
   .btn,
   .btn::after,
-  .btn .material-icons {
-    color: var(--#{$cdk}white);
+  .btn .material-icons,
+  a,
+  a::after {
+    color: var(--#{$cdk}white) !important;
   }
 }
 
 .js-drag-handle {
   cursor: move;
+
+  &:hover {
+    .material-icons {
+      color: var(--#{$cdk}ocean-blue-700);
+    }
+  }
 }
 
 .position-drag-handle {
-  color: var(--#{$cdk}primary-500);
+  color: var(--#{$cdk}ocean-blue-500);
   visibility: hidden;
 
   &:hover {
-    color: var(--#{$cdk}primary-800);
+    color: var(--#{$cdk}ocean-blue-700);
   }
 }
 
@@ -171,13 +179,7 @@ table .column-filters {
             i.material-icons,
             a,
             a::after {
-              color: var(--#{$cdk}white);
-            }
-            
-            &.column-name {
-              a {
-                color: var(--#{$cdk}white) !important;
-              }
+              color: var(--#{$cdk}white) !important;
             }
           }
         }
@@ -303,6 +305,10 @@ table .column-filters {
                 vertical-align: middle;
               }
             }
+          }
+
+          &.shop_list-type {
+            min-width: var(--#{$cdk}size-144);
           }
         }
       }
