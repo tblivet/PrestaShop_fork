@@ -337,7 +337,8 @@
 .product-page {
   .dropzone-window {
     width: 45%;
-    background-color: darken(#ffffff, 2%);
+    flex-shrink: 0;
+    background-color: var(--#{$cdk}primary-200);
     align-self: stretch;
     padding: 1rem;
     min-width: 20rem;
@@ -435,7 +436,7 @@
       }
     }
 
-    @include media-breakpoint-down(xs) {
+    @include media-breakpoint-down(sm) {
       width: 100%;
       min-width: 100%;
     }
