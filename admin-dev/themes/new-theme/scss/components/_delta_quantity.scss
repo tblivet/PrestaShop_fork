@@ -14,7 +14,7 @@ $component-name: delta-quantity;
     }
 
     .quantity-update {
-      color: $brand-primary;
+      color: var(--#{$cdk}ocean-blue-500);
       visibility: hidden;
 
       .material-icons {
