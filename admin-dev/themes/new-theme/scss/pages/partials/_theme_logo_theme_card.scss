@@ -149,6 +149,6 @@
 .theme-card:hover .actions-container {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--#{$cdk}size-8);
   justify-content: center;
+  gap: var(--#{$cdk}size-8);
 }

@@ -131,6 +131,13 @@
         &:empty {
           border: none;
         }
+
+        &:not(:empty) {
+          padding-inline: var(--#{$cdk}size-4);
+          line-height: 1;
+          height: var(--#{$cdk}size-18);
+          min-width: var(--#{$cdk}size-18);
+        }
       }
     }
   }
