@@ -3,6 +3,7 @@
   gap: var(--#{$cdk}size-4);
   align-items: center;
   white-space: normal;
+  justify-content: center;
 
   i {
     &.material-icons {
@@ -51,6 +52,7 @@
   // Group
   &-group {
     > .btn {
+      display: block;
       height: 100%;
     }
 
