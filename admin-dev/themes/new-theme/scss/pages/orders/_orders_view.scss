@@ -486,7 +486,7 @@
     .order-actions {
       justify-content: center;
 
-      #update_order_status_action_form {        
+      #update_order_status_action_form {
         .input-group {
           gap: var(--#{$cdk}size-8);
         }

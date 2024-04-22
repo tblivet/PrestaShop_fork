@@ -57,8 +57,8 @@
   }
 
   &.mobile-nav {
-    width: 70%;
     z-index: 2000;
+    width: 70%;
     margin-top: 0;
     margin-left: -100%;
 
@@ -123,8 +123,8 @@
         display: flex;
         gap: var(--#{$cdk}size-16);
         align-items: center;
-        color: var(--#{$cdk}primary-800);
         padding: 0;
+        color: var(--#{$cdk}primary-800);
       }
 
       img {
@@ -377,6 +377,7 @@
 
   .nav-bar {
     width: $size-navbar-width-mini;
+    // stylelint-disable-next-line
     overflow: visible !important;
 
     &-overflow {
@@ -430,6 +431,7 @@
       #subtab-ShopParameters.ul-open,
       #subtab-AdminAdvancedParameters.ul-open {
         ul.submenu {
+          // stylelint-disable-next-line
           display: flex !important;
           flex-direction: column-reverse;
           margin-top: var(--#{$cdk}size-40);
