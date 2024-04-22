@@ -150,7 +150,7 @@
 
   .employee-icon {
     color: var(--#{$cdk}primary-800);
-    
+
     &::before {
       font-family: var(--#{$cdk}font-family-material-icons);
       content: "account_circle";

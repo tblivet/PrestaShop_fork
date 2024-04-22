@@ -44,6 +44,9 @@ $component-name: header-multishop;
 
     svg {
       path {
+        // stylelint-disable-next-line
+        -webkit-mask: none !important;
+        // stylelint-disable-next-line
         mask: none !important;
       }
     }
@@ -97,7 +100,7 @@ $component-name: header-multishop;
     line-height: 1;
     color: var(--#{$cdk}white);
     transition: var(--#{$cdk}default-transition);
-    
+
     i {
       font-size: var(--#{$cdk}size-20);
       color: currentcolor;

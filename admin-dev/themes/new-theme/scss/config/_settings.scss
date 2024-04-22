@@ -60,10 +60,10 @@ $sidebar-logout-color: #ff7a7a;
 // Menu
 $gray-dark-menu: map-get($map: $cdk-common, $key: "white");
 $sidebar-menu-bg: map-get($map: $cdk-common, $key: "white");
-$widthSidebarNav: 210px;
-$paddingLeftPageClosed: 4.0625rem;
-$paddingLeftMobile: 0.625rem;
-$widthSidebarSubmenu: 200px;
+$width-sidebar-nav: 210px;
+$padding-left-page-closed: 4.0625rem;
+$padding-left-mobile: 0.625rem;
+$width-sidebar-submenu: 200px;
 $menu-item-size: 34px;
 $min-height: 950px;
 $gray-dark-link: map-get($map: $cdk-primary, $key: "primary-800");
