@@ -25,9 +25,9 @@ $header-text-color: var(--#{$cdk}white) !default;
 
   .header-right {
     display: flex;
+    gap: var(--#{$cdk}size-4);
     align-items: center;
     height: 100%;
-    gap: var(--#{$cdk}size-4);
   }
 
   .material-icons {
@@ -112,9 +112,9 @@ $header-text-color: var(--#{$cdk}white) !default;
 
   .ajax-spinner {
     position: absolute;
-    z-index: 9;
     top: 0;
     left: 0;
+    z-index: 9;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -125,21 +125,19 @@ $header-text-color: var(--#{$cdk}white) !default;
 
     &::before {
       @extend .material-icons;
-      content: "\e86a";
       color: var(--#{$cdk}black);
+      content: "\e86a";
       animation: ajax-spin 2s infinite linear;
     }
   }
 
   @keyframes ajax-spin {
     0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg)
+      transform: rotate(0deg);
     }
 
     to {
-        -webkit-transform: rotate(359deg);
-        transform: rotate(359deg)
+      transform: rotate(360deg);
     }
   }
 
@@ -154,7 +152,7 @@ $header-text-color: var(--#{$cdk}white) !default;
     .quick-accesses {
       height: 100%;
     }
-    
+
     #quick_select {
       height: 100%;
       padding: var(--#{$cdk}size-4) var(--#{$cdk}size-8);
@@ -193,7 +191,7 @@ $header-text-color: var(--#{$cdk}white) !default;
       .component-search-body {
         width: 100%;
       }
-      
+
       form {
         &.collapsed {
           width: 100%;
@@ -242,8 +240,8 @@ $header-text-color: var(--#{$cdk}white) !default;
         .input-group {
           // loupe icon
           &::before {
-            opacity: 1;
             pointer-events: initial;
+            opacity: 1;
           }
         }
 
@@ -268,7 +266,7 @@ $header-text-color: var(--#{$cdk}white) !default;
       font-size: var(--#{$cdk}size-14);
       border: 1px solid var(--#{$cdk}search-border-color);
       transition: padding-left var(--#{$cdk}default-transition-duration);
-      
+
       &::placeholder {
         font-size: var(--#{$cdk}size-12);
         color: var(--#{$cdk}primary-600);
@@ -279,17 +277,17 @@ $header-text-color: var(--#{$cdk}white) !default;
       // loupe icon (hidden by default)
       &::before {
         @extend .material-icons;
-        content: "\e8b6";
         position: absolute;
         top: 50%;
         left: var(--#{$cdk}size-8);
         z-index: 5;
         font-size: var(--#{$cdk}size-24);
-        opacity: 0;
-        pointer-events: none;
         color: var(--#{$cdk}primary-800);
-        transform: translateY(-50%);
+        pointer-events: none;
+        content: "\e8b6";
+        opacity: 0;
         transition: var(--#{$cdk}default-transition);
+        transform: translateY(-50%);
       }
 
       button:not(:first-of-type) {
@@ -412,8 +410,8 @@ $header-text-color: var(--#{$cdk}white) !default;
     display: flex;
     gap: var(--#{$cdk}size-8);
     align-items: center;
-    padding: var(--#{$cdk}size-8);
     height: 100%;
+    padding: var(--#{$cdk}size-8);
     font-size: var(--#{$cdk}size-14);
     color: var(--#{$cdk}header-text-color);
     white-space: nowrap;
@@ -422,7 +420,7 @@ $header-text-color: var(--#{$cdk}white) !default;
       color: var(--#{$cdk}header-text-color-hover);
       text-decoration: none;
     }
-    
+
     // hide label
     @include media-breakpoint-down(lg) {
       span {
@@ -521,8 +519,8 @@ $header-text-color: var(--#{$cdk}white) !default;
 // @TODO
 .employee-top {
   display: flex;
-  align-items: center;
   gap: var(--#{$cdk}size-16);
+  align-items: center;
   margin-bottom: var(--#{$cdk}size-16);
 }
 
@@ -744,8 +742,8 @@ $header-text-color: var(--#{$cdk}white) !default;
           position: relative;
           font-family: var(--#{$cdk}font-family-material-icons);
           color: currentcolor;
-          content: "\e89e";
           vertical-align: middle;
+          content: "\e89e";
         }
       }
 
@@ -772,7 +770,6 @@ $header-text-color: var(--#{$cdk}white) !default;
       justify-content: center;
       width: 100%;
       margin: 0 auto;
-      justify-content: center;
 
       i {
         padding: 0;
@@ -781,8 +778,8 @@ $header-text-color: var(--#{$cdk}white) !default;
     }
 
     .employee_profile {
-      font-weight: 600;
       font-size: var(--#{$cdk}size-14);
+      font-weight: 600;
     }
 
     .avatar {
@@ -808,7 +805,9 @@ $header-text-color: var(--#{$cdk}white) !default;
         white-space: normal;
 
         &:hover {
+          // stylelint-disable-next-line
           color: var(--#{$cdk}red-500) !important;
+          // stylelint-disable-next-line
           text-decoration: none !important;
 
           i {

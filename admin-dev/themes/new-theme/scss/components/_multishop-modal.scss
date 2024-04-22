@@ -14,8 +14,8 @@ $component-name: multishop-modal;
   pointer-events: all;
   background: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.8);
   opacity: 1;
-  transform: translateX(-50%);
   transition: var(--#{$cdk}default-transition);
+  transform: translateX(-50%);
 
   &-hidden {
     pointer-events: none;
@@ -34,10 +34,9 @@ $component-name: multishop-modal;
     overflow: auto;
     background: var(--#{$cdk}white);
     border: 1px solid var(--#{$cdk}primary-400);
-    // stylelint-enable
     box-shadow: var(--#{$cdk}box-shadow-md);
-    transform: translateY(0);
     transition: var(--#{$cdk}default-transition);
+    transform: translateY(0);
 
     @include media-breakpoint-down(sm) {
       padding: var(--#{$cdk}size-30) var(--#{$cdk}size-24);
@@ -101,7 +100,7 @@ $component-name: multishop-modal;
     font-size: var(--#{$cdk}size-14);
     line-height: var(--#{$cdk}size-20);
     color: var(--#{$cdk}primary-800);
-  
+
     i {
       text-decoration: none;
     }
@@ -233,8 +232,8 @@ $component-name: multishop-modal;
   ul.#{$component-name}-group-list {
     position: relative;
     max-height: 500px;
-    margin: 0;
     padding-right: var(--#{$cdk}size-16);
+    margin: 0;
   }
 
   &-shop-view {
@@ -251,7 +250,7 @@ $component-name: multishop-modal;
 
       &:hover {
         text-decoration: none;
-        
+
         i {
           color: var(--#{$cdk}primary-700);
         }
