@@ -6,13 +6,13 @@
       color: var(--#{$cdk}primary-600);
       border: none;
       border-top: 3px solid transparent;
-      
+
       &:hover {
-        border: none;
-        border-top: 3px solid transparent;
         color: var(--#{$cdk}primary-800);
         background-color: transparent;
+        border: none;
         border-color: transparent;
+        border-top: 3px solid transparent;
       }
     }
 
@@ -23,7 +23,7 @@
         border: none;
         border-top: 3px solid var(--#{$cdk}primary-800);
       }
-      
+
       &:hover {
         border: none;
         border-top: 3px solid var(--#{$cdk}primary-800);
