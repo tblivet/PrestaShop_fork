@@ -6,7 +6,7 @@
       color: var(--#{$cdk}primary-500);
       content: "more_vert";
     }
-    
+
     &:hover {
       &::after {
         color: var(--#{$cdk}primary-800);

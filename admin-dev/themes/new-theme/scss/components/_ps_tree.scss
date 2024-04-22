@@ -7,14 +7,14 @@
   }
 
   .tree-header {
-    border-bottom: 1px solid var(--#{$cdk}primary-400);
     padding-bottom: var(--#{$cdk}size-8);
+    border-bottom: 1px solid var(--#{$cdk}primary-400);
 
     button {
       font-size: var(--#{$cdk}size-12);
       font-weight: 600;
       color: var(--#{$cdk}primary-600);
-      
+
       &:hover {
         color: var(--#{$cdk}primary-800);
       }

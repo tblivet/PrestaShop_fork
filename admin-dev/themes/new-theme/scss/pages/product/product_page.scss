@@ -149,13 +149,13 @@ $product-page-padding-bottom: 80px !default;
     border: 1px solid var(--#{$cdk}primary-400);
 
     .product-header-cover {
+      flex-basis: var(--#{$cdk}size-128);
       flex-grow: 0;
       flex-shrink: 0;
-      flex-basis: var(--#{$cdk}size-128);
 
       .image_preview-widget {
-        margin-bottom: 0;
         height: 100%;
+        margin-bottom: 0;
 
         img {
           height: 100%;
@@ -165,14 +165,14 @@ $product-page-padding-bottom: 80px !default;
     }
 
     .product-header-form {
-      flex-grow: 1;
       flex-basis: 45%;
+      flex-grow: 1;
       flex-shrink: 0;
       padding: var(--#{$cdk}size-16) 0;
 
       .modify-all-shops {
-        margin: 0;
         padding: var(--#{$cdk}size-16) 0 var(--#{$cdk}size-8);
+        margin: 0;
       }
 
       > .form-group {
@@ -241,9 +241,9 @@ $product-page-padding-bottom: 80px !default;
 
         .product-field-preview {
           display: flex;
-          align-items: center;
           flex-direction: row;
           gap: var(--#{$cdk}size-8);
+          align-items: center;
           font-size: var(--#{$cdk}size-14);
           font-weight: 600;
           line-height: 1.5;
@@ -402,10 +402,10 @@ $product-page-padding-bottom: 80px !default;
     z-index: 10;
     display: flex;
     align-items: center;
+    padding-block: var(--#{$cdk}size-8);
     background: var(--#{$cdk}white);
     border-top: 1px solid var(--#{$cdk}primary-400);
     //box-shadow: 0 0 6px -1px rgb(29 29 27 / 0.2);
-    padding-block: var(--#{$cdk}size-8);
 
     .form-group {
       margin-bottom: 0;
@@ -665,12 +665,12 @@ $product-page-padding-bottom: 80px !default;
   // Dropzone & Image manager
   #product-images-dropzone {
     z-index: 1;
+    flex-basis: 0;
+    flex-grow: 1;
     padding: 5px;
     margin-bottom: 0;
     overflow-y: hidden;
     border: none;
-    flex-grow: 1;
-    flex-basis: 0;
     @include border-bottom-radius(0);
     @include transition(width 0.5s ease-out, margin 0.5s ease-out);
 
@@ -864,6 +864,7 @@ $product-page-padding-bottom: 80px !default;
     flex-wrap: wrap;
     width: 100%;
     border: 1px solid var(--#{$cdk}primary-400);
+    // stylelint-disable-next-line
     border-radius: 0 !important;
 
     .dropzone-expander {
@@ -2561,6 +2562,7 @@ $mobile-menu-height: 3.25rem !default;
 @include media-breakpoint-down(md) {
   .product-page-v2 {
     .header-toolbar {
+      // stylelint-disable-next-line
       margin: 0 calc(-1 * var(--#{$cdk}size-16)) !important;
     }
 
@@ -2581,16 +2583,16 @@ $mobile-menu-height: 3.25rem !default;
           #product_header {
             .switch-widget {
               display: flex;
-              flex-grow: 1;
               flex-basis: 0;
-              align-items: start;
+              flex-grow: 1;
               gap: var(--#{$cdk}size-8);
+              align-items: start;
               width: auto;
 
               > .input-group {
                 width: auto;
               }
-              
+
               .modify-all-shops {
                 padding: 0;
               }
@@ -2600,8 +2602,8 @@ $mobile-menu-height: 3.25rem !default;
               .dropdown-menu {
                 .btn {
                   margin: 0;
-                  text-align: inherit;
                   font-weight: inherit;
+                  text-align: inherit;
                 }
               }
             }
@@ -2613,8 +2615,8 @@ $mobile-menu-height: 3.25rem !default;
         }
 
         .product-header-details {
-          padding: 0;
           flex-basis: 100%;
+          padding: 0;
 
           .product-header-summary {
             flex-wrap: nowrap;
@@ -2790,9 +2792,9 @@ $mobile-menu-height: 3.25rem !default;
             .nav-link {
               height: 100%;
               padding: var(--#{$cdk}size-16) var(--#{$cdk}size-16);
+              white-space: nowrap;
               border-top: none;
               border-bottom: 3px solid transparent;
-              white-space: nowrap;
             }
           }
 
