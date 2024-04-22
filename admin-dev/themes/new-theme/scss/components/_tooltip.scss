@@ -1,7 +1,7 @@
 .tooltip {
   &-inner {
     color: var(--#{$cdk}white);
-    
+
     > p {
       &:last-child {
         margin-bottom: 0;
@@ -13,6 +13,7 @@
     }
 
     .text-nowrap {
+      // stylelint-disable-next-line
       white-space: normal !important;
     }
   }

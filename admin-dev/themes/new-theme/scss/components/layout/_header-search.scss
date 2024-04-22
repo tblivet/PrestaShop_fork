@@ -45,15 +45,15 @@ $component-name: component-search;
     &-quickaccess {
       @extend .dropdown-menu;
       display: block;
-      margin: 0;
       width: 100%;
+      margin: 0;
     }
 
     &-background {
       position: absolute;
       top: 0;
-      left: 0;
       right: 0;
+      left: 0;
       z-index: -1;
       height: 100vh;
       background: rgba(map-get($map: $cdk-primary, $key: "primary-800"), 0.8);
