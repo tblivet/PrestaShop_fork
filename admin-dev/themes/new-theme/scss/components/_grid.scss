@@ -41,6 +41,7 @@ table.grid-ordering-column tr.position-row-while-drag {
   .btn .material-icons,
   a,
   a::after {
+    // stylelint-disable-next-line
     color: var(--#{$cdk}white) !important;
   }
 }
@@ -100,8 +101,8 @@ table.grid-ordering-column tr.position-row-while-drag {
 
   .btn.tooltip-link {
     display: flex;
-    align-items: center;
     flex-grow: 0;
+    align-items: center;
   }
 }
 
@@ -138,7 +139,7 @@ table .column-filters {
 
             ~ .form-control {
               display: inline-block;
-              /* stylelint-disable-next-line */
+              // stylelint-disable-next-line
               width: calc(100% - 32px);
             }
           }
@@ -179,6 +180,7 @@ table .column-filters {
             i.material-icons,
             a,
             a::after {
+              // stylelint-disable-next-line
               color: var(--#{$cdk}white) !important;
             }
           }
@@ -198,9 +200,8 @@ table .column-filters {
 
             @at-root {
               #{$tr}:hover .draggable-column {
-                /* stylelint-disable declaration-no-important */
+                // stylelint-disable-next-line
                 color: var(--#{$cdk}ocean-blue-500) !important;
-                /* stylelint-enable declaration-no-important */
               }
             }
           }
@@ -298,8 +299,8 @@ table .column-filters {
 
             .preview-toggle {
               display: inline-block;
-              vertical-align: middle;
               line-height: 1;
+              vertical-align: middle;
 
               i {
                 vertical-align: middle;

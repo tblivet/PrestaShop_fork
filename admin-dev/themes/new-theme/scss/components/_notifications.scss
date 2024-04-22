@@ -2,12 +2,12 @@
   height: 100%;
 
   > .notification {
+    height: 100%;
     padding: var(--#{$cdk}size-8);
     color: var(--#{$cdk}header-text-color);
     background: transparent;
     border: none;
-    height: 100%;
-    
+
     &:hover {
       color: var(--#{$cdk}header-text-color-hover);
     }
