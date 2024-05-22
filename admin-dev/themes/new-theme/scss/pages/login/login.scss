@@ -88,12 +88,6 @@ label {
         label {
           vertical-align: top;
         }
-
-        .form-check-radio {
-          flex-grow: 1;
-          margin-right: auto;
-          margin-bottom: 0;
-        }
       }
     }
 
@@ -132,13 +126,6 @@ label {
       align-items: center;
       justify-content: center;
       font-size: var(--#{$cdk}size-16);
-    }
-
-    .login-footer-social {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      justify-content: center;
     }
   }
 
