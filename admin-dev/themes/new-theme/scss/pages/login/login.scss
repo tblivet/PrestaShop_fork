@@ -53,12 +53,6 @@ label {
             font-weight: 400;
           }
         }
-
-        .form-check-radio {
-          flex-grow: 1;
-          margin-right: auto;
-          margin-bottom: 0;
-        }
       }
     }
 
@@ -77,13 +71,6 @@ label {
   #login-footer {
     a {
       color: #a0aab5;
-    }
-
-    .login-footer-social {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      justify-content: center;
     }
   }
 
