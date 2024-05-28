@@ -81,7 +81,7 @@
       left: 50%;
       margin-left: calc(-1 * var(--#{$cdk}size-10));
       color: var(--#{$cdk}primary-800);
-      cursor: pointer;
+      cursor:pointer;
     }
     .bootstrap-datetimepicker-widget tr td span:hover {
       background-color: var(--#{$cdk}white);
