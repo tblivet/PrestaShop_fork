@@ -46,11 +46,7 @@
           :thumbnail="thumbnail"
         >
           {{ product.product_name }}
-          <small
-            v-if="hasCombination"
-            class="product-combinations"
-          >
-            <br>
+          <small class="product-combinations" v-if="hasCombination"><br>
             {{ product.combination_name }}
           </small>
         </PSMedia>
