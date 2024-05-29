@@ -340,8 +340,8 @@
     flex-shrink: 0;
     background-color: var(--#{$cdk}primary-200);
     align-self: stretch;
-    padding: 1rem;
-    min-width: 20rem;
+    padding: var(--#{$cdk}size-16);
+    min-width: var(--#{$cdk}size-320);
 
     &-filemanager {
       display: none;
@@ -351,7 +351,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.5rem;
+      margin-bottom: var(--#{$cdk}size-8);
 
       label {
         margin-bottom: 0;
@@ -359,7 +359,7 @@
 
       .dropdown {
         > button {
-          padding-right: 0.25rem;
+          padding-right: var(--#{$cdk}size-4);
         }
 
         &-item {
@@ -369,7 +369,7 @@
     }
 
     textarea {
-      margin-bottom: 1rem;
+      margin-bottom: var(--#{$cdk}size-16);
     }
 
     &-button {
@@ -380,27 +380,31 @@
     }
 
     &-checkbox {
-      margin-bottom: 1rem;
+      margin-bottom: var(--#{$cdk}size-16);
 
       label {
-        font-size: 0.875rem;
+        font-size: var(--#{$cdk}size-14);
       }
     }
 
     &-select,
     &-unselect {
       font-weight: 600;
-      font-size: 0.925rem;
-      color: $primary;
+      font-size: var(--#{$cdk}size-16);
+      color: var(--#{$cdk}primary-800);
       cursor: pointer;
-      margin-top: 0.5rem;
+      margin-top: var(--#{$cdk}size-8);
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &-number {
-      font-size: 1rem;
+      font-size: var(--#{$cdk}size-16);
 
       span {
-        color: $primary;
+        color: var(--#{$cdk}primary-800);
         font-weight: 600;
       }
     }
@@ -409,7 +413,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 1rem;
+      padding: 0 var(--#{$cdk}size-16);
 
       p {
         margin-bottom: 0;
@@ -417,10 +421,10 @@
 
       .material-icons {
         cursor: pointer;
-        color: $gray-500;
+        color: var(--#{$cdk}primary-500);
         transition: 0.25s ease-out;
-        font-size: 1.5rem;
-        margin: 0 0.25rem;
+        font-size: var(--#{$cdk}size-24);
+        margin: 0 var(--#{$cdk}size-4);
 
         &:last-child {
           margin-right: 0;
@@ -431,7 +435,7 @@
         }
 
         &:hover {
-          color: primary;
+          color: var(--#{$cdk}primary-800);
         }
       }
     }
