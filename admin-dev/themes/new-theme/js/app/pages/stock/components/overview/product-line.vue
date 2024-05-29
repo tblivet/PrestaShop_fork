@@ -45,12 +45,10 @@
           class="d-flex align-items-center ml-2"
           :thumbnail="thumbnail"
         >
-          <p>
-            {{ product.product_name }}
-            <small v-if="hasCombination"><br>
-              {{ product.combination_name }}
-            </small>
-          </p>
+          {{ product.product_name }}
+          <small class="product-combinations" v-if="hasCombination"><br>
+            {{ product.combination_name }}
+          </small>
         </PSMedia>
       </div>
     </td>
@@ -236,3 +234,12 @@
     },
   });
 </script>
+
+<style lang="scss" scoped>
+@import '~@scss/config/_settings.scss';
+
+.product-combinations {
+  padding-top: var(--#{$cdk}size-4);
+  color: var(--#{$cdk}primary-500);
+}
+</style>
