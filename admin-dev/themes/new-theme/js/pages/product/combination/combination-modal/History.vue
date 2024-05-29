@@ -209,7 +209,7 @@
 
   .card-block {
     padding: 0;
-    height: calc(100% - 7rem);
+    height: calc(100% - 162px);
     overflow: auto;
   }
 
