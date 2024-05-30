@@ -50,7 +50,10 @@
       animation-name: loading;
       animation-timing-function: linear;
       background: var(--#{$cdk}primary-200);
-      background: linear-gradient(to right, var(--#{$cdk}primary-200) 10%, var(--#{$cdk}primary-500) 20%, var(--#{$cdk}primary-200) 30%);
+      background:
+        linear-gradient(to right, var(--#{$cdk}primary-200) 10%,
+        var(--#{$cdk}primary-500) 20%,
+        var(--#{$cdk}primary-200) 30%);
       background-size: 100%;
       height: var(--#{$cdk}size-40);
       position: relative;
