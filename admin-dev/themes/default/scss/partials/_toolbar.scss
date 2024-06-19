@@ -226,7 +226,7 @@
         &.current {
           color: var(--#{$cdk}primary-700);
           background-color: var(--#{$cdk}white);
-          border-bottom: 3px solid var(--#{$cdk}ocean-blue-500);
+          border-bottom: 3px solid var(--#{$cdk}primary-800);
         }
       }
     }

@@ -68,23 +68,37 @@
       }
 
       &-default {
-        &:hover {
+        &:not(:active),
+        &:not(.active){
+          &:hover {
+            color: var(--#{$cdk}primary-800);
+            background: var(--#{$cdk}primary-300);
+            border-color: var(--#{$cdk}primary-800);
+          }
+        }
+        
+        &:not(.active){
+          &:active,
+          &:focus {
+            color: var(--#{$cdk}primary-800);
+            background: var(--#{$cdk}primary-400);
+            border-color: var(--#{$cdk}primary-800);
+          }
+        }
+
+        &.active {
+          &:hover,
+          &:focus {
+            color: var(--#{$cdk}white);
+            background: var(--#{$cdk}primary-700);
+            border-color: var(--#{$cdk}primary-700);
+          }
+        }
+
+        &.active {
           color: var(--#{$cdk}white);
           background: var(--#{$cdk}primary-800);
           border-color: var(--#{$cdk}primary-800);
-        }
-
-        &:focus,
-        &:active {
-          color: var(--#{$cdk}white);
-          background: var(--#{$cdk}primary-800);
-          border-color: var(--#{$cdk}primary-800);
-        }
-
-        &:focus:active {
-          color: var(--#{$cdk}white);
-          background: var(--#{$cdk}primary-700);
-          border-color: var(--#{$cdk}primary-700);
         }
       }
     }

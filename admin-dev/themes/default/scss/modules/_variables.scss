@@ -17,7 +17,7 @@ $fa-css-prefix: icon;
 $icon-size-base: 14px;
 
 // Tooltips
-$tooltip-opacity: 0.9;
+$tooltip-opacity: 1;
 $tooltip-bg: map-get($map: $cdk-primary, $key: "primary-800");
 $tooltip-max-width: 250px;
 
@@ -200,7 +200,7 @@ $input-border-focus: map-get($map: $cdk-primary, $key: "primary-800");
 $input-color-placeholder: map-get($map: $cdk-primary, $key: "primary-500");
 
 $input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2);
-$input-group-addon-bg: map-get($map: $cdk-common, $key: "white");
+$input-group-addon-bg: map-get($map: $cdk-primary, $key: "primary-200");
 $input-focus-background: map-get($map: $cdk-common, $key: "white");
 
 $legend-color: map-get($map: $cdk-primary, $key: "primary-800");
@@ -230,6 +230,7 @@ $dropdown-divider-bg: map-get($map: $cdk-primary, $key: "primary-400");
 
 $dropdown-link-hover-color: map-get($map: $cdk-primary, $key: "primary-800");
 $dropdown-link-hover-bg: map-get($map: $cdk-primary, $key: "primary-200");
+$dropdown-link-disabled-color: map-get($map: $cdk-primary, $key: "primary-300");
 
 // Navs
 $nav-link-padding: map-get($map: $cdk-size, $key: "size-16") map-get($map: $cdk-size, $key: "size-20");
