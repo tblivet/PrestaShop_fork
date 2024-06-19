@@ -3,6 +3,11 @@
   &:hover {
     border-color: var(--#{$cdk}primary-800);
   }
+
+  &:focus {
+    outline: 2px solid var(--#{$cdk}blue-500);
+    @include box-shadow(none);
+  }
 }
 
 label {
@@ -59,9 +64,12 @@ fieldset[disabled] input[type="search"],
 fieldset[disabled] input[type="text"],
 fieldset[disabled] select,
 fieldset[disabled] textarea {
+  background-color: var(--#{$cdk}primary-200);
+  border-color: var(--#{$cdk}primary-400);
+  
   &:hover {
-    background-color: var(--#{$cdk}primary-300);
-    border-color: var(--#{$cdk}primary-300);
+    background-color: var(--#{$cdk}primary-200);
+    border-color: var(--#{$cdk}primary-400);
   }
 }
 
@@ -83,6 +91,7 @@ input[type="color"]:focus,
 .uneditable-input:focus {
   background-color: $input-focus-background;
   border-color: $input-border-focus;
+  outline: 2px solid var(--#{$cdk}blue-500);
   @include box-shadow(none);
 }
 

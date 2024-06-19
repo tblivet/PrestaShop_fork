@@ -7,7 +7,6 @@
 /* stylelint-disable */
 @import "@scss/config/_settings";
 @import "@scss/config/_keyframes";
-
 @import "@scss/config/_bootstrap";
 /* stylelint-enable */
 
@@ -1543,6 +1542,14 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+.adminproducts {
+  .ui-widget {
+    > .search {
+      @import "../../components/twitter_typeahead";
+    }
+  }
+}
+
 // Stock movement style is common to product and combination page
 .stock-movement-list {
   max-width: 600px;
@@ -2814,6 +2821,10 @@ $mobile-menu-height: 3.25rem !default;
 .select2-results__option[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.4;
+}
+
+.ps-select-product-category {
+  
 }
 
 // Create product modal

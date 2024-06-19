@@ -243,7 +243,7 @@
       }
 
       .low-stock {
-        background: $danger-hover;
+        background: var(--#{$cdk}red-50);
 
         .stock-warning {
           font-weight: 700;
