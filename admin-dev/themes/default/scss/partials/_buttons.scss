@@ -16,13 +16,13 @@
     &:focus,
     &.focus {
       color: var(--#{$cdk}primary-800);
-      background-color: var(--#{$cdk}primary-300);
+      background-color: var(--#{$cdk}primary-400);
       border-color: var(--#{$cdk}primary-800);
     }
 
     &:hover {
       color: var(--#{$cdk}primary-800);
-      background-color: var(--#{$cdk}primary-200);
+      background-color: var(--#{$cdk}primary-300);
       border-color: var(--#{$cdk}primary-800);
     }
 
@@ -30,7 +30,7 @@
     &.active,
     .open > &.dropdown-toggle {
       color: var(--#{$cdk}primary-800);
-      background-color: var(--#{$cdk}primary-200);
+      background-color: var(--#{$cdk}primary-300);
       background-image: none;
       border-color: var(--#{$cdk}primary-800);
 
@@ -38,7 +38,7 @@
       &:focus,
       &.focus {
         color: var(--#{$cdk}primary-800);
-        background-color: var(--#{$cdk}primary-300);
+        background-color: var(--#{$cdk}primary-400);
         border-color: var(--#{$cdk}primary-800);
       }
     }

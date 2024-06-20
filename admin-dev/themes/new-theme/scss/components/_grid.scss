@@ -103,6 +103,12 @@ table.grid-ordering-column tr.position-row-while-drag {
     display: flex;
     flex-grow: 0;
     align-items: center;
+
+    &:focus,
+    &:active {
+      outline: none;
+      background-color: transparent;
+    }
   }
 }
 
@@ -122,6 +128,7 @@ table .column-filters {
 
   td:last-child .grid-search-button,
   td:last-child .grid-reset-button {
+    display: flex;
     margin-left: auto;
     white-space: nowrap;
   }
