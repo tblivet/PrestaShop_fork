@@ -38,6 +38,10 @@ $component: panel;
         color: map-get($map: $cdk-primary, $key: "primary-800");
         text-decoration: none;
       }
+
+      [class^="process-icon-"] {
+        color: var(--#{$cdk}primary-800);
+      }
     }
   }
 

@@ -114,6 +114,10 @@ input[type="color"]:hover,
   background-color: $input-focus-background;
 }
 
+.help-block {
+  color: var(--#{$cdk}primary-700);
+}
+
 //buttons
 .dropdown-menu {
   @include text-align(left);
