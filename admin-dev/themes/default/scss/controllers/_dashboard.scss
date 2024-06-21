@@ -64,10 +64,10 @@
   section > section {
     header {
       padding: var(--#{$cdk}size-4) var(--#{$cdk}size-8);
+      margin: 0 0 var(--#{$cdk}size-8) 0;
       font-size: 1.2em;
       color: #fff;
       background-color: $brand-primary;
-      margin: 0 0 var(--#{$cdk}size-8) 0;
 
       .small {
         display: block;
@@ -138,12 +138,12 @@
     @extend .list-unstyled;
     padding: 0;
     margin-block: var(--#{$cdk}size-8);
-    
+
     li {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: relative;
       padding: var(--#{$cdk}size-4) 0;
       margin: 0;
       border: none;
@@ -157,8 +157,8 @@
 
       small {
         display: block;
-        line-height: 1.2;
         font-size: 0.6em;
+        line-height: 1.2;
 
         br {
           display: none;
