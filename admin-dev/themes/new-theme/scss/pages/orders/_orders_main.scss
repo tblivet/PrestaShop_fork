@@ -179,7 +179,7 @@
     }
 
     &.employee-message {
-      background-color: $primary-disabled;
+      background-color: var(--#{$cdk}primary-300);
     }
 
     &.employee-message--private {

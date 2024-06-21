@@ -3,6 +3,7 @@
   flex-wrap: wrap;
   gap: var(--#{$cdk}size-16);
   justify-content: space-between;
+  margin-bottom: 0;
   
   &__left {
     align-items: center;
