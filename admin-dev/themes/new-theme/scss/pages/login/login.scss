@@ -72,10 +72,10 @@ label {
       .checkbox-widget {
         position: relative;
         display: flex;
+        flex-wrap: wrap;
         gap: var(--#{$cdk}size-8);
         align-items: center;
         justify-content: space-between;
-        flex-wrap: wrap;
 
         .form-checkbox {
           margin: 0;
@@ -88,8 +88,8 @@ label {
         }
 
         label {
-          vertical-align: top;
           font-weight: 400;
+          vertical-align: top;
         }
       }
     }

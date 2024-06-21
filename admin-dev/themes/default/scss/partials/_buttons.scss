@@ -75,7 +75,7 @@
             border-color: var(--#{$cdk}primary-800);
           }
         }
-        
+
         &:not(.active){
           &:active,
           &:focus {
@@ -86,18 +86,16 @@
         }
 
         &.active {
+          color: var(--#{$cdk}white);
+          background: var(--#{$cdk}primary-800);
+          border-color: var(--#{$cdk}primary-800);
+
           &:hover,
           &:focus {
             color: var(--#{$cdk}white);
             background: var(--#{$cdk}primary-700);
             border-color: var(--#{$cdk}primary-700);
           }
-        }
-
-        &.active {
-          color: var(--#{$cdk}white);
-          background: var(--#{$cdk}primary-800);
-          border-color: var(--#{$cdk}primary-800);
         }
       }
     }

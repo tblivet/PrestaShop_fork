@@ -1543,11 +1543,7 @@ $product-page-padding-bottom: 80px !default;
 }
 
 .adminproducts {
-  .ui-widget {
-    > .search {
-      @import "../../components/twitter_typeahead";
-    }
-  }
+  @import "../../components/twitter_typeahead";
 }
 
 // Stock movement style is common to product and combination page
@@ -1784,8 +1780,6 @@ $product-page-padding-bottom: 80px !default;
 }
 
 #product_combinations_combination_manager {
-  @import "../../components/twitter_typeahead";
-
   #combination-list-actions {
     display: flex;
     flex-direction: row;
@@ -2826,10 +2820,6 @@ $mobile-menu-height: 3.25rem !default;
 .select2-results__option[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.4;
-}
-
-.ps-select-product-category {
-  
 }
 
 // Create product modal

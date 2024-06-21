@@ -4,30 +4,30 @@
   gap: var(--#{$cdk}size-16);
   justify-content: space-between;
   margin-bottom: 0;
-  
+
   &__left {
-    align-items: center;
+    display: flex;
     flex: 1 1 auto;
-    display: flex;
     flex-wrap: wrap;
+    align-items: center;
   }
-  
+
   &__right {
-    flex: 1 2 auto;
     display: flex;
+    flex: 1 2 auto;
     flex-wrap: wrap;
-    align-items: start;
     gap: var(--#{$cdk}size-8);
-    
+    align-items: start;
+
     .input-group {
-      flex: 1 1 auto;
       display: flex !important;
+      flex: 1 1 auto;
       align-items: stretch;
-      
+
       label {
+        align-content: center;
         width: auto;
         margin: 0;
-        align-content: center;
       }
 
       .form-control {
