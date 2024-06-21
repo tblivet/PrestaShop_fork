@@ -865,10 +865,6 @@ form#importDropzone {
         border: none;
       }
     }
-
-    .dropdown-toggle.dropdown-toggle-dots:hover::after {
-      color: var(--#{$cdk}ocean-blue-500);
-    }
   }
 
   .dropdown-menu {

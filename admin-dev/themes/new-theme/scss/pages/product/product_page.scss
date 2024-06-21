@@ -1084,7 +1084,7 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .subtitle {
-    color: var(--#{$cdk}primary-500);
+    color: var(--#{$cdk}primary-700);
   }
 
   .external-link {
@@ -1846,6 +1846,11 @@ $product-page-padding-bottom: 80px !default;
           &.dropdown-toggle-dots::after {
             color: var(--#{$cdk}primary-500);
           }
+        }
+
+        .edit-combination-item,
+        .dropdown-toggle {
+          padding-inline: var(--#{$cdk}size-8);
         }
       }
 
