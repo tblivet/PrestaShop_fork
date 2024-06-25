@@ -17,7 +17,7 @@ $component-name: header-multishop;
   }
 
   &-allshops .#{$component-name}-top-bar {
-    background-color: var(--#{$cdk}ocean-blue-500);
+    background-color: var(--#{$cdk}blue-300);
 
     .#{$component-name}-title {
       color: var(--#{$cdk}white);

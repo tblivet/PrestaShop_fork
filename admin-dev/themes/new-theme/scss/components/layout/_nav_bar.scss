@@ -32,14 +32,14 @@
   // CSS var
   --#{$cdk}sidebar-category-color: var(--#{$cdk}primary-500);
   --#{$cdk}sidebar-icon-color: var(--#{$cdk}primary-800);
-  --#{$cdk}sidebar-icon-active: var(--#{$cdk}primary-800);
+  --#{$cdk}sidebar-icon-active: var(--#{$cdk}blue-700);
   --#{$cdk}sidebar-link-color: var(--#{$cdk}primary-800);
-  --#{$cdk}sidebar-link-color-hover: var(--#{$cdk}ocean-blue-700);
-  --#{$cdk}sidebar-link-color-active: var(--#{$cdk}primary-800);
-  --#{$cdk}sidebar-link-bg-active: var(--#{$cdk}ocean-blue-500);
-  --#{$cdk}sidebar-link-bg-hover: var(--#{$cdk}ocean-blue-50);
-  --#{$cdk}sidebar-link-lvl-one-bg-active: var(--#{$cdk}ocean-blue-500);
-  --#{$cdk}sidebar-submenu-bg: var(--#{$cdk}ocean-blue-50);
+  --#{$cdk}sidebar-link-color-hover: var(--#{$cdk}blue-700);
+  --#{$cdk}sidebar-link-color-active: var(--#{$cdk}blue-700);
+  --#{$cdk}sidebar-link-bg-hover: var(--#{$cdk}primary-200);
+  --#{$cdk}sidebar-link-bg-active: var(--#{$cdk}primary-300);
+  --#{$cdk}sidebar-link-lvl-one-bg-active: var(--#{$cdk}primary-200);
+  --#{$cdk}sidebar-submenu-bg: var(--#{$cdk}primary-200);
 
   .logo-container {
     display: none;
@@ -48,7 +48,7 @@
   .material-icons {
     font-size: var(--#{$cdk}size-24);
     line-height: 1;
-    color: var(--#{$cdk}sidebar-icon-color);
+    color: currentcolor;
 
     &.close-btn {
       font-size: 1.5rem;
@@ -324,7 +324,7 @@
   transition: color var(--#{$cdk}default-transition-duration);
 
   &:hover {
-    color: var(--#{$cdk}sidebar-link-bg-active);
+    color: var(--#{$cdk}blue-500);
   }
 
   .material-icons {

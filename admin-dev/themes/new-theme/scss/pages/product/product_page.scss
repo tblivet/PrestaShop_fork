@@ -2805,7 +2805,7 @@ $mobile-menu-height: 3.25rem !default;
           .nav-link.active {
             background: transparent;
             border-top: none;
-            border-bottom: var(--#{$cdk}size-3) solid var(--#{$cdk}ocean-blue-500);
+            border-bottom: var(--#{$cdk}size-3) solid var(--#{$cdk}blue-300);
           }
         }
 

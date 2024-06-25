@@ -4,10 +4,8 @@
 #order-view-page {
   #historyTabContent {
     .badge {
-      padding: 0 5px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      line-height: 1.5;
+      font-size: var(--#{$cdk}size-12);
+      font-weight: 700;
     }
 
     .card-details-actions {

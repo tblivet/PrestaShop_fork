@@ -1,6 +1,6 @@
 :root {
   --#{$cdk}header-text-color: var(--#{$cdk}white);
-  --#{$cdk}header-text-color-hover: var(--#{$cdk}ocean-blue-500);
+  --#{$cdk}header-text-color-hover: var(--#{$cdk}primary-500);
   --#{$cdk}header-bg: var(--#{$cdk}primary-800);
   --#{$cdk}search-color: var(--#{$cdk}primary-800);
   --#{$cdk}search-border-color: var(--#{$cdk}primary-400);
@@ -121,11 +121,11 @@ $header-text-color: var(--#{$cdk}white) !default;
     width: var(--#{$cdk}size-52);
     height: 100%;
     text-align: center;
-    background-color: rgba(map-get($map: $cdk-ocean-blue, $key: "ocean-blue-500"), 0.8);
+    background-color: rgba(map-get($map: $cdk-blue, $key: "blue-500"), 0.8);
 
     &::before {
       @extend .material-icons;
-      color: var(--#{$cdk}black);
+      color: var(--#{$cdk}white);
       content: "\e86a";
       animation: ajax-spin 2s infinite linear;
     }
@@ -162,7 +162,7 @@ $header-text-color: var(--#{$cdk}white) !default;
       color: var(--#{$cdk}header-text-color);
 
       &:hover {
-        color: var(--#{$cdk}ocean-blue-500);
+        color: var(--#{$cdk}header-text-color-hover);
         text-decoration: none;
       }
 
