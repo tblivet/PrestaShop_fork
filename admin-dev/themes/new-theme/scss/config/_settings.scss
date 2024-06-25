@@ -22,7 +22,7 @@ $info-block-background: var(--#{$cdk}primary-200);
 $widget-border-color: #e7e7e7;
 $alert-warning-bg: #fffbd3;
 
-$light-blue: var(--#{$cdk}ocean-blue-50);
+$light-blue: var(--#{$cdk}blue-50);
 $light-gray: var(--#{$cdk}primary-100);
 
 // Multishop
@@ -30,8 +30,8 @@ $multishop-header-default-color: var(--#{$cdk}primary-800);
 $multishop-header-default-color-hover: var(--#{$cdk}primary-700);
 $multishop-header-default-background: var(--#{$cdk}primary-300);
 $multishop-header-allshop-color: var(--#{$cdk}white);
-$multishop-header-allshop-background: var(--#{$cdk}ocean-blue-500);
-$multishop-selector-selected-background: var(--#{$cdk}ocean-blue-50);
+$multishop-header-allshop-background: var(--#{$cdk}blue-500);
+$multishop-selector-selected-background: var(--#{$cdk}blue-50);
 
 // Sizes
 $size-navbar-width: 13.13rem;

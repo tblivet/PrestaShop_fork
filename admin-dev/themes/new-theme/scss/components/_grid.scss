@@ -51,17 +51,17 @@ table.grid-ordering-column tr.position-row-while-drag {
 
   &:hover {
     .material-icons {
-      color: var(--#{$cdk}ocean-blue-700);
+      color: var(--#{$cdk}primary-700);
     }
   }
 }
 
 .position-drag-handle {
-  color: var(--#{$cdk}ocean-blue-500);
+  color: var(--#{$cdk}primary-800);
   visibility: hidden;
 
   &:hover {
-    color: var(--#{$cdk}ocean-blue-700);
+    color: var(--#{$cdk}primary-700);
   }
 }
 
@@ -159,7 +159,7 @@ table .column-filters {
         $tr: &;
 
         &:hover {
-          background: var(--#{$cdk}ocean-blue-50);
+          background: var(--#{$cdk}primary-100);
         }
 
         &.preview-row,
@@ -168,7 +168,7 @@ table .column-filters {
         }
 
         &.preview-open {
-          background-color: var(--#{$cdk}ocean-blue-50);
+          background-color: var(--#{$cdk}primary-100);
         }
 
         // styling for row that is being dragged
@@ -208,7 +208,7 @@ table .column-filters {
             @at-root {
               #{$tr}:hover .draggable-column {
                 // stylelint-disable-next-line
-                color: var(--#{$cdk}ocean-blue-500) !important;
+                color: var(--#{$cdk}primary-800) !important;
               }
             }
           }
@@ -357,6 +357,27 @@ table {
       td[data-column-id^="quantity"] {
         input {
           max-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="id_product"],
+      td[data-column-id^="final_price_tax_excluded"],
+      td[data-column-id^="date_add"],
+      td[data-column-id^="quantity"] {
+        .input-group {
+          &:nth-child(2) {
+            margin-top: -1px;
+          }
+
+          .form-control {
+            position: relative;
+
+            &:hover,
+            &:focus,
+            &:active {
+              z-index: 1;
+            }
+          }
         }
       }
     }

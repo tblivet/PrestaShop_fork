@@ -99,7 +99,7 @@
       transition: var(--#{$cdk}default-transition);
 
       &:hover {
-        color: var(--#{$cdk}ocean-blue-500);
+        color: var(--#{$cdk}blue-300);
         text-decoration: none;
       }
     }
