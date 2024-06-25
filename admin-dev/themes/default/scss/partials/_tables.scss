@@ -37,7 +37,7 @@
     > tr.filter > th {
       vertical-align: middle;
       background-color: var(--#{$cdk}primary-100);
-      border-color: var(--#{$cdk}blue-300);
+      border-color: var(--#{$cdk}primary-400);
       border-width: var(--#{$cdk}size-1);
 
       input[type="text"].filter,
@@ -78,7 +78,7 @@
     }
 
     > tr:hover > td {
-      background-color: var(--#{$cdk}blue-50);
+      background-color: var(--#{$cdk}primary-100);
     }
   }
 
@@ -271,7 +271,7 @@ tr.highlighted td {
     th {
       height: var(--#{$cdk}size-60);
       text-align: center;
-      border-color: var(--#{$cdk}blue-300) !important;
+      border-color: var(--#{$cdk}primary-400) !important;
       border-width: var(--#{$cdk}size-1) !important;
     }
 
