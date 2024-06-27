@@ -144,26 +144,6 @@
       text-decoration: none;
     }
 
-    &:hover {
-      color: var(--#{$cdk}ocean-blue-500);
-      text-decoration: none;
-    }
-
-    &:focus,
-    &:active {
-      text-decoration: none;
-    }
-
-    &:hover {
-      color: var(--#{$cdk}ocean-blue-500);
-      text-decoration: none;
-    }
-
-    &:focus,
-    &:active {
-      text-decoration: none;
-    }
-
     > .material-icons {
       font-size: var(--#{$cdk}size-20);
     }
