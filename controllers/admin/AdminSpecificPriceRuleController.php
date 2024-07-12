@@ -318,6 +318,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
             ],
             'submit' => [
                 'title' => $this->trans('Save', [], 'Admin.Actions'),
+                'class' => 'btn btn-primary pull-right',
             ],
         ];
 
