@@ -15,6 +15,8 @@ parameters:
   env(PS_LOG_OUTPUT): "%kernel.logs_dir%/%kernel.environment%.log"
   env(PS_LOG_MAX_FILES): '30'
   env(PS_TRUSTED_PROXIES): ''
+  # Loads the /ui kit instead of the Bootstrap 4 + prestakit assets on new-theme pages
+  env(PS_UI_KIT): '0'
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
@@ -45,6 +47,8 @@ framework:
     packages:
       front_js:
         base_path: '../js'
+      ui_kit:
+        base_path: '../ui/dist'
 
   # esi: ~
   secret: "%secret%"
@@ -101,6 +105,7 @@ twig:
   globals:
     ps: '@PrestaShopBundle\Twig\Layout\PrestaShopLayoutGlobalVariables'
     webpack_server: false
+    ui_kit: '%env(bool:PS_UI_KIT)%'
     multistore_field_prefix: !php/const PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX
     modify_all_shops_prefix: !php/const PrestaShopBundle\Form\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     disabling_switch_prefix: !php/const PrestaShopBundle\Form\Extension\DisablingSwitchExtension::FIELD_PREFIX

@@ -31,7 +31,9 @@
   <script type="text/javascript" src="{{ js_uri }}"></script>
 {% endfor %}
 
-{% if ps.isRtlLanguage %}
+{% if ui_kit %}
+  <link rel="stylesheet" href="{{ asset('css/ui.css', 'ui_kit') }}" media="all">
+{% elseif ps.isRtlLanguage %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme_rtl.css') }}" media="all">
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/rtl.css') }}" media="all">
 {% else %}

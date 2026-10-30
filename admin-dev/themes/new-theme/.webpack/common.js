@@ -141,6 +141,7 @@ module.exports = {
     login_form: './js/pages/login',
     logs: './js/pages/logs',
     main: './js/theme',
+    main_ui: './js/theme-ui',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
     manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form',

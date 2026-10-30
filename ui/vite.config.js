@@ -34,10 +34,14 @@ export default defineConfig({
     outDir: resolve(root, 'dist'),
     emptyOutDir: true,
     sourcemap: true,
+    // One stylesheet, kept out of the IIFE bundle.
+    cssCodeSplit: false,
     // Stable file names: the back-office links them directly.
     rollupOptions: {
       input: resolve(root, 'src/js/main.js'),
       output: {
+        // Classic script exposing window.bootstrap, loaded before the back-office bundles.
+        format: 'iife',
         entryFileNames: 'js/ui.js',
         assetFileNames: ({ names }) => (names[0]?.endsWith('.css') ? 'css/ui.css' : 'fonts/[name][extname]'),
       },

@@ -39,7 +39,7 @@
       <span class="material-symbols-outlined">settings</span>
     </div>
     <script type="module">
-      import { bootstrap } from './js/main.js';
+      const { bootstrap } = window;
 
       document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => new bootstrap.Tooltip(el));
     </script>
