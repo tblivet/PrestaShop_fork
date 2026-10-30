@@ -24,18 +24,6 @@
             <img class="img-fluid" src="{{ asset('prestashop.svg', 'ui_kit') }}" alt="{{ shopName }}" width="185" height="20" />
           </div>
 
-          {% for type, alertClass in {error: 'danger', failure: 'danger', success: 'success', warning: 'warning', info: 'info'} %}
-            {% set messages = app.session.flashbag.get(type) %}
-            {% if messages is not empty %}
-              <div class="alert alert-{{ alertClass }} alert-dismissible" role="alert">
-                {% for message in messages %}
-                  <p class="mb-0">{{ message|raw_purified }}</p>
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>
-              </div>
-            {% endif %}
-          {% endfor %}
-
           {% block login_content %}{% endblock %}
         </div>
       </div>

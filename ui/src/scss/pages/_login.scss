@@ -59,6 +59,14 @@ $selectors: (
     // The title sits inside the form so it switches with it (login / forgot password)
     > .#{map.get($selectors, login)}__title {
       margin-block-end: 1rem;
+
+      &:has(+ .alert) {
+        margin-block-end: 0;
+
+        + .alert {
+          margin-block-end: 0;
+        }
+      }
     }
   }
 
