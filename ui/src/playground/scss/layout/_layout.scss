@@ -1,0 +1,64 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Variables must be imported here — Vite compiles page files in isolation for HMR.
+@import '../variables';
+
+// Generic BO shell — full-width header row, sidebar column, scrollable content section
+.ps-layout {
+  display: grid;
+  grid-template:
+    'header header' auto
+    'sidebar content' 1fr / auto 1fr;
+  height: 100vh;
+
+  &__header {
+    grid-area: header;
+  }
+
+  &__sidebar {
+    grid-area: sidebar;
+    min-height: 0;
+
+    // Below md the sidebar is an offcanvas drawer: panel and backdrop start
+    // under the header, so the header stays visible and interactive
+    @include media-breakpoint-down(md) {
+      .sidebar {
+        top: $ps-header-height;
+        height: auto;
+      }
+
+      // Bootstrap appends the offcanvas backdrop to the drawer's parent (this element)
+      .offcanvas-backdrop {
+        top: $ps-header-height;
+        height: calc(100vh - #{$ps-header-height});
+      }
+    }
+  }
+
+  &__content {
+    grid-area: content;
+    min-width: 0;
+    padding: 1.5rem;
+    overflow-y: auto;
+    background-color: var(--#{$prefix}primary-50);
+  }
+
+  // Fixed design canvas — pages target one width instead of fluid full-width.
+  // Full-height flex column so pages can stretch content to fill the viewport
+  // yet still scroll once it overflows.
+  &__container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: $ps-content-max-width;
+    min-height: 100%;
+    margin-inline: auto;
+
+    // Opt-out for wide pages (large tables, kanban…)
+    &--fluid {
+      max-width: none;
+    }
+  }
+}

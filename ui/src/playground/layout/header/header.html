@@ -1,0 +1,68 @@
+<header class="ps-header">
+  <div class="container-fluid">
+    <div class="ps-header__inner">
+      <div class="ps-header__brand">
+        <button
+          class="ps-header__menu-toggle"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#bo-sidebar"
+          aria-controls="bo-sidebar"
+          aria-label="Toggle menu"
+        >
+          <span class="icon ps-header__menu-icon ps-header__menu-icon--open" aria-hidden="true">menu</span>
+          <span class="icon ps-header__menu-icon ps-header__menu-icon--close" aria-hidden="true">close</span>
+        </button>
+        <a class="ps-header__brand-link" href="#">
+          <img class="ps-header__logo" src="/prestashop.svg" alt="PrestaShop" height="14" />
+        </a>
+        <span class="badge rounded-pill ps-header__version">9.2.0</span>
+      </div>
+
+      <!-- data-bs-theme: form defaults (placeholder…) must resolve for the dark surface -->
+      <form class="ps-header__search" role="search" data-bs-theme="dark">
+        <span class="icon ps-header__search-icon" aria-hidden="true">search</span>
+        <input
+          type="search"
+          id="header-search"
+          name="search"
+          class="form-control form-control-sm ps-header__search-input"
+          placeholder="Search"
+          aria-label="Search"
+        />
+      </form>
+
+      <ul class="ps-header__nav">
+        <li class="ps-header__nav-item">
+          <a class="ps-header__nav-link" href="#">
+            <span class="icon" aria-hidden="true">storefront</span>
+            <span class="ps-header__nav-label">View my store</span>
+          </a>
+        </li>
+        <li class="ps-header__nav-item">
+          <a class="ps-header__nav-link" href="#">
+            <span class="icon" aria-hidden="true">notifications</span>
+            <span class="ps-header__nav-label">Notifications</span>
+            <span class="badge badge-counter text-bg-danger">3</span>
+          </a>
+        </li>
+        <li class="dropdown ps-header__nav-item">
+          <button
+            class="dropdown-toggle ps-header__nav-link"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <span class="icon" aria-hidden="true">account_circle</span>
+            <span class="ps-header__nav-label">John Doe</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="#">Your profile</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="#">Sign out</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

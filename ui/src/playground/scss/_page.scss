@@ -1,0 +1,13 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+.ps-page {
+  min-height: 100vh;
+  padding: 1rem;
+
+  &--bg-subtle {
+    --#{$prefix}page-bg-subtle: var(--#{$prefix}primary-50);
+    background-color: var(--#{$prefix}page-bg-subtle);
+  }
+}

@@ -12,6 +12,8 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development",
     "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "lint:scss": "stylelint 'src/**/*.scss'",
@@ -23,9 +25,14 @@
   },
   "devDependencies": {
     "@fontsource/ibm-plex-sans": "^5.2.8",
+    "@storybook/addon-a11y": "^8.6.18",
+    "@storybook/addon-essentials": "^8.6.18",
+    "@storybook/addon-links": "^8.6.18",
+    "@storybook/html-vite": "^8.6.18",
     "material-symbols": "^0.44.4",
     "prettier": "^3.8.3",
     "sass": "^1.99.0",
+    "storybook": "^8.6.18",
     "stylelint": "^16.26.1",
     "stylelint-config-twbs-bootstrap": "^16.1.0",
     "vite": "^8.0.10"
