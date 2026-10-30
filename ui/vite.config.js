@@ -29,7 +29,7 @@ export const shared = {
   },
 };
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   ...shared,
   root: resolve(root, 'src'),
   // Relative URLs, so the CSS finds its fonts wherever dist/ is served from.
@@ -38,7 +38,8 @@ export default defineConfig({
   publicDir: resolve(root, 'public'),
   build: {
     outDir: resolve(root, 'dist'),
-    emptyOutDir: true,
+    // Not in watch mode (--mode development): Vite copies public/ on the first build only.
+    emptyOutDir: mode !== 'development',
     sourcemap: true,
     // One stylesheet, kept out of the IIFE bundle.
     cssCodeSplit: false,
@@ -56,4 +57,4 @@ export default defineConfig({
   server: {
     port: 5173,
   },
-});
+}));
