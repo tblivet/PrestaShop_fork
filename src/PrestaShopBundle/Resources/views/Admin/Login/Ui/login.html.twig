@@ -10,7 +10,7 @@
 {% block login_content %}
   {% set forgotPasswordLink = loginForm.stay_logged_in.vars.external_link %}
 
-  {{ form_start(loginForm, {attr: loginForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? ' d-none' : '')})}) }}
+  {{ form_start(loginForm, {action: path('admin_login'), attr: loginForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? ' d-none' : '')})}) }}
     <h1 class="ps-login__title">{{ 'Sign in to access your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
 
     {{ form_errors(loginForm) }}
@@ -52,7 +52,7 @@
     </div>
   {{ form_end(loginForm) }}
 
-  {{ form_start(requestPasswordResetForm, {attr: requestPasswordResetForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? '' : ' d-none')})}) }}
+  {{ form_start(requestPasswordResetForm, {action: path('admin_request_password_reset'), attr: requestPasswordResetForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? '' : ' d-none')})}) }}
     <h1 class="ps-login__title">{{ requestPasswordResetForm.vars.label }}</h1>
 
     {{ form_errors(requestPasswordResetForm) }}
