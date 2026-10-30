@@ -24,16 +24,11 @@ $selectors: (
     }
   }
 
-  &__logo-small {
-    margin: 2rem 0;
-    text-align: center;
-    opacity: 0.25;
-  }
-
   &__container {
     width: 100%;
     max-width: 30rem;
-    margin: 0 auto;
+    margin-block-start: 4rem;
+    margin-inline: auto;
   }
 
   &__logo-big {
