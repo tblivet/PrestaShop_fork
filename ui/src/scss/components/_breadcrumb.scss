@@ -1,0 +1,29 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Override Bootstrap breadcrumb — https://getbootstrap.com/docs/5.3/components/breadcrumb/
+
+// ── Breadcrumb ────────────────────────────────────────────────────────────────
+
+// Bootstrap has no variable for the divider's font-family.
+.breadcrumb {
+  &-item {
+    & + & {
+      display: flex;
+      align-items: center;
+
+      &::before {
+        float: none;
+        font-family: 'Material Symbols Outlined', sans-serif;
+        font-size: 1rem;
+        line-height: 1;
+        content: $breadcrumb-divider;
+
+        @at-root [dir='rtl'] & {
+          content: $breadcrumb-divider-flipped;
+        }
+      }
+    }
+  }
+}

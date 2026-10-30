@@ -1,0 +1,135 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Override Bootstrap buttons — https://getbootstrap.com/docs/5.3/components/buttons/
+
+// Bootstrap darkens solid buttons on hover/active for dark-text buttons and lightens for light-text
+// buttons. Override all variants to always brighten (tint) so hover feels like a highlight rather
+// than a press. Uses Bootstrap's own tint-amount variables so the magnitude stays consistent.
+@each $color, $value in $theme-colors {
+  .btn {
+    &-#{$color} {
+      --#{$prefix}btn-hover-bg: #{tint-color($value, $btn-hover-bg-tint-amount)};
+      --#{$prefix}btn-hover-border-color: #{tint-color($value, $btn-hover-border-tint-amount)};
+      --#{$prefix}btn-hover-color: #{color-contrast(tint-color($value, $btn-hover-bg-tint-amount))};
+      --#{$prefix}btn-active-bg: #{tint-color($value, $btn-active-bg-tint-amount)};
+      --#{$prefix}btn-active-border-color: #{tint-color($value, $btn-active-border-tint-amount)};
+      --#{$prefix}btn-active-color: #{color-contrast(tint-color($value, $btn-active-bg-tint-amount))};
+
+      @at-root [data-bs-theme='dark'] & {
+        @if $color == 'primary' {
+          --#{$prefix}btn-bg: #{tint-color($value, 10%)};
+          --#{$prefix}btn-border-color: #{tint-color($value, 10%)};
+          --#{$prefix}btn-color: #{$white};
+          --#{$prefix}btn-hover-bg: #{tint-color($value, 18%)};
+          --#{$prefix}btn-hover-border-color: #{tint-color($value, 18%)};
+          --#{$prefix}btn-hover-color: #{$white};
+          --#{$prefix}btn-active-bg: #{tint-color($value, 25%)};
+          --#{$prefix}btn-active-border-color: #{tint-color($value, 25%)};
+          --#{$prefix}btn-active-color: #{$white};
+        } @else {
+          --#{$prefix}btn-hover-bg: #{shade-color($value, $btn-hover-bg-shade-amount)};
+          --#{$prefix}btn-hover-border-color: #{shade-color($value, $btn-hover-border-shade-amount)};
+          --#{$prefix}btn-hover-color: #{color-contrast(shade-color($value, $btn-hover-bg-shade-amount))};
+          --#{$prefix}btn-active-bg: #{shade-color($value, $btn-active-bg-shade-amount)};
+          --#{$prefix}btn-active-border-color: #{shade-color($value, $btn-active-border-shade-amount)};
+          --#{$prefix}btn-active-color: #{color-contrast(shade-color($value, $btn-active-bg-shade-amount))};
+        }
+      }
+    }
+
+    &-outline-#{$color} {
+      @if $color == 'primary' {
+        --#{$prefix}btn-hover-bg: #{$value};
+        --#{$prefix}btn-hover-border-color: #{$value};
+        --#{$prefix}btn-hover-color: #{color-contrast($value)};
+        --#{$prefix}btn-active-bg: #{tint-color($value, $btn-active-bg-tint-amount)};
+        --#{$prefix}btn-active-border-color: #{tint-color($value, $btn-active-border-tint-amount)};
+        --#{$prefix}btn-active-color: #{color-contrast(tint-color($value, $btn-active-bg-tint-amount))};
+      } @else {
+        --#{$prefix}btn-active-bg: #{shade-color($value, $btn-active-bg-shade-amount)};
+        --#{$prefix}btn-active-border-color: #{shade-color($value, $btn-active-border-shade-amount)};
+        --#{$prefix}btn-active-color: #{color-contrast(shade-color($value, $btn-active-bg-shade-amount))};
+      }
+
+      @at-root [data-bs-theme='dark'] & {
+        @if $color == 'primary' {
+          --#{$prefix}btn-bg: #{tint-color($value, 5%)};
+          --#{$prefix}btn-border-color: #{tint-color($value, 50%)};
+          --#{$prefix}btn-color: #{$white};
+          --#{$prefix}btn-hover-bg: #{tint-color($value, 18%)};
+          --#{$prefix}btn-hover-border-color: #{tint-color($value, 18%)};
+          --#{$prefix}btn-hover-color: #{$white};
+          --#{$prefix}btn-active-bg: #{tint-color($value, 25%)};
+          --#{$prefix}btn-active-border-color: #{tint-color($value, 25%)};
+          --#{$prefix}btn-active-color: #{$white};
+        } @else {
+          --#{$prefix}btn-active-bg: #{shade-color($value, $btn-active-bg-shade-amount)};
+          --#{$prefix}btn-active-border-color: #{shade-color($value, $btn-active-border-shade-amount)};
+          --#{$prefix}btn-active-color: #{color-contrast(shade-color($value, $btn-active-bg-shade-amount))};
+        }
+      }
+    }
+  }
+}
+
+// ── Icon pairing ──────────────────────────────────────────────────────────────
+// Buttons hosting an .icon lay out via flex — no spacing utilities needed in the
+// markup; covers leading, trailing, and icon-only buttons with the same rule.
+.btn {
+  &:has(.icon) {
+    display: inline-flex;
+    gap: 0.375rem;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// $btn-custom-bg gives certain variants a subtle tinted bg (light mode) or shaded bg (dark mode)
+// instead of the solid $theme-colors value, keeping alerts/badges untouched.
+@each $color, $value in $btn-custom-bg {
+  .btn {
+    // Solid variant — subtle bg, colored border
+    &-#{$color} {
+      --#{$prefix}btn-bg: #{tint-color($value, 88%)};
+      --#{$prefix}btn-border-color: #{$value};
+      --#{$prefix}btn-color: #{color-contrast(tint-color($value, 88%))};
+      --#{$prefix}btn-hover-bg: #{tint-color($value, 78%)};
+      --#{$prefix}btn-hover-border-color: #{$value};
+      --#{$prefix}btn-hover-color: #{color-contrast(tint-color($value, 78%))};
+      --#{$prefix}btn-active-bg: #{tint-color($value, 68%)};
+      --#{$prefix}btn-active-border-color: #{$value};
+      --#{$prefix}btn-active-color: #{color-contrast(tint-color($value, 68%))};
+
+      @at-root [data-bs-theme='dark'] & {
+        --#{$prefix}btn-bg: #{shade-color($value, 78%)};
+        --#{$prefix}btn-border-color: #{shade-color($value, 35%)};
+        --#{$prefix}btn-color: #{tint-color($value, 40%)};
+        --#{$prefix}btn-hover-bg: #{shade-color($value, 68%)};
+        --#{$prefix}btn-hover-border-color: #{shade-color($value, 35%)};
+        --#{$prefix}btn-hover-color: #{color-contrast(shade-color($value, 68%))};
+        --#{$prefix}btn-active-bg: #{shade-color($value, 60%)};
+        --#{$prefix}btn-active-border-color: #{shade-color($value, 35%)};
+        --#{$prefix}btn-active-color: #{color-contrast(shade-color($value, 60%))};
+      }
+    }
+
+    // Outline variant — colored border and text, transparent bg
+    &-outline-#{$color} {
+      --#{$prefix}btn-color: #{$value};
+      --#{$prefix}btn-border-color: #{$value};
+      --#{$prefix}btn-hover-bg: #{$value};
+      --#{$prefix}btn-hover-border-color: #{$value};
+      --#{$prefix}btn-hover-color: #{color-contrast($value)};
+      --#{$prefix}btn-active-bg: #{shade-color($value, $btn-active-bg-shade-amount)};
+      --#{$prefix}btn-active-border-color: #{shade-color($value, $btn-active-border-shade-amount)};
+      --#{$prefix}btn-active-color: #{color-contrast(shade-color($value, $btn-active-bg-shade-amount))};
+
+      @at-root [data-bs-theme='dark'] & {
+        --#{$prefix}btn-color: #{tint-color($value, 30%)};
+        --#{$prefix}btn-border-color: #{tint-color($value, 30%)};
+      }
+    }
+  }
+}

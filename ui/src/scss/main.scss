@@ -1,0 +1,101 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// ============================================================
+// MAIN SCSS ENTRY POINT
+// Import order is load-bearing. Do not reorder.
+// ============================================================
+
+// ── PHASE 1: Bootstrap functions (required before any variable use) ──────────
+@import 'bootstrap/scss/functions';
+
+// ── PHASE 1.5: Self-hosted font @font-face declarations ──────────────────────
+@import 'fonts';
+
+// ── PHASE 2: Your variable overrides (must precede Bootstrap's !default) ─────
+@import 'variables';
+@import 'variables-dark';
+
+// ── PHASE 3: Bootstrap variables, maps, mixins ────────────────────────────────
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/variables-dark';
+@import 'bootstrap/scss/maps';
+@import 'maps'; // after bootstrap/scss/maps so map.merge($theme-colors, …) works
+@import 'bootstrap/scss/mixins';
+@import 'bootstrap/scss/utilities';
+
+// ── PHASE 4: Bootstrap layout + components ────────────────────────────────────
+@import 'bootstrap/scss/root';
+@import 'bootstrap/scss/reboot';
+@import 'bootstrap/scss/type';
+@import 'bootstrap/scss/images';
+@import 'bootstrap/scss/containers';
+@import 'bootstrap/scss/grid';
+@import 'bootstrap/scss/tables';
+@import 'bootstrap/scss/forms';
+@import 'bootstrap/scss/buttons';
+@import 'bootstrap/scss/transitions';
+@import 'bootstrap/scss/dropdown';
+@import 'bootstrap/scss/button-group';
+@import 'bootstrap/scss/nav';
+@import 'bootstrap/scss/navbar';
+@import 'bootstrap/scss/card';
+@import 'bootstrap/scss/accordion';
+@import 'bootstrap/scss/breadcrumb';
+@import 'bootstrap/scss/pagination';
+@import 'bootstrap/scss/badge';
+@import 'bootstrap/scss/alert';
+@import 'bootstrap/scss/progress';
+@import 'bootstrap/scss/list-group';
+@import 'bootstrap/scss/close';
+@import 'bootstrap/scss/toasts';
+@import 'bootstrap/scss/modal';
+@import 'bootstrap/scss/tooltip';
+@import 'bootstrap/scss/popover';
+@import 'bootstrap/scss/carousel';
+@import 'bootstrap/scss/spinners';
+@import 'bootstrap/scss/offcanvas';
+@import 'bootstrap/scss/placeholders';
+@import 'bootstrap/scss/helpers';
+@import 'bootstrap/scss/utilities/api'; // must be last Bootstrap partial
+
+// ── PHASE 5: Your component overrides (appended after Bootstrap styles) ───────
+@import 'reboot';
+@import 'components/accordion';
+@import 'components/alert';
+@import 'components/badge';
+@import 'components/breadcrumb';
+@import 'components/button-group';
+@import 'components/buttons';
+@import 'components/card';
+@import 'components/carousel';
+@import 'components/close';
+@import 'components/dropdown';
+@import 'components/list-group';
+@import 'components/modal';
+@import 'components/nav';
+@import 'components/navbar';
+@import 'components/offcanvas';
+@import 'components/pagination';
+@import 'components/placeholders';
+@import 'components/progress';
+@import 'components/spinners';
+@import 'components/tables';
+@import 'components/toasts';
+@import 'components/tooltip';
+@import 'components/popover';
+@import 'components/icon-link';
+@import 'components/type';
+@import 'forms/floating-labels';
+@import 'forms/form-check';
+@import 'forms/form-control';
+@import 'forms/form-range';
+@import 'forms/form-select';
+@import 'forms/form-text';
+@import 'forms/input-group';
+@import 'forms/labels';
+
+// ── PHASE 6: New/custom components not in Bootstrap ───────────────────────────
+@import 'components/sidebar';
+@import 'custom';

@@ -1,0 +1,13 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Override Bootstrap form-check — https://getbootstrap.com/docs/5.3/forms/checks-radios/
+
+// ── Switch ────────────────────────────────────────────────────────────────────
+// $enable-rounded: false zeroes out border-radius globally; restore it for switches only.
+.form-switch {
+  .form-check-input {
+    border-radius: $form-switch-border-radius;
+  }
+}

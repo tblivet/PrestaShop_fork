@@ -1,0 +1,34 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Override Bootstrap progress — https://getbootstrap.com/docs/5.3/components/progress/
+
+.progress {
+  --#{$prefix}progress-border-radius: var(--#{$prefix}border-radius-pill);
+  border-radius: var(--#{$prefix}progress-border-radius, #{$border-radius-pill});
+
+  &-bar {
+    border-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+  }
+
+  &-stacked {
+    .progress {
+      border-radius: 0;
+
+      &-bar {
+        border-radius: 0;
+      }
+
+      &:first-child .progress-bar {
+        border-top-left-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+        border-bottom-left-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+      }
+
+      &:last-child .progress-bar {
+        border-top-right-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+        border-bottom-right-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+      }
+    }
+  }
+}

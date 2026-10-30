@@ -1,0 +1,21 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Override Bootstrap accordion — https://getbootstrap.com/docs/5.3/components/accordion/
+
+.accordion {
+  --#{$prefix}accordion-active-bg: #{$gray-200};
+  --#{$prefix}accordion-btn-hover-bg: #{$gray-200};
+
+  &-button {
+    &:hover {
+      background-color: var(--#{$prefix}accordion-btn-hover-bg);
+    }
+  }
+
+  @at-root [data-bs-theme='dark'] & {
+    --#{$prefix}accordion-active-bg: #{$gray-800};
+    --#{$prefix}accordion-btn-hover-bg: #{$gray-800};
+  }
+}

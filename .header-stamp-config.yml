@@ -46,6 +46,12 @@ excludedFiles:
   - 'tools/build/Library/InstallUnpacker/content'
   - 'tools/build/composer.json'
   - 'themes/package.json'
+  # back-office UI kit: npm manifests, tool configs and build output
+  - 'ui/package.json'
+  - 'ui/package-lock.json'
+  - 'ui/.prettierrc.json'
+  - 'ui/.stylelintrc.json'
+  - 'ui/dist'
   # modules are not part of the core, they are independent and installed via composer
   - 'modules'
   # dependencies

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PrestaShop UI</title>
+    <script type="module" src="./js/main.js"></script>
+  </head>
+  <body>
+    <div class="container py-4 px-3 mx-auto">
+      <h1>PrestaShop UI</h1>
+      <p class="lead">
+        Back-office UI kit built on Bootstrap 5.3. Run <code>npm run dev</code> and edit <code>src/scss</code> to see
+        changes live.
+      </p>
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-secondary">Secondary</button>
+        <button class="btn btn-outline-primary">Outline</button>
+        <button class="btn btn-danger">Danger</button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-title="Bootstrap JS is loaded">
+          Tooltip
+        </button>
+      </div>
+      <div class="alert alert-info">Info alert</div>
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title h5">Form</h2>
+          <div class="mb-3">
+            <label class="form-label" for="example-input">Label</label>
+            <input class="form-control" id="example-input" type="text" placeholder="Placeholder" />
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" id="example-switch" type="checkbox" role="switch" checked />
+            <label class="form-check-label" for="example-switch">Switch</label>
+          </div>
+        </div>
+      </div>
+      <span class="material-symbols-outlined">settings</span>
+    </div>
+    <script type="module">
+      import { bootstrap } from './js/main.js';
+
+      document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => new bootstrap.Tooltip(el));
+    </script>
+  </body>
+</html>

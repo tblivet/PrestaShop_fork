@@ -1,0 +1,21 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Icon link overrides — https://getbootstrap.com/docs/5.3/helpers/icon-link/
+
+.icon-link {
+  > .material-symbols-outlined {
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out;
+  }
+}
+
+.icon-link-hover {
+  &:hover,
+  &:focus-visible {
+    > .material-symbols-outlined {
+      transform: var(--#{$prefix}icon-link-transform, #{$icon-link-icon-transform});
+    }
+  }
+}

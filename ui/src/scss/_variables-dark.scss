@@ -1,0 +1,35 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Bootstrap dark-mode overrides — node_modules/bootstrap/scss/_variables-dark.scss
+// Loaded before bootstrap/scss/variables — only base color vars available ($green/$blue etc.).
+
+// ── Subtle tokens (dark mode) ─────────────────────────────────────────────────
+
+// bg-subtle
+$primary-bg-subtle-dark: $primary;
+$secondary-bg-subtle-dark: shade-color($secondary, 72%);
+$success-bg-subtle-dark: shade-color($green, 72%);
+$info-bg-subtle-dark: shade-color($blue, 72%);
+$warning-bg-subtle-dark: shade-color($yellow, 72%);
+$danger-bg-subtle-dark: shade-color($red, 72%);
+$destructive-bg-subtle-dark: shade-color($red, 72%);
+
+// border-subtle
+$primary-border-subtle-dark: tint-color($primary, 20%);
+$secondary-border-subtle-dark: shade-color($secondary, 40%);
+$success-border-subtle-dark: shade-color($green, 40%);
+$info-border-subtle-dark: shade-color($blue, 40%);
+$warning-border-subtle-dark: shade-color($yellow, 40%);
+$danger-border-subtle-dark: shade-color($red, 40%);
+$destructive-border-subtle-dark: shade-color($red, 40%);
+
+// text-emphasis
+$primary-text-emphasis-dark: tint-color($primary, 80%);
+$secondary-text-emphasis-dark: tint-color($secondary, 40%);
+$success-text-emphasis-dark: tint-color($green, 40%);
+$info-text-emphasis-dark: tint-color($blue, 40%);
+$warning-text-emphasis-dark: tint-color($yellow, 40%);
+$danger-text-emphasis-dark: tint-color($red, 40%);
+$destructive-text-emphasis-dark: tint-color($red, 40%);

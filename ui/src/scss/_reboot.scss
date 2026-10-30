@@ -1,0 +1,21 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Base element overrides — appended after bootstrap/scss/reboot
+
+// ── Links ─────────────────────────────────────────────────────────────────────
+
+a {
+  text-underline-offset: 0.125rem;
+  @include transition(
+    color var(--#{$prefix}transition-duration, #{$transition-duration})
+      var(--#{$prefix}transition-easing, #{$transition-easing}),
+    text-underline-offset var(--#{$prefix}transition-duration, #{$transition-duration})
+      var(--#{$prefix}transition-easing, #{$transition-easing})
+  );
+
+  &:hover {
+    text-underline-offset: 0.25rem;
+  }
+}

@@ -1,0 +1,132 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Custom components and utilities not part of Bootstrap
+// Bootstrap variables and mixins are available here.
+
+// ── Global design tokens ──────────────────────────────────────────────────────
+:root {
+  --#{$prefix}transition-duration: #{$transition-duration};
+  --#{$prefix}transition-easing: #{$transition-easing};
+  --#{$prefix}font-weight-lighter: #{$font-weight-lighter};
+  --#{$prefix}font-weight-light: #{$font-weight-light};
+  --#{$prefix}font-weight-normal: #{$font-weight-normal};
+  --#{$prefix}font-weight-medium: #{$font-weight-medium};
+  --#{$prefix}font-weight-semibold: #{$font-weight-semibold};
+  --#{$prefix}font-weight-bold: #{$font-weight-bold};
+  --#{$prefix}font-weight-bolder: #{$font-weight-bolder};
+  @each $key, $value in $primaries {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $secondaries {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $reds {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $yellows {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $ambers {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $greens {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $blues {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $oceanblues {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $key, $value in $purples {
+    --#{$prefix}#{$key}: #{$value};
+  }
+  @each $name, $value in $palette-bg-subtle {
+    --#{$prefix}#{$name}-bg-subtle: #{$value};
+  }
+}
+
+// .bg-{color} / .text-{color} / .border-{color} — base alias for -500
+// .bg-{color}-{step} / .text-{color}-{step} / .border-{color}-{step} — full scale 50–900
+@each $color-name, $scale in $palette-scales {
+  .bg-#{$color-name} {
+    background-color: var(--#{$prefix}#{$color-name}-500) if($enable-important-utilities, !important, null);
+  }
+  .text-#{$color-name} {
+    color: var(--#{$prefix}#{$color-name}-500) if($enable-important-utilities, !important, null);
+  }
+  .border-#{$color-name} {
+    border-color: var(--#{$prefix}#{$color-name}-500) if($enable-important-utilities, !important, null);
+  }
+
+  @each $key, $value in $scale {
+    .bg-#{$key} {
+      background-color: var(--#{$prefix}#{$key}) if($enable-important-utilities, !important, null);
+    }
+    .text-#{$key} {
+      color: var(--#{$prefix}#{$key}) if($enable-important-utilities, !important, null);
+    }
+    .border-#{$key} {
+      border-color: var(--#{$prefix}#{$key}) if($enable-important-utilities, !important, null);
+    }
+  }
+}
+
+// .bg-{color}-subtle for non-theme palette colors
+@each $name, $value in $palette-bg-subtle {
+  .bg-#{$name}-subtle {
+    background-color: var(--#{$prefix}#{$name}-bg-subtle) if($enable-important-utilities, !important, null);
+  }
+}
+
+// ── Material Symbols helpers ─────────────────────────────────────────────────
+// Mirrors the class Google Fonts CDN injects — ensures dist/ is self-contained.
+.material-symbols-outlined {
+  display: inline-block;
+  font-family: $ms-font-family;
+  font-size: 1em;
+  font-style: normal;
+  font-weight: $font-weight-normal;
+  font-feature-settings: 'liga';
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+// Usage: <span class="icon">home</span>
+// Variation axes: --icon-fill, --icon-wght, --icon-grad, --icon-opsz
+.icon {
+  display: inline-flex;
+  align-items: center;
+  font-family: $ms-font-family;
+  font-size: 1em; // scales with surrounding text
+  font-variation-settings:
+    'FILL' var(--icon-fill, 0),
+    'wght' var(--icon-wght, 400),
+    'GRAD' var(--icon-grad, 0),
+    'opsz' var(--icon-opsz, 24);
+  font-style: normal;
+  font-weight: $font-weight-normal;
+  line-height: 1;
+  vertical-align: middle;
+  user-select: none;
+}
+
+// Filled variant — add .icon-filled or set --icon-fill: 1 inline
+.icon-filled {
+  --icon-fill: 1;
+}
+
+// Size modifiers
+.icon-sm {
+  font-size: 0.875em;
+}
+.icon-lg {
+  font-size: 1.5em;
+}

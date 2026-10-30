@@ -1,0 +1,26 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Override Bootstrap form-control — https://getbootstrap.com/docs/5.3/forms/form-control/
+
+.form-control {
+  // Chrome/Safari autofill applies a UA background that background-color cannot
+  // override — repaint every autofill state with an inset box-shadow. Dark contexts
+  // retint via the --#{$prefix}form-control-autofill-* hooks instead of redoing the hack.
+  &:-webkit-autofill {
+    &,
+    &:hover,
+    &:focus {
+      caret-color: var(--#{$prefix}form-control-autofill-color, var(--#{$prefix}body-color));
+      box-shadow: inset 0 0 0 100rem var(--#{$prefix}form-control-autofill-bg, var(--#{$prefix}body-bg));
+      -webkit-text-fill-color: var(--#{$prefix}form-control-autofill-color, var(--#{$prefix}body-color));
+    }
+
+    &:focus {
+      box-shadow:
+        inset 0 0 0 100rem var(--#{$prefix}form-control-autofill-bg, var(--#{$prefix}body-bg)),
+        $input-btn-focus-box-shadow;
+    }
+  }
+}

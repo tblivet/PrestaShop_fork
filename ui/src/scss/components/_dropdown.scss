@@ -1,0 +1,43 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Override Bootstrap dropdown — https://getbootstrap.com/docs/5.3/components/dropdowns/
+
+// Replace Bootstrap's CSS-border caret with a Material Symbol icon.
+%ms-caret {
+  font-family: $ms-font-family;
+  font-size: 1.1em;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 20;
+  font-style: normal;
+  font-weight: $font-weight-normal;
+  line-height: 0;
+  vertical-align: middle;
+  border: 0;
+}
+
+.dropdown {
+  &-toggle::after {
+    @extend %ms-caret;
+    content: 'keyboard_arrow_down';
+  }
+}
+
+.dropup .dropdown-toggle::after {
+  @extend %ms-caret;
+  content: 'keyboard_arrow_up';
+}
+
+.dropend .dropdown-toggle::after {
+  @extend %ms-caret;
+  content: 'keyboard_arrow_right';
+}
+
+.dropstart .dropdown-toggle::before {
+  @extend %ms-caret;
+  content: 'keyboard_arrow_left';
+}
