@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% set classes = ['alert', 'alert-' ~ type] %}
+{% if dismissible %}
+  {% set classes = classes|merge(['alert-dismissible', 'fade', 'show']) %}
+{% endif %}
+{% if icon %}
+  {% set classes = classes|merge(['d-flex', 'align-items-center', 'gap-2']) %}
+{% endif %}
+<div{{ attributes.defaults({class: classes|join(' '), role: 'alert'}) }}>
+  {% if icon %}
+    <twig:ux:icon :name="icon" width="16" height="16" class="flex-shrink-0" aria-hidden="true"/>
+    <div>{% block content %}{% endblock %}</div>
+  {% else %}
+    {{ block('content') }}
+  {% endif %}
+  {% if dismissible %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>
+  {% endif %}
+</div>

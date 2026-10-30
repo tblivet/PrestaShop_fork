@@ -5,6 +5,16 @@
 // PrestaShop BO login page — https://getbootstrap.com/docs/5.3/components/card/
 import { playgroundMeta } from '../../playground.meta.js';
 import loginHtml from './login.html?raw';
+import facebook from '../../../../icons/bi/facebook.svg?raw';
+import github from '../../../../icons/bi/github.svg?raw';
+import twitterX from '../../../../icons/bi/twitter-x.svg?raw';
+import uxIcon from '../../../stories/ux-icon';
+
+// login.html marks icons as <!-- ux:icon bi/name -->, rendered from ui/icons like <twig:ux:icon> in the back office
+const icons = { 'bi/facebook': facebook, 'bi/github': github, 'bi/twitter-x': twitterX };
+const page = loginHtml.replace(/<!-- ux:icon (\S+) -->/g, (_, name) =>
+  uxIcon(icons[name], { height: 16, width: 16, 'aria-hidden': 'true' })
+);
 
 export default {
   title: 'Playground/Pages/Login',
@@ -14,5 +24,5 @@ export default {
 };
 
 export const Default = {
-  render: () => loginHtml,
+  render: () => page,
 };
