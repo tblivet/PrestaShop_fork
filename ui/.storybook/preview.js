@@ -3,13 +3,15 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import '../src/scss/main.scss';
-import '../src/playground/scss/playground.scss';
 import * as bootstrap from 'bootstrap';
+import initPasswordToggle from '../src/js/components/password-toggle';
 import { addons } from '@storybook/preview-api';
 import { format } from 'prettier/standalone';
 import * as htmlPlugin from 'prettier/plugins/html';
 
 const SNIPPET_RENDERED = 'storybook/docs/snippet-rendered';
+
+initPasswordToggle();
 
 /** @type {import('@storybook/html').Preview} */
 const preview = {

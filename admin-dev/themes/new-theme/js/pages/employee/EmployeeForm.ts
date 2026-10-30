@@ -49,7 +49,7 @@ export default class EmployeeForm {
     const passwordHandler = new ChangePasswordHandler(
       employeeFormMap.passwordStrengthFeedbackContainer,
     );
-    passwordHandler.watchPasswordStrength($(employeeFormMap.passwordInput));
+    passwordHandler.watchPasswordStrength(document.querySelectorAll<HTMLInputElement>(employeeFormMap.passwordInput));
 
     this.initEvents();
     this.toggleShopTree();

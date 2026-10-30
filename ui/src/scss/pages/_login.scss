@@ -3,10 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 @use 'sass:map';
-// Variables must be imported here — Vite compiles page files in isolation for HMR.
-@import '../variables';
 
-// PrestaShop BO login page layout — playground only, not part of the design system
+// PrestaShop BO login page layout
 $selectors: (
   page: 'ps-page--login',
   login: 'ps-login',
@@ -62,6 +60,17 @@ $selectors: (
   &__form {
     display: grid;
     gap: 1rem;
+
+    // The title sits inside the form so it switches with it (login / forgot password)
+    > .#{map.get($selectors, login)}__title {
+      margin-block-end: 1rem;
+    }
+  }
+
+  &__form-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
   }
 
   &__form-group {

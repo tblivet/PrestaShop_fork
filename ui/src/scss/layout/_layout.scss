@@ -2,8 +2,6 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Variables must be imported here — Vite compiles page files in isolation for HMR.
-@import '../variables';
 
 // Generic BO shell — full-width header row, sidebar column, scrollable content section
 .ps-layout {

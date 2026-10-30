@@ -8,11 +8,8 @@ import { defineConfig } from 'vite';
 
 const root = fileURLToPath(new URL('.', import.meta.url));
 
-export default defineConfig({
-  root: resolve(root, 'src'),
-  // Relative URLs, so the CSS finds its fonts wherever dist/ is served from.
-  base: './',
-  publicDir: false,
+// Shared with Storybook (.storybook/vite.config.js), which has its own build.
+export const shared = {
   resolve: {
     // Fonts are served straight from their npm packages, in dev and in the build.
     alias: {
@@ -30,6 +27,15 @@ export default defineConfig({
       },
     },
   },
+};
+
+export default defineConfig({
+  ...shared,
+  root: resolve(root, 'src'),
+  // Relative URLs, so the CSS finds its fonts wherever dist/ is served from.
+  base: './',
+  // Brand images (prestashop.svg…), copied to dist/ and shared with Storybook.
+  publicDir: resolve(root, 'public'),
   build: {
     outDir: resolve(root, 'dist'),
     emptyOutDir: true,

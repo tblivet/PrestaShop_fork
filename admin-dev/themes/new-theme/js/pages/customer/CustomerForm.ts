@@ -15,7 +15,7 @@ export default class CustomerForm {
     const passwordHandler = new ChangePasswordHandler(
       customerFormMap.passwordStrengthFeedbackContainer,
     );
-    passwordHandler.watchPasswordStrength($(customerFormMap.passwordInput));
+    passwordHandler.watchPasswordStrength(document.querySelectorAll<HTMLInputElement>(customerFormMap.passwordInput));
 
     // Watch customer group checkbox change and if it was unchecked,
     // update default group below if it's no longer in the list.

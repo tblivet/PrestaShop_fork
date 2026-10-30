@@ -12,6 +12,8 @@ interface Window {
   moduleURLs: Record<string, any>;
   str2url: any;
   prestaShopUiKit: any;
+  // Bootstrap 5 from the /ui kit, only set while PS_UI_KIT is on
+  bootstrap?: any;
   // eslint-disable-next-line
   update_success_msg: string;
   adminNotificationPushLink: string;

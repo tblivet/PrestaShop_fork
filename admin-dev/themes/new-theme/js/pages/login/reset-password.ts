@@ -9,7 +9,7 @@ import ChangePasswordHandler from '@components/change-password-handler';
 
 onReady(() => {
   const passwordHandler = new ChangePasswordHandler(LoginFormMap.passwordStrengthFeedbackContainer);
-  passwordHandler.watchPasswordStrength($(LoginFormMap.resetNewPassword));
+  passwordHandler.watchPasswordStrength(document.querySelectorAll<HTMLInputElement>(LoginFormMap.resetNewPassword));
   const submitButton = document.querySelector<HTMLInputElement>(LoginFormMap.resetSubmitButton);
 
   if (submitButton) {

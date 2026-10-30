@@ -1,0 +1,71 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{% extends '@PrestaShop/Admin/Layout/Ui/login_layout.html.twig' %}
+
+{% form_theme loginForm 'bootstrap_5_layout.html.twig' %}
+{% form_theme requestPasswordResetForm 'bootstrap_5_layout.html.twig' %}
+
+{% block login_content %}
+  {% set forgotPasswordLink = loginForm.stay_logged_in.vars.external_link %}
+
+  {{ form_start(loginForm, {attr: loginForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? ' d-none' : '')})}) }}
+    <h1 class="ps-login__title">{{ 'Sign in to access your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
+
+    {{ form_errors(loginForm) }}
+
+    <div class="ps-login__form-group">
+      {{ form_label(loginForm.email) }}
+      {{ form_widget(loginForm.email, {attr: loginForm.email.vars.attr|merge({placeholder: 'name@example.com', autocomplete: 'email'})}) }}
+      {{ form_errors(loginForm.email) }}
+    </div>
+
+    <div class="ps-login__form-group">
+      {{ form_label(loginForm.passwd) }}
+      <div class="input-group">
+        {{ form_widget(loginForm.passwd, {attr: loginForm.passwd.vars.attr|merge({placeholder: loginForm.passwd.vars.label, autocomplete: 'current-password'})}) }}
+        <button
+          class="btn btn-primary d-inline-flex align-items-center"
+          type="button"
+          aria-label="{{ 'Show password'|trans({}, 'Admin.Actions') }}"
+          aria-controls="{{ loginForm.passwd.vars.id }}"
+          aria-pressed="false"
+          data-ps-action="toggle-password"
+        >
+          <span class="material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility</span>
+        </button>
+      </div>
+      {{ form_errors(loginForm.passwd) }}
+    </div>
+
+    <div class="ps-login__form-group">
+      {{ form_widget(loginForm.stay_logged_in) }}
+    </div>
+
+    <div class="ps-login__form-group">
+      {{ form_widget(loginForm.submit_login, {attr: {class: 'btn-primary ps-login__submit'}}) }}
+    </div>
+
+    <div class="ps-login__form-group ps-login__form-group--end">
+      <a href="{{ forgotPasswordLink.href }}" id="{{ forgotPasswordLink.attr.id }}" class="link-secondary small">{{ forgotPasswordLink.text }}</a>
+    </div>
+  {{ form_end(loginForm) }}
+
+  {{ form_start(requestPasswordResetForm, {attr: requestPasswordResetForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? '' : ' d-none')})}) }}
+    <h1 class="ps-login__title">{{ requestPasswordResetForm.vars.label }}</h1>
+
+    {{ form_errors(requestPasswordResetForm) }}
+
+    <div class="ps-login__form-group">
+      {{ form_label(requestPasswordResetForm.email_forgot) }}
+      {{ form_widget(requestPasswordResetForm.email_forgot, {attr: {placeholder: 'name@example.com', autocomplete: 'email'}}) }}
+      {{ form_errors(requestPasswordResetForm.email_forgot) }}
+    </div>
+
+    <div class="ps-login__form-actions">
+      {{ form_widget(requestPasswordResetForm.buttons.cancel, {attr: {class: 'btn-outline-secondary'}}) }}
+      {{ form_widget(requestPasswordResetForm.buttons.submit_login, {attr: {class: 'btn-primary'}}) }}
+    </div>
+  {{ form_end(requestPasswordResetForm) }}
+{% endblock %}

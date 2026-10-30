@@ -97,5 +97,12 @@
 @import 'forms/labels';
 
 // ── PHASE 6: New/custom components not in Bootstrap ───────────────────────────
-@import 'components/sidebar';
+@import 'layout/sidebar';
 @import 'custom';
+
+// ── PHASE 7: Back-office layout and pages (ps- prefixed classes) ──────────────
+@import 'layout/page';
+@import 'layout/layout';
+@import 'layout/header';
+@import 'layout/page-head';
+@import 'pages/login';

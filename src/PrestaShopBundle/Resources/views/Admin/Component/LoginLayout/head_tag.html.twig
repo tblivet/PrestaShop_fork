@@ -33,11 +33,15 @@
 
 {% if ui_kit %}
   <link rel="stylesheet" href="{{ asset('css/ui.css', 'ui_kit') }}" media="all">
-{% elseif ps.isRtlLanguage %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme_rtl.css') }}" media="all">
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/rtl.css') }}" media="all">
+  <script src="{{ asset('js/ui.js', 'ui_kit') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/login_form_ui.bundle.js') }}"></script>
 {% else %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" media="all">
+  {% if ps.isRtlLanguage %}
+    <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme_rtl.css') }}" media="all">
+    <link rel="stylesheet" href="{{ asset('themes/new-theme/public/rtl.css') }}" media="all">
+  {% else %}
+    <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" media="all">
+  {% endif %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/login.css') }}" media="all">
+  <script src="{{ asset('themes/new-theme/public/login_form.bundle.js') }}"></script>
 {% endif %}
-<link rel="stylesheet" href="{{ asset('themes/new-theme/public/login.css') }}" media="all">
-<script src="{{ asset('themes/new-theme/public/login_form.bundle.js') }}"></script>

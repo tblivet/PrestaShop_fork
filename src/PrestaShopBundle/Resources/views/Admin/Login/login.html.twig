@@ -2,7 +2,8 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
-{% extends '@PrestaShop/Admin/Layout/login_layout.html.twig' %}
+{# With PS_UI_KIT on, Ui/login.html.twig renders the page and the blocks below are not used #}
+{% extends ui_kit ? '@PrestaShop/Admin/Login/Ui/login.html.twig' : '@PrestaShop/Admin/Layout/login_layout.html.twig' %}
 
 {% block content %}
   {{ form_start(loginForm, {action: path('admin_login'), attr: {class: showRequestPasswordResetForm ? 'd-none' : ''}}) }}

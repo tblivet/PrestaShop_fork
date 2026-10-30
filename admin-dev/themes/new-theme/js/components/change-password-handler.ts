@@ -22,8 +22,6 @@ const zxcvbnConfig = {
 
 zxcvbnOptions.setOptions(zxcvbnConfig);
 
-const {$} = window;
-
 export interface ChangePasswordHandlerOptions {
   minLength?: number;
 }
@@ -55,45 +53,54 @@ export default class ChangePasswordHandler {
 
   /**
    * Watch password, which is entered in the input, strength and inform about it.
-   *
-   * @param {jQuery} $input the input to watch.
    */
-  watchPasswordStrength($input: JQuery): void {
-    const self = this;
+  watchPasswordStrength(inputs: ArrayLike<HTMLInputElement>): void {
+    Array.from(inputs).forEach((input) => {
+      input.addEventListener('keyup', () => {
+        const container = input.parentElement;
 
-    $input.each((index, element) => {
-      $(element).on('keyup', function checkPasswordStrength() {
-        const passwordValue = <string>$(this).val();
-        let $feedbackContainer = $(this).parent().find(self.feedbackSelector);
-
-        if ($feedbackContainer.length === 0) {
-          $(this).parent().append($('#password-feedback').html());
-          $feedbackContainer = $(this).parent().find(self.feedbackSelector);
+        if (!container) {
+          return;
         }
 
-        const passwordRequirementsLength = $feedbackContainer.find('.password-requirements-length');
-        passwordRequirementsLength.find('span').text(
-          sprintf(
-            passwordRequirementsLength.data('translation'),
-            $(this).data('minlength'),
-            $(this).data('maxlength'),
-          ),
-        );
+        let feedbackContainer = container.querySelector<HTMLElement>(this.feedbackSelector);
 
-        const passwordRequirementsScore = $feedbackContainer.find('.password-requirements-score');
-        passwordRequirementsScore.find('span').text(
-          sprintf(
-            passwordRequirementsScore.data('translation'),
-            $feedbackContainer.data('translations')[$(this).data('minscore')],
-          ),
-        );
+        if (!feedbackContainer) {
+          container.insertAdjacentHTML('beforeend', document.querySelector('#password-feedback')?.innerHTML ?? '');
+          feedbackContainer = container.querySelector<HTMLElement>(this.feedbackSelector);
+        }
 
-        if (passwordValue === '') {
-          $feedbackContainer.toggleClass('d-none', true);
+        if (!feedbackContainer) {
+          return;
+        }
+
+        const translations = JSON.parse(feedbackContainer.dataset.translations ?? '{}');
+        const passwordRequirementsLength = feedbackContainer.querySelector<HTMLElement>('.password-requirements-length');
+        const lengthText = passwordRequirementsLength?.querySelector('span');
+
+        if (passwordRequirementsLength && lengthText) {
+          lengthText.textContent = sprintf(
+            passwordRequirementsLength.dataset.translation,
+            input.dataset.minlength,
+            input.dataset.maxlength,
+          );
+        }
+
+        const passwordRequirementsScore = feedbackContainer.querySelector<HTMLElement>('.password-requirements-score');
+        const scoreText = passwordRequirementsScore?.querySelector('span');
+
+        if (passwordRequirementsScore && scoreText) {
+          scoreText.textContent = sprintf(
+            passwordRequirementsScore.dataset.translation,
+            translations[input.dataset.minscore ?? ''],
+          );
+        }
+
+        if (input.value === '') {
+          feedbackContainer.classList.add('d-none');
         } else {
-          const result = zxcvbn(passwordValue);
-          self.displayFeedback($(this), $feedbackContainer, result);
-          $feedbackContainer.removeClass('d-none');
+          this.displayFeedback(input, feedbackContainer, translations, zxcvbn(input.value));
+          feedbackContainer.classList.remove('d-none');
         }
       });
     });
@@ -106,23 +113,22 @@ export default class ChangePasswordHandler {
   /**
    * Display feedback about password's strength.
    *
-   * @param {jQuery} $passwordInput The currenct password field
-   * @param {jQuery} $outputContainer a container to put feedback output into.
-   * @param {ZXCVBNResult} result
-   *
    * @private
    */
   private displayFeedback(
-    $passwordInput: JQuery,
-    $outputContainer: JQuery,
+    passwordInput: HTMLInputElement,
+    outputContainer: HTMLElement,
+    translations: Record<string, string>,
     result: ZxcvbnResult,
   ): void {
     const feedback = this.getPasswordStrengthFeedback(result.score);
-    const translations = $outputContainer.data('translations');
     const popoverContent:string[] = [];
 
-    $outputContainer.find('.password-strength-text').text(translations[result.score]);
-    $passwordInput.popover('dispose');
+    const strengthText = outputContainer.querySelector('.password-strength-text');
+
+    if (strengthText) {
+      strengthText.textContent = translations[result.score];
+    }
 
     if (result.feedback.warning && result.feedback.warning !== '') {
       if (result.feedback.warning in translations) {
@@ -136,40 +142,55 @@ export default class ChangePasswordHandler {
       }
     });
 
-    $passwordInput.popover({
-      html: true,
-      placement: 'top',
-      content: popoverContent.join('<br/>'),
-    }).popover('show');
+    this.showPopover(passwordInput, popoverContent.join('<br/>'));
 
-    const passwordLength = (<string>$passwordInput.val()).length;
+    const passwordLength = passwordInput.value.length;
 
-    const passwordLengthValid = passwordLength >= $passwordInput.data('minlength')
-      && passwordLength <= $passwordInput.data('maxlength');
-    $outputContainer.find('.password-requirements-length .material-icons').toggleClass(
+    const passwordLengthValid = passwordLength >= Number(passwordInput.dataset.minlength)
+      && passwordLength <= Number(passwordInput.dataset.maxlength);
+    outputContainer.querySelector('.password-requirements-length .material-icons')?.classList.toggle(
       'text-success',
       passwordLengthValid,
     );
 
-    const passwordScoreValid = $passwordInput.data('minscore') <= result.score;
-    $outputContainer.find('.password-requirements-score .material-icons').toggleClass(
+    const passwordScoreValid = Number(passwordInput.dataset.minscore) <= result.score;
+    outputContainer.querySelector('.password-requirements-score .material-icons')?.classList.toggle(
       'text-success',
       passwordScoreValid,
     );
 
-    $passwordInput
-      .removeClass()
-      .addClass(passwordScoreValid && passwordLengthValid ? 'border-success' : 'border-danger')
-      .addClass('form-control border');
+    const borderClass = passwordScoreValid && passwordLengthValid ? 'border-success' : 'border-danger';
+    passwordInput.setAttribute('class', `form-control border ${borderClass}`);
     this.isValid = passwordScoreValid && passwordLengthValid;
 
     const percentage = (result.score * 20) + 20;
     // increase and decrease progress bar
-    $outputContainer
-      .find('.progress-bar')
-      .width(`${percentage}%`)
-      .css('visibility', 'visible')
-      .css('background-color', feedback.color);
+    const progressBar = outputContainer.querySelector<HTMLElement>('.progress-bar');
+
+    if (progressBar) {
+      progressBar.style.width = `${percentage}%`;
+      progressBar.style.visibility = 'visible';
+      progressBar.style.backgroundColor = feedback.color;
+    }
+  }
+
+  /**
+   * Bootstrap 5 when the /ui kit is loaded, otherwise the Bootstrap 4 jQuery plugin.
+   *
+   * @private
+   */
+  private showPopover(input: HTMLInputElement, content: string): void {
+    const {bootstrap} = window;
+
+    if (bootstrap?.Popover) {
+      bootstrap.Popover.getInstance(input)?.dispose();
+      new bootstrap.Popover(input, {html: true, placement: 'top', content}).show();
+
+      return;
+    }
+
+    window.$(input).popover('dispose');
+    window.$(input).popover({html: true, placement: 'top', content}).popover('show');
   }
 
   /**

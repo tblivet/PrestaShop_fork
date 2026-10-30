@@ -2,8 +2,6 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Variables must be imported here — Vite compiles page files in isolation for HMR.
-@import '../variables';
 
 // Page content head — icon + title with an actions zone; actions wrap below the
 // title on narrow screens

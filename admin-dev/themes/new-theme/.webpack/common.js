@@ -66,6 +66,19 @@ module.exports = {
     jquery: 'jQuery',
   },
   entry: {
+    // Bootstrap 4 + prestakit, only loaded while PS_UI_KIT is off.
+    // Delete this block with the toggle (tracker 4.2); the /ui replacement is noted on each line.
+    login: './scss/pages/login/login.scss', // -> /ui ui.css (scss/pages/_login.scss)
+    login_form: './js/pages/login', // -> login_form_ui
+    main: './js/theme', // -> /ui ui.js + main_ui
+    rtl: './scss/rtl.scss', // -> no /ui equivalent yet
+    theme: './scss/theme.scss', // -> /ui ui.css
+
+    // Only loaded while PS_UI_KIT is on: drop the _ui suffix once the block above is gone.
+    login_form_ui: './js/pages/login/login-page',
+    main_ui: './js/theme-ui',
+
+    // Pages and shared bundles, loaded in both modes
     address: './js/pages/address',
     alias_form: './js/pages/alias/form',
     administration: './js/pages/administration',
@@ -137,11 +150,7 @@ module.exports = {
     language: './js/pages/language',
     light_theme: './scss/light_theme.scss',
     localization: './js/pages/localization',
-    login: './scss/pages/login/login.scss',
-    login_form: './js/pages/login',
     logs: './js/pages/logs',
-    main: './js/theme',
-    main_ui: './js/theme-ui',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
     manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form',
@@ -179,7 +188,6 @@ module.exports = {
     product_shops: './js/pages/product/shop',
     profiles: './js/pages/profiles',
     reset_password: './js/pages/login/reset-password',
-    rtl: './scss/rtl.scss',
     search: './js/pages/search',
     search_engine: './js/pages/search-engine',
     security: './js/pages/security',
@@ -200,7 +208,6 @@ module.exports = {
     tax_rules: './js/pages/tax-rules',
     tax_rules_form: './js/pages/tax-rules/form',
     tax_rules_group: './js/pages/tax-rules-group',
-    theme: './scss/theme.scss',
     themes: './js/pages/themes',
     title: './js/pages/title',
     title_form: './js/pages/title/form',
