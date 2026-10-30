@@ -26,7 +26,7 @@ SYMFONY  = $(PHP_CONT) bin/console
 
 # Misc
 .DEFAULT_GOAL = install
-.PHONY        : help docker-build docker-up docker-start docker-restart docker-down docker-logs docker-sh composer cc test test-unit test-integration test-integration-behaviour test-api-module assets assets-clean wait-assets admin front admin-default admin-new-theme front-core front-classic front-hummingbird watch-admin-default watch-admin-new-theme watch-front-core watch-front-classic watch-front-hummingbird install install-prestashop cs-fixer cs-fixer-dry phpstan scss-fixer es-linter
+.PHONY        : help docker-build docker-up docker-start docker-restart docker-down docker-logs docker-sh composer cc test test-unit test-integration test-integration-behaviour test-api-module assets assets-clean wait-assets admin front admin-default admin-new-theme admin-ui front-core front-classic front-hummingbird watch-admin-default watch-admin-new-theme watch-admin-ui watch-front-core watch-front-classic watch-front-hummingbird install install-prestashop cs-fixer cs-fixer-dry phpstan scss-fixer es-linter
 
 ## —— 🎵 🐳 PrestaShop Docker Makefile 🐳 🎵 ———————————————————————————————————
 help: ## Outputs this help screen
@@ -71,6 +71,7 @@ wait-assets: ## Wait for assets to be built
 admin: ## Build admin assets
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh admin-default --force
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh admin-new-theme --force
+	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh admin-ui --force
 
 front: ## Build front assets
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh front-core --force
@@ -82,6 +83,9 @@ admin-default: ## Build assets for default admin theme
 
 admin-new-theme: ## Build assets for new admin theme
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh admin-new-theme --force
+
+admin-ui: ## Build assets for the back-office UI kit
+	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh admin-ui --force
 
 front-core: ## Build assets for core theme
 	$(PHP_CONT_WITH_LOGIN) ./tools/assets/build.sh front-core --force
@@ -99,6 +103,9 @@ watch-admin-default: ## Watch and rebuild assets for default admin theme
 
 watch-admin-new-theme: ## Watch and rebuild assets for new admin theme
 	$(WATCH_CONT) ./tools/assets/build.sh admin-new-theme --watch || [ $$? -eq 130 ]
+
+watch-admin-ui: ## Watch and rebuild assets for the back-office UI kit
+	$(WATCH_CONT) ./tools/assets/build.sh admin-ui --watch || [ $$? -eq 130 ]
 
 watch-front-core: ## Watch and rebuild assets for core theme
 	$(WATCH_CONT) ./tools/assets/build.sh front-core --watch || [ $$? -eq 130 ]

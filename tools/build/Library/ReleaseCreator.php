@@ -61,6 +61,13 @@ class ReleaseCreator
         'package-lock.json',
         '.babelrc',
         'postcss.config.js',
+        'ui/.gitignore',
+        'ui/.nvmrc',
+        'ui/.prettierrc.json',
+        'ui/.stylelintrc.json',
+        'ui/package-lock.json',
+        'ui/package.json',
+        'ui/vite.config.js',
     ];
 
     /**
@@ -68,7 +75,12 @@ class ReleaseCreator
      *
      * @var array
      */
-    protected $foldersRemoveList = [];
+    protected $foldersRemoveList = [
+        'ui/.storybook',
+        'ui/public',
+        'ui/src',
+        'ui/storybook-static',
+    ];
 
     /**
      * Pattern of files or directories to remove.

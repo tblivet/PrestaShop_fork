@@ -1,0 +1,6 @@
+# Only the built assets in dist/ are served, never the sources or node_modules.
+<IfModule mod_authz_core.c>
+  <If "%{REQUEST_URI} !~ m#/ui/dist/#">
+    Require all denied
+  </If>
+</IfModule>

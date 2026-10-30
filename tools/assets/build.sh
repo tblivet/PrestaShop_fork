@@ -3,7 +3,7 @@
 ###
 # This script rebuilds all the static assets, reinstalling dependencies when they changed
 # Usage: ./tools/assets/build.sh [asset-name] [--force] [--force-install] [--watch]
-#   asset-name: admin-default, admin-new-theme, front-core, front-classic, front-hummingbird, or all
+#   asset-name: admin-default, admin-new-theme, admin-ui, front-core, front-classic, front-hummingbird, or all
 #   --force: Force rebuild even if assets already exist
 #   --force-install: Force a clean reinstall of node_modules (implies --force)
 #   --watch: Rebuild the given asset on every change instead of building once.
@@ -126,6 +126,7 @@ function asset_dir {
   case $1 in
     admin-default)     echo "$ADMIN_DIR/themes/default" ;;
     admin-new-theme)   echo "$ADMIN_DIR/themes/new-theme" ;;
+    admin-ui)          echo "$PROJECT_PATH/ui" ;;
     front-core)        echo "$PROJECT_PATH/themes" ;;
     front-classic)     echo "$PROJECT_PATH/themes/classic/_dev" ;;
     front-hummingbird) echo "$PROJECT_PATH/themes/hummingbird" ;;
@@ -133,7 +134,7 @@ function asset_dir {
   esac
 }
 
-ASSET_NAMES="admin-default, admin-new-theme, front-core, front-classic, front-hummingbird"
+ASSET_NAMES="admin-default, admin-new-theme, admin-ui, front-core, front-classic, front-hummingbird"
 
 # Watch mode leaves development assets on disk. This marker records that, so the
 # "already built" check below does not mistake them for a finished build.
@@ -230,6 +231,9 @@ should_build_asset() {
     admin-new-theme)
       [[ ! -f "$ADMIN_DIR/themes/new-theme/public/theme.css" ]]
       ;;
+    admin-ui)
+      [[ ! -f "$PROJECT_PATH/ui/dist/css/ui.css" ]]
+      ;;
     front-core)
       [[ ! -f "$PROJECT_PATH/themes/core.js" ]]
       ;;
@@ -245,9 +249,9 @@ should_build_asset() {
 build_asset() {
   case $1 in
     all)
-      build_asset admin-default & build_asset admin-new-theme & build_asset front-core & build_asset front-classic & build_asset front-hummingbird
+      build_asset admin-default & build_asset admin-new-theme & build_asset admin-ui & build_asset front-core & build_asset front-classic & build_asset front-hummingbird
     ;;
-    admin-default|admin-new-theme|front-core|front-classic|front-hummingbird)
+    admin-default|admin-new-theme|admin-ui|front-core|front-classic|front-hummingbird)
       if should_build_asset "$1"; then
         echo ">>> Building $1 assets..."
         build "$(asset_dir "$1")"
