@@ -14,7 +14,7 @@
   <main class="ps-page ps-page--bg-subtle ps-page--login">
     <a class="icon-link icon-link-hover ps-login__back" href="{{ ps.baseUrl }}">
       <i class="material-symbols-outlined" aria-hidden="true">arrow_back</i>
-      {{ 'Back to'|trans({}, 'Admin.Actions') }} {{ shopName }}
+      {{ 'Back to %store_name%'|trans({'%store_name%': shopName}, 'Admin.Actions') }}
     </a>
 
     <div class="ps-login__container">

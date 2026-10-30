@@ -67,6 +67,13 @@ $selectors: (
     }
   }
 
+  &__intro {
+    margin-block: 0 1rem;
+    font-size: 0.875rem;
+    color: var(--#{$prefix}secondary-color);
+    text-align: center;
+  }
+
   &__form-actions {
     display: flex;
     gap: 0.5rem;

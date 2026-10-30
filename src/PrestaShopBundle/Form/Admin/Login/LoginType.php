@@ -57,14 +57,14 @@ class LoginType extends AbstractType
                 ] : [],
             ])
             ->add('submit_login', SubmitType::class, [
-                'label' => $this->translator->trans('Log in', [], 'Admin.Login.Feature'),
+                'label' => $this->translator->trans('Sign in', [], 'Admin.Login.Feature'),
             ])
             ->add('stay_logged_in', CheckboxType::class, [
-                'label' => $this->translator->trans('Stay logged in', [], 'Admin.Login.Feature'),
+                'label' => $this->translator->trans('Stay signed in', [], 'Admin.Login.Feature'),
                 'required' => false,
                 'external_link' => [
                     'href' => '#forgotten_password',
-                    'text' => $this->translator->trans('I forgot my password', [], 'Admin.Login.Feature'),
+                    'text' => $this->translator->trans('Forgot your password?', [], 'Admin.Login.Feature'),
                     'open_in_new_tab' => false,
                     'attr' => [
                         'id' => 'forgot-password-link',

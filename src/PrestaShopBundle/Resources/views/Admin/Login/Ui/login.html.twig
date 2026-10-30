@@ -11,7 +11,7 @@
   {% set forgotPasswordLink = loginForm.stay_logged_in.vars.external_link %}
 
   {{ form_start(loginForm, {action: path('admin_login'), attr: loginForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? ' d-none' : '')})}) }}
-    <h1 class="ps-login__title">{{ 'Sign in to access your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
+    <h1 class="ps-login__title">{{ 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
 
     {{ form_errors(loginForm) }}
 

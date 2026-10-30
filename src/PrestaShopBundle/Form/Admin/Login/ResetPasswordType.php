@@ -43,7 +43,7 @@ class ResetPasswordType extends AbstractType
                 'first_options' => [
                     'label' => $this->translator->trans('New password', [], 'Admin.Advparameters.Feature'),
                     'help' => $this->translator->trans(
-                        'Password should be at least %num% characters long.',
+                        'Use at least %num% characters.',
                         [
                             '%num%' => Password::MIN_LENGTH,
                         ],
@@ -56,11 +56,11 @@ class ResetPasswordType extends AbstractType
                     ],
                 ],
                 'second_options' => [
-                    'label' => $this->translator->trans('Confirm password', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->translator->trans('Confirm new password', [], 'Admin.Advparameters.Feature'),
                     'help' => '',
                     'attr' => [
                         'data-invalid-password' => $this->translator->trans(
-                            'The confirmation password doesn\'t match.',
+                            'The passwords don\'t match.',
                             [],
                             'Admin.Notifications.Error'
                         ),

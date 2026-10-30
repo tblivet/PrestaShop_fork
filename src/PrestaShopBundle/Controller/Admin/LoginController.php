@@ -70,7 +70,7 @@ class LoginController extends PrestaShopAdminController
         $requestPasswordResetForm = $requestResetPasswordFormHandler->getForm();
 
         if ($authenticationUtils->getLastAuthenticationError() instanceof AuthenticationException) {
-            $this->addFlash('error', $this->trans('The employee does not exist, or the password provided is incorrect.', [], 'Admin.Login.Notification'));
+            $this->addFlash('error', $this->trans('The email address or password is incorrect.', [], 'Admin.Login.Notification'));
         }
 
         return $this->renderLoginPage($loginForm, $requestPasswordResetForm, false);
@@ -127,21 +127,21 @@ class LoginController extends PrestaShopAdminController
                 $infoMessage = $errorMessage = null;
                 try {
                     $requestResetPasswordFormHandler->save($requestPasswordResetForm->getData());
-                    $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
-                        $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
+                    $infoMessage = $this->trans('Check your inbox.', [], 'Admin.Login.Notification') . '<br/>' .
+                        $this->trans('If an account exists for this email address, you\'ll receive a link to reset your password.', [], 'Admin.Login.Notification')
                     ;
                 } catch (EmployeeNotFoundException|UserNotFoundException) {
                     // If the email doesn't match a known employee we still display a generic success message to avoid any hacker using this
                     // to find out the employee's emails via brute force.
                     // UserNotFoundException is no longer thrown by EmployeePasswordResetter but is still caught for safety.
-                    $infoMessage = $this->trans('Please, check your mailbox.', [], 'Admin.Login.Notification') . '<br/>' .
-                        $this->trans('If this email address has been registered in our store, you will receive a link to reset your password.', [], 'Admin.Login.Notification')
+                    $infoMessage = $this->trans('Check your inbox.', [], 'Admin.Login.Notification') . '<br/>' .
+                        $this->trans('If an account exists for this email address, you\'ll receive a link to reset your password.', [], 'Admin.Login.Notification')
                     ;
                 } catch (PasswordResetTemporarilyBlockedException) {
                     $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_TIME_BACK') ?: 360);
-                    $errorMessage = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => $validityDuration], 'Admin.Login.Notification');
+                    $errorMessage = $this->trans('You can request a new reset link every %interval% minute(s). Try again later.', ['%interval%' => $validityDuration], 'Admin.Login.Notification');
                 } catch (Throwable) {
-                    $errorMessage = $this->trans('An error occurred while attempting to reset your password.', [], 'Admin.Login.Notification');
+                    $errorMessage = $this->trans('We couldn\'t reset your password. Try again later.', [], 'Admin.Login.Notification');
                 }
 
                 if (!empty($infoMessage)) {
@@ -173,14 +173,14 @@ class LoginController extends PrestaShopAdminController
                 $resetPasswordFormHandler->save(array_merge([
                     'resetToken' => $resetToken,
                 ], $resetPasswordForm->getData()));
-                $this->addFlash('success', $this->trans('The password has been changed successfully.', [], 'Admin.Login.Notification'));
+                $this->addFlash('success', $this->trans('Your password has been changed. You can now sign in.', [], 'Admin.Login.Notification'));
             } catch (InvalidResetPasswordTokenException) {
                 // Display generic error message with no details why it failed
-                $this->addFlash('error', $this->trans('Your password reset request expired. Please start again.', [], 'Admin.Login.Notification'));
+                $this->addFlash('error', $this->trans('Your reset link has expired. Request a new one.', [], 'Admin.Login.Notification'));
 
                 return $this->redirectToRoute('admin_login');
             } catch (Throwable) {
-                $this->addFlash('error', $this->trans('An error occurred while attempting to reset your password.', [], 'Admin.Login.Notification'));
+                $this->addFlash('error', $this->trans('We couldn\'t reset your password. Try again later.', [], 'Admin.Login.Notification'));
             }
 
             return $this->redirectToRoute('admin_login');
