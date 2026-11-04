@@ -127,19 +127,12 @@ class LoginController extends PrestaShopAdminController
                 $infoMessage = $errorMessage = null;
                 try {
                     $requestResetPasswordFormHandler->save($requestPasswordResetForm->getData());
-                    $infoMessage = $this->trans('Check your inbox.', [], 'Admin.Login.Notification') . '<br/>' .
-                        $this->trans('If an account exists for this email address, you\'ll receive a link to reset your password.', [], 'Admin.Login.Notification')
-                    ;
-                } catch (EmployeeNotFoundException|UserNotFoundException) {
-                    // If the email doesn't match a known employee we still display a generic success message to avoid any hacker using this
-                    // to find out the employee's emails via brute force.
+                    $infoMessage = $this->getPasswordResetRequestedMessage();
+                } catch (EmployeeNotFoundException|UserNotFoundException|PasswordResetTemporarilyBlockedException) {
+                    // An unknown email, or a known one asking again too soon, gets the same message as a sent link,
+                    // so nobody can find out which emails belong to an employee by trying them.
                     // UserNotFoundException is no longer thrown by EmployeePasswordResetter but is still caught for safety.
-                    $infoMessage = $this->trans('Check your inbox.', [], 'Admin.Login.Notification') . '<br/>' .
-                        $this->trans('If an account exists for this email address, you\'ll receive a link to reset your password.', [], 'Admin.Login.Notification')
-                    ;
-                } catch (PasswordResetTemporarilyBlockedException) {
-                    $validityDuration = (int) ($this->getConfiguration()->get('PS_PASSWD_TIME_BACK') ?: 360);
-                    $errorMessage = $this->trans('You can request a new reset link every %interval% minute(s). Try again later.', ['%interval%' => $validityDuration], 'Admin.Login.Notification');
+                    $infoMessage = $this->getPasswordResetRequestedMessage();
                 } catch (Throwable) {
                     $errorMessage = $this->trans('We couldn\'t reset your password. Try again later.', [], 'Admin.Login.Notification');
                 }
@@ -193,6 +186,33 @@ class LoginController extends PrestaShopAdminController
         ]);
     }
 
+    private function getPasswordResetRequestedMessage(): string
+    {
+        return $this->trans('Check your inbox.', [], 'Admin.Login.Notification') . '<br/>'
+            . $this->trans('If an account exists for this email address, you\'ll receive a link to reset your password.', [], 'Admin.Login.Notification') . ' '
+            . $this->getPasswordResetIntervalMessage((int) ($this->getConfiguration()->get('PS_PASSWD_TIME_BACK') ?: 360));
+    }
+
+    /**
+     * One sentence per case, since the translator has no plural forms: PS_PASSWD_TIME_BACK is in minutes, 360 by default.
+     */
+    private function getPasswordResetIntervalMessage(int $minutes): string
+    {
+        if ($minutes === 60) {
+            return $this->trans('You can request a new link every hour.', [], 'Admin.Login.Notification');
+        }
+
+        if ($minutes > 60 && $minutes % 60 === 0) {
+            return $this->trans('You can request a new link every %count% hours.', ['%count%' => intdiv($minutes, 60)], 'Admin.Login.Notification');
+        }
+
+        if ($minutes === 1) {
+            return $this->trans('You can request a new link every minute.', [], 'Admin.Login.Notification');
+        }
+
+        return $this->trans('You can request a new link every %count% minutes.', ['%count%' => $minutes], 'Admin.Login.Notification');
+    }
+
     protected function renderLoginPage(FormInterface $loginForm, FormInterface $requestPasswordResetForm, bool $showRequestPasswordResetForm): Response
     {
         return $this->render('@PrestaShop/Admin/Login/login.html.twig', [
@@ -211,7 +231,7 @@ class LoginController extends PrestaShopAdminController
 
         // If install folder is still present display a warning to remove it
         if (is_dir($this->projectDir . '/install')) {
-            $requiredActions[] = $this->trans('deleted the /install folder', [], 'Admin.Login.Notification');
+            $requiredActions[] = $this->trans('Delete the /install folder.', [], 'Admin.Login.Notification');
         }
 
         // If admin folder is still named admin
@@ -221,7 +241,7 @@ class LoginController extends PrestaShopAdminController
                 mt_rand(0, 999),
                 mb_strtolower((new PasswordGenerator(new OpenSSL()))->generatePassword(16)),
             );
-            $requiredActions[] = $this->trans('renamed the /admin folder (e.g. %s)', [$randomName], 'Admin.Login.Notification');
+            $requiredActions[] = $this->trans('Rename the /admin folder, for example to %s', [$randomName], 'Admin.Login.Notification');
         }
 
         $sslEnabled = (bool) $this->getConfiguration()->get('PS_SSL_ENABLED');
@@ -253,12 +273,12 @@ class LoginController extends PrestaShopAdminController
                 $securedUrl .= $this->generateUrl('admin_login');
 
                 $requiredActions[] = $this->trans(
-                    'SSL is activated. Please connect using the following link to [1]log in to secure mode (https://)[/1]',
+                    'SSL is on: [1]sign in over a secure connection (https://)[/1].',
                     ['[1]' => '<a href="' . $securedUrl . '">', '[/1]' => '</a>'],
                     'Admin.Login.Notification'
                 );
             } else {
-                $warningActions[] = $this->trans('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.', [], 'Admin.Login.Notification');
+                $warningActions[] = $this->trans('SSL is on, but your IP address is allowed to sign in without it, for maintenance or local access.', [], 'Admin.Login.Notification');
             }
         }
 

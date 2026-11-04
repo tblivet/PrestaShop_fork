@@ -1,0 +1,23 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# Only types with messages are read: reading empties them, and an empty wrapper would still take a place in its layout #}
+{% set alerts = [] %}
+{% for flashType, alert in this.alerts %}
+  {% if app.session.flashbag.peek(flashType) is not empty %}
+    {% set alerts = alerts|merge([alert|merge({messages: app.session.flashbag.get(flashType)})]) %}
+  {% endif %}
+{% endfor %}
+
+{% if alerts is not empty %}
+  <div{{ attributes.defaults({class: 'ps-flash-messages', 'data-ps-ref': 'flash-messages'}) }}>
+    {% for alert in alerts %}
+      <twig:ui:Alert :type="alert.type" :icon="alert.icon" :dismissible="dismissible" data-ps-ref="flash-alert">
+        {% for message in alert.messages %}
+          <p class="mb-0">{{ message|raw_purified }}</p>
+        {% endfor %}
+      </twig:ui:Alert>
+    {% endfor %}
+  </div>
+{% endif %}

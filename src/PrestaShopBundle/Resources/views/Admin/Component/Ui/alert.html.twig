@@ -7,11 +7,13 @@
   {% set classes = classes|merge(['alert-dismissible', 'fade', 'show']) %}
 {% endif %}
 {% if icon %}
-  {% set classes = classes|merge(['d-flex', 'align-items-center', 'gap-2']) %}
+  {% set classes = classes|merge(['d-flex', 'align-items-start', 'gap-2']) %}
 {% endif %}
-<div{{ attributes.defaults({class: classes|join(' '), role: 'alert'}) }}>
+{# Only a danger alert interrupts screen readers; the others are announced politely #}
+<div{{ attributes.defaults({class: classes|join(' '), role: type == 'danger' ? 'alert' : 'status'}) }}>
   {% if icon %}
-    <twig:ux:icon :name="icon" width="16" height="16" class="flex-shrink-0" aria-hidden="true"/>
+    {# mt-1 centres the 16px icon on the first 24px line, so it stays there when the text wraps #}
+    <twig:ux:icon :name="icon" width="16" height="16" class="flex-shrink-0 mt-1" aria-hidden="true"/>
     <div>{% block content %}{% endblock %}</div>
   {% else %}
     {{ block('content') }}

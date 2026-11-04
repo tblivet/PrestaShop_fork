@@ -7,13 +7,14 @@
  * Defines all selectors that are used in login/reset password form.
  */
 export default {
-  loginForm: '#login_form',
-  forgotPasswordForm: '#forgot_password_form',
-  forgotPasswordLink: '#forgot-password-link',
-  cancelResetPasswordButton: '#request_password_reset_buttons_cancel',
-  passwordStrengthFeedbackContainer: '.password-strength-feedback',
-  resetNewPassword: '#reset_password_new_password_first',
-  resetNewPasswordConfirmation: '#reset_password_new_password_second',
-  resetSubmitButton: '#reset_password_submit_login',
-  alertMessages: '.card-body .alert',
+  loginForm: '[data-ps-ref="login-form"]',
+  forgotPasswordForm: '[data-ps-ref="forgot-password-form"]',
+  forgotPasswordLink: '[data-ps-action="show-forgot-password"]',
+  cancelResetPasswordButton: '[data-ps-action="cancel-forgot-password"]',
+  passwordStrengthFeedbackContainer: '[data-ps-ref="password-feedback"]',
+  resetNewPassword: '[data-ps-ref="new-password"]',
+  resetNewPasswordConfirmation: '[data-ps-ref="new-password-confirmation"]',
+  resetPasswordMismatch: '[data-ps-target="password-mismatch"]',
+  resetSubmitButton: '[data-ps-ref="reset-password-submit"]',
+  alertMessages: '[data-ps-ref="flash-alert"]',
 };

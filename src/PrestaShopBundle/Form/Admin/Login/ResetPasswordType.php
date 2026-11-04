@@ -7,7 +7,6 @@
 namespace PrestaShopBundle\Form\Admin\Login;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -36,20 +35,21 @@ class ResetPasswordType extends AbstractType
         $builder
             ->add('new_password', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'constraints' => [
-                    $this->getLengthConstraint($maxLength, $minLength),
-                ],
                 'required' => true,
+                // Same words as the client-side check, shown under the confirmation field
+                'invalid_message' => $this->translator->trans('The passwords don\'t match.', [], 'Admin.Notifications.Error'),
+                'error_mapping' => [
+                    '.' => 'second',
+                ],
                 'first_options' => [
                     'label' => $this->translator->trans('New password', [], 'Admin.Advparameters.Feature'),
-                    'help' => $this->translator->trans(
-                        'Use at least %num% characters.',
-                        [
-                            '%num%' => Password::MIN_LENGTH,
-                        ],
-                        'Admin.Advparameters.Help'
-                    ),
+                    // The same requirement as the strength checklist, from the password policy
+                    'help' => $this->translator->trans('Use between %d and %d characters', [$minLength, $maxLength], 'Admin.Advparameters.Feature'),
+                    'constraints' => [
+                        $this->getLengthConstraint($maxLength, $minLength),
+                    ],
                     'attr' => [
+                        'data-ps-ref' => 'new-password',
                         'data-minscore' => $minScore,
                         'data-minlength' => $minLength,
                         'data-maxlength' => $maxLength,
@@ -59,11 +59,8 @@ class ResetPasswordType extends AbstractType
                     'label' => $this->translator->trans('Confirm new password', [], 'Admin.Advparameters.Feature'),
                     'help' => '',
                     'attr' => [
-                        'data-invalid-password' => $this->translator->trans(
-                            'The passwords don\'t match.',
-                            [],
-                            'Admin.Notifications.Error'
-                        ),
+                        'data-ps-ref' => 'new-password-confirmation',
+                        'data-ps-data-mismatch' => $this->translator->trans('The passwords don\'t match.', [], 'Admin.Notifications.Error'),
                         'data-minscore' => $minScore,
                         'data-minlength' => $minLength,
                         'data-maxlength' => $maxLength,
@@ -72,6 +69,9 @@ class ResetPasswordType extends AbstractType
             ])
             ->add('submit_login', SubmitType::class, [
                 'label' => $this->translator->trans('Reset password', [], 'Admin.Login.Feature'),
+                'attr' => [
+                    'data-ps-ref' => 'reset-password-submit',
+                ],
             ])
         ;
     }
@@ -85,7 +85,9 @@ class ResetPasswordType extends AbstractType
             'form_theme' => '@PrestaShop/Admin/Login/form_theme.html.twig',
             'attr' => [
                 'id' => 'reset_password_form',
+                'data-ps-ref' => 'reset-password-form',
             ],
+            'csrf_message' => $this->translator->trans('This page has expired. Try again.', [], 'Admin.Login.Notification'),
         ]);
     }
 

@@ -39,6 +39,9 @@ class RequestPasswordResetType extends AbstractType
                         'type' => ButtonType::class,
                         'options' => [
                             'label' => $this->translator->trans('Cancel', [], 'Admin.Global'),
+                            'attr' => [
+                                'data-ps-action' => 'cancel-forgot-password',
+                            ],
                         ],
                     ],
                     'submit_login' => [
@@ -62,7 +65,9 @@ class RequestPasswordResetType extends AbstractType
             'form_theme' => '@PrestaShop/Admin/Login/form_theme.html.twig',
             'attr' => [
                 'id' => 'forgot_password_form',
+                'data-ps-ref' => 'forgot-password-form',
             ],
+            'csrf_message' => $this->translator->trans('This page has expired. Try again.', [], 'Admin.Login.Notification'),
         ]);
     }
 }

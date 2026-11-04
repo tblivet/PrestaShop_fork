@@ -23,5 +23,5 @@ export default {
   confirmNewPasswordInput: '#employee_change_password_new_password_second',
   generatedPasswordDisplayInput: '#employee_change_password_generated_password',
   generatedPasswordButton: '#employee_change_password_generate_password_button',
-  passwordStrengthFeedbackContainer: '.password-strength-feedback',
+  passwordStrengthFeedbackContainer: '[data-ps-ref="password-feedback"]',
 };

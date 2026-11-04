@@ -4,7 +4,7 @@
  */
 import selectors from '../selectors';
 
-// <button data-ps-action="toggle-password" aria-controls="{input id}"> shows or hides that input's value.
+// <button data-ps-action="toggle-password" aria-controls="{input id}"> (the <twig:ui:PasswordField> button) shows or hides that input's value.
 export default function initPasswordToggle() {
   document.addEventListener('click', (event) => {
     const button = event.target.closest(selectors.passwordToggle);
@@ -15,13 +15,9 @@ export default function initPasswordToggle() {
     }
 
     const show = input.type === 'password';
-    const icon = button.querySelector('[aria-hidden="true"]');
 
+    // The icon follows aria-pressed in CSS (_password-field.scss)
     input.type = show ? 'text' : 'password';
     button.setAttribute('aria-pressed', String(show));
-
-    if (icon) {
-      icon.textContent = show ? 'visibility_off' : 'visibility';
-    }
   });
 }

@@ -6,6 +6,7 @@
 import {zxcvbn, zxcvbnOptions, ZxcvbnResult} from '@zxcvbn-ts/core';
 import * as zxcvbnCommonPackage from '@zxcvbn-ts/language-common';
 import * as zxcvbnEnPackage from '@zxcvbn-ts/language-en';
+import debounce from 'lodash/debounce';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const {sprintf} = require('sprintf-js');
@@ -21,6 +22,32 @@ const zxcvbnConfig = {
 };
 
 zxcvbnOptions.setOptions(zxcvbnConfig);
+
+// Hooks of Admin/Helpers/password_feedback.html.twig
+const PasswordFeedbackMap = {
+  field: '[data-ps-ref="password-field"]',
+  template: '[data-ps-ref="password-feedback-template"]',
+  strengthBar: '[data-ps-ref="password-strength-bar"]',
+  strengthText: '[data-ps-ref="password-strength-text"]',
+  requirements: '[data-ps-ref="password-requirements"]',
+  requirementLength: '[data-ps-ref="password-requirement-length"]',
+  requirementScore: '[data-ps-ref="password-requirement-score"]',
+  requirementIcon: '[data-ps-ref="password-requirement-icon"]',
+  requirementText: '[data-ps-ref="password-requirement-text"]',
+  announcement: '[data-ps-target="password-feedback-announcement"]',
+};
+
+type RequirementState = 'met' | 'unmet' | 'failed';
+
+// The icon changes shape with the state, so color is not the only cue
+const REQUIREMENT_ICONS: Record<RequirementState, string> = {
+  met: 'check_circle',
+  unmet: 'radio_button_unchecked',
+  failed: 'cancel',
+};
+
+// Wait for a pause in typing, so screen readers are not interrupted on every key
+const ANNOUNCEMENT_DELAY = 800;
 
 export interface ChangePasswordHandlerOptions {
   minLength?: number;
@@ -56,8 +83,17 @@ export default class ChangePasswordHandler {
    */
   watchPasswordStrength(inputs: ArrayLike<HTMLInputElement>): void {
     Array.from(inputs).forEach((input) => {
+      const announce = debounce((feedbackContainer: HTMLElement, message: string) => {
+        const announcement = feedbackContainer.querySelector<HTMLElement>(PasswordFeedbackMap.announcement);
+
+        if (announcement) {
+          announcement.textContent = message;
+        }
+      }, ANNOUNCEMENT_DELAY);
+
       input.addEventListener('keyup', () => {
-        const container = input.parentElement;
+        // A page can wrap the input (e.g. in an input group) and mark the element the feedback goes into
+        const container = input.closest<HTMLElement>(PasswordFeedbackMap.field) ?? input.parentElement;
 
         if (!container) {
           return;
@@ -66,41 +102,55 @@ export default class ChangePasswordHandler {
         let feedbackContainer = container.querySelector<HTMLElement>(this.feedbackSelector);
 
         if (!feedbackContainer) {
-          container.insertAdjacentHTML('beforeend', document.querySelector('#password-feedback')?.innerHTML ?? '');
+          container.insertAdjacentHTML(
+            'beforeend',
+            document.querySelector(PasswordFeedbackMap.template)?.innerHTML ?? '',
+          );
           feedbackContainer = container.querySelector<HTMLElement>(this.feedbackSelector);
+
+          if (feedbackContainer) {
+            this.describeInput(input, feedbackContainer);
+          }
         }
 
         if (!feedbackContainer) {
           return;
         }
 
-        const translations = JSON.parse(feedbackContainer.dataset.translations ?? '{}');
-        const passwordRequirementsLength = feedbackContainer.querySelector<HTMLElement>('.password-requirements-length');
-        const lengthText = passwordRequirementsLength?.querySelector('span');
+        const translations = JSON.parse(feedbackContainer.dataset.psDataTranslations ?? '{}');
+        const passwordRequirementsLength = feedbackContainer.querySelector<HTMLElement>(
+          PasswordFeedbackMap.requirementLength,
+        );
+        const lengthText = passwordRequirementsLength?.querySelector(PasswordFeedbackMap.requirementText);
 
         if (passwordRequirementsLength && lengthText) {
           lengthText.textContent = sprintf(
-            passwordRequirementsLength.dataset.translation,
+            passwordRequirementsLength.dataset.psDataTranslation,
             input.dataset.minlength,
             input.dataset.maxlength,
           );
         }
 
-        const passwordRequirementsScore = feedbackContainer.querySelector<HTMLElement>('.password-requirements-score');
-        const scoreText = passwordRequirementsScore?.querySelector('span');
+        const passwordRequirementsScore = feedbackContainer.querySelector<HTMLElement>(
+          PasswordFeedbackMap.requirementScore,
+        );
+        const scoreText = passwordRequirementsScore?.querySelector(PasswordFeedbackMap.requirementText);
 
         if (passwordRequirementsScore && scoreText) {
           scoreText.textContent = sprintf(
-            passwordRequirementsScore.dataset.translation,
+            passwordRequirementsScore.dataset.psDataTranslation,
             translations[input.dataset.minscore ?? ''],
           );
         }
 
         if (input.value === '') {
           feedbackContainer.classList.add('d-none');
+          announce.cancel();
         } else {
-          this.displayFeedback(input, feedbackContainer, translations, zxcvbn(input.value));
+          const result = zxcvbn(input.value);
+          this.displayFeedback(input, feedbackContainer, translations, result);
           feedbackContainer.classList.remove('d-none');
+          announce(feedbackContainer, this.getAnnouncement(feedbackContainer, this.getStrengthText(input, translations, result)));
         }
       });
     });
@@ -108,6 +158,57 @@ export default class ChangePasswordHandler {
 
   isPasswordValid(): boolean {
     return this.isValid;
+  }
+
+  /**
+   * Link the requirements to the input, so screen readers read them with the field.
+   *
+   * @private
+   */
+  private describeInput(input: HTMLInputElement, feedbackContainer: HTMLElement): void {
+    const requirements = feedbackContainer.querySelector<HTMLElement>(PasswordFeedbackMap.requirements);
+
+    if (!requirements || !input.id) {
+      return;
+    }
+
+    requirements.id = `${input.id}_password_requirements`;
+
+    const describedBy = (input.getAttribute('aria-describedby') ?? '').split(' ').filter((id) => id !== '');
+
+    if (!describedBy.includes(requirements.id)) {
+      input.setAttribute('aria-describedby', [...describedBy, requirements.id].join(' '));
+    }
+  }
+
+  /**
+   * Strength, then the requirements left to meet, or that they are all met.
+   *
+   * @private
+   */
+  private getAnnouncement(feedbackContainer: HTMLElement, strength: string): string {
+    const announcement = feedbackContainer.querySelector<HTMLElement>(PasswordFeedbackMap.announcement);
+
+    if (!announcement) {
+      return '';
+    }
+
+    const prefix = strength ? `${strength}. ` : '';
+
+    if (this.isValid) {
+      return `${prefix}${announcement.dataset.psDataValid ?? ''}`;
+    }
+
+    const unmetRequirements = Array.from(
+      feedbackContainer.querySelectorAll<HTMLElement>(
+        `${PasswordFeedbackMap.requirementLength}, ${PasswordFeedbackMap.requirementScore}`,
+      ),
+    )
+      .filter((requirement) => requirement.dataset.psState !== 'met')
+      .map((requirement) => requirement.querySelector(PasswordFeedbackMap.requirementText)?.textContent ?? '')
+      .join(', ');
+
+    return `${prefix}${sprintf(announcement.dataset.psDataInvalid ?? '%s', unmetRequirements)}`;
   }
 
   /**
@@ -121,13 +222,12 @@ export default class ChangePasswordHandler {
     translations: Record<string, string>,
     result: ZxcvbnResult,
   ): void {
-    const feedback = this.getPasswordStrengthFeedback(result.score);
     const popoverContent:string[] = [];
 
-    const strengthText = outputContainer.querySelector('.password-strength-text');
+    const strengthText = outputContainer.querySelector(PasswordFeedbackMap.strengthText);
 
     if (strengthText) {
-      strengthText.textContent = translations[result.score];
+      strengthText.textContent = this.getStrengthText(passwordInput, translations, result);
     }
 
     if (result.feedback.warning && result.feedback.warning !== '') {
@@ -144,33 +244,72 @@ export default class ChangePasswordHandler {
 
     this.showPopover(passwordInput, popoverContent.join('<br/>'));
 
-    const passwordLength = passwordInput.value.length;
-
-    const passwordLengthValid = passwordLength >= Number(passwordInput.dataset.minlength)
-      && passwordLength <= Number(passwordInput.dataset.maxlength);
-    outputContainer.querySelector('.password-requirements-length .material-icons')?.classList.toggle(
-      'text-success',
-      passwordLengthValid,
-    );
+    const lengthState = this.getLengthState(passwordInput);
+    this.markRequirement(outputContainer.querySelector(PasswordFeedbackMap.requirementLength), lengthState);
 
     const passwordScoreValid = Number(passwordInput.dataset.minscore) <= result.score;
-    outputContainer.querySelector('.password-requirements-score .material-icons')?.classList.toggle(
-      'text-success',
-      passwordScoreValid,
+    this.markRequirement(
+      outputContainer.querySelector(PasswordFeedbackMap.requirementScore),
+      passwordScoreValid ? 'met' : 'unmet',
     );
 
-    const borderClass = passwordScoreValid && passwordLengthValid ? 'border-success' : 'border-danger';
-    passwordInput.setAttribute('class', `form-control border ${borderClass}`);
-    this.isValid = passwordScoreValid && passwordLengthValid;
+    this.isValid = passwordScoreValid && lengthState === 'met';
 
-    const percentage = (result.score * 20) + 20;
-    // increase and decrease progress bar
-    const progressBar = outputContainer.querySelector<HTMLElement>('.progress-bar');
+    if (this.isValid) {
+      passwordInput.removeAttribute('aria-invalid');
+    } else {
+      passwordInput.setAttribute('aria-invalid', 'true');
+    }
+
+    const progressBar = outputContainer.querySelector<HTMLElement>(PasswordFeedbackMap.strengthBar);
 
     if (progressBar) {
-      progressBar.style.width = `${percentage}%`;
-      progressBar.style.visibility = 'visible';
-      progressBar.style.backgroundColor = feedback.color;
+      // Width only; the color comes from the state, styled in _password.scss
+      progressBar.style.width = `${(result.score * 20) + 20}%`;
+      progressBar.dataset.psState = lengthState === 'met' ? this.getStrengthState(result.score) : 'weak';
+    }
+  }
+
+  /**
+   * A password outside the length bounds is not acceptable, whatever its score, so its strength is not shown.
+   *
+   * @private
+   */
+  private getStrengthText(input: HTMLInputElement, translations: Record<string, string>, result: ZxcvbnResult): string {
+    return this.getLengthState(input) === 'met' ? translations[result.score] : '';
+  }
+
+  /**
+   * Too long cannot be fixed by typing more, so it fails rather than staying unmet.
+   *
+   * @private
+   */
+  private getLengthState(input: HTMLInputElement): RequirementState {
+    const {length} = input.value;
+
+    if (length > Number(input.dataset.maxlength)) {
+      return 'failed';
+    }
+
+    return length >= Number(input.dataset.minlength) ? 'met' : 'unmet';
+  }
+
+  /**
+   * The state goes on the requirement for the styles, and the icon changes shape so color is not the only cue.
+   *
+   * @private
+   */
+  private markRequirement(requirement: HTMLElement | null, state: RequirementState): void {
+    if (!requirement) {
+      return;
+    }
+
+    requirement.setAttribute('data-ps-state', state);
+
+    const icon = requirement.querySelector(PasswordFeedbackMap.requirementIcon);
+
+    if (icon) {
+      icon.textContent = REQUIREMENT_ICONS[state];
     }
   }
 
@@ -194,44 +333,13 @@ export default class ChangePasswordHandler {
   }
 
   /**
-   * Get feedback that describes given password strength.
-   * Response contains text message and element class.
-   *
-   * @param {zxcvbn.ZXCVBNScore} strength
-   *
    * @private
    */
-  private getPasswordStrengthFeedback(
-    strength: number,
-  ): Record<string, string> {
-    switch (strength) {
-      case 0:
-        return {
-          color: '#D5343C',
-        };
-
-      case 1:
-        return {
-          color: '#D5343C',
-        };
-
-      case 2:
-        return {
-          color: '#FFA000',
-        };
-
-      case 3:
-        return {
-          color: '#21834D',
-        };
-
-      case 4:
-        return {
-          color: '#21834D',
-        };
-
-      default:
-        throw new Error('Invalid password strength indicator.');
+  private getStrengthState(score: number): string {
+    if (score <= 1) {
+      return 'weak';
     }
+
+    return score === 2 ? 'average' : 'strong';
   }
 }

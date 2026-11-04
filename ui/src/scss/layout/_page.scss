@@ -2,9 +2,10 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-.ps-page {
-  min-height: 100vh;
-  padding: 1rem;
+$component-name: ps-page;
+
+.#{$component-name} {
+  min-height: 100dvh;
 
   &--bg-subtle {
     --#{$prefix}page-bg-subtle: var(--#{$prefix}primary-50);

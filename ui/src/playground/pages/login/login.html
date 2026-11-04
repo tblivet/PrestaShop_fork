@@ -1,4 +1,4 @@
-<div class="ps-page ps-page--bg-subtle ps-page--login">
+<div class="ps-page ps-page--bg-subtle ps-page--login ps-login">
   <a class="icon-link icon-link-hover ps-login__back ps-login__back--left" href="#">
     <i class="material-symbols-outlined">arrow_back</i>
     Back to PrestaShop
@@ -28,7 +28,7 @@
           <div class="ps-login__form-group">
             <label for="login-password" class="form-label">Password</label>
 
-            <div class="input-group">
+            <div class="ps-password-field input-group has-validation">
               <input
                 type="password"
                 id="login-password"
@@ -37,15 +37,17 @@
                 autocomplete="current-password"
               />
 
+              <!-- <twig:ui:PasswordField> -->
               <button
-                class="btn btn-primary d-inline-flex align-items-center"
+                class="ps-password-field__toggle btn btn-primary d-inline-flex align-items-center justify-content-center"
                 type="button"
                 aria-label="Show password"
                 aria-controls="login-password"
                 aria-pressed="false"
                 data-ps-action="toggle-password"
               >
-                <span class="material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility</span>
+                <span class="ps-password-field__icon material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility</span>
+                <span class="ps-password-field__icon ps-password-field__icon--shown material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility_off</span>
               </button>
             </div>
           </div>

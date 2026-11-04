@@ -8,51 +8,57 @@ import onReady from '@components/on-ready';
 import ChangePasswordHandler from '@components/change-password-handler';
 
 onReady(() => {
-  const passwordHandler = new ChangePasswordHandler(LoginFormMap.passwordStrengthFeedbackContainer);
-  passwordHandler.watchPasswordStrength(document.querySelectorAll<HTMLInputElement>(LoginFormMap.resetNewPassword));
-  const submitButton = document.querySelector<HTMLInputElement>(LoginFormMap.resetSubmitButton);
+  const passwordInput = document.querySelector<HTMLInputElement>(LoginFormMap.resetNewPassword);
+  const confirmationInput = document.querySelector<HTMLInputElement>(LoginFormMap.resetNewPasswordConfirmation);
+  const mismatch = document.querySelector<HTMLElement>(LoginFormMap.resetPasswordMismatch);
 
-  if (submitButton) {
-    submitButton.disabled = true;
+  if (!passwordInput || !confirmationInput) {
+    return;
   }
 
-  document.addEventListener('submit', (event) => {
-    const isValid = passwordHandler.isPasswordValid();
+  const passwordHandler = new ChangePasswordHandler(LoginFormMap.passwordStrengthFeedbackContainer);
+  passwordHandler.watchPasswordStrength([passwordInput]);
 
-    if (submitButton) {
-      submitButton.disabled = !isValid;
+  const passwordsMatch = (): boolean => passwordInput.value === confirmationInput.value;
+
+  // The message is written when shown, so the live region announces it
+  const showMismatch = (show: boolean): void => {
+    if (show) {
+      confirmationInput.setAttribute('aria-invalid', 'true');
+    } else {
+      confirmationInput.removeAttribute('aria-invalid');
     }
 
-    if (!isValid) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
+    if (mismatch) {
+      mismatch.textContent = show ? confirmationInput.dataset.psDataMismatch ?? '' : '';
     }
+  };
+
+  // Shown once the user leaves the field, not while they are still typing; cleared as soon as it is fixed
+  confirmationInput.addEventListener('blur', () => {
+    showMismatch(confirmationInput.value !== '' && !passwordsMatch());
+  });
+  [passwordInput, confirmationInput].forEach((input) => {
+    input.addEventListener('input', () => {
+      if (passwordsMatch() || confirmationInput.value === '') {
+        showMismatch(false);
+      }
+    });
   });
 
-  const resetPasswordInput = document.querySelector<HTMLInputElement>(LoginFormMap.resetNewPassword);
-  const resetPasswordConfirmationInput = document.querySelector<HTMLInputElement>(LoginFormMap.resetNewPasswordConfirmation);
+  // The button stays enabled: a blocked submit explains itself on the fields and moves focus to the first one to fix
+  passwordInput.form?.addEventListener('submit', (event) => {
+    const passwordValid = passwordHandler.isPasswordValid();
+    const match = passwordsMatch();
 
-  [resetPasswordInput, resetPasswordConfirmationInput].forEach((input: HTMLInputElement|null) => {
-    if (input) {
-      input.addEventListener('keyup', () => {
-        const isValid = passwordHandler.isPasswordValid();
-        const passwordsMatch = resetPasswordInput?.value === resetPasswordConfirmationInput?.value;
-        const confirmFormText = resetPasswordConfirmationInput?.parentNode?.querySelector('.form-text');
+    showMismatch(!match);
 
-        if (confirmFormText) {
-          if (!passwordsMatch && resetPasswordInput?.value.length && resetPasswordConfirmationInput?.value.length) {
-            confirmFormText.textContent = resetPasswordConfirmationInput?.dataset.invalidPassword ?? '';
-            confirmFormText.classList.toggle('text-danger', !passwordsMatch);
-            confirmFormText.classList.remove('d-none');
-          } else {
-            confirmFormText.classList.add('d-none');
-          }
-        }
-
-        if (submitButton) {
-          submitButton.disabled = !isValid || !passwordsMatch;
-        }
-      });
+    if (passwordValid && match) {
+      return;
     }
+
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    (passwordValid ? confirmationInput : passwordInput).focus();
   });
 });

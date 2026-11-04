@@ -69,6 +69,7 @@ class LoginType extends AbstractType
                     'attr' => [
                         'id' => 'forgot-password-link',
                         'class' => 'show-forgot-password',
+                        'data-ps-action' => 'show-forgot-password',
                     ],
                 ],
             ])
@@ -84,6 +85,7 @@ class LoginType extends AbstractType
             'form_theme' => '@PrestaShop/Admin/Login/form_theme.html.twig',
             'attr' => [
                 'id' => 'login_form',
+                'data-ps-ref' => 'login-form',
             ],
         ]);
     }

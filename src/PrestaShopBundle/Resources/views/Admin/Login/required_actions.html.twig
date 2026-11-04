@@ -7,7 +7,7 @@
 
 {% block content %}
   <div class="alert alert-warning d-print-none" role="alert">
-    <p>{{ 'For security reasons, you cannot connect to the back office until you have:'|trans({}, 'Admin.Login.Notification') }}</p>
+    <p>{{ 'For security reasons, do the following before you sign in:'|trans({}, 'Admin.Login.Notification') }}</p>
     <ul class="alert-text">
       {% for requiredAction in requiredActions %}
         <li>{{ requiredAction|raw_purified }}</li>

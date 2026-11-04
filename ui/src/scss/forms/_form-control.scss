@@ -24,3 +24,23 @@
     }
   }
 }
+
+// Runtime state is ARIA first (ui/.ai/CONVENTIONS.md): aria-invalid looks like Bootstrap's .is-invalid,
+// so scripts only set the attribute screen readers also read
+.form-control[aria-invalid="true"] {
+  border-color: var(--#{$prefix}form-invalid-border-color);
+
+  &:focus {
+    border-color: var(--#{$prefix}form-invalid-border-color);
+    box-shadow: 0 0 $input-btn-focus-blur $input-focus-width rgba(var(--#{$prefix}danger-rgb), $input-btn-focus-color-opacity);
+  }
+
+  ~ .invalid-feedback {
+    display: block;
+  }
+}
+
+// The same when the field sits in an input group (a <twig:ui:PasswordField>) and the message follows the group
+.input-group:has(> .form-control[aria-invalid="true"]) ~ .invalid-feedback {
+  display: block;
+}

@@ -5,8 +5,9 @@
 {% extends '@PrestaShop/Admin/Layout/Ui/login_layout.html.twig' %}
 
 {% block login_content %}
-  <twig:ui:Alert type="warning" class="mb-0">
-    <p>{{ 'For security reasons, you cannot connect to the back office until you have:'|trans({}, 'Admin.Login.Notification') }}</p>
+  <h1 class="ps-login__title">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
+  <twig:ui:Alert type="warning" icon="bi:exclamation-triangle-fill" class="mb-0">
+    <p>{{ 'For security reasons, do the following before you sign in:'|trans({}, 'Admin.Login.Notification') }}</p>
     <ul class="mb-0">
       {% for requiredAction in requiredActions %}
         <li>{{ requiredAction|raw_purified }}</li>

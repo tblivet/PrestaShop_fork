@@ -4,7 +4,9 @@
  */
 
 // Generic BO shell — full-width header row, sidebar column, scrollable content section
-.ps-layout {
+$component-name: ps-layout;
+
+.#{$component-name} {
   display: grid;
   grid-template:
     'header header' auto
@@ -23,13 +25,13 @@
     // under the header, so the header stays visible and interactive
     @include media-breakpoint-down(md) {
       .sidebar {
-        top: $ps-header-height;
+        inset-block-start: $ps-header-height;
         height: auto;
       }
 
       // Bootstrap appends the offcanvas backdrop to the drawer's parent (this element)
       .offcanvas-backdrop {
-        top: $ps-header-height;
+        inset-block-start: $ps-header-height;
         height: calc(100vh - #{$ps-header-height});
       }
     }

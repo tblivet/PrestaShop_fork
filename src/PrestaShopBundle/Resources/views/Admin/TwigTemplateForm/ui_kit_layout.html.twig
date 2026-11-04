@@ -1,0 +1,47 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# Form theme of the /ui kit pages, which render widgets one by one rather than with form_row #}
+{% extends 'bootstrap_5_layout.html.twig' %}
+
+{# Links the help and the errors to their field, and marks it invalid for screen readers #}
+{%- block widget_attributes -%}
+  {%- set describedBy = (attr['aria-describedby'] ?? '')|split(' ')|filter(describedById => describedById is not empty) -%}
+  {%- if help is not empty and (id ~ '_help') not in describedBy -%}
+    {%- set describedBy = describedBy|merge([id ~ '_help']) -%}
+  {%- endif -%}
+  {%- if errors|length > 0 -%}
+    {%- set describedBy = describedBy|merge([id ~ '_error']) -%}
+    {%- set attr = attr|merge({'aria-invalid': 'true'}) -%}
+  {%- endif -%}
+  {%- if describedBy is not empty -%}
+    {%- set attr = attr|merge({'aria-describedby': describedBy|join(' ')}) -%}
+  {%- endif -%}
+  {{- parent() -}}
+{%- endblock widget_attributes -%}
+
+{# Every password field gets the show/hide button (DECISIONS.md #25: the block maps the field to a kit component) #}
+{%- block password_widget -%}
+  {%- set input -%}{{- parent() -}}{%- endset -%}
+  <twig:ui:PasswordField :inputId="id">{{ input }}</twig:ui:PasswordField>
+{%- endblock password_widget -%}
+
+{# Form-level errors (e.g. an expired CSRF token) look like the flash alerts; field errors get the id the field points to #}
+{%- block form_errors -%}
+  {%- if errors|length > 0 -%}
+    {%- if form is rootform -%}
+      <twig:ui:Alert type="danger" icon="bi:x-circle-fill" id="{{ id }}_error">
+        {%- for error in errors -%}
+          <p class="mb-0">{{ error.message }}</p>
+        {%- endfor -%}
+      </twig:ui:Alert>
+    {%- else -%}
+      <div id="{{ id }}_error" class="invalid-feedback d-block">
+        {%- for error in errors -%}
+          <span class="d-block">{{ error.message }}</span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endblock form_errors -%}

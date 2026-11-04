@@ -305,7 +305,7 @@ $primary-text-emphasis: $primary-700;
 $secondary-text-emphasis: $secondary-700;
 $success-text-emphasis: $green-700;
 $info-text-emphasis: $blue-700;
-$warning-text-emphasis: $yellow-700;
+$warning-text-emphasis: shade-color($yellow, 50%); // $yellow-700 is 4.5:1 on $warning-bg-subtle, too tight for AA
 $danger-text-emphasis: $red-700;
 $destructive-text-emphasis: $red-700;
 

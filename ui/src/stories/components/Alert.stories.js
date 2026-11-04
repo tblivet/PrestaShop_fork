@@ -43,9 +43,12 @@ export default {
   },
 };
 
+// Same rule as alert.html.twig: only a danger alert interrupts screen readers.
+const role = (variant) => (variant === 'danger' ? 'alert' : 'status');
+
 export const Default = {
   render: ({ variant, message, dismissible }) => `
-    <div class="alert alert-${variant}${dismissible ? ' alert-dismissible fade show' : ''}" role="alert">
+    <div class="alert alert-${variant}${dismissible ? ' alert-dismissible fade show' : ''}" role="${role(variant)}">
       ${message}
       ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
     </div>
@@ -57,7 +60,7 @@ export const AllVariants = {
     <div class="d-flex flex-column gap-2">
       ${['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
         .map(
-          (v) => `<div class="alert alert-${v}" role="alert">A simple <strong>${v}</strong> alert — check it out!</div>`
+          (v) => `<div class="alert alert-${v}" role="${role(v)}">A simple <strong>${v}</strong> alert — check it out!</div>`
         )
         .join('')}
     </div>
@@ -67,21 +70,25 @@ export const AllVariants = {
 export const WithIcon = {
   render: () => `
     <div class="d-flex flex-column gap-2">
-      <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
-        ${uxIcon(infoCircleFill, { width: 16, height: 16, class: 'flex-shrink-0', 'aria-hidden': 'true' })}
+      <div class="alert alert-info d-flex align-items-start gap-2" role="status">
+        ${uxIcon(infoCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
         <div>An example alert with an icon</div>
       </div>
-      <div class="alert alert-success d-flex align-items-center gap-2" role="alert">
-        ${uxIcon(checkCircleFill, { width: 16, height: 16, class: 'flex-shrink-0', 'aria-hidden': 'true' })}
+      <div class="alert alert-success d-flex align-items-start gap-2" role="status">
+        ${uxIcon(checkCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
         <div>A success alert with an icon</div>
       </div>
-      <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
-        ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0', 'aria-hidden': 'true' })}
+      <div class="alert alert-warning d-flex align-items-start gap-2" role="status">
+        ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
         <div>A warning alert with an icon</div>
       </div>
-      <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
-        ${uxIcon(xCircleFill, { width: 16, height: 16, class: 'flex-shrink-0', 'aria-hidden': 'true' })}
+      <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+        ${uxIcon(xCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
         <div>A danger alert with an icon</div>
+      </div>
+      <div class="alert alert-warning d-flex align-items-start gap-2 w-50" role="status">
+        ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
+        <div>A long warning that wraps on several lines keeps its icon on the first line.</div>
       </div>
     </div>
   `,
@@ -90,11 +97,11 @@ export const WithIcon = {
 export const Dismissible = {
   render: () => `
     <div class="d-flex flex-column gap-2">
-      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <div class="alert alert-warning alert-dismissible fade show" role="status">
         <strong>Holy guacamole!</strong> You should check in on some of those fields below.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <div class="alert alert-success alert-dismissible fade show" role="status">
         <strong>Well done!</strong> You successfully read this important alert message.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>

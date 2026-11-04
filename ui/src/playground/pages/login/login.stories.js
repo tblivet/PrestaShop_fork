@@ -28,12 +28,14 @@ export const Default = {
   render: () => page,
 };
 
-// Same markup as <twig:ui:Alert type="danger" icon="bi:x-circle-fill" dismissible>, printed under the form title (Admin/Layout/Ui/_flash_alerts.html.twig)
+// Same markup as <twig:ui:FlashMessages/> with one error, printed under the form title (Login/Ui/login.html.twig)
 const errorAlert = `
-  <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
-    ${uxIcon(xCircleFill, { width: 16, height: 16, class: 'flex-shrink-0', 'aria-hidden': 'true' })}
-    <div><p class="mb-0">The email address or password is incorrect.</p></div>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <div class="ps-flash-messages" data-ps-ref="flash-messages">
+    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-start gap-2" role="alert" data-ps-ref="flash-alert">
+      ${uxIcon(xCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
+      <div><p class="mb-0">The email address or password is incorrect.</p></div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   </div>
 `;
 

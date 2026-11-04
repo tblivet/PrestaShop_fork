@@ -21,13 +21,13 @@
       }
 
       &:first-child .progress-bar {
-        border-top-left-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
-        border-bottom-left-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+        border-start-start-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+        border-end-start-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
       }
 
       &:last-child .progress-bar {
-        border-top-right-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
-        border-bottom-right-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+        border-start-end-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+        border-end-end-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
       }
     }
   }

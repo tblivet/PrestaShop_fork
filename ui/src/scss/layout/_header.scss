@@ -4,7 +4,9 @@
  */
 
 // PrestaShop BO header — custom layout block; composes dropdown, badge, form-control
-.ps-header {
+$component-name: ps-header;
+
+.#{$component-name} {
   display: flex;
   align-items: center;
   height: $ps-header-height;

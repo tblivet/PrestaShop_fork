@@ -8,7 +8,7 @@
  */
 export default {
   passwordInput: '#customer_password',
-  passwordStrengthFeedbackContainer: '.password-strength-feedback',
+  passwordStrengthFeedbackContainer: '[data-ps-ref="password-feedback"]',
   requiredFieldsFormAlertOptin: '#customerRequiredFieldsAlertMessageOptin',
   requiredFieldsFormCheckboxOptin: '#customerRequiredFieldsContainer input[type="checkbox"][value="optin"]',
 

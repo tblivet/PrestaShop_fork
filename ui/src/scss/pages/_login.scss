@@ -2,20 +2,12 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-@use 'sass:map';
+// Sign-in, password reset and required actions pages. The root sits on the page wrapper, with ps-page and ps-page--login
+$component-name: ps-login;
 
-// PrestaShop BO login page layout
-$selectors: (
-  page: 'ps-page--login',
-  login: 'ps-login',
-);
-
-// ── Layout ────────────────────────────────────────────────────────────────────
-.#{map.get($selectors, page)} {
+.#{$component-name} {
   padding: 2rem;
-}
 
-.#{map.get($selectors, login)} {
   &__back {
     font-size: 0.875rem;
 
@@ -57,15 +49,11 @@ $selectors: (
     gap: 1rem;
 
     // The title sits inside the form so it switches with it (login / forgot password)
-    > .#{map.get($selectors, login)}__title {
+    > .#{$component-name}__title {
       margin-block-end: 1rem;
 
-      &:has(+ .alert) {
+      &:has(+ .ps-flash-messages) {
         margin-block-end: 0;
-
-        + .alert {
-          margin-block-end: 0;
-        }
       }
     }
   }

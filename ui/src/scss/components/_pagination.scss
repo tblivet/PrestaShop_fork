@@ -49,7 +49,7 @@
     min-width: var(--pagination-item-size);
     height: var(--pagination-item-size);
     padding: 0 var(--pagination-item-px);
-    margin-left: 0;
+    margin-inline-start: 0;
     font-weight: $font-weight-bold;
     line-height: 1;
     border-color: transparent;
