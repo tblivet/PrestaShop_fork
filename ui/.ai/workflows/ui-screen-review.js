@@ -269,7 +269,7 @@ You review this page through ONE lens: ${lens.brief}
 Evidence (captured states, screenshot paths, axe and keyboard results; how="emulated" captures were forced in the DOM, judge what they show, not how they were produced):
 ${evidence}
 
-Open the screenshots with the Read tool (it shows images) and compare states and widths. Read ui/.ai/CONVENTIONS.md and the reference story or mockup. Report only problems you can point to in a screenshot or a file:line, each with a concrete improvement in kit terms. Stay inside your lens; an empty list is a valid answer. RTL and dark mode are out of scope (ui/.ai/DECISIONS.md #4, #5): never report them.`,
+Open the screenshots with the Read tool (it shows images) and compare states and widths. Read ui/.ai/CONVENTIONS.md and the reference story or mockup. Report only problems you can point to in a screenshot or a file:line, each with a concrete improvement in kit terms. Stay inside your lens; an empty list is a valid answer. Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL and dark mode are out of scope (#4, #5), button focus rings are the button color at 50% on purpose (#29).`,
       { label: `review:${lens.key}:${page.name}`, phase: 'Review', schema: FINDINGS_SCHEMA },
     ).then((r) => (r ? r.findings.map((f) => ({ ...f, lens: lens.key })) : []))))
       .then((byLens) => ({ page, plan, capture, dir, findings: byLens.filter(Boolean).flat() }))

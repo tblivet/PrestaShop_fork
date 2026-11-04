@@ -334,8 +334,8 @@ $border-color: $gray-400;
 
 // ── Focus ring ────────────────────────────────────────────────────────────────
 // Bootstrap derives focus styles from $primary (rgba($primary, .25)) — with the
-// near-black brand that ring is imperceptible. Use the info blue on all surfaces.
-$focus-ring-color: rgba($primary, 0.8);
+// near-black brand that ring is imperceptible. Use the brand at 50% (3.3:1 on white); buttons use their own color (components/_buttons.scss).
+$focus-ring-color: rgba($primary, 0.5);
 $input-focus-border-color: var(--#{$prefix}border-color);
 
 // ── Breadcrumb ────────────────────────────────────────────────────────────────

@@ -10,6 +10,8 @@ export default {
   loginForm: '[data-ps-ref="login-form"]',
   forgotPasswordForm: '[data-ps-ref="forgot-password-form"]',
   forgotPasswordLink: '[data-ps-action="show-forgot-password"]',
+  forgotPasswordEmail: '[data-ps-ref="forgot-password-email"]',
+  emailError: '[data-ps-target="email-error"]',
   cancelResetPasswordButton: '[data-ps-action="cancel-forgot-password"]',
   passwordStrengthFeedbackContainer: '[data-ps-ref="password-feedback"]',
   resetNewPassword: '[data-ps-ref="new-password"]',

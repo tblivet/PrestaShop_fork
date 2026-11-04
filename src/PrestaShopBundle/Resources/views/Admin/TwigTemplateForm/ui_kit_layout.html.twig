@@ -27,6 +27,14 @@
   <twig:ui:PasswordField :inputId="id">{{ input }}</twig:ui:PasswordField>
 {%- endblock password_widget -%}
 
+{# Every email field gets an empty slot for its client-side check, linked to it; the page script fills it and sets aria-invalid #}
+{%- block email_widget -%}
+  {%- set clientErrorId = id ~ '_client_error' -%}
+  {%- set attr = attr|merge({'aria-describedby': ((attr['aria-describedby'] ?? '') ~ ' ' ~ clientErrorId)|trim}) -%}
+  {{- parent() -}}
+  <div class="invalid-feedback" id="{{ clientErrorId }}" role="status" data-ps-target="email-error" data-ps-data-invalid="{{ attr['data-invalid-message'] ?? 'Invalid email address.'|trans({}, 'Admin.Notifications.Error') }}"></div>
+{%- endblock email_widget -%}
+
 {# Form-level errors (e.g. an expired CSRF token) look like the flash alerts; field errors get the id the field points to #}
 {%- block form_errors -%}
   {%- if errors|length > 0 -%}

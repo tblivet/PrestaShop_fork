@@ -34,6 +34,7 @@ const PasswordFeedbackMap = {
   requirementScore: '[data-ps-ref="password-requirement-score"]',
   requirementIcon: '[data-ps-ref="password-requirement-icon"]',
   requirementText: '[data-ps-ref="password-requirement-text"]',
+  tip: '[data-ps-ref="password-tip"]',
   announcement: '[data-ps-target="password-feedback-announcement"]',
 };
 
@@ -58,6 +59,24 @@ export interface ChangePasswordHandlerOptions {
  * You can pass a password input to watch the password strength and display feedback messages.
  * You can also generate a random password into an input.
  */
+type FeedbackTranslations = {warnings?: Record<string, string>, suggestions?: Record<string, string>};
+
+/**
+ * Puts the PrestaShop translations over the library's English ones, by @zxcvbn-ts warning and suggestion id,
+ * so result.feedback comes back translated. Every id must stay present, hence the merge.
+ */
+const useFeedbackTranslations = (feedback: FeedbackTranslations): void => {
+  const {translations} = zxcvbnEnPackage;
+
+  zxcvbnOptions.setOptions({
+    translations: {
+      ...translations,
+      warnings: {...translations.warnings, ...feedback.warnings},
+      suggestions: {...translations.suggestions, ...feedback.suggestions},
+    },
+  });
+};
+
 export default class ChangePasswordHandler {
   minLength: number;
 
@@ -110,6 +129,7 @@ export default class ChangePasswordHandler {
 
           if (feedbackContainer) {
             this.describeInput(input, feedbackContainer);
+            useFeedbackTranslations(JSON.parse(feedbackContainer.dataset.psDataFeedback ?? '{}'));
           }
         }
 
@@ -150,7 +170,8 @@ export default class ChangePasswordHandler {
           const result = zxcvbn(input.value);
           this.displayFeedback(input, feedbackContainer, translations, result);
           feedbackContainer.classList.remove('d-none');
-          announce(feedbackContainer, this.getAnnouncement(feedbackContainer, this.getStrengthText(input, translations, result)));
+          const strength = this.getStrengthText(input, translations, result);
+          announce(feedbackContainer, this.getAnnouncement(feedbackContainer, strength, result));
         }
       });
     });
@@ -186,7 +207,7 @@ export default class ChangePasswordHandler {
    *
    * @private
    */
-  private getAnnouncement(feedbackContainer: HTMLElement, strength: string): string {
+  private getAnnouncement(feedbackContainer: HTMLElement, strength: string, result: ZxcvbnResult): string {
     const announcement = feedbackContainer.querySelector<HTMLElement>(PasswordFeedbackMap.announcement);
 
     if (!announcement) {
@@ -208,7 +229,9 @@ export default class ChangePasswordHandler {
       .map((requirement) => requirement.querySelector(PasswordFeedbackMap.requirementText)?.textContent ?? '')
       .join(', ');
 
-    return `${prefix}${sprintf(announcement.dataset.psDataInvalid ?? '%s', unmetRequirements)}`;
+    const warning = result.feedback.warning ? `. ${result.feedback.warning}` : '';
+
+    return `${prefix}${sprintf(announcement.dataset.psDataInvalid ?? '%s', unmetRequirements)}${warning}`;
   }
 
   /**
@@ -222,27 +245,15 @@ export default class ChangePasswordHandler {
     translations: Record<string, string>,
     result: ZxcvbnResult,
   ): void {
-    const popoverContent:string[] = [];
-
-    const strengthText = outputContainer.querySelector(PasswordFeedbackMap.strengthText);
+    const strengthText = outputContainer.querySelector<HTMLElement>(PasswordFeedbackMap.strengthText);
 
     if (strengthText) {
-      strengthText.textContent = this.getStrengthText(passwordInput, translations, result);
+      const strength = this.getStrengthText(passwordInput, translations, result);
+      const minScore = Number(passwordInput.dataset.minscore);
+      strengthText.textContent = strength && result.score < minScore
+        ? sprintf(strengthText.dataset.psDataBelowRequired ?? '%s', strength, translations[minScore])
+        : strength;
     }
-
-    if (result.feedback.warning && result.feedback.warning !== '') {
-      if (result.feedback.warning in translations) {
-        popoverContent.push(translations[result.feedback.warning]);
-      }
-    }
-
-    result.feedback.suggestions.forEach((suggestion) => {
-      if (suggestion in translations) {
-        popoverContent.push(translations[suggestion]);
-      }
-    });
-
-    this.showPopover(passwordInput, popoverContent.join('<br/>'));
 
     const lengthState = this.getLengthState(passwordInput);
     this.markRequirement(outputContainer.querySelector(PasswordFeedbackMap.requirementLength), lengthState);
@@ -260,6 +271,8 @@ export default class ChangePasswordHandler {
     } else {
       passwordInput.setAttribute('aria-invalid', 'true');
     }
+
+    this.showTip(outputContainer, passwordScoreValid ? [] : [result.feedback.warning, result.feedback.suggestions[0]]);
 
     const progressBar = outputContainer.querySelector<HTMLElement>(PasswordFeedbackMap.strengthBar);
 
@@ -314,22 +327,23 @@ export default class ChangePasswordHandler {
   }
 
   /**
-   * Bootstrap 5 when the /ui kit is loaded, otherwise the Bootstrap 4 jQuery plugin.
+   * Why the strength is not enough (warning) and how to improve it (first suggestion), under the strength requirement.
+   * The library's sentences may lack a final period, so one is added to join them.
    *
    * @private
    */
-  private showPopover(input: HTMLInputElement, content: string): void {
-    const {bootstrap} = window;
+  private showTip(outputContainer: HTMLElement, sentences: Array<string | null | undefined>): void {
+    const tip = outputContainer.querySelector<HTMLElement>(PasswordFeedbackMap.tip);
 
-    if (bootstrap?.Popover) {
-      bootstrap.Popover.getInstance(input)?.dispose();
-      new bootstrap.Popover(input, {html: true, placement: 'top', content}).show();
-
+    if (!tip) {
       return;
     }
 
-    window.$(input).popover('dispose');
-    window.$(input).popover({html: true, placement: 'top', content}).popover('show');
+    tip.textContent = sentences
+      .filter((sentence): sentence is string => Boolean(sentence))
+      .map((sentence) => (/[.!?]$/.test(sentence) ? sentence : `${sentence}.`))
+      .join(' ');
+    tip.hidden = tip.textContent === '';
   }
 
   /**

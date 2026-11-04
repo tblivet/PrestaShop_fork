@@ -30,17 +30,32 @@
 .form-control[aria-invalid="true"] {
   border-color: var(--#{$prefix}form-invalid-border-color);
 
+  // Same icon as Bootstrap's .is-invalid, so a client-side and a server-side error look the same
+  @if $enable-validation-icons {
+    padding-inline-end: $input-height-inner;
+    background-image: escape-svg($form-feedback-icon-invalid);
+    background-repeat: no-repeat;
+    background-position: right $input-height-inner-quarter center;
+    background-size: $input-height-inner-half $input-height-inner-half;
+  }
+
   &:focus {
     border-color: var(--#{$prefix}form-invalid-border-color);
     box-shadow: 0 0 $input-btn-focus-blur $input-focus-width rgba(var(--#{$prefix}danger-rgb), $input-btn-focus-color-opacity);
   }
 
-  ~ .invalid-feedback {
+  // An empty slot (a client-side check not triggered yet) takes no room
+  ~ .invalid-feedback:not(:empty) {
     display: block;
   }
 }
 
 // The same when the field sits in an input group (a <twig:ui:PasswordField>) and the message follows the group
-.input-group:has(> .form-control[aria-invalid="true"]) ~ .invalid-feedback {
+.input-group:has(> .form-control[aria-invalid="true"]) ~ .invalid-feedback:not(:empty) {
   display: block;
+}
+
+// Bootstrap shows every feedback after an .is-invalid field (server error): not an empty client-side slot
+.invalid-feedback:empty {
+  display: none;
 }

@@ -39,7 +39,14 @@
     </div>
 
     <div class="ps-login__form-group ps-login__form-group--end">
-      <a href="{{ forgotPasswordLink.href }}" id="{{ forgotPasswordLink.attr.id }}" class="link-secondary small" data-ps-action="{{ forgotPasswordLink.attr['data-ps-action'] }}">{{ forgotPasswordLink.text }}</a>
+      {# A button: it switches panels in place, it does not navigate #}
+      <button
+        type="button"
+        id="{{ forgotPasswordLink.attr.id }}"
+        class="btn btn-link link-secondary small p-0"
+        aria-controls="{{ requestPasswordResetForm.vars.attr.id }}"
+        data-ps-action="{{ forgotPasswordLink.attr['data-ps-action'] }}"
+      >{{ forgotPasswordLink.text }}</button>
     </div>
   {{ form_end(loginForm) }}
 
@@ -53,7 +60,7 @@
 
     <div class="ps-login__form-group">
       {{ form_label(requestPasswordResetForm.email_forgot) }}
-      {{ form_widget(requestPasswordResetForm.email_forgot, {attr: {placeholder: 'name@example.com', autocomplete: 'email'}}) }}
+      {{ form_widget(requestPasswordResetForm.email_forgot, {attr: requestPasswordResetForm.email_forgot.vars.attr|merge({placeholder: 'name@example.com', autocomplete: 'email', 'data-ps-ref': 'forgot-password-email'})}) }}
       {{ form_errors(requestPasswordResetForm.email_forgot) }}
     </div>
 

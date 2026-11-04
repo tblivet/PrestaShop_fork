@@ -11,31 +11,11 @@
   },
   "findings": {
     "blocker": 0,
-    "major": 4,
+    "major": 0,
     "minor": 13,
     "suggestion": 4
   },
   "open": [
-    {
-      "severity": "major",
-      "title": "Password tips never show: 'password' gets 'Very weak' with no reason and no advice",
-      "where": "reset-strength-common, reset-strength-weak-short, reset-passwords-shown, all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:233-245,321-333"
-    },
-    {
-      "severity": "major",
-      "title": "Client-side invalid email shows only a red border and icon, with no message and no aria-invalid",
-      "where": "Forgot panel, all widths (also applies to the login email field)"
-    },
-    {
-      "severity": "major",
-      "title": "Showing or hiding the forgot panel loses focus, and the trigger is a fake link",
-      "where": "Login and forgot panel, all widths"
-    },
-    {
-      "severity": "major",
-      "title": "Button focus ring is too faint (about 2.6:1) on Sign in, the password toggle and the forgot panel buttons",
-      "where": "All states with buttons, all widths"
-    },
     {
       "severity": "minor",
       "title": "Uneven spacing when two flash alerts stack",
@@ -122,5 +102,5 @@
       "where": "ui/src/js/components/password-toggle.js:18; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:9"
     }
   ],
-  "note": "RTL finding dropped (out of scope, DECISIONS.md #4). Run before FlashMessages replaced _flash_alerts.html.twig."
+  "note": "RTL finding dropped (out of scope, DECISIONS.md #4). 3 of the 4 major findings were fixed on 2026-11-04, not re-reviewed yet; the button focus ring one is closed as an accepted choice (the button color at 50%, under 3:1, DECISIONS.md #29)."
 }

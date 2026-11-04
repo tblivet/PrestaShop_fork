@@ -139,3 +139,8 @@ Why: `ps-login` alone does not say it is the page wrapper (it could be a form or
 Refines #26 for `ui/src/scss/pages/` only: a page is one block by default (parts as flattened elements), split into one partial per sub-block when a part has its own elements, or uses a `$selectors` map of its own blocks when one partial reads better. Components and layouts keep one block and `$component-name`. Stylelint checks the map values. Rules in `CONVENTIONS.md`, "Classes".
 Why: unlike a component, a page can style many parts and sub-parts; one fixed form does not fit every page size.
 
+
+## 29. Button focus rings use the button color at 50% — 2026-11-04
+
+Every `.btn` focus ring is a 2px gap in the page color, then the button's own color at 50% (`rgba(var(--bs-btn-focus-shadow-rgb), .5)`, `components/_buttons.scss`), warning and light included. Other focus rings use `$focus-ring-color`, the brand at 50% (3.3:1 on white).
+Why: a ring that matches its button, as Bootstrap does; the gap keeps it apart from a dark button. Accepted trade-off: on white these rings are 1.8:1 to 2.8:1, under the 3:1 of WCAG 1.4.11; reviews should not report it again. Left aside: one dark ring for every button (8.9:1); the button color at 100% (3.8:1 to 12.5:1, yellow excepted).

@@ -75,3 +75,17 @@ Each entry: the page or component, then only the sections that apply.
 **Markup**
 - Login pages: `<main class="ps-page ps-page--bg-subtle ps-page--login">` → `<main class="ps-page ps-page--bg-subtle ps-page--login ps-login">`. `ps-page--login` stays as the page wrapper's name, unstyled; the padding moved to the `ps-login` block.
 
+## Login review: the 4 major findings — 2026-11-04
+
+**Markup**
+- Login page: the "Forgot your password?" trigger is a `<button type="button" class="btn btn-link …">` with `aria-controls` (was an `<a href="#forgotten_password">`); its id and `data-ps-action="show-forgot-password"` are kept.
+- Kit form theme (`email_widget`): every email field is followed by an empty `<div class="invalid-feedback" id="<id>_client_error" role="status" data-ps-target="email-error">`, linked by `aria-describedby`.
+- Password feedback helper: the strength tip is a `<p class="ps-password-feedback__tip" data-ps-ref="password-tip">` right under the "Minimum strength required" requirement, indented to its text (it was a Bootstrap popover on the field); `data-ps-data-translations` keeps the 5 strength labels, the tips moved to `data-ps-data-feedback`, keyed by @zxcvbn-ts ids. Employee and Customer forms get the same.
+- Kit CSS: `aria-invalid` fields show Bootstrap's error icon; empty `.invalid-feedback` slots are hidden; buttons get a focus ring with a gap in the page color, then the button color at 50% (`DECISIONS.md` #29).
+
+**Behaviour**
+- Password tips show again: they never did with @zxcvbn-ts v3, whose sentences did not match the translation keys. One line, the warning (why) then the first suggestion (how), while the strength requirement is unmet. The warning is also announced.
+- Below the required strength, the strength label names it: "Average (Strong required)" (new string `%s (%s required)`, `Admin.Advparameters.Feature`).
+- Kit login page: an invalid email shows its message under the field and sets `aria-invalid`, on change and on a blocked submit; the Bootstrap 4 page keeps `EmailInput` (moved to `pages/login/index.ts`).
+- Opening the forgot-password panel moves focus to its email field; Cancel moves it back to the trigger.
+
