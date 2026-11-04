@@ -18,7 +18,7 @@ Rules for any markup rendered with the `/ui` kit: Twig components, `Ui/` page te
 
 ## Classes: BEM with the `ps-` prefix
 
-- **Blocks start with `ps-`** (`ps-login`, `ps-password-feedback`) so they never clash with Bootstrap or module classes. Elements `__`, modifiers `--`, kebab-case: `ps-login__form-group--end`.
+- **Blocks start with `ps-`** (`ps-login`, `ps-password-feedback`) so they never clash with Bootstrap or module classes. Elements `__`, modifiers `--`, kebab-case: `ps-password-field__icon--shown`.
 - **One block per partial**, nested with `&__` / `&--` in `ui/src/scss/{components,layout,pages}/_<block>.scss`. No element of another block, no element of an element (`ps-login__card-body`, not `ps-login__card__body`).
 - **The block name is declared once**, on the first line, as in Hummingbird: `$component-name: ps-flash-messages;` then `.#{$component-name} { … }`. Write elements and modifiers with `&__` / `&--`, nesting a modifier under its element (`&__icon { &--shown { … } }`). When a rule needs more specificity, nest the element under another element or a state of the block (`&__toggle[aria-pressed="true"] &__icon { &--shown { … } }`) rather than spelling `.#{$component-name}__icon` in full. Never style another block from a partial, not even a modifier of it: put the page's own block on the same element instead and style that block in its partial.
 - **Pages may need more than one block** (`ui/src/scss/pages/`), unlike components and layouts. Pick by size:

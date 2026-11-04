@@ -23,7 +23,7 @@ For every state of one or more pages at once, with a panel of reviewers and an H
 
 ## 1. Prepare
 
-1. `PS_UI_KIT=1` in `.env.local`, and assets built (`make admin-ui`, plus `make admin-new-theme` when page JS changed).
+1. `PS_UI_KIT=1` in `.env.local`, and assets built: `node ui/.ai/bin/check-builds.mjs` must say "Builds are current" (otherwise run the `make` targets it names, then clear the cache as www-data). The `ui-screen-review` workflow runs it first and stops on stale builds.
 2. Open the page in a **new** browser tab and hard-reload (asset URLs only carry `?<ps version>`).
 3. A page behind sign-in needs a signed-in tab. Use local test credentials only; otherwise ask the user to sign in.
 4. Confirm the kit is loaded: a stylesheet whose URL contains `ui.css`. If not, stop: the review would describe the old theme.

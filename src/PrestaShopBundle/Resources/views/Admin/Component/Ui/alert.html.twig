@@ -2,7 +2,7 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
-{% set classes = ['alert', 'alert-' ~ type] %}
+{% set classes = ['ps-alert', 'alert', 'alert-' ~ type] %}
 {% if dismissible %}
   {% set classes = classes|merge(['alert-dismissible', 'fade', 'show']) %}
 {% endif %}
@@ -14,7 +14,7 @@
   {% if icon %}
     {# mt-1 centres the 16px icon on the first 24px line, so it stays there when the text wraps #}
     <twig:ux:icon :name="icon" width="16" height="16" class="flex-shrink-0 mt-1" aria-hidden="true"/>
-    <div>{% block content %}{% endblock %}</div>
+    <div class="ps-alert__content">{% block content %}{% endblock %}</div>
   {% else %}
     {{ block('content') }}
   {% endif %}

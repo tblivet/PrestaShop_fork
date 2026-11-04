@@ -78,3 +78,13 @@ export const AllColors = {
     </div>
   `,
 };
+
+// A long label wraps; the icon stays on the first line (_icon-link.scss)
+export const Wrapping = {
+  render: () => `
+    <a class="icon-link icon-link-hover link-secondary small" href="#" style="max-width: 16rem">
+      <i class="material-symbols-outlined" aria-hidden="true">arrow_back</i>
+      Back to Maison Dupont et Fils - Épicerie fine artisanale depuis 1887
+    </a>
+  `,
+};

@@ -47,33 +47,35 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 | Page | Ui template | Components | Raw markup | Last review | Open findings |
 |------|-------------|-----------:|-----------:|-------------|---------------|
-| Login/login.html.twig | Login/Ui/login.html.twig | 2 | 0 | 2026-11-03 | 13 minor, 4 suggestion |
+| Login/login.html.twig | Login/Ui/login.html.twig | 2 | 0 | 2026-11-04 | 1 major, 13 minor, 7 suggestion |
 | Login/required_actions.html.twig | Login/Ui/required_actions.html.twig | 1 | 0 | never | – |
 | Login/reset_password.html.twig | Login/Ui/reset_password.html.twig | 1 | 0 | never | – |
 
 ## Open findings
 
-### login — 2026-11-03
+### login — 2026-11-04
 
-RTL finding dropped (out of scope, DECISIONS.md #4). 3 of the 4 major findings were fixed on 2026-11-04, not re-reviewed yet; the button focus ring one is closed as an accepted choice (the button color at 50%, under 3:1, DECISIONS.md #29).
-
-- **minor** Uneven spacing when two flash alerts stack (login-ssl-warning-stacked, 375/768/1280)
-- **minor** Long unbreakable text overflows ui:Alert on mobile (required-actions-all, 375)
-- **minor** Back link arrow centred on a wrapped shop name (login-long-shop-name, 375)
-- **minor** Password requirement icons float between wrapped lines (Reset page, strength checklist, 375)
-- **minor** Over-length password shows a full red bar next to a ticked strength rule (reset-too-long, 375/768/1280)
-- **minor** Expired reset link: the error says 'Request a new one' but gives no way to do it, and only after the user has typed two passwords (reset-default and login-error-link-expired, all widths; src/PrestaShopBundle/Controller/Admin/LoginController.php:170-174 and 181-186)
-- **minor** Server min-length error uses generic Symfony wording that differs from the checklist (reset-server-length-error, all widths; src/PrestaShopBundle/Form/Admin/Login/ResetPasswordType.php:120-127)
-- **minor** Sign in and Send reset link give no feedback while the request runs (login-submitting, all widths; admin-dev/themes/new-theme/js/pages/login/login-page.ts:9-32 (no submit handler))
-- **minor** 'Check your inbox' info alert is 7 lines on mobile and puts the main point in the middle of a paragraph (login-info-link-sent at 375; LoginController.php:189-193)
-- **minor** French back office mixes languages on the login card (login-french at 375/768/1280)
-- **minor** Wrong-credentials and reset errors are not reliably announced after the page reloads (login-wrong-credentials, login-error-link-expired, login-error-reset-failed, all widths)
-- **minor** Password requirements are hidden until the first keystroke and not linked to the field before then (reset-default, all widths)
-- **minor** Same document title on login, forgot and reset pages (All states)
-- **suggestion** displayAdminLogin hook slot has no spacing of its own (login-hook-content, all widths)
-- **suggestion** Required-action item for renaming /admin has no final period, unlike the other items (required-actions-all; LoginController.php:244)
-- **suggestion** Login SCSS rewrites layout utilities, and the forgot buttons are raw flex markup instead of a layout (ui/src/scss/pages/_login.scss:80-84,92-94,102-115,118-126; login.html.twig:63-66)
-- **suggestion** Small hook and spacing slips: icon selected by aria-hidden, spacing utility on ui:Alert (ui/src/js/components/password-toggle.js:18; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:9)
+- **major** Unbreakable text overflows the Alert box at 375 px (required-actions-rename-admin, 375 px; Component/Ui/alert.html.twig:15; ui/src/scss/components/_alert.scss (empty))
+- **minor** Two-line requirement items centre their icon instead of aligning it with the first line (reset-strength-* at 375 px (and French at all widths); Helpers/password_feedback.html.twig:63,67)
+- **minor** Expired reset link tells the user to request a new one but gives no way to do it (reset-link-expired, all widths; LoginController.php:170-174)
+- **minor** Send-failure message says the password could not be reset when the link could not be sent (forgot-send-failure-error, all widths; LoginController.php:136)
+- **minor** Email error appears on blur, moves the Sign in button and the click is lost (sign-in-email-client-error (b) at 768; forgot panel likewise; login-page.ts:39)
+- **minor** Required-actions page has no next step after the actions are done (required-actions, all widths; required_actions.html.twig:9-16)
+- **minor** A weak-password submit is refused silently (reset-submit-blocked (a), all widths; reset-password.ts:56-62)
+- **minor** After a server re-render or redirect, focus stays on BODY and the error is not reliably announced (sign-in-wrong-credentials, forgot-server-error-rerender, reset-server-field-errors and csrf-expired-alert, at every width)
+- **minor** Dismissing a flash alert drops focus to BODY (flash-dismissed, at every width)
+- **minor** Both show/hide buttons on the reset page have the same name (reset-page-default and keyboard-focus-hover, 375 px)
+- **minor** New password is marked invalid from the first keystroke and stays invalid when emptied (reset-strength-too-short, at every width)
+- **minor** The kit does not reset .alert's margin, so pages patch it and the CSRF alert gets an extra gap (csrf-expired-alert, at every width; required-actions)
+- **minor** Submit buttons have no busy state (submitting (emulated), 1280, 768 and 375 px)
+- **minor** _login.scss rewrites Bootstrap utilities (ui/src/scss/pages/_login.scss:26-29, 47-49, 68-82, 90-95, 111-113)
+- **suggestion** Links inside alerts render black instead of the alert link color (required-actions, all widths; LoginController.php:276-278 (raw <a> in the translated string))
+- **suggestion** Back-link arrow centred on a wrapped shop name (long-shop-name, 375 px; Layout/Ui/login_layout.html.twig:15-18; ui/src/scss/pages/_login.scss (&__back))
+- **suggestion** Stacked form actions put the primary button last on mobile (forgot-panel-default and french-translations, 375 px; ui/src/scss/pages/_login.scss (media-breakpoint-down(sm) &__form-actions flex-direction: column))
+- **suggestion** Info flash after a reset request has no heading and is long on mobile (forgot-link-requested-info, 375 (7 lines); LoginController.php:186-189)
+- **suggestion** Server length error uses different, unpunctuated wording from the checklist (reset-server-field-errors (b); ResetPasswordType.php:120-124)
+- **suggestion** Forgot panel does not say what will happen (forgot-panel-default, all widths; login.html.twig:54-65)
+- **suggestion** Reset page offers no way back to sign in (reset-page-default, all widths; reset_password.html.twig:41-43)
 
 ## Kit components
 

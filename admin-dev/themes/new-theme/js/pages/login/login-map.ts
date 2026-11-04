@@ -17,6 +17,7 @@ export default {
   resetNewPassword: '[data-ps-ref="new-password"]',
   resetNewPasswordConfirmation: '[data-ps-ref="new-password-confirmation"]',
   resetPasswordMismatch: '[data-ps-target="password-mismatch"]',
+  resetPasswordPolicyError: '[data-ps-target="password-policy-error"]',
   resetSubmitButton: '[data-ps-ref="reset-password-submit"]',
   alertMessages: '[data-ps-ref="flash-alert"]',
 };

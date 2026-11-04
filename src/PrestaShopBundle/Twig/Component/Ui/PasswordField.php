@@ -24,6 +24,9 @@ final class PasswordField
     /** id of the password input given as content, which the button shows or hides */
     public string $inputId;
 
+    /** label of the field, in the button's name so two password fields on a page have distinct buttons */
+    public ?string $label = null;
+
     #[PreMount]
     public function preMount(array $data): array
     {
@@ -31,7 +34,9 @@ final class PasswordField
         $resolver
             ->setIgnoreUndefined()
             ->setRequired('inputId')
+            ->setDefault('label', null)
             ->setAllowedTypes('inputId', 'string')
+            ->setAllowedTypes('label', ['null', 'string'])
             ->setAllowedValues('inputId', fn (string $inputId): bool => '' !== $inputId)
         ;
 

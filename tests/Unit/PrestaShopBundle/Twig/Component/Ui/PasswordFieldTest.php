@@ -17,10 +17,22 @@ class PasswordFieldTest extends TestCase
 {
     public function testKeepsTheInputIdAndExtraAttributes(): void
     {
-        $this->assertSame(
-            ['inputId' => 'login_passwd', 'class' => 'mb-0'],
+        $this->assertEquals(
+            ['inputId' => 'login_passwd', 'label' => null, 'class' => 'mb-0'],
             (new PasswordField())->preMount(['inputId' => 'login_passwd', 'class' => 'mb-0'])
         );
+    }
+
+    public function testKeepsTheLabel(): void
+    {
+        $this->assertSame('New password', (new PasswordField())->preMount(['inputId' => 'pwd', 'label' => 'New password'])['label']);
+    }
+
+    public function testRejectsANonStringLabel(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        (new PasswordField())->preMount(['inputId' => 'pwd', 'label' => 12]);
     }
 
     public function testRequiresTheInputId(): void

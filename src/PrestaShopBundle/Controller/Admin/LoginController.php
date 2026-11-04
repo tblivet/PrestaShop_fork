@@ -73,7 +73,8 @@ class LoginController extends PrestaShopAdminController
             $this->addFlash('error', $this->trans('The email address or password is incorrect.', [], 'Admin.Login.Notification'));
         }
 
-        return $this->renderLoginPage($loginForm, $requestPasswordResetForm, false);
+        // ?forgot_password=1 opens the forgot password panel, where the request flashes (sent, failed, expired link) lead
+        return $this->renderLoginPage($loginForm, $requestPasswordResetForm, $request->query->getBoolean('forgot_password'));
     }
 
     /**
@@ -134,16 +135,19 @@ class LoginController extends PrestaShopAdminController
                     // UserNotFoundException is no longer thrown by EmployeePasswordResetter but is still caught for safety.
                     $infoMessage = $this->getPasswordResetRequestedMessage();
                 } catch (Throwable) {
-                    $errorMessage = $this->trans('We couldn\'t reset your password. Try again later.', [], 'Admin.Login.Notification');
+                    $errorMessage = $this->trans('We couldn\'t send the reset link. Try again later.', [], 'Admin.Login.Notification');
                 }
 
                 if (!empty($infoMessage)) {
                     $this->addFlash('info', $infoMessage);
-                } elseif (!empty($errorMessage)) {
-                    $this->addFlash('error', $errorMessage);
+
+                    return $this->redirectToRoute('admin_login');
                 }
 
-                return $this->redirectToRoute('admin_login');
+                // Back on the panel, so trying again does not mean opening it again
+                $this->addFlash('error', (string) $errorMessage);
+
+                return $this->redirectToRoute('admin_login', ['forgot_password' => 1]);
             }
 
             return $this->renderLoginPage($loginForm, $requestPasswordResetForm, true);
@@ -171,7 +175,8 @@ class LoginController extends PrestaShopAdminController
                 // Display generic error message with no details why it failed
                 $this->addFlash('error', $this->trans('Your reset link has expired. Request a new one.', [], 'Admin.Login.Notification'));
 
-                return $this->redirectToRoute('admin_login');
+                // On the panel where a new link is requested
+                return $this->redirectToRoute('admin_login', ['forgot_password' => 1]);
             } catch (Throwable) {
                 $this->addFlash('error', $this->trans('We couldn\'t reset your password. Try again later.', [], 'Admin.Login.Notification'));
             }
@@ -188,7 +193,7 @@ class LoginController extends PrestaShopAdminController
 
     private function getPasswordResetRequestedMessage(): string
     {
-        return $this->trans('Check your inbox.', [], 'Admin.Login.Notification') . '<br/>'
+        return '<strong>' . $this->trans('Check your inbox.', [], 'Admin.Login.Notification') . '</strong><br/>'
             . $this->trans('If an account exists for this email address, you\'ll receive a link to reset your password.', [], 'Admin.Login.Notification') . ' '
             . $this->getPasswordResetIntervalMessage((int) ($this->getConfiguration()->get('PS_PASSWD_TIME_BACK') ?: 360));
     }
@@ -241,7 +246,7 @@ class LoginController extends PrestaShopAdminController
                 mt_rand(0, 999),
                 mb_strtolower((new PasswordGenerator(new OpenSSL()))->generatePassword(16)),
             );
-            $requiredActions[] = $this->trans('Rename the /admin folder, for example to %s', [$randomName], 'Admin.Login.Notification');
+            $requiredActions[] = $this->trans('Rename the /admin folder, for example to %s.', ['<code>' . $randomName . '</code>'], 'Admin.Login.Notification');
         }
 
         $sslEnabled = (bool) $this->getConfiguration()->get('PS_SSL_ENABLED');

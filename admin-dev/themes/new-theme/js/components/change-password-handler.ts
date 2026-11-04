@@ -84,6 +84,9 @@ export default class ChangePasswordHandler {
 
   isValid: boolean;
 
+  // Fields the user has left with a value: only they show the invalid state, not a password still being typed
+  private touched = new WeakSet<HTMLInputElement>();
+
   constructor(
     passwordStrengthFeedbackContainerSelector: string,
     options: ChangePasswordHandlerOptions = {},
@@ -109,6 +112,13 @@ export default class ChangePasswordHandler {
           announcement.textContent = message;
         }
       }, ANNOUNCEMENT_DELAY);
+
+      input.addEventListener('blur', () => {
+        if (input.value !== '') {
+          this.touched.add(input);
+        }
+        this.updateInvalidState(input);
+      });
 
       input.addEventListener('keyup', () => {
         // A page can wrap the input (e.g. in an input group) and mark the element the feedback goes into
@@ -166,6 +176,8 @@ export default class ChangePasswordHandler {
         if (input.value === '') {
           feedbackContainer.classList.add('d-none');
           announce.cancel();
+          this.touched.delete(input);
+          this.updateInvalidState(input);
         } else {
           const result = zxcvbn(input.value);
           this.displayFeedback(input, feedbackContainer, translations, result);
@@ -179,6 +191,28 @@ export default class ChangePasswordHandler {
 
   isPasswordValid(): boolean {
     return this.isValid;
+  }
+
+  /**
+   * Shows the invalid state now, e.g. when a submit is blocked, without waiting for the user to leave the field.
+   */
+  markInvalid(input: HTMLInputElement): void {
+    this.touched.add(input);
+    this.updateInvalidState(input);
+  }
+
+  /**
+   * aria-invalid (and its red style) once the field was left or a submit blocked, never on an empty field;
+   * removed as soon as the password meets the policy.
+   *
+   * @private
+   */
+  private updateInvalidState(input: HTMLInputElement): void {
+    if (input.value !== '' && !this.isValid && this.touched.has(input)) {
+      input.setAttribute('aria-invalid', 'true');
+    } else {
+      input.removeAttribute('aria-invalid');
+    }
   }
 
   /**
@@ -265,12 +299,7 @@ export default class ChangePasswordHandler {
     );
 
     this.isValid = passwordScoreValid && lengthState === 'met';
-
-    if (this.isValid) {
-      passwordInput.removeAttribute('aria-invalid');
-    } else {
-      passwordInput.setAttribute('aria-invalid', 'true');
-    }
+    this.updateInvalidState(passwordInput);
 
     this.showTip(outputContainer, passwordScoreValid ? [] : [result.feedback.warning, result.feedback.suggestions[0]]);
 

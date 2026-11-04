@@ -4,9 +4,16 @@
  */
 // Icon link overrides — https://getbootstrap.com/docs/5.3/helpers/icon-link/
 
+// When the text wraps, the icon stays on the first line: it is sized to the text and gets the text's line height
+// (1.2 = $line-height-base 1.5 / 1.25)
 .icon-link {
+  align-items: flex-start;
+
   > .material-symbols-outlined {
+    flex-shrink: 0;
     overflow: hidden;
+    font-size: 1.25em;
+    line-height: 1.2;
     transition: transform 0.2s ease-in-out;
   }
 }

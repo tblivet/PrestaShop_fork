@@ -46,7 +46,7 @@ class ResetPasswordType extends AbstractType
                     // The same requirement as the strength checklist, from the password policy
                     'help' => $this->translator->trans('Use between %d and %d characters', [$minLength, $maxLength], 'Admin.Advparameters.Feature'),
                     'constraints' => [
-                        $this->getLengthConstraint($maxLength, $minLength),
+                        $this->getLengthConstraint($minLength, $maxLength),
                     ],
                     'attr' => [
                         'data-ps-ref' => 'new-password',
@@ -92,51 +92,21 @@ class ResetPasswordType extends AbstractType
     }
 
     /**
-     * @param int $maxLength
-     * @param int|null $minLength
-     *
-     * @return Length
+     * Too short or too long, the message gives the rule in the checklist's words
      */
-    private function getLengthConstraint(int $maxLength, ?int $minLength = null): Length
+    private function getLengthConstraint(int $minLength, int $maxLength): Length
     {
-        $options = [
+        $message = $this->translator->trans(
+            'Use between %min% and %max% characters.',
+            ['%min%' => $minLength, '%max%' => $maxLength],
+            'Admin.Login.Notification'
+        );
+
+        return new Length([
+            'min' => $minLength,
             'max' => $maxLength,
-            'maxMessage' => $this->getMaxLengthValidationMessage($maxLength),
-        ];
-
-        if (null !== $minLength) {
-            $options['min'] = $minLength;
-            $options['minMessage'] = $this->getMinLengthValidationMessage($minLength);
-        }
-
-        return new Length($options);
-    }
-
-    /**
-     * @param int $minLength
-     *
-     * @return string
-     */
-    private function getMinLengthValidationMessage(int $minLength): string
-    {
-        return $this->translator->trans(
-            'This field cannot be shorter than %limit% characters',
-            ['%limit%' => $minLength],
-            'Admin.Notifications.Error'
-        );
-    }
-
-    /**
-     * @param int $maxLength
-     *
-     * @return string
-     */
-    private function getMaxLengthValidationMessage(int $maxLength): string
-    {
-        return $this->translator->trans(
-            'This field cannot be longer than %limit% characters',
-            ['%limit%' => $maxLength],
-            'Admin.Notifications.Error'
-        );
+            'minMessage' => $message,
+            'maxMessage' => $message,
+        ]);
     }
 }

@@ -17,7 +17,7 @@ export default {
       description: {
         component:
           'Back office: `<twig:ui:Alert type="danger" icon="bi:x-circle-fill" dismissible>…</twig:ui:Alert>`. ' +
-          'Props: `type` (variant), `dismissible`, `icon` (ux:icon name).',
+          'Props: `type` (variant), `dismissible`, `icon` (ux:icon name). No outer margin: a layout spaces alerts. Long words break inside the box; links in the message take the alert link color.',
       },
     },
   },
@@ -48,7 +48,7 @@ const role = (variant) => (variant === 'danger' ? 'alert' : 'status');
 
 export const Default = {
   render: ({ variant, message, dismissible }) => `
-    <div class="alert alert-${variant}${dismissible ? ' alert-dismissible fade show' : ''}" role="${role(variant)}">
+    <div class="ps-alert alert alert-${variant}${dismissible ? ' alert-dismissible fade show' : ''}" role="${role(variant)}">
       ${message}
       ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
     </div>
@@ -60,7 +60,7 @@ export const AllVariants = {
     <div class="d-flex flex-column gap-2">
       ${['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
         .map(
-          (v) => `<div class="alert alert-${v}" role="${role(v)}">A simple <strong>${v}</strong> alert — check it out!</div>`
+          (v) => `<div class="ps-alert alert alert-${v}" role="${role(v)}">A simple <strong>${v}</strong> alert — check it out!</div>`
         )
         .join('')}
     </div>
@@ -70,25 +70,29 @@ export const AllVariants = {
 export const WithIcon = {
   render: () => `
     <div class="d-flex flex-column gap-2">
-      <div class="alert alert-info d-flex align-items-start gap-2" role="status">
+      <div class="ps-alert alert alert-info d-flex align-items-start gap-2" role="status">
         ${uxIcon(infoCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div>An example alert with an icon</div>
+        <div class="ps-alert__content">An example alert with an icon</div>
       </div>
-      <div class="alert alert-success d-flex align-items-start gap-2" role="status">
+      <div class="ps-alert alert alert-success d-flex align-items-start gap-2" role="status">
         ${uxIcon(checkCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div>A success alert with an icon</div>
+        <div class="ps-alert__content">A success alert with an icon</div>
       </div>
-      <div class="alert alert-warning d-flex align-items-start gap-2" role="status">
+      <div class="ps-alert alert alert-warning d-flex align-items-start gap-2" role="status">
         ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div>A warning alert with an icon</div>
+        <div class="ps-alert__content">A warning alert with an icon</div>
       </div>
-      <div class="alert alert-danger d-flex align-items-start gap-2" role="alert">
+      <div class="ps-alert alert alert-danger d-flex align-items-start gap-2" role="alert">
         ${uxIcon(xCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div>A danger alert with an icon</div>
+        <div class="ps-alert__content">A danger alert with an icon</div>
       </div>
-      <div class="alert alert-warning d-flex align-items-start gap-2 w-50" role="status">
+      <div class="ps-alert alert alert-warning d-flex align-items-start gap-2 w-50" role="status">
         ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div>A long warning that wraps on several lines keeps its icon on the first line.</div>
+        <div class="ps-alert__content">A long warning that wraps on several lines keeps its icon on the first line.</div>
+      </div>
+      <div class="ps-alert alert alert-warning d-flex align-items-start gap-2" style="max-width: 18rem" role="status">
+        ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
+        <div class="ps-alert__content">Rename the /admin folder, for example to <code>admin482k3j9x2qv8mzt0wpl/</code>. A long word breaks inside the box. <a href="#">A link</a> takes the alert color.</div>
       </div>
     </div>
   `,
@@ -97,15 +101,15 @@ export const WithIcon = {
 export const Dismissible = {
   render: () => `
     <div class="d-flex flex-column gap-2">
-      <div class="alert alert-warning alert-dismissible fade show" role="status">
+      <div class="ps-alert alert alert-warning alert-dismissible fade show" role="status">
         <strong>Holy guacamole!</strong> You should check in on some of those fields below.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      <div class="alert alert-success alert-dismissible fade show" role="status">
+      <div class="ps-alert alert alert-success alert-dismissible fade show" role="status">
         <strong>Well done!</strong> You successfully read this important alert message.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <div class="ps-alert alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Oh snap!</strong> Change a few things up and try submitting again.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>

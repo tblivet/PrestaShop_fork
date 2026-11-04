@@ -1,8 +1,8 @@
 {
   "page": "login",
   "url": "http://localhost:8001/admin-dev/login",
-  "date": "2026-11-03",
-  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-3/index.html",
+  "date": "2026-11-04",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-4/index.html",
   "states": {
     "total": 30,
     "captured": 26,
@@ -11,96 +11,115 @@
   },
   "findings": {
     "blocker": 0,
-    "major": 0,
+    "major": 1,
     "minor": 13,
-    "suggestion": 4
+    "suggestion": 7
   },
   "open": [
     {
-      "severity": "minor",
-      "title": "Uneven spacing when two flash alerts stack",
-      "where": "login-ssl-warning-stacked, 375/768/1280"
+      "severity": "major",
+      "title": "Unbreakable text overflows the Alert box at 375 px",
+      "where": "required-actions-rename-admin, 375 px; Component/Ui/alert.html.twig:15; ui/src/scss/components/_alert.scss (empty)"
     },
     {
       "severity": "minor",
-      "title": "Long unbreakable text overflows ui:Alert on mobile",
-      "where": "required-actions-all, 375"
+      "title": "Two-line requirement items centre their icon instead of aligning it with the first line",
+      "where": "reset-strength-* at 375 px (and French at all widths); Helpers/password_feedback.html.twig:63,67"
     },
     {
       "severity": "minor",
-      "title": "Back link arrow centred on a wrapped shop name",
-      "where": "login-long-shop-name, 375"
+      "title": "Expired reset link tells the user to request a new one but gives no way to do it",
+      "where": "reset-link-expired, all widths; LoginController.php:170-174"
     },
     {
       "severity": "minor",
-      "title": "Password requirement icons float between wrapped lines",
-      "where": "Reset page, strength checklist, 375"
+      "title": "Send-failure message says the password could not be reset when the link could not be sent",
+      "where": "forgot-send-failure-error, all widths; LoginController.php:136"
     },
     {
       "severity": "minor",
-      "title": "Over-length password shows a full red bar next to a ticked strength rule",
-      "where": "reset-too-long, 375/768/1280"
+      "title": "Email error appears on blur, moves the Sign in button and the click is lost",
+      "where": "sign-in-email-client-error (b) at 768; forgot panel likewise; login-page.ts:39"
     },
     {
       "severity": "minor",
-      "title": "Expired reset link: the error says 'Request a new one' but gives no way to do it, and only after the user has typed two passwords",
-      "where": "reset-default and login-error-link-expired, all widths; src/PrestaShopBundle/Controller/Admin/LoginController.php:170-174 and 181-186"
+      "title": "Required-actions page has no next step after the actions are done",
+      "where": "required-actions, all widths; required_actions.html.twig:9-16"
     },
     {
       "severity": "minor",
-      "title": "Server min-length error uses generic Symfony wording that differs from the checklist",
-      "where": "reset-server-length-error, all widths; src/PrestaShopBundle/Form/Admin/Login/ResetPasswordType.php:120-127"
+      "title": "A weak-password submit is refused silently",
+      "where": "reset-submit-blocked (a), all widths; reset-password.ts:56-62"
     },
     {
       "severity": "minor",
-      "title": "Sign in and Send reset link give no feedback while the request runs",
-      "where": "login-submitting, all widths; admin-dev/themes/new-theme/js/pages/login/login-page.ts:9-32 (no submit handler)"
+      "title": "After a server re-render or redirect, focus stays on BODY and the error is not reliably announced",
+      "where": "sign-in-wrong-credentials, forgot-server-error-rerender, reset-server-field-errors and csrf-expired-alert, at every width"
     },
     {
       "severity": "minor",
-      "title": "'Check your inbox' info alert is 7 lines on mobile and puts the main point in the middle of a paragraph",
-      "where": "login-info-link-sent at 375; LoginController.php:189-193"
+      "title": "Dismissing a flash alert drops focus to BODY",
+      "where": "flash-dismissed, at every width"
     },
     {
       "severity": "minor",
-      "title": "French back office mixes languages on the login card",
-      "where": "login-french at 375/768/1280"
+      "title": "Both show/hide buttons on the reset page have the same name",
+      "where": "reset-page-default and keyboard-focus-hover, 375 px"
     },
     {
       "severity": "minor",
-      "title": "Wrong-credentials and reset errors are not reliably announced after the page reloads",
-      "where": "login-wrong-credentials, login-error-link-expired, login-error-reset-failed, all widths"
+      "title": "New password is marked invalid from the first keystroke and stays invalid when emptied",
+      "where": "reset-strength-too-short, at every width"
     },
     {
       "severity": "minor",
-      "title": "Password requirements are hidden until the first keystroke and not linked to the field before then",
-      "where": "reset-default, all widths"
+      "title": "The kit does not reset .alert's margin, so pages patch it and the CSRF alert gets an extra gap",
+      "where": "csrf-expired-alert, at every width; required-actions"
     },
     {
       "severity": "minor",
-      "title": "Same document title on login, forgot and reset pages",
-      "where": "All states"
+      "title": "Submit buttons have no busy state",
+      "where": "submitting (emulated), 1280, 768 and 375 px"
+    },
+    {
+      "severity": "minor",
+      "title": "_login.scss rewrites Bootstrap utilities",
+      "where": "ui/src/scss/pages/_login.scss:26-29, 47-49, 68-82, 90-95, 111-113"
     },
     {
       "severity": "suggestion",
-      "title": "displayAdminLogin hook slot has no spacing of its own",
-      "where": "login-hook-content, all widths"
+      "title": "Links inside alerts render black instead of the alert link color",
+      "where": "required-actions, all widths; LoginController.php:276-278 (raw <a> in the translated string)"
     },
     {
       "severity": "suggestion",
-      "title": "Required-action item for renaming /admin has no final period, unlike the other items",
-      "where": "required-actions-all; LoginController.php:244"
+      "title": "Back-link arrow centred on a wrapped shop name",
+      "where": "long-shop-name, 375 px; Layout/Ui/login_layout.html.twig:15-18; ui/src/scss/pages/_login.scss (&__back)"
     },
     {
       "severity": "suggestion",
-      "title": "Login SCSS rewrites layout utilities, and the forgot buttons are raw flex markup instead of a layout",
-      "where": "ui/src/scss/pages/_login.scss:80-84,92-94,102-115,118-126; login.html.twig:63-66"
+      "title": "Stacked form actions put the primary button last on mobile",
+      "where": "forgot-panel-default and french-translations, 375 px; ui/src/scss/pages/_login.scss (media-breakpoint-down(sm) &__form-actions flex-direction: column)"
     },
     {
       "severity": "suggestion",
-      "title": "Small hook and spacing slips: icon selected by aria-hidden, spacing utility on ui:Alert",
-      "where": "ui/src/js/components/password-toggle.js:18; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:9"
+      "title": "Info flash after a reset request has no heading and is long on mobile",
+      "where": "forgot-link-requested-info, 375 (7 lines); LoginController.php:186-189"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Server length error uses different, unpunctuated wording from the checklist",
+      "where": "reset-server-field-errors (b); ResetPasswordType.php:120-124"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Forgot panel does not say what will happen",
+      "where": "forgot-panel-default, all widths; login.html.twig:54-65"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Reset page offers no way back to sign in",
+      "where": "reset-page-default, all widths; reset_password.html.twig:41-43"
     }
-  ],
-  "note": "RTL finding dropped (out of scope, DECISIONS.md #4). 3 of the 4 major findings were fixed on 2026-11-04, not re-reviewed yet; the button focus ring one is closed as an accepted choice (the button color at 50%, under 3:1, DECISIONS.md #29)."
+  ]
 }

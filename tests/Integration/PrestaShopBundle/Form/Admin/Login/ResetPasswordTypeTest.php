@@ -43,7 +43,9 @@ class ResetPasswordTypeTest extends KernelTestCase
         $form = $this->submit('short', 'short');
 
         $this->assertCount(0, $form->get('new_password')->getErrors());
-        $this->assertCount(1, $form->get('new_password')->get('first')->getErrors());
+        $errors = $form->get('new_password')->get('first')->getErrors();
+        $this->assertCount(1, $errors);
+        $this->assertMatchesRegularExpression('/^Use between \d+ and \d+ characters\.$/', $errors[0]->getMessage());
         $this->assertCount(0, $form->get('new_password')->get('second')->getErrors());
     }
 

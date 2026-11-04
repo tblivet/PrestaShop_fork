@@ -24,7 +24,11 @@
 {# Every password field gets the show/hide button (DECISIONS.md #25: the block maps the field to a kit component) #}
 {%- block password_widget -%}
   {%- set input -%}{{- parent() -}}{%- endset -%}
-  <twig:ui:PasswordField :inputId="id">{{ input }}</twig:ui:PasswordField>
+  {%- set fieldLabel = null -%}
+  {%- if label is not same as(false) -%}
+    {%- set fieldLabel = label is empty ? name|humanize : (translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain)) -%}
+  {%- endif -%}
+  <twig:ui:PasswordField :inputId="id" :label="fieldLabel">{{ input }}</twig:ui:PasswordField>
 {%- endblock password_widget -%}
 
 {# Every email field gets an empty slot for its client-side check, linked to it; the page script fills it and sets aria-invalid #}

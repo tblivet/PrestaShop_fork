@@ -36,9 +36,18 @@ const watchEmailFields = (): void => {
       return valid;
     };
 
-    input.addEventListener('change', check);
+    // Checked on submit, not when the field is left: a message appearing then would move the button being clicked.
+    // Once shown, it follows the typing, so it goes away as soon as the address is fixed.
+    let shown = false;
+
+    input.addEventListener('input', () => {
+      if (shown) {
+        shown = !check();
+      }
+    });
     input.form?.addEventListener('submit', (event) => {
       if (!check()) {
+        shown = true;
         event.preventDefault();
         event.stopImmediatePropagation();
         input.focus();

@@ -10,8 +10,4 @@ $component-name: ps-flash-messages;
 .#{$component-name} {
   display: grid;
   gap: 0.5rem;
-
-  > .alert {
-    margin-block-end: 0;
-  }
 }

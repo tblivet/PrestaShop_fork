@@ -338,6 +338,10 @@ $border-color: $gray-400;
 $focus-ring-color: rgba($primary, 0.5);
 $input-focus-border-color: var(--#{$prefix}border-color);
 
+// ── Alert ─────────────────────────────────────────────────────────────────────
+// A component has no outer margin (CONVENTIONS.md): the layout around an alert spaces it
+$alert-margin-bottom: 0;
+
 // ── Breadcrumb ────────────────────────────────────────────────────────────────
 $breadcrumb-font-size: 0.75rem;
 $breadcrumb-item-padding-x: 0.25rem;

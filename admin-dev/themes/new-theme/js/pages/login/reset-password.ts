@@ -11,6 +11,7 @@ onReady(() => {
   const passwordInput = document.querySelector<HTMLInputElement>(LoginFormMap.resetNewPassword);
   const confirmationInput = document.querySelector<HTMLInputElement>(LoginFormMap.resetNewPasswordConfirmation);
   const mismatch = document.querySelector<HTMLElement>(LoginFormMap.resetPasswordMismatch);
+  const policyError = document.querySelector<HTMLElement>(LoginFormMap.resetPasswordPolicyError);
 
   if (!passwordInput || !confirmationInput) {
     return;
@@ -20,6 +21,19 @@ onReady(() => {
   passwordHandler.watchPasswordStrength([passwordInput]);
 
   const passwordsMatch = (): boolean => passwordInput.value === confirmationInput.value;
+
+  // Says why a submit did nothing when the password does not meet the policy; the checklist below tells what is missing
+  const showPolicyError = (show: boolean): void => {
+    if (policyError) {
+      policyError.textContent = show ? policyError.dataset.psDataInvalid ?? '' : '';
+    }
+  };
+
+  passwordInput.addEventListener('keyup', () => {
+    if (passwordHandler.isPasswordValid() || passwordInput.value === '') {
+      showPolicyError(false);
+    }
+  });
 
   // The message is written when shown, so the live region announces it
   const showMismatch = (show: boolean): void => {
@@ -52,9 +66,14 @@ onReady(() => {
     const match = passwordsMatch();
 
     showMismatch(!match);
+    showPolicyError(!passwordValid);
 
     if (passwordValid && match) {
       return;
+    }
+
+    if (!passwordValid) {
+      passwordHandler.markInvalid(passwordInput);
     }
 
     event.preventDefault();

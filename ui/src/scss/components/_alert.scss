@@ -3,3 +3,30 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // Override Bootstrap alert — https://getbootstrap.com/docs/5.3/components/alerts/
+
+.alert {
+  // A long word (path, URL, token) breaks rather than overflowing the box
+  overflow-wrap: break-word;
+
+  // Links written in a message (a translated string, a module) cannot carry .alert-link: they get its look anyway
+  a:not(.btn) {
+    font-weight: $alert-link-font-weight;
+    color: var(--#{$prefix}alert-link-color);
+  }
+
+  // Focused by the kit after a server error (server-error-focus.js): the kit ring, not the browser outline
+  &[tabindex="-1"]:focus {
+    outline: 0;
+    box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
+  }
+}
+
+// <twig:ui:Alert> (Admin/Component/Ui/alert.html.twig)
+$component-name: ps-alert;
+
+.#{$component-name} {
+  // Beside the icon the text is a flex item, which does not shrink below its longest word without this
+  &__content {
+    min-width: 0;
+  }
+}

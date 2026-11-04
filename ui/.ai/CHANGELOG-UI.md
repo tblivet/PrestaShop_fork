@@ -89,3 +89,31 @@ Each entry: the page or component, then only the sections that apply.
 - Kit login page: an invalid email shows its message under the field and sets `aria-invalid`, on change and on a blocked submit; the Bootstrap 4 page keeps `EmailInput` (moved to `pages/login/index.ts`).
 - Opening the forgot-password panel moves focus to its email field; Cancel moves it back to the trigger.
 
+
+## Login review 4: every finding — 2026-11-04
+
+`ui:Alert`, `ui:PasswordField`, kit JS (`submit-once`, `alert-dismiss-focus`, `server-error-focus`), `_icon-link.scss`, login pages, `LoginController`, `ResetPasswordType`.
+
+**Markup**
+- `ui:Alert`: root gets `ps-alert`, the text next to the icon `ps-alert__content`; no outer margin any more (`$alert-margin-bottom: 0`, kit-wide), so `mb-0` on alerts and the `.ps-flash-messages > .alert` reset are gone. Long words break inside the box; links in a message take the alert link color.
+- `ui:PasswordField`: new `label` prop, set by the form theme; the button name is "Show password: <label>" (was "Show password" for every field).
+- Login pages: the submit buttons are `btn-primary w-100` (`ps-login__submit` removed); `ps-login__form-group--end` → `text-end`; `ps-login__form-actions` → `d-flex flex-column-reverse flex-sm-row justify-content-sm-end gap-2` (main action first on mobile); layout utilities replace the logo, copyright, social and back link styles. Forms carry `data-ps-action="submit-once"`.
+- Forgot panel: new intro line `ps-login__intro`, linked to the email field. Reset page: "Back to sign in" link, and an empty `#<new password id>_policy` slot (`data-ps-target="password-policy-error"`). Required actions: a "Check again" button under the alert.
+- Password checklist: items align their icon with the first line (`align-items-start`); the icon really gets its 1.125em size now (the icon font used to override it), so the tip indent is 1.375rem.
+- Icon links (kit-wide): the icon is sized to the text (1.25em) and stays on the first line when the text wraps.
+
+**Behaviour**
+- A focused alert shows the kit focus ring.
+- Kit, every page: a busy submit button (spinner, `aria-busy`, `aria-disabled`) on `submit-once` forms, and a second submit is ignored; after the server renders a form with errors, focus goes to the first invalid field, otherwise to the danger alert in the form; closing an alert moves focus to the next focusable element.
+- Expired reset link and a failed reset-link email: back on the forgot password panel (`/login?forgot_password=1`), not the sign-in panel.
+- Email check: on submit, then live once shown (no message on blur that moves the button being clicked).
+- New password: red only once the field is left or a submit blocked, never while typing a first value or when empty; a submit blocked by the policy says "Choose a password that meets the requirements."
+
+**Strings** (`Admin.Login.Feature`, `Admin.Login.Notification`, `Admin.Actions`)
+- Send failure: "We couldn't reset your password. Try again later." → "We couldn't send the reset link. Try again later." (the reset failure keeps the former).
+- "Rename the /admin folder, for example to %s" → "…%s." with the name in `<code>`; "Check your inbox." is bold.
+- Server length errors "This field cannot be shorter/longer than %limit% characters" → "Use between %min% and %max% characters."
+- New: "Enter your email address and we'll send you a link to reset your password.", "Check again", "Back to sign in", "Choose a password that meets the requirements.", "Show password: %label%".
+
+**Old theme**
+- `Login/reset_password.html.twig` and the Employee and Customer forms share the password handler: the invalid state also waits for the field to be left there.

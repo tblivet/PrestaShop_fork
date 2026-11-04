@@ -38,6 +38,13 @@ class PasswordFieldComponentTest extends KernelTestCase
         $this->assertLessThan(strpos($html, '<button'), strpos($html, '<input'));
     }
 
+    public function testTheLabelNamesTheButton(): void
+    {
+        $html = $this->render('<twig:ui:PasswordField inputId="pwd" label="New password"><input type="password" id="pwd" class="form-control"></twig:ui:PasswordField>');
+
+        $this->assertStringContainsString('aria-label="Show password: New password"', $html);
+    }
+
     private function render(string $template): string
     {
         return $this->twig->createTemplate($template)->render([]);
