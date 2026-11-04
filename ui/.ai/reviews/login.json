@@ -1,0 +1,126 @@
+{
+  "page": "login",
+  "url": "http://localhost:8001/admin-dev/login",
+  "date": "2026-11-03",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-3/index.html",
+  "states": {
+    "total": 30,
+    "captured": 26,
+    "emulated": 4,
+    "missing": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 4,
+    "minor": 13,
+    "suggestion": 4
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "Password tips never show: 'password' gets 'Very weak' with no reason and no advice",
+      "where": "reset-strength-common, reset-strength-weak-short, reset-passwords-shown, all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:233-245,321-333"
+    },
+    {
+      "severity": "major",
+      "title": "Client-side invalid email shows only a red border and icon, with no message and no aria-invalid",
+      "where": "Forgot panel, all widths (also applies to the login email field)"
+    },
+    {
+      "severity": "major",
+      "title": "Showing or hiding the forgot panel loses focus, and the trigger is a fake link",
+      "where": "Login and forgot panel, all widths"
+    },
+    {
+      "severity": "major",
+      "title": "Button focus ring is too faint (about 2.6:1) on Sign in, the password toggle and the forgot panel buttons",
+      "where": "All states with buttons, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Uneven spacing when two flash alerts stack",
+      "where": "login-ssl-warning-stacked, 375/768/1280"
+    },
+    {
+      "severity": "minor",
+      "title": "Long unbreakable text overflows ui:Alert on mobile",
+      "where": "required-actions-all, 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Back link arrow centred on a wrapped shop name",
+      "where": "login-long-shop-name, 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Password requirement icons float between wrapped lines",
+      "where": "Reset page, strength checklist, 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Over-length password shows a full red bar next to a ticked strength rule",
+      "where": "reset-too-long, 375/768/1280"
+    },
+    {
+      "severity": "minor",
+      "title": "Expired reset link: the error says 'Request a new one' but gives no way to do it, and only after the user has typed two passwords",
+      "where": "reset-default and login-error-link-expired, all widths; src/PrestaShopBundle/Controller/Admin/LoginController.php:170-174 and 181-186"
+    },
+    {
+      "severity": "minor",
+      "title": "Server min-length error uses generic Symfony wording that differs from the checklist",
+      "where": "reset-server-length-error, all widths; src/PrestaShopBundle/Form/Admin/Login/ResetPasswordType.php:120-127"
+    },
+    {
+      "severity": "minor",
+      "title": "Sign in and Send reset link give no feedback while the request runs",
+      "where": "login-submitting, all widths; admin-dev/themes/new-theme/js/pages/login/login-page.ts:9-32 (no submit handler)"
+    },
+    {
+      "severity": "minor",
+      "title": "'Check your inbox' info alert is 7 lines on mobile and puts the main point in the middle of a paragraph",
+      "where": "login-info-link-sent at 375; LoginController.php:189-193"
+    },
+    {
+      "severity": "minor",
+      "title": "French back office mixes languages on the login card",
+      "where": "login-french at 375/768/1280"
+    },
+    {
+      "severity": "minor",
+      "title": "Wrong-credentials and reset errors are not reliably announced after the page reloads",
+      "where": "login-wrong-credentials, login-error-link-expired, login-error-reset-failed, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Password requirements are hidden until the first keystroke and not linked to the field before then",
+      "where": "reset-default, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Same document title on login, forgot and reset pages",
+      "where": "All states"
+    },
+    {
+      "severity": "suggestion",
+      "title": "displayAdminLogin hook slot has no spacing of its own",
+      "where": "login-hook-content, all widths"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Required-action item for renaming /admin has no final period, unlike the other items",
+      "where": "required-actions-all; LoginController.php:244"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Login SCSS rewrites layout utilities, and the forgot buttons are raw flex markup instead of a layout",
+      "where": "ui/src/scss/pages/_login.scss:80-84,92-94,102-115,118-126; login.html.twig:63-66"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Small hook and spacing slips: icon selected by aria-hidden, spacing utility on ui:Alert",
+      "where": "ui/src/js/components/password-toggle.js:18; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:9"
+    }
+  ],
+  "note": "RTL finding dropped (out of scope, DECISIONS.md #4). Run before FlashMessages replaced _flash_alerts.html.twig."
+}

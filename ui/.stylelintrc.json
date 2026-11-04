@@ -1,6 +1,74 @@
 {
-  "extends": ["stylelint-config-twbs-bootstrap"],
+  "extends": [
+    "stylelint-config-twbs-bootstrap"
+  ],
   "rules": {
+    "property-disallowed-list": [
+      [
+        "/^(margin|padding|scroll-margin|scroll-padding)-(top|right|bottom|left)$/",
+        "/^(top|right|bottom|left)$/",
+        "/^border-(top|right|bottom|left)(-(width|style|color))?$/",
+        "/^border-(top|bottom)-(left|right)-radius$/",
+        "/^overscroll-behavior-[xy]$/"
+      ],
+      {
+        "message": "Use the logical property (margin-inline-start, inset-block-end, border-start-end-radius…), see ui/.ai/CONVENTIONS.md"
+      }
+    ],
+    "declaration-property-value-disallowed-list": [
+      {
+        "/^(float|clear)$/": [
+          "left",
+          "right"
+        ],
+        "text-align": [
+          "left",
+          "right"
+        ],
+        "resize": [
+          "horizontal",
+          "vertical"
+        ]
+      },
+      {
+        "message": "Use the logical value (inline-start, inline-end, start, end, block, inline), see ui/.ai/CONVENTIONS.md"
+      }
+    ],
+    "selector-class-pattern": [
+      "^(?!ps-)|^ps-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$",
+      {
+        "resolveNestedSelectors": true,
+        "message": "ps- classes are BEM: ps-block__element--modifier, see ui/.ai/CONVENTIONS.md"
+      }
+    ],
+    "declaration-property-value-allowed-list": [
+      {
+        "/^\\$component-name$/": [
+          "/^ps-[a-z0-9]+(-[a-z0-9]+)*$/"
+        ],
+        "/^\\$selectors$/": [
+          "/^\\(\\s*([a-z0-9-]+\\s*:\\s*'ps-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?'\\s*,?\\s*)+\\)$/"
+        ]
+      },
+      {
+        "message": "$component-name is the ps- BEM block of the partial; $selectors (pages only) maps keys to ps- BEM classes. See ui/.ai/CONVENTIONS.md"
+      }
+    ],
+    "selector-nested-pattern": [
+      "^(?:(?!&(?:__|--))(?!.*#\\{\\$component-name\\}(?:__|--)).*|.*?(?:&|#\\{\\$component-name\\})(?:__[a-z0-9]+(-[a-z0-9]+)*)?(?:--[a-z0-9]+(-[a-z0-9]+)*)?(?![A-Za-z0-9_-]).*)$",
+      {
+        "splitList": true,
+        "message": "Elements and modifiers of the block are BEM: &__element--modifier in kebab-case, see ui/.ai/CONVENTIONS.md"
+      }
+    ],
+    "selector-attribute-name-disallowed-list": [
+      [
+        "/^data-ps-(?!state$)/"
+      ],
+      {
+        "message": "data-ps-* hooks are for JS; style a class, an ARIA state or data-ps-state, see ui/.ai/CONVENTIONS.md"
+      }
+    ],
     "scss/dollar-variable-colon-space-after": "always-single-line",
     "@stylistic/at-rule-name-case": null,
     "@stylistic/at-rule-name-space-after": null,
@@ -72,5 +140,6 @@
     "@stylistic/value-list-comma-space-after": null,
     "@stylistic/value-list-comma-space-before": null,
     "@stylistic/value-list-max-empty-lines": null
-  }
+  },
+  "overrides": []
 }

@@ -28,6 +28,14 @@ jobs:
       - name: BackOffice Theme `default`
         run: cd ./admin-dev/themes/default && npm ci && npm run scss-lint
 
+      - name: Setup Node for the /ui kit
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: 'ui/.nvmrc'
+
+      - name: BackOffice UI kit `ui`
+        run: cd ./ui && npm ci && npm run lint:scss
+
   eslint:
     if: github.event_name != 'push' || !github.event.repository.private
     name: ESLint

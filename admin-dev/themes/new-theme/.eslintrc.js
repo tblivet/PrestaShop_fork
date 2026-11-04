@@ -1,5 +1,13 @@
 // http://eslint.org/docs/user-guide/configuring
 
+// Scripts of the pages moved to the /ui kit: they bind to data-ps-* hooks only (ui/.ai/CONVENTIONS.md).
+// Add a page's files here when it moves to the kit.
+const uiKitFiles = [
+  'js/components/change-password-handler.ts',
+  'js/pages/login/**/*.ts',
+];
+const uiKitSelectorMessage = 'Bind to a data-ps-* hook from the selector map, not a class or an id (ui/.ai/CONVENTIONS.md).';
+
 module.exports = {
   root: true,
   env: {
@@ -151,6 +159,19 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': ['error', {allowArgumentsExplicitlyTypedAsAny: true}],
         'func-names': 0,
         'no-new': 0,
+      },
+    },
+    {
+      files: uiKitFiles,
+      rules: {
+        'no-restricted-syntax': [
+          'error',
+          'ForInStatement',
+          'LabeledStatement',
+          'WithStatement',
+          {selector: 'Literal[value=/^\\s*[.#][A-Za-z_-]/]', message: uiKitSelectorMessage},
+          {selector: 'TemplateElement[value.raw=/^\\s*[.#][A-Za-z_-]/]', message: uiKitSelectorMessage},
+        ],
       },
     },
   ],

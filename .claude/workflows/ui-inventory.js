@@ -1,0 +1,1 @@
+../../ui/.ai/workflows/ui-inventory.js
