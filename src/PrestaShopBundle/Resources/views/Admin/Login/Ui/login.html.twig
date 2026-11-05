@@ -72,8 +72,8 @@
       {{ form_errors(forgotEmail) }}
     </div>
 
-    {# Stacked on mobile with the main action first #}
-    <div class="d-flex flex-column-reverse flex-sm-row justify-content-sm-end gap-2">
+    {# Stacked on mobile in reading order, so the visual order and the focus order stay the same #}
+    <div class="d-flex flex-column flex-sm-row justify-content-sm-end gap-2">
       {{ form_widget(requestPasswordResetForm.buttons.cancel, {attr: requestPasswordResetForm.buttons.cancel.vars.attr|merge({class: 'btn-outline-secondary'})}) }}
       {{ form_widget(requestPasswordResetForm.buttons.submit_login, {attr: {class: 'btn-primary'}}) }}
     </div>

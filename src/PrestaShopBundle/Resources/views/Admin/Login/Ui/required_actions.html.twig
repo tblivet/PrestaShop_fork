@@ -6,7 +6,8 @@
 
 {% block login_content %}
   <h1 class="ps-login__title">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
-  <div class="d-grid gap-3">
+  {# A flex column, not a grid: a grid column grows to fit a long unbreakable word (the folder name) and overflows the card #}
+  <div class="d-flex flex-column gap-3">
     <twig:ui:Alert type="warning" icon="bi:exclamation-triangle-fill">
       <p>{{ 'For security reasons, do the following before you sign in:'|trans({}, 'Admin.Login.Notification') }}</p>
       <ul class="mb-0">

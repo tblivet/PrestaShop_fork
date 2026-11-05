@@ -25,12 +25,20 @@ class RequestPasswordResetType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // The same words for the browser check (data-invalid-message) and the server one
+        $invalidEmailMessage = $this->translator->trans('Enter a valid email address, like name@example.com.', [], 'Admin.Notifications.Error');
+
         $builder
             ->add('email_forgot', EmailType::class, [
                 'required' => true,
                 'label' => $this->translator->trans('Email address', [], 'Admin.Global'),
                 'constraints' => [
-                    new Email(),
+                    new Email(message: $invalidEmailMessage),
+                ],
+                // Replaces EmailType's attr: its email-input class (old theme check) is kept
+                'attr' => [
+                    'class' => 'email-input',
+                    'data-invalid-message' => $invalidEmailMessage,
                 ],
             ])
             ->add('buttons', ButtonCollectionType::class, [

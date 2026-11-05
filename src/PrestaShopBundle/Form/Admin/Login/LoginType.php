@@ -37,16 +37,19 @@ class LoginType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // The same words for the browser check (data-invalid-message) and the server one
+        $invalidEmailMessage = $this->translator->trans('Enter a valid email address, like name@example.com.', [], 'Admin.Notifications.Error');
+
         $builder
             ->add('email', EmailType::class, [
                 'label' => $this->translator->trans('Email address', [], 'Admin.Global'),
                 'constraints' => [
-                    new Email(),
+                    new Email(message: $invalidEmailMessage),
                 ],
-                'attr' => $this->isDemoModeEnabled ? [
+                'attr' => ['data-invalid-message' => $invalidEmailMessage] + ($this->isDemoModeEnabled ? [
                     // Setting a default value should be in a FormDataProvider, but has been left here to keep consistency with the password
                     'value' => $this->requestStack->getCurrentRequest()->query->get('email'),
-                ] : [],
+                ] : []),
             ])
             ->add('passwd', PasswordType::class, [
                 'label' => $this->translator->trans('Password', [], 'Admin.Global'),

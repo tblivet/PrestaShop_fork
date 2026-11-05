@@ -1,125 +1,71 @@
 {
   "page": "login",
   "url": "http://localhost:8001/admin-dev/login",
-  "date": "2026-11-04",
-  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-4/index.html",
+  "date": "2026-11-05",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-6/index.html",
   "states": {
-    "total": 30,
-    "captured": 26,
-    "emulated": 4,
+    "total": 33,
+    "captured": 30,
+    "emulated": 3,
     "missing": []
   },
   "findings": {
     "blocker": 0,
-    "major": 1,
-    "minor": 13,
-    "suggestion": 7
+    "major": 3,
+    "minor": 5,
+    "suggestion": 2
   },
   "open": [
     {
       "severity": "major",
-      "title": "Unbreakable text overflows the Alert box at 375 px",
-      "where": "required-actions-rename-admin, 375 px; Component/Ui/alert.html.twig:15; ui/src/scss/components/_alert.scss (empty)"
+      "title": "Kit forms still show the browser's validation bubbles (no novalidate)",
+      "where": "All three forms, every width (sign-in, forgot panel, reset password)"
+    },
+    {
+      "severity": "major",
+      "title": "Info and success flashes after a redirect are not focused",
+      "where": "reset-requested-info and reset-success-flash at 375/768/1280; french-forgot-panel-info at 375"
+    },
+    {
+      "severity": "major",
+      "title": "Every login page has the shop name as its title, and switching panels does not change it",
+      "where": "Sign-in, forgot panel, reset password and required actions, at every width"
     },
     {
       "severity": "minor",
-      "title": "Two-line requirement items centre their icon instead of aligning it with the first line",
-      "where": "reset-strength-* at 375 px (and French at all widths); Helpers/password_feedback.html.twig:63,67"
+      "title": "Focus ring and invalid glow of password inputs are cut off by the eye toggle",
+      "where": "reset-submit-blocked 375, reset-too-long 768 (and every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (no rules after the header comment)"
     },
     {
       "severity": "minor",
-      "title": "Expired reset link tells the user to request a new one but gives no way to do it",
-      "where": "reset-link-expired, all widths; LoginController.php:170-174"
+      "title": "Too-long password draws a full-width red strength bar",
+      "where": "reset-too-long, all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:308-309"
     },
     {
       "severity": "minor",
-      "title": "Send-failure message says the password could not be reset when the link could not be sent",
-      "where": "forgot-send-failure-error, all widths; LoginController.php:136"
+      "title": "An expired or used reset link is only revealed after the user types a new password twice",
+      "where": "/admin-dev/reset-password/{token}, all widths; LoginController.php:158-191"
     },
     {
       "severity": "minor",
-      "title": "Email error appears on blur, moves the Sign in button and the click is lost",
-      "where": "sign-in-email-client-error (b) at 768; forgot panel likewise; login-page.ts:39"
+      "title": "'Check again' is the primary button while the real next step is the https link in the alert",
+      "where": "required actions page, all widths; required_actions.html.twig:19"
     },
     {
       "severity": "minor",
-      "title": "Required-actions page has no next step after the actions are done",
-      "where": "required-actions, all widths; required_actions.html.twig:9-16"
-    },
-    {
-      "severity": "minor",
-      "title": "A weak-password submit is refused silently",
-      "where": "reset-submit-blocked (a), all widths; reset-password.ts:56-62"
-    },
-    {
-      "severity": "minor",
-      "title": "After a server re-render or redirect, focus stays on BODY and the error is not reliably announced",
-      "where": "sign-in-wrong-credentials, forgot-server-error-rerender, reset-server-field-errors and csrf-expired-alert, at every width"
-    },
-    {
-      "severity": "minor",
-      "title": "Dismissing a flash alert drops focus to BODY",
-      "where": "flash-dismissed, at every width"
-    },
-    {
-      "severity": "minor",
-      "title": "Both show/hide buttons on the reset page have the same name",
-      "where": "reset-page-default and keyboard-focus-hover, 375 px"
-    },
-    {
-      "severity": "minor",
-      "title": "New password is marked invalid from the first keystroke and stays invalid when emptied",
-      "where": "reset-strength-too-short, at every width"
-    },
-    {
-      "severity": "minor",
-      "title": "The kit does not reset .alert's margin, so pages patch it and the CSRF alert gets an extra gap",
-      "where": "csrf-expired-alert, at every width; required-actions"
-    },
-    {
-      "severity": "minor",
-      "title": "Submit buttons have no busy state",
-      "where": "submitting (emulated), 1280, 768 and 375 px"
-    },
-    {
-      "severity": "minor",
-      "title": "_login.scss rewrites Bootstrap utilities",
-      "where": "ui/src/scss/pages/_login.scss:26-29, 47-49, 68-82, 90-95, 111-113"
+      "title": "'We couldn't reset your password. Try again later.' lands on the sign-in panel, away from any way to try again",
+      "where": "reset failure (non-token error), LoginController.php:180-184"
     },
     {
       "severity": "suggestion",
-      "title": "Links inside alerts render black instead of the alert link color",
-      "where": "required-actions, all widths; LoginController.php:276-278 (raw <a> in the translated string)"
+      "title": "Busy spinner widens 'Send reset link' and shifts Cancel",
+      "where": "submitting-busy-forgot, 768 and 1280; ui/src/js/components/submit-once.js:7 (spinner inserted with me-2)"
     },
     {
       "severity": "suggestion",
-      "title": "Back-link arrow centred on a wrapped shop name",
-      "where": "long-shop-name, 375 px; Layout/Ui/login_layout.html.twig:15-18; ui/src/scss/pages/_login.scss (&__back)"
-    },
-    {
-      "severity": "suggestion",
-      "title": "Stacked form actions put the primary button last on mobile",
-      "where": "forgot-panel-default and french-translations, 375 px; ui/src/scss/pages/_login.scss (media-breakpoint-down(sm) &__form-actions flex-direction: column)"
-    },
-    {
-      "severity": "suggestion",
-      "title": "Info flash after a reset request has no heading and is long on mobile",
-      "where": "forgot-link-requested-info, 375 (7 lines); LoginController.php:186-189"
-    },
-    {
-      "severity": "suggestion",
-      "title": "Server length error uses different, unpunctuated wording from the checklist",
-      "where": "reset-server-field-errors (b); ResetPasswordType.php:120-124"
-    },
-    {
-      "severity": "suggestion",
-      "title": "Forgot panel does not say what will happen",
-      "where": "forgot-panel-default, all widths; login.html.twig:54-65"
-    },
-    {
-      "severity": "suggestion",
-      "title": "Reset page offers no way back to sign in",
-      "where": "reset-page-default, all widths; reset_password.html.twig:41-43"
+      "title": "Short orphan last word in alerts at desktop widths",
+      "where": "forgot-error-flash 768 and 1280; ui/src/scss/components/_alert.scss (.ps-alert__content)"
     }
-  ]
+  ],
+  "note": "The 3 majors are the kit rules recorded on 2026-11-05 (DECISIONS.md #30-32), not applied to the login pages yet."
 }

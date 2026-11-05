@@ -14,6 +14,12 @@
     color: var(--#{$prefix}alert-link-color);
   }
 
+  // Bootstrap's pink code color fails contrast on the tinted backgrounds: code takes the alert's text color,
+  // the monospace font sets it apart
+  code {
+    color: inherit;
+  }
+
   // Focused by the kit after a server error (server-error-focus.js): the kit ring, not the browser outline
   &[tabindex="-1"]:focus {
     outline: 0;

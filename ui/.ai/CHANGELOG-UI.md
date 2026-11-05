@@ -97,7 +97,7 @@ Each entry: the page or component, then only the sections that apply.
 **Markup**
 - `ui:Alert`: root gets `ps-alert`, the text next to the icon `ps-alert__content`; no outer margin any more (`$alert-margin-bottom: 0`, kit-wide), so `mb-0` on alerts and the `.ps-flash-messages > .alert` reset are gone. Long words break inside the box; links in a message take the alert link color.
 - `ui:PasswordField`: new `label` prop, set by the form theme; the button name is "Show password: <label>" (was "Show password" for every field).
-- Login pages: the submit buttons are `btn-primary w-100` (`ps-login__submit` removed); `ps-login__form-group--end` → `text-end`; `ps-login__form-actions` → `d-flex flex-column-reverse flex-sm-row justify-content-sm-end gap-2` (main action first on mobile); layout utilities replace the logo, copyright, social and back link styles. Forms carry `data-ps-action="submit-once"`.
+- Login pages: the submit buttons are `btn-primary w-100` (`ps-login__submit` removed); `ps-login__form-group--end` → `text-end`; `ps-login__form-actions` → `d-flex flex-column flex-sm-row justify-content-sm-end gap-2` (stacked in reading order on mobile, so focus follows what is seen); layout utilities replace the logo, copyright, social and back link styles. Forms carry `data-ps-action="submit-once"`.
 - Forgot panel: new intro line `ps-login__intro`, linked to the email field. Reset page: "Back to sign in" link, and an empty `#<new password id>_policy` slot (`data-ps-target="password-policy-error"`). Required actions: a "Check again" button under the alert.
 - Password checklist: items align their icon with the first line (`align-items-start`); the icon really gets its 1.125em size now (the icon font used to override it), so the tip indent is 1.375rem.
 - Icon links (kit-wide): the icon is sized to the text (1.25em) and stays on the first line when the text wraps.
@@ -117,3 +117,14 @@ Each entry: the page or component, then only the sections that apply.
 
 **Old theme**
 - `Login/reset_password.html.twig` and the Employee and Customer forms share the password handler: the invalid state also waits for the field to be left there.
+
+## Login review 5: code contrast, button order, email error — 2026-11-04
+
+**Markup**
+- Kit alerts: `code` takes the alert text color (Bootstrap's pink was 3.88:1 on the warning tint).
+- Required actions: the alert and the "Check again" button sit in a `d-flex flex-column gap-3` stack (was `d-grid`, whose column grew with the long folder name and overflowed the card at 375 px).
+- Forgot panel: the stacked buttons on mobile follow the reading order (Cancel, then Send reset link), like the focus order.
+
+**Strings** (`Admin.Notifications.Error`)
+- Sign-in and forgot password email fields: "Invalid email address." (client) and Symfony's "This value is not a valid email address." (server) → "Enter a valid email address, like name@example.com." for both.
+
