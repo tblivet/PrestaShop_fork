@@ -22,6 +22,21 @@ const files = (dir, ext) => readdirSync(join(repo, dir), {withFileTypes: true}).
   return path.endsWith(ext) ? [path] : [];
 });
 
+// Every argTypes object of a story file (the meta's and each story's), found by matching its braces
+const argTypesBlocks = (text) => [...text.matchAll(/argTypes:\s*{/g)].map((match) => {
+  let depth = 0;
+
+  for (let i = match.index + match[0].length - 1; i < text.length; i += 1) {
+    depth += {'{': 1, '}': -1}[text[i]] ?? 0;
+
+    if (depth === 0) {
+      return text.slice(match.index, i + 1);
+    }
+  }
+
+  return text.slice(match.index);
+}).join('\n');
+
 const stories = files('ui/src/stories', '.stories.js').map((path) => ({path, text: readFileSync(join(repo, path), 'utf8')}));
 const gaps = [];
 
@@ -43,14 +58,14 @@ for (const path of files('src/PrestaShopBundle/Twig/Component/Ui', '.php')) {
   }
 
   const docs = story.text.match(/\*\*Props\*\*[^\n]*/)?.[0] ?? '';
-  const argTypes = story.text.match(/argTypes:\s*{[\s\S]*?\n {2}},/g)?.join('\n') ?? '';
+  const argTypes = argTypesBlocks(story.text);
 
   for (const prop of props) {
     if (!docs.includes(`\`${prop}\``)) {
       gaps.push(`${name}: prop "${prop}" missing from the **Props** line of ${story.path}`);
     }
 
-    if (!prop.endsWith('Id') && !new RegExp(`\\b${prop}\\s*:\\s*{`).test(story.text)) {
+    if (!prop.endsWith('Id') && !new RegExp(`\\b${prop}\\s*:\\s*{`).test(argTypes)) {
       gaps.push(`${name}: prop "${prop}" has no control (argTypes) in ${story.path}`);
     }
   }
