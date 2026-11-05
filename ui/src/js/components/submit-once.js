@@ -4,11 +4,13 @@
  */
 import selectors from '../selectors';
 
-const SPINNER = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true" data-ps-ref="submit-spinner"></span>';
+// Laid over the label by the kit's busy button state (_buttons.scss), so the button keeps its size
+const SPINNER = '<span class="spinner-border spinner-border-sm" aria-hidden="true" data-ps-ref="submit-spinner"></span>';
 
 const setBusy = (form, button, busy) => {
   if (busy) {
     form.setAttribute('data-ps-state', 'loading');
+    button?.setAttribute('data-ps-state', 'loading');
     button?.setAttribute('aria-disabled', 'true');
     button?.setAttribute('aria-busy', 'true');
     button?.insertAdjacentHTML('afterbegin', SPINNER);
@@ -18,6 +20,7 @@ const setBusy = (form, button, busy) => {
 
   form.removeAttribute('data-ps-state');
   form.querySelectorAll('[aria-busy="true"]').forEach((busyButton) => {
+    busyButton.removeAttribute('data-ps-state');
     busyButton.removeAttribute('aria-disabled');
     busyButton.removeAttribute('aria-busy');
     busyButton.querySelector(selectors.submitSpinner)?.remove();

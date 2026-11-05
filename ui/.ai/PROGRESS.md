@@ -47,7 +47,7 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 | Page | Ui template | Components | Raw markup | Last review | Open findings |
 |------|-------------|-----------:|-----------:|-------------|---------------|
-| Login/login.html.twig | Login/Ui/login.html.twig | 2 | 0 | 2026-11-05 | 5 minor, 2 suggestion |
+| Login/login.html.twig | Login/Ui/login.html.twig | 2 | 0 | 2026-11-05 | 3 minor |
 | Login/required_actions.html.twig | Login/Ui/required_actions.html.twig | 1 | 0 | never | – |
 | Login/reset_password.html.twig | Login/Ui/reset_password.html.twig | 1 | 0 | never | – |
 
@@ -55,15 +55,11 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 ### login — 2026-11-05
 
-The 3 majors (kit rules DECISIONS.md #30-32) were applied on 2026-11-05 and checked in the browser, not re-reviewed yet.
+Fixed after the 2026-11-05 follow-up, checked in the browser, not re-reviewed: a password filled without typing (input event), orphan words in alerts (text-wrap: pretty). Also the busy spinner now covers the label instead of widening the button.
 
-- **minor** Focus ring and invalid glow of password inputs are cut off by the eye toggle (reset-submit-blocked 375, reset-too-long 768 (and every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (no rules after the header comment))
-- **minor** Too-long password draws a full-width red strength bar (reset-too-long, all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:308-309)
-- **minor** An expired or used reset link is only revealed after the user types a new password twice (/admin-dev/reset-password/{token}, all widths; LoginController.php:158-191)
-- **minor** 'Check again' is the primary button while the real next step is the https link in the alert (required actions page, all widths; required_actions.html.twig:19)
-- **minor** 'We couldn't reset your password. Try again later.' lands on the sign-in panel, away from any way to try again (reset failure (non-token error), LoginController.php:180-184)
-- **suggestion** Busy spinner widens 'Send reset link' and shifts Cancel (submitting-busy-forgot, 768 and 1280; ui/src/js/components/submit-once.js:7 (spinner inserted with me-2))
-- **suggestion** Short orphan last word in alerts at desktop widths (forgot-error-flash 768 and 1280; ui/src/scss/components/_alert.scss (.ps-alert__content))
+- **minor** 'Check again' is the primary button while the real next step is the https link in the alert (required-actions, all widths; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:19)
+- **minor** Focus ring and invalid glow of password inputs are cut off by the eye toggle (reset-submit-blocked 375, login-client-errors 375 (every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (still only the header comment))
+- **minor** Too-long password draws a full-width red strength bar (reset page, password over the max length (72), all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:308-309)
 
 ## Kit components
 

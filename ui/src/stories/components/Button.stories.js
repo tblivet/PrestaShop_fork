@@ -102,6 +102,14 @@ export const States = {
         </div>
       </div>
       <div>
+        <p class="text-muted small mb-2">Busy state (data-ps-state="loading", aria-busy): the spinner covers the label, the button keeps its size</p>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="submit" class="btn btn-primary" data-ps-state="loading" aria-busy="true" aria-disabled="true"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Send reset link</button>
+          <button type="button" class="btn btn-outline-secondary">Cancel</button>
+          <button type="submit" class="btn btn-outline-primary" data-ps-state="loading" aria-busy="true" aria-disabled="true"><span class="spinner-border spinner-border-sm" aria-hidden="true"></span>Save</button>
+        </div>
+      </div>
+      <div>
         <p class="text-muted small mb-2">Disabled state (anchor element)</p>
         <div class="d-flex flex-wrap gap-2">
           <a class="btn btn-primary disabled" role="button" aria-disabled="true">Primary link</a>

@@ -138,9 +138,9 @@ export default class ChangePasswordControl {
     // Watch and display feedback about password's strength
     this.passwordHandler.watchPasswordStrength(this.$newPasswordInputs.get() as HTMLInputElement[]);
 
-    // Validate new password and it's confirmation when any of the inputs is changed
+    // Validate new password and it's confirmation when any of the inputs is changed, typed or not (paste, password manager)
     $(document).on(
-      'keyup',
+      'input',
       `${this.newPasswordInputSelector},${this.confirmNewPasswordInputSelector}`,
       () => {
         this.checkPasswordValidity();

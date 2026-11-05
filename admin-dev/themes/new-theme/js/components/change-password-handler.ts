@@ -120,7 +120,8 @@ export default class ChangePasswordHandler {
         this.updateInvalidState(input);
       });
 
-      input.addEventListener('keyup', () => {
+      // input, not keyup: a paste, a password manager, a suggested password or dictation fill the field without a key
+      input.addEventListener('input', () => {
         // A page can wrap the input (e.g. in an input group) and mark the element the feedback goes into
         const container = input.closest<HTMLElement>(PasswordFeedbackMap.field) ?? input.parentElement;
 

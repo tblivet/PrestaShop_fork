@@ -80,6 +80,21 @@
   // Under 3:1 on white: an accepted design choice (DECISIONS.md #29)
   --#{$prefix}btn-focus-box-shadow: 0 0 0 0.125rem var(--#{$prefix}body-bg), 0 0 0 calc(0.125rem + #{$focus-ring-width}) rgba(var(--#{$prefix}btn-focus-shadow-rgb), 0.5);
 
+  // Busy (data-ps-state="loading", set by submit-once.js or any script): the spinner sits over the label, which stays
+  // in place but invisible, so the button keeps its size and nothing around it moves. The spinner is a border in the
+  // button's color: hiding only the text fill keeps it visible.
+  &[data-ps-state="loading"] {
+    position: relative;
+    pointer-events: none;
+    -webkit-text-fill-color: transparent;
+
+    > .spinner-border {
+      position: absolute;
+      inset: 0;
+      margin: auto;
+    }
+  }
+
   // Buttons hosting an .icon lay out via flex — no spacing utilities needed in the
   // markup; covers leading, trailing, and icon-only buttons with the same rule.
   &:has(.icon) {

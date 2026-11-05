@@ -153,3 +153,10 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - FlashMessages story: current alert markup (`ps-alert`, `ps-alert__content`), a `types` control, the info type.
 - PasswordField story: a `label` control.
 - `node ui/.ai/bin/story-parity.mjs` checks that every component prop is in its story; the lint CI runs it.
+
+## Password filled without typing, alert line breaks — 2026-11-05
+
+**Behaviour**
+- Password strength and policy (reset page, Employee and Customer forms, the Employee change-password control): checked on `input` (was `keyup`), so a paste, a password manager, a suggested password or dictation is checked too; such a password was refused as not meeting the requirements.
+- Alerts: `text-wrap: pretty`, so a short last word does not sit alone on its line.
+- Busy buttons (kit-wide): `data-ps-state="loading"` on the button (set by `submit-once.js`, usable by any script) lays the spinner over the label, which stays in place with a transparent text fill, so the button keeps its size and the buttons beside it do not move (the spinner used to be inserted before the label and widen the button). Shown in the Button "States" story.

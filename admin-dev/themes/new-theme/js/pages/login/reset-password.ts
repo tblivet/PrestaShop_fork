@@ -29,7 +29,7 @@ onReady(() => {
     }
   };
 
-  passwordInput.addEventListener('keyup', () => {
+  passwordInput.addEventListener('input', () => {
     if (passwordHandler.isPasswordValid() || passwordInput.value === '') {
       showPolicyError(false);
     }

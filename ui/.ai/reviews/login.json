@@ -2,55 +2,44 @@
   "page": "login",
   "url": "http://localhost:8001/admin-dev/login",
   "date": "2026-11-05",
-  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-6/index.html",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-7/index.html",
   "states": {
-    "total": 33,
-    "captured": 30,
-    "emulated": 3,
+    "total": 26,
+    "captured": 22,
+    "emulated": 4,
     "missing": []
   },
   "findings": {
     "blocker": 0,
     "major": 0,
-    "minor": 5,
-    "suggestion": 2
+    "minor": 3,
+    "suggestion": 0
   },
   "open": [
     {
       "severity": "minor",
+      "title": "'Check again' is the primary button while the real next step is the https link in the alert",
+      "where": "required-actions, all widths; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:19"
+    },
+    {
+      "severity": "minor",
       "title": "Focus ring and invalid glow of password inputs are cut off by the eye toggle",
-      "where": "reset-submit-blocked 375, reset-too-long 768 (and every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (no rules after the header comment)"
+      "where": "reset-submit-blocked 375, login-client-errors 375 (every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (still only the header comment)"
     },
     {
       "severity": "minor",
       "title": "Too-long password draws a full-width red strength bar",
-      "where": "reset-too-long, all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:308-309"
-    },
-    {
-      "severity": "minor",
-      "title": "An expired or used reset link is only revealed after the user types a new password twice",
-      "where": "/admin-dev/reset-password/{token}, all widths; LoginController.php:158-191"
-    },
-    {
-      "severity": "minor",
-      "title": "'Check again' is the primary button while the real next step is the https link in the alert",
-      "where": "required actions page, all widths; required_actions.html.twig:19"
-    },
-    {
-      "severity": "minor",
-      "title": "'We couldn't reset your password. Try again later.' lands on the sign-in panel, away from any way to try again",
-      "where": "reset failure (non-token error), LoginController.php:180-184"
-    },
-    {
-      "severity": "suggestion",
-      "title": "Busy spinner widens 'Send reset link' and shifts Cancel",
-      "where": "submitting-busy-forgot, 768 and 1280; ui/src/js/components/submit-once.js:7 (spinner inserted with me-2)"
-    },
-    {
-      "severity": "suggestion",
-      "title": "Short orphan last word in alerts at desktop widths",
-      "where": "forgot-error-flash 768 and 1280; ui/src/scss/components/_alert.scss (.ps-alert__content)"
+      "where": "reset page, password over the max length (72), all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:308-309"
     }
   ],
-  "note": "The 3 majors (kit rules DECISIONS.md #30-32) were applied on 2026-11-05 and checked in the browser, not re-reviewed yet."
+  "outOfScope": [
+    "Expired or used reset link is only revealed after the user types a new password twice: check the token when the reset page is opened (LoginController.php:158-191).",
+    "'We couldn't reset your password. Try again later.' redirects to the sign-in panel, away from the reset form (LoginController.php:180-184): send the user back to the forgot panel or the reset page instead.",
+    "Reset page: check the token on GET so an expired or used link says so before the user types a new password twice (LoginController.php:158-191).",
+    "'We couldn't reset your password. Try again later.' should land on the reset or forgot panel, not the sign-in panel (LoginController.php:180-184).",
+    "After a successful reset, prefill the sign-in email with the account just reset instead of the last tried address (reset-success capture).",
+    "An expired or used reset link only shows up after the user types a new password twice: check the token when /reset-password/{token} loads (LoginController).",
+    "'We couldn't reset your password. Try again later.' sends the user back to the sign-in panel instead of the reset or forgot form."
+  ],
+  "note": "Fixed after the 2026-11-05 follow-up, checked in the browser, not re-reviewed: a password filled without typing (input event), orphan words in alerts (text-wrap: pretty). Also the busy spinner now covers the label instead of widening the button."
 }

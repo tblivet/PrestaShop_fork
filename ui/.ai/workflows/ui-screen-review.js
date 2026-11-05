@@ -379,10 +379,10 @@ Layout: a summary table (page, states captured / emulated / missing, findings pe
 2. Gallery grouped by state, one thumbnail per width (img src relative to ${outDir}, click to open full size), an "emulated" badge where it applies.
 3. Findings ranked by severity, each with lens, where, problem, proposal, and its evidence thumbnails.
 4. Shop changes made for setup and whether each was restored; highlight any not restored.
-5. Out of scope: the page's outOfScope ideas (back end or business flow), as a short list, clearly not findings.
+5. Out of scope: the page's outOfScope ideas (back end or business flow), clearly not findings. Each reviewer wrote its own: merge the lines that say the same thing (same change, same place) into one, then keep at most 3, those that matter most to the user.
 Inline CSS only, no external scripts.${reviewsDir ? `
 
-Then, for each page, write ${reviewsDir}/<page slug>.json (mkdir -p first, overwrite), 2-space indented JSON: {"page": name, "url", "date": ${JSON.stringify(args.date || '')} or today's date (YYYY-MM-DD) if empty, "report": the HTML path, "states": {"total", "captured", "emulated", "missing": [ids]}, "findings": {"blocker": n, "major": n, "minor": n, "suggestion": n}, "open": [{"severity", "title", "where"}] for every finding, "outOfScope": the page's outOfScope lines, "note": the note of the existing file if it has one}. Page slugs: ${JSON.stringify(reportData.map((r) => ({ name: r.page.name, slug: slug(r.page.name) })))}.` : ''}
+Then, for each page, write ${reviewsDir}/<page slug>.json (mkdir -p first, overwrite), 2-space indented JSON: {"page": name, "url", "date": ${JSON.stringify(args.date || '')} or today's date (YYYY-MM-DD) if empty, "report": the HTML path, "states": {"total", "captured", "emulated", "missing": [ids]}, "findings": {"blocker": n, "major": n, "minor": n, "suggestion": n}, "open": [{"severity", "title", "where"}] for every finding, "outOfScope": the same merged list of at most 3 lines as in the report, "note": the note of the existing file if it has one}. Page slugs: ${JSON.stringify(reportData.map((r) => ({ name: r.page.name, slug: slug(r.page.name) })))}.` : ''}
 Return only the absolute path of the HTML file.`,
   { label: 'report', phase: 'Report', effort: 'low' },
 )

@@ -5,6 +5,8 @@
 // Override Bootstrap alert — https://getbootstrap.com/docs/5.3/components/alerts/
 
 .alert {
+  // No single short word alone on the last line (where supported)
+  text-wrap: pretty;
   // A long word (path, URL, token) breaks rather than overflowing the box
   overflow-wrap: break-word;
 
