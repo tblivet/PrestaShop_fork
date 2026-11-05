@@ -159,3 +159,8 @@ Why: a message rendered with the page sits in a live region that already exists,
 
 The `<title>` names the page, then the shop: "Sign in to your back office • Maison Dupont", "Reset your password • Maison Dupont", "Orders • Maison Dupont" (the separator of the other back office pages). It is the page's `h1` text; a script that switches panels in place (sign in / forgot password) updates `document.title` too.
 Why: the title is the first thing a screen reader reads and what a browser tab or history shows; pages that share one cannot be told apart (WCAG 2.4.2). Left aside: the shop name alone (today), the page name alone (several shops open in tabs).
+
+## 33. Screen reviews stay on the front end and converge — 2026-11-05
+
+`ui-screen-review` and the `ui-review` skill report what the user sees and does, caused by Twig, SCSS, kit components and their JS, accessibility or wording. Back-end and business-flow ideas (when a token is checked, where a redirect goes) go to a short "out of scope" list, not to findings. A page already reviewed gets a follow-up review: its open findings are re-checked, fixes listed in `CHANGELOG-UI.md` must hold, and only new blockers and majors are added; `fresh: true` starts a full review again.
+Why: each full run dug deeper into PHP and flows and found new minor issues, so a page never closed; the rework is about the UI. Left aside: a fixed number of runs per page; reviewing back end and front end together.

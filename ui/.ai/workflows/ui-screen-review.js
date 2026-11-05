@@ -1,7 +1,7 @@
 export const meta = {
   name: 'ui-screen-review',
   description: 'Screenshot every state of reworked /ui pages, including the hard-to-reach ones, review them as a design/UX/a11y panel and propose improvements',
-  whenToUse: 'After a back-office page is reworked with the /ui kit (PS_UI_KIT=1), to see all its states side by side, especially the ones rarely seen while developing, and get reviewed improvement proposals. Args: {pages: [{name, url, story?, files?, scenarios?}], outDir, reviewsDir?, date?, widths?, setup?}. scenarios are ui/.ai/bin/seed.php scenario names; reviewsDir (absolute, usually <repo>/ui/.ai/reviews) keeps a JSON summary per page for PROGRESS.md',
+  whenToUse: 'After a back-office page is reworked with the /ui kit (PS_UI_KIT=1), to see all its states side by side, especially the ones rarely seen while developing, and get reviewed improvement proposals. Args: {pages: [{name, url, story?, files?, scenarios?}], outDir, reviewsDir?, date?, widths?, setup?, fresh?}. With reviewsDir, a page that already has a review is reviewed as a follow-up (earlier findings re-checked, only new blockers and majors added) unless fresh: true. scenarios are ui/.ai/bin/seed.php scenario names; reviewsDir (absolute, usually <repo>/ui/.ai/reviews) keeps a JSON summary per page for PROGRESS.md',
   phases: [
     { title: 'Plan', detail: 'list every state of each page from its code and Storybook story, and how to reach it' },
     { title: 'Capture', detail: 'one page at a time in Chrome: set up, screenshot per state and width, restore, axe, keyboard pass' },
@@ -135,6 +135,11 @@ const FINDINGS_SCHEMA = {
         required: ['title', 'severity', 'where', 'evidence', 'problem', 'proposal'],
       },
     },
+    outOfScope: {
+      type: 'array',
+      items: { type: 'string' },
+      description: 'at most 3 one-line ideas outside the front end (controller, form type, route, security, business flow); not findings',
+    },
   },
   required: ['findings'],
 }
@@ -175,6 +180,16 @@ const LENSES = [
 ]
 
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+// The review is about the UI rework: what the user sees and does, and its front-end causes. The plan still reads the
+// controllers, which is how rare states are found, but findings never ask for back-end or flow changes.
+const SCOPE = `Scope: the front end. Report what the user sees and does, caused by Twig templates, SCSS, kit components and their JS behaviour, accessibility, or wording (rewording a string is in scope wherever it is defined). Do not propose changes to controllers, form types, routes, security or the business flow (when a token is checked, where a redirect goes, what the server sends or validates); if such an idea matters to the user, put it in outOfScope, one line each, at most 3. Do not dig into PHP or deep JS beyond what explains a visible problem.`
+
+// A page already reviewed converges instead of starting over: earlier findings are re-checked, fixes must hold,
+// and only new blockers or majors are added.
+const followUp = (page) => (reviewsDir && !args.fresh
+  ? `Follow-up review: if ${reviewsDir}/${slug(page.name)}.json exists, read it and the entries of ui/.ai/CHANGELOG-UI.md dated since its "date". Report (1) each of its "open" findings that is still visible, with the same title; (2) anything the changelog lists as fixed that is broken again (a regression, at least major); (3) a NEW problem only if it is a blocker or a major. Do not report new minor issues or suggestions. If the file does not exist, review normally.`
+  : '')
 
 const pageBrief = (page) => [
   `Page "${page.name}": ${page.url}`,
@@ -287,10 +302,17 @@ You review this page through ONE lens: ${lens.brief}
 Evidence (captured states, screenshot paths, axe and keyboard results; how="emulated" captures were forced in the DOM, judge what they show, not how they were produced):
 ${evidence}
 
-Open the screenshots with the Read tool (it shows images) and compare states and widths. Read ui/.ai/CONVENTIONS.md and the reference story or mockup. Report only problems you can point to in a screenshot or a file:line, each with a concrete improvement in kit terms. Stay inside your lens; an empty list is a valid answer. Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL and dark mode are out of scope (#4, #5), button focus rings are the button color at 50% on purpose (#29).`,
+Open the screenshots with the Read tool (it shows images) and compare states and widths. Read ui/.ai/CONVENTIONS.md and the reference story or mockup. Report only problems you can point to in a screenshot or a file:line, each with a concrete improvement in kit terms. Stay inside your lens; an empty list is a valid answer.
+
+${SCOPE}
+${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL and dark mode are out of scope (#4, #5), button focus rings are the button color at 50% on purpose (#29).`,
       { label: `review:${lens.key}:${page.name}`, phase: 'Review', schema: FINDINGS_SCHEMA },
-    ).then((r) => (r ? r.findings.map((f) => ({ ...f, lens: lens.key })) : []))))
-      .then((byLens) => ({ page, plan, capture, dir, findings: byLens.filter(Boolean).flat() }))
+    ).then((r) => (r ? { findings: r.findings.map((f) => ({ ...f, lens: lens.key })), outOfScope: r.outOfScope || [] } : { findings: [], outOfScope: [] }))))
+      .then((byLens) => ({
+        page, plan, capture, dir,
+        findings: byLens.flatMap((r) => r.findings),
+        outOfScope: [...new Set(byLens.flatMap((r) => r.outOfScope))],
+      }))
   },
 
   (reviewed, page) => {
@@ -298,7 +320,8 @@ Open the screenshots with the Read tool (it shows images) and compare states and
     return agent(
       `${pageBrief(page)}
 
-You are a skeptical design lead. For each finding below, open its evidence (screenshots with the Read tool, files at the given lines) and try to refute it: not visible in the evidence, an artefact of emulation rather than of the page, contradicted by the Storybook reference (which wins), a duplicate of another finding (same problem seen through another lens or state: keep the clearest one, merged with the others' evidence, and drop the rest), a matter of taste with no user impact, out of scope (RTL, dark mode), or a proposal that breaks ui/.ai/CONVENTIONS.md. Keep it only if it survives; correct its severity if it is over- or under-rated. When unsure, drop it.
+You are a skeptical design lead. For each finding below, open its evidence (screenshots with the Read tool, files at the given lines) and try to refute it: not visible in the evidence, an artefact of emulation rather than of the page, contradicted by the Storybook reference (which wins), a duplicate of another finding (same problem seen through another lens or state: keep the clearest one, merged with the others' evidence, and drop the rest), a matter of taste with no user impact, out of scope (RTL, dark mode, a choice recorded in ui/.ai/DECISIONS.md, or a fix that needs a controller, form type, route, security or business-flow change rather than a front-end one), or a proposal that breaks ui/.ai/CONVENTIONS.md. Keep it only if it survives; correct its severity if it is over- or under-rated. When unsure, drop it.
+${followUp(page) ? `This is a follow-up review: also drop a new finding (not one of the earlier open findings, not a regression) that is below major.\n${followUp(page)}` : ''}
 
 Findings:
 ${reviewed.findings.map((f, i) => `[${i}] (${f.lens}, ${f.severity}) ${f.title} — ${f.where} — evidence: ${f.evidence} — ${f.problem} — proposal: ${f.proposal}`).join('\n')}`,
@@ -343,6 +366,7 @@ const reportData = done.map((r) => {
     axe: r.capture ? r.capture.axe : [],
     consoleErrors: r.capture ? r.capture.consoleErrors : [],
     findings: r.kept.sort((a, b) => SEVERITIES.indexOf(a.severity) - SEVERITIES.indexOf(b.severity)),
+    outOfScope: r.outOfScope || [],
   }
 })
 
@@ -355,9 +379,10 @@ Layout: a summary table (page, states captured / emulated / missing, findings pe
 2. Gallery grouped by state, one thumbnail per width (img src relative to ${outDir}, click to open full size), an "emulated" badge where it applies.
 3. Findings ranked by severity, each with lens, where, problem, proposal, and its evidence thumbnails.
 4. Shop changes made for setup and whether each was restored; highlight any not restored.
+5. Out of scope: the page's outOfScope ideas (back end or business flow), as a short list, clearly not findings.
 Inline CSS only, no external scripts.${reviewsDir ? `
 
-Then, for each page, write ${reviewsDir}/<page slug>.json (mkdir -p first, overwrite), 2-space indented JSON: {"page": name, "url", "date": ${JSON.stringify(args.date || '')} or today's date (YYYY-MM-DD) if empty, "report": the HTML path, "states": {"total", "captured", "emulated", "missing": [ids]}, "findings": {"blocker": n, "major": n, "minor": n, "suggestion": n}, "open": [{"severity", "title", "where"}] for every finding, "note": the note of the existing file if it has one}. Page slugs: ${JSON.stringify(reportData.map((r) => ({ name: r.page.name, slug: slug(r.page.name) })))}.` : ''}
+Then, for each page, write ${reviewsDir}/<page slug>.json (mkdir -p first, overwrite), 2-space indented JSON: {"page": name, "url", "date": ${JSON.stringify(args.date || '')} or today's date (YYYY-MM-DD) if empty, "report": the HTML path, "states": {"total", "captured", "emulated", "missing": [ids]}, "findings": {"blocker": n, "major": n, "minor": n, "suggestion": n}, "open": [{"severity", "title", "where"}] for every finding, "outOfScope": the page's outOfScope lines, "note": the note of the existing file if it has one}. Page slugs: ${JSON.stringify(reportData.map((r) => ({ name: r.page.name, slug: slug(r.page.name) })))}.` : ''}
 Return only the absolute path of the HTML file.`,
   { label: 'report', phase: 'Report', effort: 'low' },
 )

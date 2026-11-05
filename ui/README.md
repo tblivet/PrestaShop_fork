@@ -65,7 +65,7 @@ All live in `ui/.ai/` and are linked for Claude Code (`.claude/skills`, `.claude
 | `ui-review` | skill | Quick review of a screen while working |
 | `ui-seed` | skill | Put the local shop in a data scenario and undo it |
 | `ui-wording` | skill | Reword a screen to the tone of voice and record the strings |
-| `ui-screen-review` | workflow | Full review of a page: every state captured, three reviewer lenses, a skeptic, an HTML report (about 30 min) |
+| `ui-screen-review` | workflow | Full review of a page: every state captured, three reviewer lenses on the front end only, a skeptic, an HTML report (about 30 min). A page already reviewed gets a follow-up (earlier findings re-checked, only new blockers and majors added); `fresh: true` starts over |
 | `ui-inventory` | workflow | Refresh the pattern inventory and the component backlog |
 
 Scripts:

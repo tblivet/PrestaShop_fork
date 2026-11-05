@@ -57,6 +57,10 @@ On the template, SCSS and JS behind the screen, check the conventions file secti
 
 Write the report in the session scratchpad, findings ranked **blocker → major → minor → suggestion**. Each finding: what is wrong, where (URL + width/mode, or `file:line`), why it matters (user impact or WCAG criterion), the screenshot path, and a suggested fix. End with what was not checked. Close the browser tabs you opened.
 
+## Scope
+
+The review is about the UI rework: what the user sees and does, and its front-end causes (Twig, SCSS, kit components and their JS behaviour, accessibility, wording, wherever a string is defined). Read controllers to find the states, not to redesign them: a change to a controller, form type, route, security or business flow is not a finding; list it under "Out of scope" (at most 3 lines). On a page already reviewed (`ui/.ai/reviews/<page>.json`), re-check its open findings and the fixes in `CHANGELOG-UI.md` since then, and add only new blockers and majors, so a page converges.
+
 ## Do / Don't
 
 - Do review what a user sees and does; the code read in step 5 only explains it.
