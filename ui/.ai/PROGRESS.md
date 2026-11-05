@@ -55,7 +55,7 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 ### login — 2026-11-05
 
-Fixed after the 2026-11-05 follow-up, checked in the browser, not re-reviewed: a password filled without typing (input event), orphan words in alerts (text-wrap: pretty). Also the busy spinner now covers the label instead of widening the button.
+Validated as the reference page on 2026-11-05: no blocker or major. The 3 minor findings are accepted for now; the out-of-scope ideas are for a back-end change.
 
 - **minor** 'Check again' is the primary button while the real next step is the https link in the alert (required-actions, all widths; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:19)
 - **minor** Focus ring and invalid glow of password inputs are cut off by the eye toggle (reset-submit-blocked 375, login-client-errors 375 (every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (still only the header comment))

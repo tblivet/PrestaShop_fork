@@ -41,5 +41,5 @@
     "An expired or used reset link only shows up after the user types a new password twice: check the token when /reset-password/{token} loads (LoginController).",
     "'We couldn't reset your password. Try again later.' sends the user back to the sign-in panel instead of the reset or forgot form."
   ],
-  "note": "Fixed after the 2026-11-05 follow-up, checked in the browser, not re-reviewed: a password filled without typing (input event), orphan words in alerts (text-wrap: pretty). Also the busy spinner now covers the label instead of widening the button."
+  "note": "Validated as the reference page on 2026-11-05: no blocker or major. The 3 minor findings are accepted for now; the out-of-scope ideas are for a back-end change."
 }
