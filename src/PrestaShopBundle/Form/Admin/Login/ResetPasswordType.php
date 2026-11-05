@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResetPasswordType extends AbstractType
@@ -31,6 +32,8 @@ class ResetPasswordType extends AbstractType
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
         $minScore = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE);
+        // An empty field gets the same words from the client check (data-required-message) and the server
+        $newPasswordRequiredMessage = $this->translator->trans('Enter a new password.', [], 'Admin.Notifications.Error');
 
         $builder
             ->add('new_password', RepeatedType::class, [
@@ -46,10 +49,12 @@ class ResetPasswordType extends AbstractType
                     // The same requirement as the strength checklist, from the password policy
                     'help' => $this->translator->trans('Use between %d and %d characters', [$minLength, $maxLength], 'Admin.Advparameters.Feature'),
                     'constraints' => [
+                        new NotBlank(message: $newPasswordRequiredMessage),
                         $this->getLengthConstraint($minLength, $maxLength),
                     ],
                     'attr' => [
                         'data-ps-ref' => 'new-password',
+                        'data-required-message' => $newPasswordRequiredMessage,
                         'data-minscore' => $minScore,
                         'data-minlength' => $minLength,
                         'data-maxlength' => $maxLength,
@@ -60,6 +65,7 @@ class ResetPasswordType extends AbstractType
                     'help' => '',
                     'attr' => [
                         'data-ps-ref' => 'new-password-confirmation',
+                        'data-required-message' => $this->translator->trans('Confirm your new password.', [], 'Admin.Notifications.Error'),
                         'data-ps-data-mismatch' => $this->translator->trans('The passwords don\'t match.', [], 'Admin.Notifications.Error'),
                         'data-minscore' => $minScore,
                         'data-minlength' => $minLength,

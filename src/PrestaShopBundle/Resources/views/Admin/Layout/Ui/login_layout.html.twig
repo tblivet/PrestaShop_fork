@@ -6,7 +6,8 @@
 <!DOCTYPE html>
 <html lang="{{ ps.isoUser }}"{% if ps.isRtlLanguage %} dir="rtl"{% endif %}>
 <head>
-  {{ component('LoginHeadTag') }}
+  {# The page's own title, then the shop (DECISIONS.md #32): each page fills login_title with its h1 text #}
+  {{ component('LoginHeadTag', {metaTitle: (block('login_title') is defined ? block('login_title') : '')|trim}) }}
   {% block login_javascripts %}{% endblock %}
 </head>
 

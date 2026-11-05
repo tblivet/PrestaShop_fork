@@ -128,3 +128,20 @@ Each entry: the page or component, then only the sections that apply.
 **Strings** (`Admin.Notifications.Error`)
 - Sign-in and forgot password email fields: "Invalid email address." (client) and Symfony's "This value is not a valid email address." (server) → "Enter a valid email address, like name@example.com." for both.
 
+
+## Kit rules #30-32 on the login pages — 2026-11-05
+
+Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-focus.js`, was `server-error-focus.js`), login layout and pages, login form types.
+
+**Markup**
+- Every kit form gets `novalidate` and `validate` in its `data-ps-action` (a token list now: "submit-once validate"; kit selectors use `~=`).
+- Email and password fields of kit forms: one client error slot, `#<id>_client_error` with `data-ps-target="client-error"` (was `data-ps-target="email-error"` on email fields only), linked by `aria-describedby`; its words come from the field's `data-required-message` / `data-invalid-message`.
+- Login panels: `h1` gets `data-ps-ref="panel-title"`. Kit login pages: `<title>` is "<page title> • <shop name>" (was the shop name); the old theme keeps the shop name.
+
+**Behaviour**
+- No browser validation bubble on kit forms: an empty required field or a malformed email gets the kit message under the field on submit, then live while typing. `login-page.ts` no longer has its own email check.
+- After a submit or a redirect, focus goes to the first field in error, otherwise to the first flash message of any type (was danger alerts only), so "Check your inbox" and "Your password has been changed" are read.
+- Switching between sign in and forgot password updates the document title.
+
+**Strings** (`Admin.Notifications.Error`)
+- New: "Enter your email address.", "Enter your password.", "Enter a new password.", "Confirm your new password.", and the kit default "This field is required.". Server: `NotBlank` with the same words on the forgot password email and the new password.

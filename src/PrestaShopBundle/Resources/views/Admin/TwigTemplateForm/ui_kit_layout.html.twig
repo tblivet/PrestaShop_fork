@@ -5,6 +5,29 @@
 {# Form theme of the /ui kit pages, which render widgets one by one rather than with form_row #}
 {% extends 'bootstrap_5_layout.html.twig' %}
 
+{# Kit forms report their own errors, never the browser's bubbles (DECISIONS.md #30): ui/src/js/components/form-validation.js
+ # checks the fields that have a client error slot on submit #}
+{%- block form_start -%}
+  {%- set attr = attr|merge({
+    novalidate: 'novalidate',
+    'data-ps-action': ((attr['data-ps-action'] ?? '') ~ ' validate')|trim,
+  }) -%}
+  {{- parent() -}}
+{%- endblock form_start -%}
+
+{# The empty message slot of a field's client check, linked by aria-describedby (id_client_error). Words from the field's
+ # data-required-message and data-invalid-message attributes, the same as its server constraints, or generic ones #}
+{%- block client_error_slot -%}
+  <div
+    class="invalid-feedback"
+    id="{{ id }}_client_error"
+    role="status"
+    data-ps-target="client-error"
+    data-ps-data-required="{{ attr['data-required-message'] ?? 'This field is required.'|trans({}, 'Admin.Notifications.Error') }}"
+    data-ps-data-invalid="{{ attr['data-invalid-message'] ?? 'Invalid email address.'|trans({}, 'Admin.Notifications.Error') }}"
+  ></div>
+{%- endblock client_error_slot -%}
+
 {# Links the help and the errors to their field, and marks it invalid for screen readers #}
 {%- block widget_attributes -%}
   {%- set describedBy = (attr['aria-describedby'] ?? '')|split(' ')|filter(describedById => describedById is not empty) -%}
@@ -23,20 +46,22 @@
 
 {# Every password field gets the show/hide button (DECISIONS.md #25: the block maps the field to a kit component) #}
 {%- block password_widget -%}
+  {%- set attr = attr|merge({'aria-describedby': ((attr['aria-describedby'] ?? '') ~ ' ' ~ id ~ '_client_error')|trim}) -%}
   {%- set input -%}{{- parent() -}}{%- endset -%}
   {%- set fieldLabel = null -%}
   {%- if label is not same as(false) -%}
     {%- set fieldLabel = label is empty ? name|humanize : (translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain)) -%}
   {%- endif -%}
   <twig:ui:PasswordField :inputId="id" :label="fieldLabel">{{ input }}</twig:ui:PasswordField>
+  {#- After the group, not in it: the kit shows it through .input-group:has(> [aria-invalid]) ~ .invalid-feedback -#}
+  {{- block('client_error_slot') -}}
 {%- endblock password_widget -%}
 
-{# Every email field gets an empty slot for its client-side check, linked to it; the page script fills it and sets aria-invalid #}
+{# Every email field gets the client error slot: required and email format checks #}
 {%- block email_widget -%}
-  {%- set clientErrorId = id ~ '_client_error' -%}
-  {%- set attr = attr|merge({'aria-describedby': ((attr['aria-describedby'] ?? '') ~ ' ' ~ clientErrorId)|trim}) -%}
+  {%- set attr = attr|merge({'aria-describedby': ((attr['aria-describedby'] ?? '') ~ ' ' ~ id ~ '_client_error')|trim}) -%}
   {{- parent() -}}
-  <div class="invalid-feedback" id="{{ clientErrorId }}" role="status" data-ps-target="email-error" data-ps-data-invalid="{{ attr['data-invalid-message'] ?? 'Invalid email address.'|trans({}, 'Admin.Notifications.Error') }}"></div>
+  {{- block('client_error_slot') -}}
 {%- endblock email_widget -%}
 
 {# Form-level errors (e.g. an expired CSRF token) look like the flash alerts; field errors get the id the field points to #}

@@ -47,7 +47,7 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 | Page | Ui template | Components | Raw markup | Last review | Open findings |
 |------|-------------|-----------:|-----------:|-------------|---------------|
-| Login/login.html.twig | Login/Ui/login.html.twig | 2 | 0 | 2026-11-05 | 3 major, 5 minor, 2 suggestion |
+| Login/login.html.twig | Login/Ui/login.html.twig | 2 | 0 | 2026-11-05 | 5 minor, 2 suggestion |
 | Login/required_actions.html.twig | Login/Ui/required_actions.html.twig | 1 | 0 | never | – |
 | Login/reset_password.html.twig | Login/Ui/reset_password.html.twig | 1 | 0 | never | – |
 
@@ -55,11 +55,8 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 ### login — 2026-11-05
 
-The 3 majors are the kit rules recorded on 2026-11-05 (DECISIONS.md #30-32), not applied to the login pages yet.
+The 3 majors (kit rules DECISIONS.md #30-32) were applied on 2026-11-05 and checked in the browser, not re-reviewed yet.
 
-- **major** Kit forms still show the browser's validation bubbles (no novalidate) (All three forms, every width (sign-in, forgot panel, reset password))
-- **major** Info and success flashes after a redirect are not focused (reset-requested-info and reset-success-flash at 375/768/1280; french-forgot-panel-info at 375)
-- **major** Every login page has the shop name as its title, and switching panels does not change it (Sign-in, forgot panel, reset password and required actions, at every width)
 - **minor** Focus ring and invalid glow of password inputs are cut off by the eye toggle (reset-submit-blocked 375, reset-too-long 768 (and every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (no rules after the header comment))
 - **minor** Too-long password draws a full-width red strength bar (reset-too-long, all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:308-309)
 - **minor** An expired or used reset link is only revealed after the user types a new password twice (/admin-dev/reset-password/{token}, all widths; LoginController.php:158-191)

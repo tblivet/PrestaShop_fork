@@ -11,26 +11,11 @@
   },
   "findings": {
     "blocker": 0,
-    "major": 3,
+    "major": 0,
     "minor": 5,
     "suggestion": 2
   },
   "open": [
-    {
-      "severity": "major",
-      "title": "Kit forms still show the browser's validation bubbles (no novalidate)",
-      "where": "All three forms, every width (sign-in, forgot panel, reset password)"
-    },
-    {
-      "severity": "major",
-      "title": "Info and success flashes after a redirect are not focused",
-      "where": "reset-requested-info and reset-success-flash at 375/768/1280; french-forgot-panel-info at 375"
-    },
-    {
-      "severity": "major",
-      "title": "Every login page has the shop name as its title, and switching panels does not change it",
-      "where": "Sign-in, forgot panel, reset password and required actions, at every width"
-    },
     {
       "severity": "minor",
       "title": "Focus ring and invalid glow of password inputs are cut off by the eye toggle",
@@ -67,5 +52,5 @@
       "where": "forgot-error-flash 768 and 1280; ui/src/scss/components/_alert.scss (.ps-alert__content)"
     }
   ],
-  "note": "The 3 majors are the kit rules recorded on 2026-11-05 (DECISIONS.md #30-32), not applied to the login pages yet."
+  "note": "The 3 majors (kit rules DECISIONS.md #30-32) were applied on 2026-11-05 and checked in the browser, not re-reviewed yet."
 }

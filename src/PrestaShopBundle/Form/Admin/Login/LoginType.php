@@ -46,7 +46,11 @@ class LoginType extends AbstractType
                 'constraints' => [
                     new Email(message: $invalidEmailMessage),
                 ],
-                'attr' => ['data-invalid-message' => $invalidEmailMessage] + ($this->isDemoModeEnabled ? [
+                // The sign-in submit goes to the security authenticator, not to form validation: these words are the client's
+                'attr' => [
+                    'data-required-message' => $this->translator->trans('Enter your email address.', [], 'Admin.Notifications.Error'),
+                    'data-invalid-message' => $invalidEmailMessage,
+                ] + ($this->isDemoModeEnabled ? [
                     // Setting a default value should be in a FormDataProvider, but has been left here to keep consistency with the password
                     'value' => $this->requestStack->getCurrentRequest()->query->get('email'),
                 ] : []),
@@ -54,10 +58,12 @@ class LoginType extends AbstractType
             ->add('passwd', PasswordType::class, [
                 'label' => $this->translator->trans('Password', [], 'Admin.Global'),
                 'always_empty' => false,
-                'attr' => $this->isDemoModeEnabled ? [
+                'attr' => [
+                    'data-required-message' => $this->translator->trans('Enter your password.', [], 'Admin.Notifications.Error'),
+                ] + ($this->isDemoModeEnabled ? [
                     // This is the only place we can set a value for a password input field.
                     'value' => $this->requestStack->getCurrentRequest()->query->get('password'),
-                ] : [],
+                ] : []),
             ])
             ->add('submit_login', SubmitType::class, [
                 'label' => $this->translator->trans('Sign in', [], 'Admin.Login.Feature'),

@@ -7,6 +7,10 @@
 {% form_theme loginForm '@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig' %}
 {% form_theme requestPasswordResetForm '@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig' %}
 
+{% block login_title %}
+  {{- showRequestPasswordResetForm ? requestPasswordResetForm.vars.label : 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') -}}
+{% endblock %}
+
 {% block login_content %}
   {% set forgotPasswordLink = loginForm.stay_logged_in.vars.external_link %}
 
@@ -15,7 +19,7 @@
 
   {# submit-once: the kit marks the button busy and ignores a second submit (ui/src/js/components/submit-once.js) #}
   {{ form_start(loginForm, {action: path('admin_login'), attr: loginForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? ' d-none' : ''), 'data-ps-action': 'submit-once'})}) }}
-    <h1 class="ps-login__title">{{ 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
+    <h1 class="ps-login__title" data-ps-ref="panel-title">{{ 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
     {% if not showRequestPasswordResetForm %}
       <twig:ui:FlashMessages/>
     {% endif %}
@@ -55,7 +59,7 @@
   {{ form_end(loginForm) }}
 
   {{ form_start(requestPasswordResetForm, {action: path('admin_request_password_reset'), attr: requestPasswordResetForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? '' : ' d-none'), 'data-ps-action': 'submit-once'})}) }}
-    <h1 class="ps-login__title">{{ requestPasswordResetForm.vars.label }}</h1>
+    <h1 class="ps-login__title" data-ps-ref="panel-title">{{ requestPasswordResetForm.vars.label }}</h1>
     {% if showRequestPasswordResetForm %}
       <twig:ui:FlashMessages/>
     {% endif %}

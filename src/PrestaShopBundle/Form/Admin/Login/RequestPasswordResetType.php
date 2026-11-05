@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RequestPasswordResetType extends AbstractType
@@ -25,7 +26,8 @@ class RequestPasswordResetType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // The same words for the browser check (data-invalid-message) and the server one
+        // The same words for the client check (data-required-message, data-invalid-message) and the server one
+        $requiredEmailMessage = $this->translator->trans('Enter your email address.', [], 'Admin.Notifications.Error');
         $invalidEmailMessage = $this->translator->trans('Enter a valid email address, like name@example.com.', [], 'Admin.Notifications.Error');
 
         $builder
@@ -33,11 +35,13 @@ class RequestPasswordResetType extends AbstractType
                 'required' => true,
                 'label' => $this->translator->trans('Email address', [], 'Admin.Global'),
                 'constraints' => [
+                    new NotBlank(message: $requiredEmailMessage),
                     new Email(message: $invalidEmailMessage),
                 ],
                 // Replaces EmailType's attr: its email-input class (old theme check) is kept
                 'attr' => [
                     'class' => 'email-input',
+                    'data-required-message' => $requiredEmailMessage,
                     'data-invalid-message' => $invalidEmailMessage,
                 ],
             ])

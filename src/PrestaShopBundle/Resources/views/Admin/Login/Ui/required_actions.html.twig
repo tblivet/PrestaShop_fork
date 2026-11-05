@@ -4,6 +4,8 @@
  #}
 {% extends '@PrestaShop/Admin/Layout/Ui/login_layout.html.twig' %}
 
+{% block login_title %}{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}{% endblock %}
+
 {% block login_content %}
   <h1 class="ps-login__title">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
   {# A flex column, not a grid: a grid column grows to fit a long unbreakable word (the folder name) and overflows the card #}

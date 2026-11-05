@@ -6,7 +6,8 @@ import '../scss/main.scss';
 import * as bootstrap from 'bootstrap';
 import initAlertDismissFocus from './components/alert-dismiss-focus';
 import initPasswordToggle from './components/password-toggle';
-import focusServerError from './components/server-error-focus';
+import initFormValidation from './components/form-validation';
+import focusOnLoad from './components/load-focus';
 import initSubmitOnce from './components/submit-once';
 import registerJqueryPlugins from './compat/jquery-plugins';
 
@@ -15,7 +16,8 @@ window.bootstrap = bootstrap;
 
 registerJqueryPlugins(bootstrap);
 initPasswordToggle();
+initFormValidation();
 initSubmitOnce();
 initAlertDismissFocus();
 // The script loads in <head>: wait for the page
-document.addEventListener('DOMContentLoaded', focusServerError);
+document.addEventListener('DOMContentLoaded', focusOnLoad);

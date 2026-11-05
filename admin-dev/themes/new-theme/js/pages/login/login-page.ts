@@ -2,58 +2,19 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-import * as EmailValidator from 'email-validator';
 import LoginFormMap from '@pages/login/login-map';
 import onReady from '@components/on-ready';
 
 /**
- * Client-side email check of the kit login pages: each email field has an empty message slot linked by
- * aria-describedby (email_widget block of ui_kit_layout.html.twig); the field state is aria-invalid.
+ * The document title names the visible panel, then the shop (DECISIONS.md #32): "Sign in to your back office • Shop".
  */
-const watchEmailFields = (): void => {
-  document.querySelectorAll<HTMLElement>(LoginFormMap.emailError).forEach((error) => {
-    const input = document.querySelector<HTMLInputElement>(`[aria-describedby~="${error.id}"]`);
+const showPanelTitle = (from: HTMLFormElement | null, to: HTMLFormElement | null): void => {
+  const fromTitle = from?.querySelector(LoginFormMap.panelTitle)?.textContent?.trim();
+  const toTitle = to?.querySelector(LoginFormMap.panelTitle)?.textContent?.trim();
 
-    if (!input) {
-      return;
-    }
-
-    const check = (): boolean => {
-      const valid = EmailValidator.validate(input.value);
-
-      if (valid) {
-        input.removeAttribute('aria-invalid');
-      } else {
-        input.setAttribute('aria-invalid', 'true');
-      }
-      // Written when shown, so the live region announces it; emptied otherwise, so the slot takes no room
-      if (valid) {
-        error.replaceChildren();
-      } else {
-        error.replaceChildren(error.dataset.psDataInvalid ?? '');
-      }
-
-      return valid;
-    };
-
-    // Checked on submit, not when the field is left: a message appearing then would move the button being clicked.
-    // Once shown, it follows the typing, so it goes away as soon as the address is fixed.
-    let shown = false;
-
-    input.addEventListener('input', () => {
-      if (shown) {
-        shown = !check();
-      }
-    });
-    input.form?.addEventListener('submit', (event) => {
-      if (!check()) {
-        shown = true;
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        input.focus();
-      }
-    });
-  });
+  if (fromTitle && toTitle && document.title.startsWith(fromTitle)) {
+    document.title = toTitle + document.title.slice(fromTitle.length);
+  }
 };
 
 onReady(() => {
@@ -67,6 +28,7 @@ onReady(() => {
     event.stopImmediatePropagation();
     loginForm?.classList.add('d-none');
     forgotPasswordForm?.classList.remove('d-none');
+    showPanelTitle(loginForm, forgotPasswordForm);
     document.querySelectorAll<HTMLElement>(LoginFormMap.alertMessages).forEach((alert) => {
       alert.remove();
     });
@@ -78,8 +40,7 @@ onReady(() => {
     event.stopImmediatePropagation();
     loginForm?.classList.remove('d-none');
     forgotPasswordForm?.classList.add('d-none');
+    showPanelTitle(forgotPasswordForm, loginForm);
     forgotPasswordLink?.focus();
   });
-
-  watchEmailFields();
 });

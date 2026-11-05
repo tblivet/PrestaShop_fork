@@ -11,7 +11,7 @@ export default {
   forgotPasswordForm: '[data-ps-ref="forgot-password-form"]',
   forgotPasswordLink: '[data-ps-action="show-forgot-password"]',
   forgotPasswordEmail: '[data-ps-ref="forgot-password-email"]',
-  emailError: '[data-ps-target="email-error"]',
+  panelTitle: '[data-ps-ref="panel-title"]',
   cancelResetPasswordButton: '[data-ps-action="cancel-forgot-password"]',
   passwordStrengthFeedbackContainer: '[data-ps-ref="password-feedback"]',
   resetNewPassword: '[data-ps-ref="new-password"]',

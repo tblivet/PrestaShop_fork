@@ -20,7 +20,7 @@
     color: inherit;
   }
 
-  // Focused by the kit after a server error (server-error-focus.js): the kit ring, not the browser outline
+  // Focused by the kit when the page loads (load-focus.js): the kit ring, not the browser outline
   &[tabindex="-1"]:focus {
     outline: 0;
     box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;

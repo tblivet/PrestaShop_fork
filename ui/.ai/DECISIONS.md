@@ -147,15 +147,15 @@ Why: a ring that matches its button, as Bootstrap does; the gap keeps it apart f
 
 ## 30. Kit forms report their own errors, never the browser's bubbles — 2026-11-05
 
-Every kit form has `novalidate`. Its page script checks what the browser would (empty required field, malformed email, too long) on submit, and writes a translated message into the field's error slot, linked by `aria-describedby`, with `aria-invalid` on the field and focus on the first one to fix. The server checks the same rules with the same words.
+Every kit form has `novalidate` (the kit form theme's `form_start`). The kit checks what the browser would on submit (`ui/src/js/components/form-validation.js`: empty required field, malformed email; more as field types join the form theme), and writes a translated message into the field's client error slot, linked by `aria-describedby`, with `aria-invalid` on the field and focus on the first one to fix. The words come from the field's `data-required-message` and `data-invalid-message`; the server checks the same rules with the same words (`NotBlank`, `Email` messages).
 Why: the browser bubble is in the browser's language, not the page's, disappears on its own, cannot be read again, is cut off on phones, and looks unlike every other error of the kit. Left aside: keeping native validation and styling `:invalid` (still the browser's words and timing).
 
 ## 31. After a redirect, focus goes to the flash message — 2026-11-05
 
-A page reached by a redirect that shows a flash message (`<twig:ui:FlashMessages>`) moves focus to the first one, whatever its type (success, info, warning, error), made focusable with `tabindex="-1"`; a field in error still comes first. `server-error-focus.js` does it for danger alerts today and widens to every flash.
+A page reached by a redirect that shows a flash message (`<twig:ui:FlashMessages>`) moves focus to the first one, whatever its type (success, info, warning, error), made focusable with `tabindex="-1"`; a field in error still comes first. `ui/src/js/components/load-focus.js` does it on every kit page.
 Why: a message rendered with the page sits in a live region that already exists, so screen readers do not announce it; "Your password has been changed" or "Check your inbox" is the outcome of the user's action and must be read. Left aside: announcing through a live region filled after load (unreliable timing across screen readers).
 
 ## 32. Every page has its own document title — 2026-11-05
 
-The `<title>` names the page, then the shop: "Sign in · Maison Dupont", "Reset your password · Maison Dupont", "Orders · Maison Dupont". It is the page's `h1` text; a script that switches panels in place (sign in / forgot password) updates `document.title` too.
+The `<title>` names the page, then the shop: "Sign in to your back office • Maison Dupont", "Reset your password • Maison Dupont", "Orders • Maison Dupont" (the separator of the other back office pages). It is the page's `h1` text; a script that switches panels in place (sign in / forgot password) updates `document.title` too.
 Why: the title is the first thing a screen reader reads and what a browser tab or history shows; pages that share one cannot be told apart (WCAG 2.4.2). Left aside: the shop name alone (today), the page name alone (several shops open in tabs).

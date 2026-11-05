@@ -9,7 +9,7 @@
 
 <link rel="icon" type="image/x-icon" href="{{ this.imgDir }}favicon.ico" />
 <link rel="apple-touch-icon" href="{{ this.imgDir }}app_icon.png" />
-<title>{{ this.shopName }}</title>
+<title>{% if this.metaTitle %}{{ this.metaTitle }} • {% endif %}{{ this.shopName }}</title>
 
 {{ include('@AdminNewTheme/public/preload.html.twig') }}
 

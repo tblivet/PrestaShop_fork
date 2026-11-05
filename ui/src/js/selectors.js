@@ -6,6 +6,10 @@
 // JS hooks of the kit's components: data-ps-* attributes only, never CSS classes.
 export default {
   passwordToggle: '[data-ps-action="toggle-password"]',
-  submitOnce: '[data-ps-action="submit-once"]',
+  // data-ps-action can hold several behaviours ("submit-once validate")
+  submitOnce: '[data-ps-action~="submit-once"]',
+  validate: '[data-ps-action~="validate"]',
+  clientError: '[data-ps-target="client-error"]',
+  flashAlert: '[data-ps-ref="flash-alert"]',
   submitSpinner: '[data-ps-ref="submit-spinner"]',
 };
