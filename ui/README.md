@@ -74,6 +74,7 @@ Scripts:
 |---------|------|
 | `php ui/.ai/bin/seed.php list` (in the container, as `www-data`) | Data scenarios: full listings, long names, limited employee, another language, multistore |
 | `node ui/.ai/bin/missing-translations.mjs --locale fr-FR` | Strings of the branch missing from the catalogues |
+| `node ui/.ai/bin/story-parity.mjs` | Says which `<twig:ui:*>` props are missing from their story (Props line or controls); CI runs it |
 | `node ui/.ai/bin/check-builds.mjs` | Says whether `ui/dist` and `new-theme/public` are older than their sources, and which `make` target to run; reviews run it first |
 | `node ui/.ai/bin/progress.mjs` | Regenerates `PROGRESS.md` |
 | `node ui/.ai/bin/review-files.mjs [--uncommitted] [filter …]` | The files to review for a change, grouped for a web integrator |

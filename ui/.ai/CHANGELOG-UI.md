@@ -145,3 +145,11 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Strings** (`Admin.Notifications.Error`)
 - New: "Enter your email address.", "Enter your password.", "Enter a new password.", "Confirm your new password.", and the kit default "This field is required.". Server: `NotBlank` with the same words on the forgot password email and the new password.
+
+## Stories in sync with the Twig components — 2026-11-05
+
+**Markup**
+- Alert story: controls named after the props (`type`, `icon`, `dismissible`, content; was `variant`, `message`), docs in the Twig usage / Props / Do-Don't / States form, new state with a first sentence in `<strong>` (no title prop: emphasis is message content).
+- FlashMessages story: current alert markup (`ps-alert`, `ps-alert__content`), a `types` control, the info type.
+- PasswordField story: a `label` control.
+- `node ui/.ai/bin/story-parity.mjs` checks that every component prop is in its story; the lint CI runs it.

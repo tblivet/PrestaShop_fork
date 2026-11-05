@@ -36,6 +36,9 @@ jobs:
       - name: BackOffice UI kit `ui`
         run: cd ./ui && npm ci && npm run lint:scss
 
+      - name: UI kit components and their stories in sync
+        run: node ui/.ai/bin/story-parity.mjs
+
   eslint:
     if: github.event_name != 'push' || !github.event.repository.private
     name: ESLint

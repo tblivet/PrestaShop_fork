@@ -60,6 +60,7 @@ Templates write `<twig:ui:*>` components and layouts, not raw Bootstrap markup (
 - **Bootstrap underneath**: the component outputs Bootstrap's own classes, so Bootstrap docs, utilities and JS keep working on it.
 - **Compose only what is generic; own what is specific**: a component reuses another when it needs it exactly as it is, through its normal props (a menu of actions made of standard buttons). When a part belongs to one component (its structure, state or behaviour are tied to it), the component owns that part as a BEM element instead: the show/hide button of `ui:PasswordField` is `ps-password-field__toggle`, not a generic icon button. A sign of the wrong choice: a generic component growing a prop only one parent uses (`pressedIcon` for the password field).
 - **A missing case goes into the component**: add the variant, slot or prop, with its story and test, instead of writing raw markup in the page.
+- **The story shows every prop**: a `<twig:ui:*>` prop is named in its story's `**Props**` line and has a control (`argTypes`); markup-wiring props ending in `Id` need the docs line only. Adding, renaming or removing a prop updates the story in the same change. `node ui/.ai/bin/story-parity.mjs` checks it (CI too). Content that is not a prop (a bold first sentence, a link in the message) is shown as a story state, never presented as an option.
 
 ## JS hooks: `data-ps-*`
 

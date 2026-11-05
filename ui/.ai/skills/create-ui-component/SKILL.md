@@ -62,4 +62,4 @@ Generic behaviour goes to `ui/src/js/components/{name}.js`, its hooks to `ui/src
 
 ## 7. Verify
 
-`make admin-ui`, the two PHPUnit tests, `php vendor/bin/php-cs-fixer fix` and `phpstan` on the new PHP, the story in Storybook, then one real page using the component with `PS_UI_KIT=1`. Run the `ui-review` skill on that page.
+`node ui/.ai/bin/story-parity.mjs` (every prop in the story's Props line and controls), `make admin-ui`, the two PHPUnit tests, `php vendor/bin/php-cs-fixer fix` and `phpstan` on the new PHP, the story in Storybook, then one real page using the component with `PS_UI_KIT=1`. Run the `ui-review` skill on that page.

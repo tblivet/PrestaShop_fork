@@ -33,6 +33,12 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 
 ## Backlog
 
+### Tooling
+
+| Status | Name | When | What |
+|--------|------|------|------|
+| - [ ] | Story markup parity test | With the first layouts (Stack, Cluster) | Render each `<twig:ui:*>` component and its story with the same props, compare classes and hooks (`data-ps-*`, `role`, `aria-*`); run in CI. `story-parity.mjs` only checks props: it missed the outdated FlashMessages story markup (2026-11-05). |
+
 ### Layouts
 
 | # | Status | Name | Kind | Pages | Sections | Complexity | Depends on | Design workflow |

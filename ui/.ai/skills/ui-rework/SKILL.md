@@ -55,7 +55,7 @@ While working, check with a quick `ui-review` (a few states, inline).
 |------|-----|
 | Builds and lints | `make admin-ui`, `make admin-new-theme`; `npm run lint:scss` in `ui/`, `npm run lint` in `admin-dev/themes/new-theme` |
 | Tests | Twig component unit and render tests for touched components; PHP integration tests for changed form types and controllers; Behat untouched. Without the test database, say so instead of skipping silently |
-| Storybook parity | The story or mockup matches the page in every reviewed state |
+| Storybook parity | The story or mockup matches the page in every reviewed state, and every prop of a component touched is in its story (`node ui/.ai/bin/story-parity.mjs` passes) |
 | Screen review clean | The `ui-screen-review` workflow once on the page with its seed scenarios: no blocker or major finding left, or each one accepted with a reason in `DECISIONS.md` |
 
 Clear the Symfony cache as the web user (`docker exec -u www-data …`), never as root, and hard-reload pages (asset URLs only carry `?<version>`).

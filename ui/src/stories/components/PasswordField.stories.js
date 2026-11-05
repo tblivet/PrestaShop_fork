@@ -5,11 +5,11 @@
 // Twig: <twig:ui:PasswordField> (src/PrestaShopBundle/Twig/Component/Ui/PasswordField.php) renders this markup, keep both in sync.
 // The kit form theme (ui_kit_layout.html.twig, password_widget) renders every PasswordType through it.
 
-const field = ({ id, invalid = false, message = '' }) => `
-  <label for="${id}" class="form-label">Password</label>
+const field = ({ id, label = 'Password', invalid = false, message = '' }) => `
+  <label for="${id}" class="form-label">${label}</label>
   <div class="ps-password-field input-group has-validation">
     <input type="password" id="${id}" class="form-control${invalid ? ' is-invalid' : ''}" autocomplete="current-password"${invalid ? ` aria-invalid="true" aria-describedby="${id}_error"` : ''}>
-    <button class="ps-password-field__toggle btn btn-primary d-inline-flex align-items-center justify-content-center" type="button" aria-label="Show password: Password" aria-controls="${id}" aria-pressed="false" data-ps-action="toggle-password">
+    <button class="ps-password-field__toggle btn btn-primary d-inline-flex align-items-center justify-content-center" type="button" aria-label="${label ? `Show password: ${label}` : 'Show password'}" aria-controls="${id}" aria-pressed="false" data-ps-action="toggle-password">
       <span class="ps-password-field__icon material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility</span>
       <span class="ps-password-field__icon ps-password-field__icon--shown material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility_off</span>
     </button>
@@ -32,6 +32,10 @@ export default {
   },
 };
 
-export const Default = { render: () => field({ id: 'story_password' }) };
+export const Default = {
+  argTypes: { label: { control: 'text', description: 'Field label, in the button name; empty: "Show password"' } },
+  args: { label: 'Password' },
+  render: ({ label }) => field({ id: 'story_password', label }),
+};
 
 export const WithError = { render: () => field({ id: 'story_password_error', invalid: true, message: 'Use between 8 and 72 characters.' }) };

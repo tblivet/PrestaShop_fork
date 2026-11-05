@@ -10,50 +10,68 @@ import xCircleFill from '../../../icons/bi/x-circle-fill.svg?raw';
 import uxIcon from '../ux-icon';
 // Twig: <twig:ui:Alert> (src/PrestaShopBundle/Twig/Component/Ui/Alert.php) renders this markup, keep both in sync.
 
+const ICONS = {
+  none: null,
+  'bi:info-circle-fill': infoCircleFill,
+  'bi:check-circle-fill': checkCircleFill,
+  'bi:exclamation-triangle-fill': exclamationTriangleFill,
+  'bi:x-circle-fill': xCircleFill,
+};
+
+// Same rule as alert.html.twig: only a danger alert interrupts screen readers.
+const role = (type) => (type === 'danger' ? 'alert' : 'status');
+
+// The markup of alert.html.twig for the given props; the content is the component's content block
+const alert = ({ type, icon, dismissible, content }) => {
+  const iconSvg = ICONS[icon] ?? null;
+  const classes = ['ps-alert', 'alert', `alert-${type}`];
+  if (dismissible) classes.push('alert-dismissible', 'fade', 'show');
+  if (iconSvg) classes.push('d-flex', 'align-items-start', 'gap-2');
+
+  return `
+    <div class="${classes.join(' ')}" role="${role(type)}">
+      ${iconSvg ? `${uxIcon(iconSvg, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}<div class="ps-alert__content">${content}</div>` : content}
+      ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
+    </div>`;
+};
+
 export default {
   title: 'Components/Alert',
   parameters: {
     docs: {
       description: {
-        component:
-          'Back office: `<twig:ui:Alert type="danger" icon="bi:x-circle-fill" dismissible>…</twig:ui:Alert>`. ' +
-          'Props: `type` (variant), `dismissible`, `icon` (ux:icon name). No outer margin: a layout spaces alerts. Long words break inside the box; links in the message take the alert link color.',
+        component: [
+          '**Twig usage**: `<twig:ui:Alert type="danger" icon="bi:x-circle-fill" dismissible>…message…</twig:ui:Alert>`. The content block is the message: text, a list, links; there is no title prop, emphasise a first sentence with `<strong>` in the message.',
+          '**Props**: `type` (`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`; default `info`), `icon` (a ux:icon name from `ui/icons`, e.g. `bi:x-circle-fill`; default none), `dismissible` (default `false`). Other attributes (`id`, `data-ps-*`, `aria-*`) go on the alert.',
+          '**Do**: let a layout or `<twig:ui:FlashMessages>` space alerts (the alert has no outer margin); use `danger` only for errors, it is the only type announced at once (`role="alert"`). **Don\'t**: add margins or `.alert-link` by hand: links in the message take the alert link color.',
+          '**States**: each type, with and without icon, dismissible, long text wrapping with its icon on the first line, a long unbreakable word (path, token) breaking inside the box, a link and `<code>` in the message, a first sentence in `<strong>`.',
+        ].join('\n\n'),
       },
     },
   },
   argTypes: {
-    variant: {
+    type: {
       control: 'select',
       options: ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'],
-      description: 'Bootstrap contextual variant',
+      description: 'Bootstrap contextual type',
     },
-    message: {
-      control: 'text',
-      description: 'Alert message content',
+    icon: {
+      control: 'select',
+      options: Object.keys(ICONS),
+      description: 'ux:icon name, none by default',
     },
-    dismissible: {
-      control: 'boolean',
-      description: 'Show dismiss button',
-    },
+    dismissible: { control: 'boolean', description: 'Close button' },
+    content: { control: 'text', description: 'The content block (HTML)' },
   },
   args: {
-    variant: 'primary',
-    message: 'A simple alert — check it out!',
+    type: 'info',
+    icon: 'none',
     dismissible: false,
+    content: 'A simple alert — check it out!',
   },
 };
 
-// Same rule as alert.html.twig: only a danger alert interrupts screen readers.
-const role = (variant) => (variant === 'danger' ? 'alert' : 'status');
-
-export const Default = {
-  render: ({ variant, message, dismissible }) => `
-    <div class="ps-alert alert alert-${variant}${dismissible ? ' alert-dismissible fade show' : ''}" role="${role(variant)}">
-      ${message}
-      ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
-    </div>
-  `,
-};
+export const Default = { render: (args) => alert(args) };
 
 export const AllVariants = {
   render: () => `
@@ -116,3 +134,14 @@ export const Dismissible = {
     </div>
   `,
 };
+
+// A flash message whose first sentence is its point, in <strong> (LoginController's "Check your inbox.")
+export const StrongFirstSentence = {
+  render: () => alert({
+    type: 'info',
+    icon: 'bi:info-circle-fill',
+    dismissible: true,
+    content: '<p class="mb-0"><strong>Check your inbox.</strong><br/>If an account exists for this email address, you\'ll receive a link to reset your password. You can request a new link every 6 hours.</p>',
+  }),
+};
+
