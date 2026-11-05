@@ -25,20 +25,27 @@ export default {
       control: 'boolean',
       description: 'Disabled state',
     },
+    loading: {
+      control: 'boolean',
+      description: 'Busy state: data-ps-state="loading" with aria-busy and aria-disabled; the spinner covers the label and the button keeps its size (set by submit-once.js on kit forms)',
+    },
   },
   args: {
     label: 'Button',
     variant: 'primary',
     size: 'md',
     disabled: false,
+    loading: false,
   },
 };
 
 export const Default = {
-  render: ({ label, variant, size, disabled }) => {
+  render: ({ label, variant, size, disabled, loading }) => {
     const sizeClass = size !== 'md' ? ` btn-${size}` : '';
     const disabledAttr = disabled ? ' disabled' : '';
-    return `<button type="button" class="btn btn-${variant}${sizeClass}"${disabledAttr}>${label}</button>`;
+    const loadingAttrs = loading ? ' data-ps-state="loading" aria-busy="true" aria-disabled="true"' : '';
+    const spinner = loading ? '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span>' : '';
+    return `<button type="button" class="btn btn-${variant}${sizeClass}"${disabledAttr}${loadingAttrs}>${spinner}${label}</button>`;
   },
 };
 
