@@ -72,6 +72,7 @@ Left aside: Stimulus, Live Components, keeping page logic in new-theme TypeScrip
 ## 14. Desktop first, usable on mobile — 2026-11-03
 
 Designed for 1280 px and wider, fully usable at 375 px (no page scroll sideways, touch targets); a dense grid may scroll inside its own box.
+This is the design priority, not how CSS is written: kit and page SCSS is mobile first like Bootstrap (`media-breakpoint-up`), see "Classes" in `CONVENTIONS.md` (2026-11-06).
 
 ## 15. The old theme may break on the feature branch — 2026-11-03
 

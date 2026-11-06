@@ -17,7 +17,7 @@ $component-name: ps-login;
   &__container {
     width: 100%;
     max-width: 30rem;
-    margin-block-start: 4rem;
+    margin-block-start: 2rem;
     margin-inline: auto;
   }
 
@@ -70,9 +70,9 @@ $component-name: ps-login;
     height: 2em;
   }
 
-  @include media-breakpoint-down(sm) {
+  @include media-breakpoint-up(sm) {
     &__container {
-      margin-block-start: 2rem;
+      margin-block-start: 4rem;
     }
   }
 }

@@ -51,7 +51,7 @@ axe covers about a third of WCAG: also check by hand what it cannot — live reg
 
 ## 5. Read the source
 
-On the template, SCSS and JS behind the screen, check the conventions file sections: BEM + utilities + `data-ps-*`, runtime state, migrating shared markup, accessibility. Flag JS selecting classes or ids, SCSS selecting a `data-ps-*` hook other than `data-ps-state`, untranslated strings, and Storybook/page drift. List the strings missing from the catalogues with `node ui/.ai/bin/missing-translations.mjs --locale <installed locale>`.
+On the template, SCSS and JS behind the screen, check the conventions file sections: BEM + utilities + `data-ps-*`, runtime state, migrating shared markup, accessibility. Flag JS selecting classes or ids, SCSS selecting a `data-ps-*` hook other than `data-ps-state`, SCSS written desktop first (`media-breakpoint-down` without a comment saying why; kit and page CSS is mobile first like Bootstrap), breakpoints nested in element rules instead of grouped at the end of the root block, untranslated strings, and Storybook/page drift. List the strings missing from the catalogues with `node ui/.ai/bin/missing-translations.mjs --locale <installed locale>`.
 
 ## 6. Report
 
