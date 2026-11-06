@@ -1,0 +1,6 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# as is one of the allowed elements (checked in PreMount); with ul/ol the caller writes each item as an <li> #}
+<{{ as }}{{ attributes.defaults({class: this.classes}) }}>{% block content %}{% endblock %}</{{ as }}>

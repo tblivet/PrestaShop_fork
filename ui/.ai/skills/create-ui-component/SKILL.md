@@ -31,6 +31,7 @@ Follow "Component API" in `ui/.ai/CONVENTIONS.md`. For each part, decide: reuse 
 `ui/src/stories/components/{Name}.stories.js`, the reference the page will be checked against. Its docs page holds:
 
 - **Twig usage and props**: the `<twig:ui:{Name}>` call, every prop with its allowed values and default, the content block and slots.
+- **Defaults and Twig code**: `const DEFAULTS = {…}` with the PHP defaults, `argTypes: withDefaults({…}, DEFAULTS)` and `args: DEFAULTS` (`ui/src/stories/story-defaults.js`), so the controls table shows each default; every story built with `withTwig` (`ui/src/stories/twig-snippet.js`), so "Show code" gives the HTML then the `<twig:ui:{Name}>` call (see `Cluster.stories.js`). Labels or a frame around the component go in the HTML only, with `rendered` giving the bare markup; session data the render reads (flash messages) goes in `session`.
 - **Do / Don't**: when to use it, when another component fits better, and the misuses to avoid, each with a short example.
 - **States**: one story per variant and per state (empty, loading, error, disabled, long content, long translation), with controls for each prop.
 
@@ -62,4 +63,4 @@ Generic behaviour goes to `ui/src/js/components/{name}.js`, its hooks to `ui/src
 
 ## 7. Verify
 
-`node ui/.ai/bin/story-parity.mjs` (every prop in the story's Props line and controls), `make admin-ui`, the two PHPUnit tests, `php vendor/bin/php-cs-fixer fix` and `phpstan` on the new PHP, the story in Storybook, then one real page using the component with `PS_UI_KIT=1`. Run the `ui-review` skill on that page.
+`node ui/.ai/bin/story-markup.mjs` then `node ui/.ai/bin/story-parity.mjs` (every prop in the story's Props line and controls, every story with Twig code, snapshot current), `StoryMarkupTest` (the stories show what the component renders), `make admin-ui`, the two PHPUnit tests, `php vendor/bin/php-cs-fixer fix` and `phpstan` on the new PHP, the story in Storybook, then one real page using the component with `PS_UI_KIT=1`. Run the `ui-review` skill on that page.

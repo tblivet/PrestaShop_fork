@@ -58,22 +58,18 @@ const preview = {
       const result = story();
       const html = typeof result === 'string' ? result : result.outerHTML;
 
-      // Format the rendered HTML and push it to the source panel.
+      // Format the rendered HTML and push it to the source panel; stories with a Twig call (parameters.twig, see
+      // src/stories/twig-snippet.js) show it under the HTML, for the current args.
+      const twig = typeof context.parameters.twig === 'function' ? context.parameters.twig(context.args) : '';
+      const emitSource = (htmlSource) => addons.getChannel().emit(SNIPPET_RENDERED, {
+        id: context.id,
+        args: context.args,
+        source: twig ? `${htmlSource}\n\n<!-- ---------- Twig ---------- -->\n\n${twig}` : htmlSource,
+      });
+
       format(html.trim(), { parser: 'html', plugins: [htmlPlugin], printWidth: 80, tabWidth: 2 })
-        .then((formatted) => {
-          addons.getChannel().emit(SNIPPET_RENDERED, {
-            id: context.id,
-            args: context.args,
-            source: formatted,
-          });
-        })
-        .catch(() => {
-          addons.getChannel().emit(SNIPPET_RENDERED, {
-            id: context.id,
-            args: context.args,
-            source: html.trim(),
-          });
-        });
+        .then((formatted) => emitSource(formatted.trim()))
+        .catch(() => emitSource(html.trim()));
 
       // Auto-init Bootstrap JS components (data-api fires on DOMContentLoaded
       // which has already passed by the time Storybook injects story HTML).

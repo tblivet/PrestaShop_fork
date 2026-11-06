@@ -7,6 +7,8 @@ import exclamationTriangleFill from '../../../icons/bi/exclamation-triangle-fill
 import infoCircleFill from '../../../icons/bi/info-circle-fill.svg?raw';
 import xCircleFill from '../../../icons/bi/x-circle-fill.svg?raw';
 import uxIcon from '../ux-icon';
+import { twigCall, withTwig } from '../twig-snippet';
+import { withDefaults } from '../story-defaults';
 // Twig: <twig:ui:FlashMessages> (src/PrestaShopBundle/Twig/Component/Ui/FlashMessages.php) renders this markup, keep both in sync.
 
 const alert = (type, icon, role, message, dismissible) => `
@@ -25,15 +27,23 @@ const TYPES = {
   info: ['info', infoCircleFill, 'status', '<strong>Check your inbox.</strong><br/>If an account exists for this email address, you\'ll receive a link to reset your password.'],
 };
 
-// The markup of flash_messages.html.twig when the flash bag holds one message of each of the given types
+// The markup of flash_messages.html.twig when the flash bag holds one message of each of the given types, and its call
 const flashMessages = ({ types, dismissible }) => {
   const printed = Object.keys(TYPES).filter((type) => types.length === 0 || types.includes(type));
 
-  return `
+  return {
+    html: `
     <div class="ps-flash-messages" data-ps-ref="flash-messages">
       ${printed.map((type) => alert(...TYPES[type], dismissible)).join('')}
-    </div>`;
+    </div>`,
+    twig: twigCall('ui:FlashMessages', { types, dismissible }, DEFAULTS),
+    // One message of every type in the flash bag: the types the call leaves out are not printed
+    session: { flashes: Object.fromEntries(Object.entries(TYPES).map(([type, [, , , message]]) => [type, [message]])) },
+  };
 };
+
+// FlashMessages.php defaults (no type checked: all of them)
+const DEFAULTS = { types: [], dismissible: true };
 
 export default {
   title: 'Components/FlashMessages',
@@ -49,28 +59,25 @@ export default {
       },
     },
   },
-  argTypes: {
+  argTypes: withDefaults({
     types: {
       control: 'check',
       options: Object.keys(TYPES),
       description: 'Flash types to print (none checked: all of them)',
     },
     dismissible: { control: 'boolean' },
-  },
-  args: {
-    types: [],
-    dismissible: true,
-  },
+  }, DEFAULTS),
+  args: DEFAULTS,
 };
 
-export const Default = { render: (args) => flashMessages(args) };
+export const Default = withTwig((args) => flashMessages(args));
 
 export const OneType = {
   args: { types: ['error'] },
-  render: (args) => flashMessages(args),
+  ...withTwig((args) => flashMessages(args)),
 };
 
 export const NotDismissible = {
   args: { types: ['success'], dismissible: false },
-  render: (args) => flashMessages(args),
+  ...withTwig((args) => flashMessages(args)),
 };

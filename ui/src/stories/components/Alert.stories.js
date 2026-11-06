@@ -8,6 +8,8 @@ import exclamationTriangleFill from '../../../icons/bi/exclamation-triangle-fill
 import infoCircleFill from '../../../icons/bi/info-circle-fill.svg?raw';
 import xCircleFill from '../../../icons/bi/x-circle-fill.svg?raw';
 import uxIcon from '../ux-icon';
+import { joinNodes, markup, twigCall, withTwig } from '../twig-snippet';
+import { withDefaults } from '../story-defaults';
 // Twig: <twig:ui:Alert> (src/PrestaShopBundle/Twig/Component/Ui/Alert.php) renders this markup, keep both in sync.
 
 const ICONS = {
@@ -21,19 +23,30 @@ const ICONS = {
 // Same rule as alert.html.twig: only a danger alert interrupts screen readers.
 const role = (type) => (type === 'danger' ? 'alert' : 'status');
 
-// The markup of alert.html.twig for the given props; the content is the component's content block
-const alert = ({ type, icon, dismissible, content }) => {
+// The markup of alert.html.twig for the given props and the Twig call that renders it; the content is the content block,
+// attributes (class, style…) go on the alert like in Twig
+const alert = ({ type, icon, dismissible, content, ...attributes }) => {
   const iconSvg = ICONS[icon] ?? null;
   const classes = ['ps-alert', 'alert', `alert-${type}`];
   if (dismissible) classes.push('alert-dismissible', 'fade', 'show');
   if (iconSvg) classes.push('d-flex', 'align-items-start', 'gap-2');
+  if (attributes.class) classes.push(attributes.class);
+  const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
 
-  return `
-    <div class="${classes.join(' ')}" role="${role(type)}">
+  return {
+    html: `
+    <div class="${classes.join(' ')}" role="${role(type)}"${extra}>
       ${iconSvg ? `${uxIcon(iconSvg, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}<div class="ps-alert__content">${content}</div>` : content}
       ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
-    </div>`;
+    </div>`,
+    twig: twigCall('ui:Alert', { type, icon: iconSvg ? icon : undefined, dismissible, ...attributes }, DEFAULTS, [markup(content)]),
+  };
 };
+
+const column = (html) => `<div class="d-flex flex-column gap-2">${html}</div>`;
+
+// Alert.php defaults (no icon: the control's "none")
+const DEFAULTS = { type: 'info', icon: null, dismissible: false };
 
 export default {
   title: 'Components/Alert',
@@ -49,7 +62,7 @@ export default {
       },
     },
   },
-  argTypes: {
+  argTypes: withDefaults({
     type: {
       control: 'select',
       options: ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'],
@@ -62,86 +75,41 @@ export default {
     },
     dismissible: { control: 'boolean', description: 'Close button' },
     content: { control: 'text', description: 'The content block (HTML)' },
-  },
+  }, DEFAULTS),
   args: {
-    type: 'info',
+    ...DEFAULTS,
     icon: 'none',
-    dismissible: false,
     content: 'A simple alert — check it out!',
   },
 };
 
-export const Default = { render: (args) => alert(args) };
+export const Default = withTwig((args) => alert(args));
 
-export const AllVariants = {
-  render: () => `
-    <div class="d-flex flex-column gap-2">
-      ${['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
-        .map(
-          (v) => `<div class="ps-alert alert alert-${v}" role="${role(v)}">A simple <strong>${v}</strong> alert — check it out!</div>`
-        )
-        .join('')}
-    </div>
-  `,
-};
+export const AllVariants = withTwig(() => joinNodes(
+  ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
+    .map((type) => alert({ type, content: `A simple <strong>${type}</strong> alert — check it out!` })),
+  column,
+));
 
-export const WithIcon = {
-  render: () => `
-    <div class="d-flex flex-column gap-2">
-      <div class="ps-alert alert alert-info d-flex align-items-start gap-2" role="status">
-        ${uxIcon(infoCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div class="ps-alert__content">An example alert with an icon</div>
-      </div>
-      <div class="ps-alert alert alert-success d-flex align-items-start gap-2" role="status">
-        ${uxIcon(checkCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div class="ps-alert__content">A success alert with an icon</div>
-      </div>
-      <div class="ps-alert alert alert-warning d-flex align-items-start gap-2" role="status">
-        ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div class="ps-alert__content">A warning alert with an icon</div>
-      </div>
-      <div class="ps-alert alert alert-danger d-flex align-items-start gap-2" role="alert">
-        ${uxIcon(xCircleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div class="ps-alert__content">A danger alert with an icon</div>
-      </div>
-      <div class="ps-alert alert alert-warning d-flex align-items-start gap-2 w-50" role="status">
-        ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div class="ps-alert__content">A long warning that wraps on several lines keeps its icon on the first line.</div>
-      </div>
-      <div class="ps-alert alert alert-warning d-flex align-items-start gap-2" style="max-width: 18rem" role="status">
-        ${uxIcon(exclamationTriangleFill, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
-        <div class="ps-alert__content">Rename the /admin folder, for example to <code>admin482k3j9x2qv8mzt0wpl/</code>. A long word breaks inside the box. <a href="#">A link</a> takes the alert color.</div>
-      </div>
-    </div>
-  `,
-};
+export const WithIcon = withTwig(() => joinNodes([
+  alert({ type: 'info', icon: 'bi:info-circle-fill', content: 'An example alert with an icon' }),
+  alert({ type: 'success', icon: 'bi:check-circle-fill', content: 'A success alert with an icon' }),
+  alert({ type: 'warning', icon: 'bi:exclamation-triangle-fill', content: 'A warning alert with an icon' }),
+  alert({ type: 'danger', icon: 'bi:x-circle-fill', content: 'A danger alert with an icon' }),
+  alert({ type: 'warning', icon: 'bi:exclamation-triangle-fill', class: 'w-50', content: 'A long warning that wraps on several lines keeps its icon on the first line.' }),
+  alert({ type: 'warning', icon: 'bi:exclamation-triangle-fill', style: 'max-width: 18rem', content: 'Rename the /admin folder, for example to <code>admin482k3j9x2qv8mzt0wpl/</code>. A long word breaks inside the box. <a href="#">A link</a> takes the alert color.' }),
+], column));
 
-export const Dismissible = {
-  render: () => `
-    <div class="d-flex flex-column gap-2">
-      <div class="ps-alert alert alert-warning alert-dismissible fade show" role="status">
-        <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-      <div class="ps-alert alert alert-success alert-dismissible fade show" role="status">
-        <strong>Well done!</strong> You successfully read this important alert message.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-      <div class="ps-alert alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Oh snap!</strong> Change a few things up and try submitting again.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    </div>
-  `,
-};
+export const Dismissible = withTwig(() => joinNodes([
+  alert({ type: 'warning', dismissible: true, content: '<strong>Holy guacamole!</strong> You should check in on some of those fields below.' }),
+  alert({ type: 'success', dismissible: true, content: '<strong>Well done!</strong> You successfully read this important alert message.' }),
+  alert({ type: 'danger', dismissible: true, content: '<strong>Oh snap!</strong> Change a few things up and try submitting again.' }),
+], column));
 
 // A flash message whose first sentence is its point, in <strong> (LoginController's "Check your inbox.")
-export const StrongFirstSentence = {
-  render: () => alert({
-    type: 'info',
-    icon: 'bi:info-circle-fill',
-    dismissible: true,
-    content: '<p class="mb-0"><strong>Check your inbox.</strong><br/>If an account exists for this email address, you\'ll receive a link to reset your password. You can request a new link every 6 hours.</p>',
-  }),
-};
-
+export const StrongFirstSentence = withTwig(() => alert({
+  type: 'info',
+  icon: 'bi:info-circle-fill',
+  dismissible: true,
+  content: '<p class="mb-0"><strong>Check your inbox.</strong><br/>If an account exists for this email address, you\'ll receive a link to reset your password. You can request a new link every 6 hours.</p>',
+}));

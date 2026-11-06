@@ -1,0 +1,43 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// <twig:ui:Layout:Tiles>: equal columns for repeated items, one per line on phones, more as the width grows.
+// The items stay the direct children (a Twig content block cannot wrap each one), so it is a CSS grid, not a Bootstrap .row.
+$component-name: ps-tiles;
+
+.#{$component-name} {
+  grid-template-columns: repeat(var(--ps-tiles-columns, 1), minmax(0, 1fr));
+
+  // Small items: two per line on phones already
+  &--6 {
+    --ps-tiles-columns: 2;
+  }
+
+  @include media-breakpoint-up(md) {
+    &--2,
+    &--4 {
+      --ps-tiles-columns: 2;
+    }
+
+    &--6 {
+      --ps-tiles-columns: 3;
+    }
+  }
+
+  @include media-breakpoint-up(lg) {
+    &--3 {
+      --ps-tiles-columns: 3;
+    }
+  }
+
+  @include media-breakpoint-up(xl) {
+    &--4 {
+      --ps-tiles-columns: 4;
+    }
+
+    &--6 {
+      --ps-tiles-columns: 6;
+    }
+  }
+}

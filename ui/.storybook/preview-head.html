@@ -2,7 +2,16 @@
 <style>
   /* Docs story canvas follows Bootstrap color mode — overrides Storybook's hardcoded white wrapper */
   .docs-story {
-    background-color: var(--bs-body-bg) !important;
+    background-color: var(--psk-body-bg) !important;
+  }
+
+  /* Stories in the docs page sit inside Storybook's docs text (Nunito Sans, 14px): give them the kit body font back */
+  .docs-story .sb-story {
+    font-family: var(--psk-body-font-family);
+    font-size: var(--psk-body-font-size);
+    font-weight: var(--psk-body-font-weight);
+    line-height: var(--psk-body-line-height);
+    color: var(--psk-body-color);
   }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com" />

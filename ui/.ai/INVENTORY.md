@@ -37,7 +37,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 
 | Status | Name | When | What |
 |--------|------|------|------|
-| - [ ] | Story markup parity test | With the first layouts (Stack, Cluster) | Render each `<twig:ui:*>` component and its story with the same props, compare classes and hooks (`data-ps-*`, `role`, `aria-*`); run in CI. `story-parity.mjs` only checks props: it missed the outdated FlashMessages story markup (2026-11-05). |
+| - [x] | Story markup parity test | With the first layouts (Stack, Cluster) | Done 2026-11-06: `StoryMarkupTest` renders each story's Twig code through the real component and compares the whole markup with the story HTML (snapshot written by `story-markup.mjs`, kept current by `story-parity.mjs` in CI). Would have caught the outdated FlashMessages story markup (2026-11-05). |
 
 ### Layouts
 
@@ -45,7 +45,8 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 |---|--------|------|------|-------|----------|------------|------------|-----------------|
 | 9 | - [ ] | [`<twig:ui:Layout:Stack>`](#9-twiguilayoutstack) | layout | 140 | 4 | S | - | no |
 | 10 | - [ ] | [`<twig:ui:Layout:Cluster>`](#10-twiguilayoutcluster) | layout | 110 | 6 | S | - | no |
-| 11 | - [ ] | [`<twig:ui:Layout:Columns>`](#11-twiguilayoutcolumns) | layout | 20 | 4 | S | - | no |
+| 11 | dropped | [`<twig:ui:Layout:Columns>`](#11-twiguilayoutcolumns) | layout | 20 | 4 | S | - | no |
+| 11b | - [ ] | `<twig:ui:Layout:Tiles>` (equal items, from #11; steps follow the screen width: in a narrow area a page sets `--ps-tiles-columns`; revisit with container-based steps if that repeats) | layout | - | - | S | - | no |
 | 20 | - [ ] | [`<twig:ui:Layout:Page>`](#20-twiguilayoutpage) | layout | 150 | 5 | XL | `<twig:ui:Header>`, `<twig:ui:SideMenu>`, `<twig:ui:Breadcrumb>`, `<twig:ui:Tabs>`, `<twig:ui:Button>`, `<twig:ui:Dropdown>`, `<twig:ui:Offcanvas>`, `<twig:ui:Alert> (extend)`, `<twig:ui:Toast>`, `<twig:ui:Layout:Cluster>` | yes |
 | 21 | - [ ] | [`<twig:ui:Layout:Standalone>`](#21-twiguilayoutstandalone) | layout | 7 | 3 | M | `<twig:ui:Alert> (extend)`, `<twig:ui:Card>`, `<twig:ui:Link>`, `<twig:ui:Layout:Stack>` | no |
 | 30 | - [ ] | [`<twig:ui:Layout:FormSection>`](#30-twiguilayoutformsection) | layout | 110 | 1 | S | `<twig:ui:FormRow> + ui_kit_layout form theme` | no |
@@ -605,6 +606,8 @@ Horizontal row of actions or inline items that wraps and aligns (start, end, bet
 
 Responsive columns for main + side panels, two equal info columns, centred narrow content and card groups; stacks under a breakpoint.
 
+> **Dropped on 2026-11-05** (`DECISIONS.md` #34): no Columns layout. Equal items (dashboard zones, logo cards, card groups, KPI rows) go to `<twig:ui:Layout:Tiles>` (`columns` 2, 3, 4, 6). A main + side split is placed by the page, or by the layout that needs it (`<twig:ui:Layout:Page>` #20 first), with the Bootstrap grid. Rules settled while designing it, to keep wherever a split is built: the side is never wider than main (`sideWidth` quarter 9/3, third 8/4, half 6/6) and its place is a position (start, end) that the DOM order follows; one breakpoint for the whole back office; an empty side gives main the full width; the side can be an `<aside>` with an accessible name; a sticky side starts at the breakpoint, offset by `--ps-columns-sticky-top`, under dropdowns; never a `main` tag (the shell owns `<main>`).
+
 - Role: layout, kind: layout, complexity: S, pages: 20
 - Sections: page content, view pages, dashboard zones, logo cards
 - Builds on: none (Bootstrap grid)
@@ -1021,6 +1024,7 @@ The one page template: places the header, side menu and the fixed slots title, b
 - multistore header slot
 - hook slots kept in place (displayDashboardToolbarTopMenu, displayDashboardTop, displayAdminAfterHeader)
 - skip link + <main> landmark, h1 always
+- optional side region next to the content (order and customer summaries, permission profiles, import help): rules carried from #11 (dropped)
 - print: hide chrome
 
 **Inconsistencies to harmonize**

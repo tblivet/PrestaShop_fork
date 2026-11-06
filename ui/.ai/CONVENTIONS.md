@@ -38,7 +38,7 @@ Two kinds of `<twig:ui:*>`, never mixed (`DECISIONS.md` #24):
 
 | | Component | Layout |
 |---|---|---|
-| Is | One element: look, content, states, behaviour (`ui:Button`, `ui:Badge`, `ui:Alert`, `ui:Modal`, `ui:Grid`) | The arrangement of elements (`ui:Layout:Page`, `ui:Layout:Stack`, `ui:Layout:Cluster`, `ui:Layout:Columns`, `ui:Layout:FormSection`) |
+| Is | One element: look, content, states, behaviour (`ui:Button`, `ui:Badge`, `ui:Alert`, `ui:Modal`, `ui:Grid`) | The arrangement of elements (`ui:Layout:Page`, `ui:Layout:Stack`, `ui:Layout:Cluster`, `ui:Layout:Tiles`, `ui:Layout:FormSection`) |
 | Owns | Its inner padding, borders, colors, typography, its own parts | The space between its children (`gap`), alignment, wrapping, columns, responsive stacking, the page slots |
 | Never | Outer margin, position, width or alignment taken from where it is used; a layout inside it | Styles, classes or props of its children; a child's look or behaviour |
 | Name, folder | `ui:{Name}`, `Twig/Component/Ui/`, `scss/components/`, Storybook "Components" | `ui:Layout:{Name}`, `Twig/Component/Ui/Layout/`, `scss/layout/`, Storybook "Layouts" |
@@ -62,6 +62,7 @@ Templates write `<twig:ui:*>` components and layouts, not raw Bootstrap markup (
 - **Compose only what is generic; own what is specific**: a component reuses another when it needs it exactly as it is, through its normal props (a menu of actions made of standard buttons). When a part belongs to one component (its structure, state or behaviour are tied to it), the component owns that part as a BEM element instead: the show/hide button of `ui:PasswordField` is `ps-password-field__toggle`, not a generic icon button. A sign of the wrong choice: a generic component growing a prop only one parent uses (`pressedIcon` for the password field).
 - **A missing case goes into the component**: add the variant, slot or prop, with its story and test, instead of writing raw markup in the page.
 - **The story shows every prop**: a `<twig:ui:*>` prop is named in its story's `**Props**` line and has a control (`argTypes`); markup-wiring props ending in `Id` need the docs line only. Adding, renaming or removing a prop updates the story in the same change. `node ui/.ai/bin/story-parity.mjs` checks it (CI too). Content that is not a prop (a bold first sentence, a link in the message) is shown as a story state, never presented as an option.
+- **The story shows what the component renders**: every story of a `<twig:ui:*>` component is built with `withTwig` (`ui/src/stories/twig-snippet.js`), so its HTML and its Twig code come from one builder and "Show code" gives both. `node ui/.ai/bin/story-markup.mjs` snapshots each story's Twig code and HTML into `tests/Integration/PrestaShopBundle/Twig/Component/Ui/story-markup.json`; `StoryMarkupTest` renders every Twig call through the real component and compares it with the HTML (as DOM trees: attribute order, class order and whitespace don't count). A change to a component template or to a story regenerates the snapshot in the same change; `story-parity.mjs` fails on a stale snapshot or a story without Twig code.
 
 ## JS hooks: `data-ps-*`
 

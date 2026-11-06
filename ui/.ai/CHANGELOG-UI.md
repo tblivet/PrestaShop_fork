@@ -160,3 +160,9 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - Password strength and policy (reset page, Employee and Customer forms, the Employee change-password control): checked on `input` (was `keyup`), so a paste, a password manager, a suggested password or dictation is checked too; such a password was refused as not meeting the requirements.
 - Alerts: `text-wrap: pretty`, so a short last word does not sit alone on its line.
 - Busy buttons (kit-wide): `data-ps-state="loading"` on the button (set by `submit-once.js`, usable by any script) lays the spinner over the label, which stays in place with a transparent text fill, so the button keeps its size and the buttons beside it do not move (the spinner used to be inserted before the label and widen the button). Shown in the Button "States" story.
+
+## Stories show their Twig code, checked against the components — 2026-11-06
+
+**Markup**
+- Every story of a `<twig:ui:*>` component (Alert, FlashMessages, PasswordField, Layout:Stack, Layout:Cluster, Layout:Tiles) shows its Twig call under the HTML in "Show code", and the controls table shows each prop's default.
+- `StoryMarkupTest` renders each story's Twig code through the real component and fails when the story HTML differs; `node ui/.ai/bin/story-markup.mjs` rewrites its snapshot after a story or template change, and `story-parity.mjs` (lint CI) fails when the snapshot is stale or a story has no Twig code.
