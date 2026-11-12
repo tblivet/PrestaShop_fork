@@ -43,10 +43,10 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 
 | # | Status | Name | Kind | Pages | Sections | Complexity | Depends on | Design workflow |
 |---|--------|------|------|-------|----------|------------|------------|-----------------|
-| 9 | - [ ] | [`<twig:ui:Layout:Stack>`](#9-twiguilayoutstack) | layout | 140 | 4 | S | - | no |
-| 10 | - [ ] | [`<twig:ui:Layout:Cluster>`](#10-twiguilayoutcluster) | layout | 110 | 6 | S | - | no |
+| 9 | - [x] | [`<twig:ui:Layout:Stack>`](#9-twiguilayoutstack) | layout | 140 | 4 | S | - | no |
+| 10 | - [x] | [`<twig:ui:Layout:Cluster>`](#10-twiguilayoutcluster) | layout | 110 | 6 | S | - | no |
 | 11 | dropped | [`<twig:ui:Layout:Columns>`](#11-twiguilayoutcolumns) | layout | 20 | 4 | S | - | no |
-| 11b | - [ ] | `<twig:ui:Layout:Tiles>` (equal items, from #11; steps follow the screen width: in a narrow area a page sets `--ps-tiles-columns`; revisit with container-based steps if that repeats) | layout | - | - | S | - | no |
+| 11b | - [x] | `<twig:ui:Layout:Tiles>` (equal items, from #11; steps follow the screen width: in a narrow area a page sets `--ps-tiles-columns`; revisit with container-based steps if that repeats) | layout | - | - | S | - | no |
 | 20 | - [ ] | [`<twig:ui:Layout:Page>`](#20-twiguilayoutpage) | layout | 150 | 5 | XL | `<twig:ui:Header>`, `<twig:ui:SideMenu>`, `<twig:ui:Breadcrumb>`, `<twig:ui:Tabs>`, `<twig:ui:Button>`, `<twig:ui:Dropdown>`, `<twig:ui:Offcanvas>`, `<twig:ui:Alert> (extend)`, `<twig:ui:Toast>`, `<twig:ui:Layout:Cluster>` | yes |
 | 21 | - [ ] | [`<twig:ui:Layout:Standalone>`](#21-twiguilayoutstandalone) | layout | 7 | 3 | M | `<twig:ui:Alert> (extend)`, `<twig:ui:Card>`, `<twig:ui:Link>`, `<twig:ui:Layout:Stack>` | no |
 | 30 | - [ ] | [`<twig:ui:Layout:FormSection>`](#30-twiguilayoutformsection) | layout | 110 | 1 | S | `<twig:ui:FormRow> + ui_kit_layout form theme` | no |
