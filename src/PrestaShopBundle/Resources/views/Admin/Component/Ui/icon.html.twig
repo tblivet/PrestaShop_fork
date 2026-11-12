@@ -1,0 +1,14 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set classes = ['ps-icon'] -%}
+{%- if size != 'md' -%}
+  {%- set classes = classes|merge(['ps-icon--' ~ size]) -%}
+{%- endif -%}
+{%- if flipRtl -%}
+  {%- set classes = classes|merge(['ps-icon--flip-rtl']) -%}
+{%- endif -%}
+{#- Named when it carries meaning on its own, hidden when the text next to it already says it -#}
+{%- set a11y = label ? {role: 'img', 'aria-label': label} : {'aria-hidden': 'true'} -%}
+{{- ux_icon(this.iconName, attributes.defaults({class: classes|join(' ')}|merge(a11y)).all()) -}}

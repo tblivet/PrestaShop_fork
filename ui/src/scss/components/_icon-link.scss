@@ -3,17 +3,14 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // Icon link overrides — https://getbootstrap.com/docs/5.3/helpers/icon-link/
+// Like Bootstrap's own `.icon-link > .bi`, these rules place the <twig:ui:Icon> of the link.
 
-// When the text wraps, the icon stays on the first line: it is sized to the text and gets the text's line height
-// (1.2 = $line-height-base 1.5 / 1.25)
+// When the text wraps, the icon stays on the first line, centred on it
 .icon-link {
   align-items: flex-start;
 
-  > .material-symbols-outlined {
-    flex-shrink: 0;
-    overflow: hidden;
-    font-size: 1.25em;
-    line-height: 1.2;
+  > .ps-icon {
+    margin-block: calc((1lh - var(--ps-icon-size)) / 2);
     transition: transform 0.2s ease-in-out;
   }
 }
@@ -21,7 +18,7 @@
 .icon-link-hover {
   &:hover,
   &:focus-visible {
-    > .material-symbols-outlined {
+    > .ps-icon {
       transform: var(--#{$prefix}icon-link-transform, #{$icon-link-icon-transform});
     }
   }

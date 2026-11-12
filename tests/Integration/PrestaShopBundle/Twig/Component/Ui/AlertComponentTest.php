@@ -35,11 +35,11 @@ class AlertComponentTest extends KernelTestCase
 
     public function testRendersDismissibleAlertWithIcon(): void
     {
-        $html = $this->render('<twig:ui:Alert type="info" icon="bi:info-circle-fill" dismissible class="mb-0">{{ message }}</twig:ui:Alert>', ['message' => 'Hello']);
+        $html = $this->render('<twig:ui:Alert type="info" icon="info" dismissible class="mb-0">{{ message }}</twig:ui:Alert>', ['message' => 'Hello']);
 
         $this->assertStringContainsString('class="ps-alert alert alert-info alert-dismissible fade show d-flex align-items-start gap-2 mb-0"', $html);
         $this->assertStringContainsString('role="status"', $html);
-        $this->assertStringContainsString('<svg', $html);
+        $this->assertStringContainsString('<svg width="1em" height="1em" fill="currentColor" viewBox="0 -960 960 960" class="ps-icon mt-1" aria-hidden="true">', $html);
         $this->assertStringContainsString('<div class="ps-alert__content">Hello</div>', $html);
         $this->assertStringContainsString('data-bs-dismiss="alert"', $html);
     }

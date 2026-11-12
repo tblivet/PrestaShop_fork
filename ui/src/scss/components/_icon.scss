@@ -1,0 +1,43 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// <twig:ui:Icon> (Admin/Component/Ui/icon.html.twig): an inline SVG sized by the text around it, so it is in place with
+// the first paint, unlike a font icon.
+
+$component-name: ps-icon;
+
+.#{$component-name} {
+  --#{$component-name}-size: 1em;
+
+  flex-shrink: 0;
+  width: var(--#{$component-name}-size);
+  height: var(--#{$component-name}-size);
+  // Centred on the capital letters (0.7em high) whatever its size; in a flex row the parent aligns it instead
+  vertical-align: calc(0.35em - var(--#{$component-name}-size) / 2);
+
+  &--xs {
+    --#{$component-name}-size: 0.75em;
+  }
+
+  &--sm {
+    --#{$component-name}-size: 0.875em;
+  }
+
+  &--lg {
+    --#{$component-name}-size: 1.25em;
+  }
+
+  &--xl {
+    --#{$component-name}-size: 1.5em;
+  }
+
+  &--xxl {
+    --#{$component-name}-size: 2em;
+  }
+
+  // Arrows and chevrons point the reading direction
+  &--flip-rtl:dir(rtl) {
+    transform: scaleX(-1);
+  }
+}

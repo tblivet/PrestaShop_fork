@@ -179,3 +179,22 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Behaviour**
 - Spacing on the gap scale: title to first field 2rem → 1.5rem, a flash message to the first field 1rem → 1.5rem, logo to title 0.75rem → 1rem, card to copyright 2rem → 3rem, copyright to social links unchanged (1.5rem), required actions title to alert 2rem → 1.5rem.
+
+## Icons as SVG: `<twig:ui:Icon>` — 2026-11-12
+
+`Twig/Component/Ui/Icon.php`, `Component/Ui/icon.html.twig`, `components/_icon.scss`, `ui/icons/`, and every kit icon: Alert, FlashMessages, PasswordField, the password requirements, the login layout.
+
+**Markup**
+- Kit icons are inline `<svg class="ps-icon …">` instead of `<i>`/`<span class="material-symbols-outlined">` (back link, password toggle, password requirements) or `<svg>` from `bi:*` files (alerts, flash messages, social links).
+- `<twig:ui:Alert icon="…">` takes a Material Symbols name, shown filled: `bi:x-circle-fill` → `cancel`, `bi:check-circle-fill` → `check_circle`, `bi:exclamation-triangle-fill` → `warning`, `bi:info-circle-fill` → `info`. FlashMessages uses those four.
+- `ui/icons/bi/` is removed; the social logos moved to `ui/icons/brand/` (`bi:github` → `brand:github`, also in the old theme's login layout).
+- PasswordField icons: `fs-5 lh-1` → `ps-icon--xl`. Password requirements render three icons (`ps-password-feedback__icon--unmet`, `--met`, `--failed`) shown by the requirement's `data-ps-state`; the kit no longer has `data-ps-ref="password-requirement-icon"` (the old theme keeps it).
+- `.icon-link` rules target `.ps-icon` instead of `.material-symbols-outlined`.
+
+**Behaviour**
+- Kit pages no longer download the Material Symbols font (3.96 MB): icons show with the first paint and do not shift the layout.
+- Icon sizes follow the text (em): the password toggle icon is 21px (was 20px), the requirement icons 1.25em (was 1.125em), with the tip indent following.
+- A missing icon name fails the render (Iconify fallback off) instead of being fetched from api.iconify.design.
+
+**Old theme**
+- Unchanged, apart from the social logos' new names.

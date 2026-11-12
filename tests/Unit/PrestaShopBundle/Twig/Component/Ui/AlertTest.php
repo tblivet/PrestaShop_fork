@@ -22,8 +22,8 @@ class AlertTest extends TestCase
     public function testKeepsExtraAttributes(): void
     {
         $this->assertSame(
-            ['type' => 'danger', 'dismissible' => true, 'icon' => 'bi:x-circle-fill', 'class' => 'mb-0'],
-            (new Alert())->preMount(['type' => 'danger', 'dismissible' => true, 'icon' => 'bi:x-circle-fill', 'class' => 'mb-0'])
+            ['type' => 'danger', 'dismissible' => true, 'icon' => 'cancel', 'class' => 'mb-0'],
+            (new Alert())->preMount(['type' => 'danger', 'dismissible' => true, 'icon' => 'cancel', 'class' => 'mb-0'])
         );
     }
 

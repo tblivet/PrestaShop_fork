@@ -92,7 +92,7 @@ Same vocabulary as the Hummingbird front theme.
 The Bootstrap 4 theme may break on the feature branch (`ui/.ai/DECISIONS.md`): a kit page does not have to keep shared markup working with `PS_UI_KIT=0`.
 
 - **Fork rather than bend**: when a shared helper, form theme or script gets in the way, give the kit its own (`Ui/` template, `ui_kit_layout.html.twig`, a `_ui` entry) instead of making one file serve both themes.
-- **Theme-specific bits** that stay shared go through the `ui_kit` global: `ui_kit ? 'material-symbols-outlined' : 'material-icons'`.
+- **Theme-specific bits** that stay shared go through the `ui_kit` global: `ui_kit ? 'visually-hidden' : 'sr-only'`, or a kit branch rendering `<twig:ui:Icon>` where the old theme keeps its font icon (`Helpers/password_feedback.html.twig`).
 - **Record what changes for others** in `ui/.ai/CHANGELOG-UI.md`: removed or renamed classes and ids, moved hooks, changed strings. Module developers and the final UI-test pass rely on it.
 
 ## Page shell
@@ -104,7 +104,7 @@ Every kit page renders in the one page template (title, breadcrumb, actions, tab
 Check these in every template and story before committing:
 
 - **Native first**: `<button>` for actions, `<a href>` for navigation, real `<label for>` on every field. ARIA only fills a gap HTML cannot.
-- **Icons**: decorative icons get `aria-hidden="true"`. An icon-only control gets an `aria-label` (translated), and the icon inside stays hidden.
+- **Icons**: always `<twig:ui:Icon>`, never an icon font or a hand-written `<svg>`. It is hidden from screen readers unless given a `label`: give one only when the icon is the only thing saying what it means. An icon-only control gets an `aria-label` (translated), and the icon inside stays hidden. An icon whose state changes (a toggle, a requirement met) is one icon per state, picked by the ARIA state or `data-ps-state` in CSS, not a script rewriting it.
 - **Never color alone**: a state also changes shape or text (`radio_button_unchecked` → `check_circle`, not grey → green only). Text contrast ≥ 4.5:1, large text and UI parts ≥ 3:1.
 - **Dynamic messages**: updates appear in a live region that exists before the update — `role="status"` (polite) for progress and hints, `role="alert"` only for blocking errors. Debounce what changes while typing.
 - **Help and errors**: link them to their field with `aria-describedby`; set `aria-invalid="true"` on a field in error.

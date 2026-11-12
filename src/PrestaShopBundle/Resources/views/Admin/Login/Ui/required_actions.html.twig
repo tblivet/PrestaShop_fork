@@ -11,7 +11,7 @@
   <twig:ui:Layout:Stack gap="lg">
     <h1 class="ps-login__title mb-0">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
     <twig:ui:Layout:Stack>
-      <twig:ui:Alert type="warning" icon="bi:exclamation-triangle-fill">
+      <twig:ui:Alert type="warning" icon="warning">
         <p>{{ 'For security reasons, do the following before you sign in:'|trans({}, 'Admin.Login.Notification') }}</p>
         <ul class="mb-0">
           {% for requiredAction in requiredActions %}

@@ -4,6 +4,9 @@
  */
 // Twig: <twig:ui:PasswordField> (src/PrestaShopBundle/Twig/Component/Ui/PasswordField.php) renders this markup, keep both in sync.
 // The kit form theme (ui_kit_layout.html.twig, password_widget) renders every PasswordType through it.
+import visibility from '../../../icons/material-symbols/visibility.svg?raw';
+import visibilityOff from '../../../icons/material-symbols/visibility-off.svg?raw';
+import uiIcon from '../ui-icon';
 import { markup, twigCall, withTwig } from '../twig-snippet';
 
 // The markup around and inside password_field.html.twig, and the hand-written Twig call (the label and the error stay outside)
@@ -18,8 +21,8 @@ const field = ({ id, label = 'Password', invalid = false, message = '' }) => {
   <div class="ps-password-field input-group has-validation">
     ${input}
     <button class="ps-password-field__toggle btn btn-primary d-inline-flex align-items-center justify-content-center" type="button" aria-label="${label ? `Show password: ${label}` : 'Show password'}" aria-controls="${id}" aria-pressed="false" data-ps-action="toggle-password">
-      <span class="ps-password-field__icon material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility</span>
-      <span class="ps-password-field__icon ps-password-field__icon--shown material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility_off</span>
+      ${uiIcon(visibility, { size: 'xl', class: 'ps-password-field__icon' })}
+      ${uiIcon(visibilityOff, { size: 'xl', class: 'ps-password-field__icon ps-password-field__icon--shown' })}
     </button>
   </div>
   ${error}`,

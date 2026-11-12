@@ -22,11 +22,11 @@ final class FlashMessages
 {
     /** Flash bag type => alert type and icon, in display order */
     public const TYPES = [
-        'error' => ['type' => 'danger', 'icon' => 'bi:x-circle-fill'],
-        'failure' => ['type' => 'danger', 'icon' => 'bi:x-circle-fill'],
-        'success' => ['type' => 'success', 'icon' => 'bi:check-circle-fill'],
-        'warning' => ['type' => 'warning', 'icon' => 'bi:exclamation-triangle-fill'],
-        'info' => ['type' => 'info', 'icon' => 'bi:info-circle-fill'],
+        'error' => ['type' => 'danger', 'icon' => 'cancel'],
+        'failure' => ['type' => 'danger', 'icon' => 'cancel'],
+        'success' => ['type' => 'success', 'icon' => 'check_circle'],
+        'warning' => ['type' => 'warning', 'icon' => 'warning'],
+        'info' => ['type' => 'info', 'icon' => 'info'],
     ];
 
     /** @var string[] */

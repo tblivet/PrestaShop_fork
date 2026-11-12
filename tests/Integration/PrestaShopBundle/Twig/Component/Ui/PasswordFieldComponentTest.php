@@ -34,7 +34,7 @@ class PasswordFieldComponentTest extends KernelTestCase
         $this->assertStringContainsString('aria-pressed="false"', $html);
         $this->assertStringContainsString('data-ps-action="toggle-password"', $html);
         $this->assertStringContainsString('aria-label="Show password"', $html);
-        $this->assertStringContainsString('ps-password-field__icon--shown material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility_off</span>', $html);
+        $this->assertStringContainsString('class="ps-icon ps-icon--xl ps-password-field__icon ps-password-field__icon--shown" aria-hidden="true"', $html);
         $this->assertLessThan(strpos($html, '<button'), strpos($html, '<input'));
     }
 

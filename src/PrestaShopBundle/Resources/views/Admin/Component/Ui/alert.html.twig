@@ -13,7 +13,7 @@
 <div{{ attributes.defaults({class: classes|join(' '), role: type == 'danger' ? 'alert' : 'status'}) }}>
   {% if icon %}
     {# mt-1 centres the 16px icon on the first 24px line, so it stays there when the text wraps #}
-    <twig:ux:icon :name="icon" width="16" height="16" class="flex-shrink-0 mt-1" aria-hidden="true"/>
+    <twig:ui:Icon :name="icon" filled class="mt-1"/>
     <div class="ps-alert__content">{% block content %}{% endblock %}</div>
   {% else %}
     {{ block('content') }}

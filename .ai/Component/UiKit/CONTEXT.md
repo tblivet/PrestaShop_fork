@@ -16,7 +16,7 @@ The process (checkpoints, done gates, records) is in [`ui/README.md`](../../../u
 | Back-office frame and page styles (`ps-` classes) | `ui/src/scss/layout/`, `ui/src/scss/pages/` |
 | Generic UI JS, `data-ps-*` hooks | `ui/src/js/` (`components/`, `selectors.js`, `compat/`) |
 | Storybook stories and page mockups | `ui/src/stories/`, `ui/src/playground/` |
-| Icons for `<twig:ux:icon>` and stories (read by PHP, ship in the release) | `ui/icons/` |
+| Icons for `<twig:ui:Icon>` and stories (read by PHP, ship in the release): Material Symbols, brand logos | `ui/icons/` |
 | Twig components (`<twig:ui:*>`) | `src/PrestaShopBundle/Twig/Component/Ui/`, templates in `src/PrestaShopBundle/Resources/views/Admin/Component/Ui/` |
 | Pages rendered with the kit | `Admin/Layout/Ui/`, `Admin/Login/Ui/` under `src/PrestaShopBundle/Resources/views/` |
 | Page logic | `admin-dev/themes/new-theme/js/pages/` (`*_ui` webpack entries) |
@@ -38,7 +38,7 @@ Storybook is the reference for the markup. Every change goes to both sides in th
 
 - **Toggle**: `PS_UI_KIT` (`0` in `.env`, set it to `1` in `.env.local`) is the `ui_kit` Twig global. A page switches with `{% extends ui_kit ? '…/Ui/page.html.twig' : '…/old_layout.html.twig' %}`. The `Ui/` template uses its own block names, so the old blocks stay untouched and unused.
 - **Twig components**: a class in `Twig/Component/Ui/` with `#[AsTwigComponent('ui:Name', template: …)]`, public props validated in a `#[PreMount]` `OptionsResolver` (`setIgnoreUndefined()` so `class` and other attributes pass through). Registered automatically.
-- **Icons**: `<twig:ux:icon name="bi:…">` reads local SVGs from `ui/icons/` (commit new ones, never rely on the Iconify fallback). Stories import the same files through `ui/src/stories/ux-icon.js`. Kit markup uses the Material Symbols font (`material-symbols-outlined`), not `material-icons`.
+- **Icons**: `<twig:ui:Icon name="arrow_back"/>` renders an inline SVG from `ui/icons/` (DECISIONS.md #35): every Material Symbol is committed in `ui/icons/material-symbols/` (`ui/.ai/bin/sync-icons.mjs`), logos in `ui/icons/brand/` (`brand:github`). Iconify is off, so a missing icon fails the render. Stories render the same markup with `ui/src/stories/ui-icon.js`; Content/Icons searches the whole set. No icon font in kit markup.
 - **JS ownership**: if Storybook or a module could use it without a PrestaShop back end, it goes to `ui/src/js` (hooks in `selectors.js`). Otherwise it stays in new-theme. Both bind to `data-ps-*` attributes only.
 - **`ui.js` is a classic IIFE script**: it sets `window.bootstrap` and registers Bootstrap's jQuery plugins at once (`compat/jquery-plugins.js`, temporary until pages call `bootstrap.Modal`… directly). jQuery comes from core `js/jquery`, loaded before it.
 - **Webpack entries** in `admin-dev/themes/new-theme/.webpack/common.js` are grouped: entries loaded only with the toggle off (Bootstrap 4 + prestakit) first, then their `_ui` replacements, then the rest.

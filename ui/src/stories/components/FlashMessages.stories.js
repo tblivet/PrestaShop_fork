@@ -2,29 +2,29 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-import checkCircleFill from '../../../icons/bi/check-circle-fill.svg?raw';
-import exclamationTriangleFill from '../../../icons/bi/exclamation-triangle-fill.svg?raw';
-import infoCircleFill from '../../../icons/bi/info-circle-fill.svg?raw';
-import xCircleFill from '../../../icons/bi/x-circle-fill.svg?raw';
-import uxIcon from '../ux-icon';
+import cancelFill from '../../../icons/material-symbols/cancel-fill.svg?raw';
+import checkCircleFill from '../../../icons/material-symbols/check-circle-fill.svg?raw';
+import infoFill from '../../../icons/material-symbols/info-fill.svg?raw';
+import warningFill from '../../../icons/material-symbols/warning-fill.svg?raw';
+import uiIcon from '../ui-icon';
 import { twigCall, withTwig } from '../twig-snippet';
 import { withDefaults } from '../story-defaults';
 // Twig: <twig:ui:FlashMessages> (src/PrestaShopBundle/Twig/Component/Ui/FlashMessages.php) renders this markup, keep both in sync.
 
 const alert = (type, icon, role, message, dismissible) => `
   <div class="ps-alert alert alert-${type}${dismissible ? ' alert-dismissible fade show' : ''} d-flex align-items-start gap-2" role="${role}" data-ps-ref="flash-alert">
-    ${uxIcon(icon, { width: 16, height: 16, class: 'flex-shrink-0 mt-1', 'aria-hidden': 'true' })}
+    ${uiIcon(icon, { class: 'mt-1' })}
     <div class="ps-alert__content"><p class="mb-0">${message}</p></div>
     ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
   </div>`;
 
 // FlashMessages::TYPES: flash bag type => alert, in display order; one sample message each
 const TYPES = {
-  error: ['danger', xCircleFill, 'alert', 'The email address or password is incorrect.'],
-  failure: ['danger', xCircleFill, 'alert', 'We couldn\'t send the reset link. Try again later.'],
+  error: ['danger', cancelFill, 'alert', 'The email address or password is incorrect.'],
+  failure: ['danger', cancelFill, 'alert', 'We couldn\'t send the reset link. Try again later.'],
   success: ['success', checkCircleFill, 'status', 'Your password has been changed. You can now sign in.'],
-  warning: ['warning', exclamationTriangleFill, 'status', 'SSL is on, but your IP address is allowed to sign in without it, for maintenance or local access.'],
-  info: ['info', infoCircleFill, 'status', '<strong>Check your inbox.</strong><br/>If an account exists for this email address, you\'ll receive a link to reset your password.'],
+  warning: ['warning', warningFill, 'status', 'SSL is on, but your IP address is allowed to sign in without it, for maintenance or local access.'],
+  info: ['info', infoFill, 'status', '<strong>Check your inbox.</strong><br/>If an account exists for this email address, you\'ll receive a link to reset your password.'],
 };
 
 // The markup of flash_messages.html.twig when the flash bag holds one message of each of the given types, and its call

@@ -14,7 +14,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
  * Bootstrap 5 alert of the /ui kit, mirrors ui/src/stories/components/Alert.stories.js:
- * <twig:ui:Alert type="danger" icon="bi:x-circle-fill" dismissible>…</twig:ui:Alert>
+ * <twig:ui:Alert type="danger" icon="cancel" dismissible>…</twig:ui:Alert>
  */
 #[AsTwigComponent('ui:Alert', template: '@PrestaShop/Admin/Component/Ui/alert.html.twig')]
 final class Alert
@@ -25,7 +25,7 @@ final class Alert
 
     public bool $dismissible = false;
 
-    /** ux:icon name, e.g. "bi:info-circle-fill" (local files in ui/icons) */
+    /** <twig:ui:Icon> name, e.g. "info", shown filled */
     public ?string $icon = null;
 
     /**

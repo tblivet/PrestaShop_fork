@@ -2,161 +2,92 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// https://fonts.google.com/icons (Material Symbols Outlined)
-// Usage: <span class="icon">icon_name</span>
-// Icon names: https://fonts.google.com/icons?icon.style=Outlined
+// Every icon <twig:ui:Icon> can show: the Material Symbols of ui/icons/material-symbols (synced from Google's package
+// by ui/.ai/bin/sync-icons.mjs) and the logos of ui/icons/brand. Only the icons on screen are loaded.
+const files = import.meta.glob('../../../icons/{material-symbols,brand}/*.svg', { query: '?raw', import: 'default' });
+
+// Template names: arrow_back for material-symbols/arrow-back.svg, brand:github for brand/github.svg; filled styles are
+// the filled prop, not separate names
+// A filled style is the "-fill" file of an icon that exists without it (format_color_fill is an icon of its own)
+const icons = Object.keys(files)
+  .filter((path) => !(path.endsWith('-fill.svg') && files[path.replace(/-fill\.svg$/, '.svg')]))
+  .map((path) => {
+    const [, set, file] = path.match(/\/(material-symbols|brand)\/([^/]+)\.svg$/);
+
+    return { path, name: set === 'brand' ? `brand:${file}` : file.replaceAll('-', '_') };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const LIMIT = 120;
+
+const sized = (svg) => svg.replace('<svg ', '<svg class="ps-icon" aria-hidden="true" ');
+
 export default {
   title: 'Content/Icons',
+  parameters: {
+    docs: {
+      description: {
+        component: [
+          `**${icons.length} icons** ship with the back office: every [Material Symbols](https://fonts.google.com/icons) icon (outlined, and filled with the \`filled\` prop) and a few brand logos. Use them with \`<twig:ui:Icon name="…"/>\` (see Components/Icon); never with an icon font.`,
+          'They are SVG files: a page shows them with its first paint, at their size, and only reads the icons it uses. After a bump of `@material-symbols/svg-400`, run `node ui/.ai/bin/sync-icons.mjs` and commit `ui/icons/material-symbols`.',
+        ].join('\n\n'),
+      },
+    },
+  },
+  argTypes: {
+    filled: { control: 'boolean', description: 'Show the filled style' },
+  },
+  args: { filled: false },
 };
 
-const icon = (name, cls = '') => `<span class="icon ${cls}" title="${name}">${name}</span>`;
+export const Search = {
+  render: ({ filled }) => {
+    const root = document.createElement('div');
+    root.innerHTML = `
+      <label class="form-label" for="icon-search">Search ${icons.length} icons</label>
+      <input id="icon-search" type="search" class="form-control mb-2" placeholder="arrow, delete, brand…" autocomplete="off">
+      <p class="small text-body-secondary mb-3" aria-live="polite" data-ps-ref="count"></p>
+      <ul class="list-unstyled d-flex flex-wrap gap-2 mb-0" data-ps-ref="results"></ul>`;
 
-export const Overview = {
-  render: () => `
-    <p class="text-body-secondary mb-3 small">
-      Material Symbols Outlined — variable font. Use <code>.icon</code> class with the icon name as text content.
-    </p>
-    <div class="d-flex flex-wrap gap-3">
-      ${[
-        'home',
-        'search',
-        'settings',
-        'person',
-        'star',
-        'favorite',
-        'check_circle',
-        'cancel',
-        'info',
-        'warning',
-        'error',
-        'help',
-        'add',
-        'remove',
-        'edit',
-        'delete',
-        'share',
-        'download',
-        'arrow_forward',
-        'arrow_back',
-        'menu',
-        'close',
-        'more_vert',
-        'more_horiz',
-        'mail',
-        'notifications',
-        'lock',
-        'visibility',
-        'visibility_off',
-        'calendar_today',
-      ]
-        .map(
-          (name) => `
-        <div class="d-flex flex-column align-items-center gap-1 text-center" style="width:72px;">
-          ${icon(name)}
-          <span class="text-body-secondary" style="font-size:.65rem;word-break:break-all;">${name}</span>
-        </div>
-      `
-        )
-        .join('')}
-    </div>
-  `,
-};
+    const input = root.querySelector('input');
+    const count = root.querySelector('[data-ps-ref="count"]');
+    const results = root.querySelector('[data-ps-ref="results"]');
+    let search = 0;
 
-export const Sizes = {
-  render: () => `
-    <div class="d-flex align-items-end gap-4">
-      ${[
-        ['icon-sm', 'sm (.icon-sm)'],
-        ['', 'default (.icon)'],
-        ['icon-lg', 'lg (.icon-lg)'],
-      ]
-        .map(
-          ([cls, label]) => `
-        <div class="d-flex flex-column align-items-center gap-2">
-          ${icon('home', cls)}
-          <span class="text-body-secondary small">${label}</span>
-        </div>
-      `
-        )
-        .join('')}
-      <div class="d-flex flex-column align-items-center gap-2">
-        <span class="icon" style="font-size:3rem;">home</span>
-        <span class="text-body-secondary small">inline style</span>
-      </div>
-    </div>
-  `,
-};
+    const show = async () => {
+      const current = ++search;
+      const words = input.value.trim().toLowerCase().split(/[\s_-]+/).filter(Boolean);
+      const matches = icons.filter(({ name }) => words.every((word) => name.includes(word)));
+      const shown = matches.slice(0, LIMIT);
+      let svgs;
 
-export const FillVariation = {
-  render: () => `
-    <p class="text-body-secondary small mb-3">Toggle fill axis: <code>--icon-fill: 0</code> (outline) vs <code>--icon-fill: 1</code> (filled).</p>
-    <div class="d-flex gap-4">
-      ${['favorite', 'star', 'bookmark', 'thumb_up', 'check_circle', 'notifications']
-        .map(
-          (name) => `
-        <div class="d-flex gap-2">
-          <span class="icon icon-lg" title="outline">${name}</span>
-          <span class="icon icon-lg icon-filled" title="filled">${name}</span>
-        </div>
-      `
-        )
-        .join('')}
-    </div>
-  `,
-};
+      try {
+        svgs = await Promise.all(shown.map(({ path, name }) => {
+          const filledPath = path.replace(/\.svg$/, '-fill.svg');
 
-export const WeightVariation = {
-  render: () => `
-    <p class="text-body-secondary small mb-3">
-      Vary <code>--icon-wght</code> from 100 to 700 (matches the font's weight axis).
-    </p>
-    <div class="d-flex align-items-end gap-4">
-      ${[100, 200, 300, 400, 500, 600, 700]
-        .map(
-          (w) => `
-        <div class="d-flex flex-column align-items-center gap-2">
-          <span class="icon icon-lg" style="--icon-wght:${w};">settings</span>
-          <span class="text-body-secondary small">${w}</span>
-        </div>
-      `
-        )
-        .join('')}
-    </div>
-  `,
-};
+          return (filled && !name.startsWith('brand:') && files[filledPath] ? files[filledPath] : files[path])();
+        }));
+      } catch (error) {
+        count.textContent = `Icons could not be loaded: ${error.message}`;
 
-export const InContext = {
-  render: () => `
-    <div class="d-flex flex-column gap-3" style="max-width:400px;">
-      <button class="btn btn-primary d-inline-flex align-items-center gap-2">
-        <span class="icon">add</span> New item
-      </button>
-      <button class="btn btn-outline-danger d-inline-flex align-items-center gap-2">
-        <span class="icon">delete</span> Delete
-      </button>
-      <div class="alert alert-warning d-flex align-items-center gap-2" role="alert">
-        <span class="icon">warning</span>
-        <span>This action cannot be undone.</span>
-      </div>
-      <div class="input-group">
-        <span class="input-group-text"><span class="icon">search</span></span>
-        <input type="text" class="form-control" placeholder="Search…">
-      </div>
-      <ul class="list-group">
-        ${[
-          ['home', 'Dashboard'],
-          ['person', 'Profile'],
-          ['settings', 'Settings'],
-          ['lock', 'Security'],
-        ]
-          .map(
-            ([ico, label]) => `
-          <li class="list-group-item d-flex align-items-center gap-2">
-            <span class="icon text-primary">${ico}</span> ${label}
-          </li>`
-          )
-          .join('')}
-      </ul>
-    </div>
-  `,
+        return;
+      }
+
+      if (current !== search) {
+        return;
+      }
+
+      count.textContent = matches.length > LIMIT ? `${matches.length} icons, the first ${LIMIT} shown: refine the search` : `${matches.length} ${matches.length === 1 ? 'icon' : 'icons'}`;
+      results.innerHTML = shown.map(({ name }, index) => `
+        <li class="d-flex flex-column align-items-center gap-1 text-center p-2 border" style="width: 7.5rem">
+          <span class="fs-3">${sized(svgs[index])}</span>
+          <code class="small text-break">${name}</code>
+        </li>`).join('');
+    };
+
+    input.addEventListener('input', show);
+    show();
+
+    return root;
+  },
 };

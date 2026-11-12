@@ -55,7 +55,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 
 | # | Status | Name | Kind | Pages | Sections | Complexity | Depends on | Design workflow |
 |---|--------|------|------|-------|----------|------------|------------|-----------------|
-| 1 | - [ ] | [`<twig:ui:Icon>`](#1-twiguiicon) | content | 120 | 7 | S | - | no |
+| 1 | - [x] | [`<twig:ui:Icon>`](#1-twiguiicon) | content | 120 | 7 | S | - | no |
 | 2 | - [ ] | [`<twig:ui:Button>`](#2-twiguibutton) | action | 140 | 6 | M | `<twig:ui:Icon>` | no |
 | 3 | - [ ] | [`<twig:ui:IconButton>`](#3-twiguiiconbutton) | action | 45 | 6 | S | `<twig:ui:Button>`, `<twig:ui:Icon>` | no |
 | 4 | - [ ] | [`<twig:ui:Link>`](#4-twiguilink) | navigation | 30 | 5 | S | `<twig:ui:Icon>` | no |
@@ -108,20 +108,23 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 
 ### 1. `<twig:ui:Icon>`
 
-One icon element for the whole kit (Material Symbols ligature or ux/bi SVG), decorative by default (aria-hidden) or named with a label; replaces raw <i class="material-icons"> everywhere.
+One icon element for the whole kit, decorative by default (aria-hidden) or named with a label; replaces raw <i class="material-icons"> everywhere.
+
+Done 2026-11-12 as inline SVG, not a font (DECISIONS.md #35): every Material Symbol ships in `ui/icons/material-symbols/`, logos in `ui/icons/brand/`; used by Alert, FlashMessages, PasswordField, the password requirements and the login layout.
 
 - Role: component, kind: content, complexity: S, pages: 120
 - Sections: shell, grid, forms, cards, alerts, buttons, toolbar
-- Builds on: ui:Alert icon handling (ux bi:* icons); ui_kit ? 'material-symbols-outlined' : 'material-icons' switch
+- Builds on: ux:icon (local SVG files)
 - Depends on: -
 
 **Variants (props)**
 
 - name (required)
 - label: when set, role=img + aria-label; when absent, aria-hidden=true
-- size: sm | md | lg
-- flip-rtl: bool (arrow_back, keyboard_backspace, chevrons)
-- set: symbols | ux (bi:*) to keep the existing ui:Alert icons
+- size: xs | sm | md | lg | xl | xxl (em of the text, centred on its capitals)
+- flipRtl: bool (arrow_back, keyboard_backspace, chevrons)
+- name: a Material Symbols name, or brand:… for a logo (no set prop)
+- filled: bool (Material Symbols only)
 - attribute pass-through (class for color tokens only, data-ps-*)
 
 **Inconsistencies to harmonize**

@@ -14,6 +14,9 @@ framework:
 ux_icons:
   # Shared with Storybook (ui/src/stories import the same files)
   icon_dir: '%kernel.project_dir%/ui/icons'
+  # Every icon is a committed file (ui/.ai/bin/add-icon.mjs): a missing one fails instead of being fetched from Iconify
+  iconify:
+    enabled: false
 
 api_platform:
   # Swagger API doc is accessible from the BackOffice, you need to be logged in to access it

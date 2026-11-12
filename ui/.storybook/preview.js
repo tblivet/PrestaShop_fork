@@ -85,7 +85,8 @@ const preview = {
         root.querySelectorAll('.carousel').forEach((node) => bootstrap.Carousel.getOrCreateInstance(node));
       });
 
-      return html;
+      // A story may return an element with its listeners (Content/Icons search): hand it back as it is
+      return result;
     },
   ],
   parameters: {
