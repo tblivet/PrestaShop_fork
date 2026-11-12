@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@fontsource/ibm-plex-sans": "^5.2.8",
+    "@material-symbols/svg-400": "0.49.0",
     "@storybook/addon-a11y": "^8.6.18",
     "@storybook/addon-essentials": "^8.6.18",
     "@storybook/addon-links": "^8.6.18",
