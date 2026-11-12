@@ -10,4 +10,9 @@ $component-name: ps-flash-messages;
 .#{$component-name} {
   display: grid;
   gap: 0.5rem;
+
+  // Closing the last alert (or a page script removing them) leaves the wrapper empty: hidden, it takes no gap in its layout
+  &:not(:has(.ps-alert)) {
+    display: none;
+  }
 }

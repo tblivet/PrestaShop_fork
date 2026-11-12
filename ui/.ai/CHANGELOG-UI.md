@@ -166,3 +166,15 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Markup**
 - Every story of a `<twig:ui:*>` component (Alert, FlashMessages, PasswordField, Layout:Stack, Layout:Cluster, Layout:Tiles) shows its Twig call under the HTML in "Show code", and the controls table shows each prop's default.
 - `StoryMarkupTest` renders each story's Twig code through the real component and fails when the story HTML differs; `node ui/.ai/bin/story-markup.mjs` rewrites its snapshot after a story or template change, and `story-parity.mjs` (lint CI) fails when the snapshot is stale or a story has no Twig code.
+
+## Login pages on the layouts — 2026-11-06
+
+`Layout/Ui/login_layout.html.twig`, `Login/Ui/{login,reset_password,required_actions}.html.twig`, `pages/_login.scss`, the login playground mockup.
+
+**Markup**
+- `.ps-login__container` and `.ps-login__card-body` are `<twig:ui:Layout:Stack>` (gap `xl` and `md`), `.ps-login__social` a `<twig:ui:Layout:Cluster>`, grouped with `.ps-login__copyright` in a new `.ps-login__footer` (`<twig:ui:Layout:Stack gap="lg">`); each form holds a header stack (title, flash messages, form errors, intro) and a fields stack inside a `gap="lg"` stack; the forgot password buttons are a `<twig:ui:Layout:Cluster stackBelow="sm">`. Classes, ids and `data-ps-*` hooks are kept.
+- An emptied `<twig:ui:FlashMessages>` (last alert closed, or removed by the login script) is hidden, so it no longer leaves a gap in its layout.
+- `.ps-login__form` no longer lays out its children (no grid); `.ps-login__title`, `.ps-login__intro`, `.ps-login__logo-big` and `.ps-login__copyright` have no margins (titles and intro get `mb-0`).
+
+**Behaviour**
+- Spacing on the gap scale: title to first field 2rem → 1.5rem, a flash message to the first field 1rem → 1.5rem, logo to title 0.75rem → 1rem, card to copyright 2rem → 3rem, copyright to social links unchanged (1.5rem), required actions title to alert 2rem → 1.5rem.

@@ -19,67 +19,77 @@
 
   {# submit-once: the kit marks the button busy and ignores a second submit (ui/src/js/components/submit-once.js) #}
   {{ form_start(loginForm, {action: path('admin_login'), attr: loginForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? ' d-none' : ''), 'data-ps-action': 'submit-once'})}) }}
-    <h1 class="ps-login__title" data-ps-ref="panel-title">{{ 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
-    {% if not showRequestPasswordResetForm %}
-      <twig:ui:FlashMessages/>
-    {% endif %}
+    {# The panel header (title, messages), then the fields #}
+    <twig:ui:Layout:Stack gap="lg">
+      <twig:ui:Layout:Stack>
+        <h1 class="ps-login__title mb-0" data-ps-ref="panel-title">{{ 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
+        {% if not showRequestPasswordResetForm %}
+          <twig:ui:FlashMessages/>
+        {% endif %}
+        {{ form_errors(loginForm) }}
+      </twig:ui:Layout:Stack>
 
-    {{ form_errors(loginForm) }}
+      <twig:ui:Layout:Stack>
+        <div class="ps-login__form-group">
+          {{ form_label(loginForm.email) }}
+          {{ form_widget(loginForm.email, {attr: loginForm.email.vars.attr|merge({placeholder: 'name@example.com', autocomplete: 'email'})}) }}
+          {{ form_errors(loginForm.email) }}
+        </div>
 
-    <div class="ps-login__form-group">
-      {{ form_label(loginForm.email) }}
-      {{ form_widget(loginForm.email, {attr: loginForm.email.vars.attr|merge({placeholder: 'name@example.com', autocomplete: 'email'})}) }}
-      {{ form_errors(loginForm.email) }}
-    </div>
+        <div class="ps-login__form-group">
+          {{ form_label(loginForm.passwd) }}
+          {{ form_widget(loginForm.passwd, {attr: loginForm.passwd.vars.attr|merge({placeholder: loginForm.passwd.vars.label, autocomplete: 'current-password'})}) }}
+          {{ form_errors(loginForm.passwd) }}
+        </div>
 
-    <div class="ps-login__form-group">
-      {{ form_label(loginForm.passwd) }}
-      {{ form_widget(loginForm.passwd, {attr: loginForm.passwd.vars.attr|merge({placeholder: loginForm.passwd.vars.label, autocomplete: 'current-password'})}) }}
-      {{ form_errors(loginForm.passwd) }}
-    </div>
+        <div class="ps-login__form-group">
+          {{ form_widget(loginForm.stay_logged_in) }}
+        </div>
 
-    <div class="ps-login__form-group">
-      {{ form_widget(loginForm.stay_logged_in) }}
-    </div>
+        <div class="ps-login__form-group">
+          {{ form_widget(loginForm.submit_login, {attr: {class: 'btn-primary w-100'}}) }}
+        </div>
 
-    <div class="ps-login__form-group">
-      {{ form_widget(loginForm.submit_login, {attr: {class: 'btn-primary w-100'}}) }}
-    </div>
-
-    <div class="ps-login__form-group text-end">
-      {# A button: it switches panels in place, it does not navigate #}
-      <button
-        type="button"
-        id="{{ forgotPasswordLink.attr.id }}"
-        class="btn btn-link link-secondary small p-0"
-        aria-controls="{{ requestPasswordResetForm.vars.attr.id }}"
-        data-ps-action="{{ forgotPasswordLink.attr['data-ps-action'] }}"
-      >{{ forgotPasswordLink.text }}</button>
-    </div>
+        <div class="ps-login__form-group text-end">
+          {# A button: it switches panels in place, it does not navigate #}
+          <button
+            type="button"
+            id="{{ forgotPasswordLink.attr.id }}"
+            class="btn btn-link link-secondary small p-0"
+            aria-controls="{{ requestPasswordResetForm.vars.attr.id }}"
+            data-ps-action="{{ forgotPasswordLink.attr['data-ps-action'] }}"
+          >{{ forgotPasswordLink.text }}</button>
+        </div>
+      </twig:ui:Layout:Stack>
+    </twig:ui:Layout:Stack>
   {{ form_end(loginForm) }}
 
   {{ form_start(requestPasswordResetForm, {action: path('admin_request_password_reset'), attr: requestPasswordResetForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? '' : ' d-none'), 'data-ps-action': 'submit-once'})}) }}
-    <h1 class="ps-login__title" data-ps-ref="panel-title">{{ requestPasswordResetForm.vars.label }}</h1>
-    {% if showRequestPasswordResetForm %}
-      <twig:ui:FlashMessages/>
-    {% endif %}
+    <twig:ui:Layout:Stack gap="lg">
+      <twig:ui:Layout:Stack>
+        <h1 class="ps-login__title mb-0" data-ps-ref="panel-title">{{ requestPasswordResetForm.vars.label }}</h1>
+        {% if showRequestPasswordResetForm %}
+          <twig:ui:FlashMessages/>
+        {% endif %}
+        {{ form_errors(requestPasswordResetForm) }}
+        <p class="ps-login__intro small text-body-secondary text-center mb-0" id="{{ forgotIntroId }}">
+          {{- 'Enter your email address and we\'ll send you a link to reset your password.'|trans({}, 'Admin.Login.Feature') -}}
+        </p>
+      </twig:ui:Layout:Stack>
 
-    {{ form_errors(requestPasswordResetForm) }}
+      <twig:ui:Layout:Stack>
+        <div class="ps-login__form-group">
+          {{ form_label(forgotEmail) }}
+          {{ form_widget(forgotEmail, {attr: forgotEmail.vars.attr|merge({placeholder: 'name@example.com', autocomplete: 'email', 'aria-describedby': forgotIntroId, 'data-ps-ref': 'forgot-password-email'})}) }}
+          {{ form_errors(forgotEmail) }}
+        </div>
 
-    <p class="ps-login__intro small text-body-secondary text-center" id="{{ forgotIntroId }}">
-      {{- 'Enter your email address and we\'ll send you a link to reset your password.'|trans({}, 'Admin.Login.Feature') -}}
-    </p>
-
-    <div class="ps-login__form-group">
-      {{ form_label(forgotEmail) }}
-      {{ form_widget(forgotEmail, {attr: forgotEmail.vars.attr|merge({placeholder: 'name@example.com', autocomplete: 'email', 'aria-describedby': forgotIntroId, 'data-ps-ref': 'forgot-password-email'})}) }}
-      {{ form_errors(forgotEmail) }}
-    </div>
-
-    {# Stacked on mobile in reading order, so the visual order and the focus order stay the same #}
-    <div class="d-flex flex-column flex-sm-row justify-content-sm-end gap-2">
-      {{ form_widget(requestPasswordResetForm.buttons.cancel, {attr: requestPasswordResetForm.buttons.cancel.vars.attr|merge({class: 'btn-outline-secondary'})}) }}
-      {{ form_widget(requestPasswordResetForm.buttons.submit_login, {attr: {class: 'btn-primary'}}) }}
-    </div>
+        {# Stacked on mobile in reading order, so the visual order and the focus order stay the same #}
+        <twig:ui:Layout:Cluster justify="end" stackBelow="sm">
+          {{ form_widget(requestPasswordResetForm.buttons.cancel, {attr: requestPasswordResetForm.buttons.cancel.vars.attr|merge({class: 'btn-outline-secondary'})}) }}
+          {{ form_widget(requestPasswordResetForm.buttons.submit_login, {attr: {class: 'btn-primary'}}) }}
+        </twig:ui:Layout:Cluster>
+      </twig:ui:Layout:Stack>
+    </twig:ui:Layout:Stack>
   {{ form_end(requestPasswordResetForm) }}
 {% endblock %}

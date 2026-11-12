@@ -48,6 +48,8 @@ Two kinds of `<twig:ui:*>`, never mixed (`DECISIONS.md` #24):
 - **A component with regions keeps them inside**: a modal's header, body and footer, a card's body are the component's own parts. What goes into a region (the buttons of a modal footer) is arranged by a layout placed in that region (`ui:Layout:Cluster`).
 - **The page template is the top layout**: slots title, breadcrumb, actions, tabs, content; inside content, sections and stacks; inside those, components.
 - **Attribute pass-through stays for hooks and ARIA** (`data-ps-*`, `aria-*`, `id`); spacing and placement utilities on a component are a sign a layout is missing.
+- **Group, then space the groups**: blocks that belong together sit in their own stack, and an outer stack with a larger gap places the groups (a form: a header stack with the title and messages, a fields stack, both in a `gap="lg"` stack; see `Login/Ui/login.html.twig`). An element with a default margin (`h1`, `p`) inside a layout gets `mb-0`.
+- **No overridable block inside a component tag**: a `{% block %}` written between `<twig:…>` tags is the component's own block, so a child template can no longer override it. A layout template renders the block first (`{% set content %}{% block page_content %}{% endblock %}{% endset %}`) and prints the variable inside the component (see `Layout/Ui/login_layout.html.twig`).
 
 ## Component API
 

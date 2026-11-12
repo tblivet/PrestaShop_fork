@@ -4,106 +4,118 @@
     Back to PrestaShop
   </a>
 
-  <div class="ps-login__container">
+  <!-- <twig:ui:Layout:Stack gap="xl"> -->
+  <div class="ps-stack d-flex flex-column gap-5 align-items-stretch ps-login__container">
     <div class="card ps-login__card">
-      <div class="card-body ps-login__card-body">
+      <!-- <twig:ui:Layout:Stack> -->
+      <div class="ps-stack d-flex flex-column gap-3 align-items-stretch card-body ps-login__card-body">
         <div class="ps-login__logo-big text-center">
           <img class="img-fluid" src="/prestashop.svg" alt="PrestaShop" width="185" height="20" />
         </div>
 
         <form class="ps-login__form" novalidate data-ps-action="submit-once">
-          <h1 class="ps-login__title">Sign in to your back office</h1>
-
-          <div class="ps-login__form-group">
-            <label for="login-email" class="form-label">Email address</label>
-            <input
-              type="email"
-              id="login-email"
-              class="form-control"
-              placeholder="name@example.com"
-              autocomplete="email"
-            />
-          </div>
-
-          <div class="ps-login__form-group">
-            <label for="login-password" class="form-label">Password</label>
-
-            <div class="ps-password-field input-group has-validation">
-              <input
-                type="password"
-                id="login-password"
-                class="form-control"
-                placeholder="Password"
-                autocomplete="current-password"
-              />
-
-              <!-- <twig:ui:PasswordField> -->
-              <button
-                class="ps-password-field__toggle btn btn-primary d-inline-flex align-items-center justify-content-center"
-                type="button"
-                aria-label="Show password: Password"
-                aria-controls="login-password"
-                aria-pressed="false"
-                data-ps-action="toggle-password"
-              >
-                <span class="ps-password-field__icon material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility</span>
-                <span class="ps-password-field__icon ps-password-field__icon--shown material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility_off</span>
-              </button>
+          <div class="ps-stack d-flex flex-column gap-4 align-items-stretch">
+            <div class="ps-stack d-flex flex-column gap-3 align-items-stretch">
+              <h1 class="ps-login__title mb-0">Sign in to your back office</h1>
             </div>
-          </div>
 
-          <div class="ps-login__form-group">
-            <div class="form-check mb-0">
-              <input class="form-check-input" type="checkbox" id="login-remember" />
-              <label class="form-check-label" for="login-remember">Stay signed in</label>
+            <div class="ps-stack d-flex flex-column gap-3 align-items-stretch">
+              <div class="ps-login__form-group">
+                <label for="login-email" class="form-label">Email address</label>
+                <input
+                  type="email"
+                  id="login-email"
+                  class="form-control"
+                  placeholder="name@example.com"
+                  autocomplete="email"
+                />
+              </div>
+
+              <div class="ps-login__form-group">
+                <label for="login-password" class="form-label">Password</label>
+
+                <div class="ps-password-field input-group has-validation">
+                  <input
+                    type="password"
+                    id="login-password"
+                    class="form-control"
+                    placeholder="Password"
+                    autocomplete="current-password"
+                  />
+
+                  <!-- <twig:ui:PasswordField> -->
+                  <button
+                    class="ps-password-field__toggle btn btn-primary d-inline-flex align-items-center justify-content-center"
+                    type="button"
+                    aria-label="Show password: Password"
+                    aria-controls="login-password"
+                    aria-pressed="false"
+                    data-ps-action="toggle-password"
+                  >
+                    <span class="ps-password-field__icon material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility</span>
+                    <span class="ps-password-field__icon ps-password-field__icon--shown material-symbols-outlined fs-5 lh-1" aria-hidden="true">visibility_off</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="ps-login__form-group">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" type="checkbox" id="login-remember" />
+                  <label class="form-check-label" for="login-remember">Stay signed in</label>
+                </div>
+              </div>
+
+              <div class="ps-login__form-group">
+                <button type="submit" class="btn btn-primary w-100">Sign in</button>
+              </div>
+
+              <div class="ps-login__form-group text-end">
+                <button type="button" class="btn btn-link link-secondary small p-0">Forgot your password?</button>
+              </div>
             </div>
-          </div>
-
-          <div class="ps-login__form-group">
-            <button type="submit" class="btn btn-primary w-100">Sign in</button>
-          </div>
-
-          <div class="ps-login__form-group text-end">
-            <button type="button" class="btn btn-link link-secondary small p-0">Forgot your password?</button>
           </div>
         </form>
       </div>
     </div>
 
-    <div class="ps-login__copyright small text-center">
-      <a class="link-secondary ps-login__copyright-link" href="#">© PrestaShop™ 2007-2026 - All rights reserved</a>
-    </div>
+    <!-- <twig:ui:Layout:Stack gap="lg"> -->
+    <div class="ps-stack d-flex flex-column gap-4 align-items-stretch ps-login__footer">
+      <div class="ps-login__copyright small text-center">
+        <a class="link-secondary ps-login__copyright-link" href="#">© PrestaShop™ 2007-2026 - All rights reserved</a>
+      </div>
 
-    <div class="ps-login__social d-flex gap-1 align-items-center justify-content-center mt-4">
-      <a
-        href="https://x.com/PrestaShop"
-        class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="PrestaShop on X"
-      >
-        <!-- ux:icon bi/twitter-x -->
-      </a>
+      <!-- <twig:ui:Layout:Cluster gap="xs" justify="center"> -->
+      <div class="ps-cluster d-flex gap-1 flex-wrap justify-content-center align-items-center ps-login__social">
+        <a
+          href="https://x.com/PrestaShop"
+          class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="PrestaShop on X"
+        >
+          <!-- ux:icon bi/twitter-x -->
+        </a>
 
-      <a
-        href="https://www.facebook.com/prestashop"
-        class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="PrestaShop on Facebook"
-      >
-        <!-- ux:icon bi/facebook -->
-      </a>
+        <a
+          href="https://www.facebook.com/prestashop"
+          class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="PrestaShop on Facebook"
+        >
+          <!-- ux:icon bi/facebook -->
+        </a>
 
-      <a
-        href="https://github.com/PrestaShop"
-        class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="PrestaShop on GitHub"
-      >
-        <!-- ux:icon bi/github -->
-      </a>
+        <a
+          href="https://github.com/PrestaShop"
+          class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="PrestaShop on GitHub"
+        >
+          <!-- ux:icon bi/github -->
+        </a>
+      </div>
     </div>
   </div>
 </div>

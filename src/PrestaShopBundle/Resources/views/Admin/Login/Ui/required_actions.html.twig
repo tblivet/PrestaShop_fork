@@ -7,18 +7,20 @@
 {% block login_title %}{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}{% endblock %}
 
 {% block login_content %}
-  <h1 class="ps-login__title">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
-  {# A flex column, not a grid: a grid column grows to fit a long unbreakable word (the folder name) and overflows the card #}
-  <div class="d-flex flex-column gap-3">
-    <twig:ui:Alert type="warning" icon="bi:exclamation-triangle-fill">
-      <p>{{ 'For security reasons, do the following before you sign in:'|trans({}, 'Admin.Login.Notification') }}</p>
-      <ul class="mb-0">
-        {% for requiredAction in requiredActions %}
-          <li>{{ requiredAction|raw_purified }}</li>
-        {% endfor %}
-      </ul>
-    </twig:ui:Alert>
-    {# Once the actions are done, the next step: this page again if one is left, the sign-in form otherwise #}
-    <a class="btn btn-primary" href="{{ path('admin_login') }}">{{ 'Check again'|trans({}, 'Admin.Login.Feature') }}</a>
-  </div>
+  {# Stacks, not a grid: a grid column grows to fit a long unbreakable word (the folder name) and overflows the card #}
+  <twig:ui:Layout:Stack gap="lg">
+    <h1 class="ps-login__title mb-0">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
+    <twig:ui:Layout:Stack>
+      <twig:ui:Alert type="warning" icon="bi:exclamation-triangle-fill">
+        <p>{{ 'For security reasons, do the following before you sign in:'|trans({}, 'Admin.Login.Notification') }}</p>
+        <ul class="mb-0">
+          {% for requiredAction in requiredActions %}
+            <li>{{ requiredAction|raw_purified }}</li>
+          {% endfor %}
+        </ul>
+      </twig:ui:Alert>
+      {# Once the actions are done, the next step: this page again if one is left, the sign-in form otherwise #}
+      <a class="btn btn-primary" href="{{ path('admin_login') }}">{{ 'Check again'|trans({}, 'Admin.Login.Feature') }}</a>
+    </twig:ui:Layout:Stack>
+  </twig:ui:Layout:Stack>
 {% endblock %}

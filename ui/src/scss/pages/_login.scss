@@ -21,10 +21,6 @@ $component-name: ps-login;
     margin-inline: auto;
   }
 
-  &__logo-big {
-    margin-block: 0 0.75rem;
-  }
-
   &__card {
     box-shadow: var(--#{$prefix}box-shadow);
 
@@ -33,36 +29,12 @@ $component-name: ps-login;
     }
   }
 
+  // Spaced by the layouts around it (login_layout.html.twig, Login/Ui/*), like every block of these pages
   &__title {
-    margin-block-end: 2rem;
     font-size: 1rem;
     font-weight: 400;
     color: var(--#{$prefix}secondary-color);
     text-align: center;
-  }
-
-  &__form {
-    display: grid;
-    gap: 1rem;
-
-    // The title sits inside the form so it switches with it (login / forgot password)
-    > .#{$component-name}__title {
-      margin-block-end: 1rem;
-
-      // Close to what follows it directly: the alerts, or the panel's explanation
-      &:has(+ .ps-flash-messages, + .#{$component-name}__intro) {
-        margin-block-end: 0;
-      }
-    }
-  }
-
-  // One line under the title explaining the panel; as far from the field as the title is
-  &__intro {
-    margin-block: 0 1rem;
-  }
-
-  &__copyright {
-    margin-block-start: 2rem;
   }
 
   &__social-link {

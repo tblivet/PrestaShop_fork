@@ -40,5 +40,5 @@ const errorAlert = `
 `;
 
 export const WithError = {
-  render: () => page.replace(/(<h1 class="ps-login__title">[^<]*<\/h1>)/, `$1${errorAlert}`),
+  render: () => page.replace(/(<h1 class="ps-login__title[^"]*">[^<]*<\/h1>)/, `$1${errorAlert}`),
 };

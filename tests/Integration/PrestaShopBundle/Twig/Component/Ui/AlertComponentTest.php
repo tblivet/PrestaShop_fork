@@ -28,7 +28,7 @@ class AlertComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:Alert type="warning">Plain</twig:ui:Alert>');
 
-        $this->assertStringContainsString('<div class="alert alert-warning" role="status">', $html);
+        $this->assertStringContainsString('<div class="ps-alert alert alert-warning" role="status">', $html);
         $this->assertStringContainsString('Plain', $html);
         $this->assertStringNotContainsString('btn-close', $html);
     }
@@ -37,10 +37,10 @@ class AlertComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:Alert type="info" icon="bi:info-circle-fill" dismissible class="mb-0">{{ message }}</twig:ui:Alert>', ['message' => 'Hello']);
 
-        $this->assertStringContainsString('class="alert alert-info alert-dismissible fade show d-flex align-items-start gap-2 mb-0"', $html);
+        $this->assertStringContainsString('class="ps-alert alert alert-info alert-dismissible fade show d-flex align-items-start gap-2 mb-0"', $html);
         $this->assertStringContainsString('role="status"', $html);
         $this->assertStringContainsString('<svg', $html);
-        $this->assertStringContainsString('<div>Hello</div>', $html);
+        $this->assertStringContainsString('<div class="ps-alert__content">Hello</div>', $html);
         $this->assertStringContainsString('data-bs-dismiss="alert"', $html);
     }
 
@@ -48,7 +48,7 @@ class AlertComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:Alert type="danger">Failed</twig:ui:Alert>');
 
-        $this->assertStringContainsString('<div class="alert alert-danger" role="alert">', $html);
+        $this->assertStringContainsString('<div class="ps-alert alert alert-danger" role="alert">', $html);
     }
 
     private function render(string $template, array $context = []): string
