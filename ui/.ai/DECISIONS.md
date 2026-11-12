@@ -91,7 +91,7 @@ Left aside: one PR per page; stacked PRs.
 
 ## 18. Done gates — 2026-11-03
 
-A page or component is done when: builds and lints pass, its tests pass (Twig component unit and render tests; PHP integration tests for changed form types and controllers; Behat untouched), Storybook matches the page, and the `ui-screen-review` workflow leaves no blocker or major finding (or each one is accepted here with a reason).
+A page or component is done when: builds and lints pass, its tests pass (Twig component unit and render tests; PHP integration tests for changed form types and controllers; Behat untouched), Storybook matches the page, and the `ui-screen-review` workflow leaves no blocker or major finding (or each one is accepted here with a reason). Minor findings and suggestions are non-blocking, badged so in the report: fixed when cheap, otherwise left open without an entry here, so a good page is not held back by polish.
 
 ## 19. Wording by AI to the tone of voice — 2026-11-03
 

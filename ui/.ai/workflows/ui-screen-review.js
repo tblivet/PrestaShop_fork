@@ -29,6 +29,15 @@ const isLocal = (url) => /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\]|[^/]+\.loc
 const setupAllowed = (page) => args.setup !== false && isLocal(page.url)
 
 const SEVERITIES = ['blocker', 'major', 'minor', 'suggestion']
+// Only blockers and majors stop a page from being done; minor findings and suggestions are fixed when cheap, or left
+const BLOCKING = ['blocker', 'major']
+
+const SEVERITY_GUIDE = `Severity, rated by what the user loses, not by how much you would like it changed:
+- blocker: a user cannot finish the task, or a WCAG 2.2 A/AA failure that shuts someone out (no keyboard access, unlabelled control, focus lost).
+- major: the task is clearly harder or error-prone (misleading message, broken layout at a width, wrong focus order, an AA contrast failure), or the page contradicts the kit (CONVENTIONS.md, the Storybook reference).
+- minor: noticeable polish on a page that works (an uneven gap, a glitch in one rare state). Non-blocking.
+- suggestion: an idea or a nit; the page is fine without it. Non-blocking.
+When in doubt between two levels, pick the lower one.`
 
 const PLAN_SCHEMA = {
   type: 'object',
@@ -304,6 +313,8 @@ ${evidence}
 
 Open the screenshots with the Read tool (it shows images) and compare states and widths. Read ui/.ai/CONVENTIONS.md and the reference story or mockup. Report only problems you can point to in a screenshot or a file:line, each with a concrete improvement in kit terms. Stay inside your lens; an empty list is a valid answer.
 
+${SEVERITY_GUIDE}
+
 ${SCOPE}
 ${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL and dark mode are out of scope (#4, #5), button focus rings are the button color at 50% on purpose (#29).`,
       { label: `review:${lens.key}:${page.name}`, phase: 'Review', schema: FINDINGS_SCHEMA },
@@ -320,7 +331,8 @@ ${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it
     return agent(
       `${pageBrief(page)}
 
-You are a skeptical design lead. For each finding below, open its evidence (screenshots with the Read tool, files at the given lines) and try to refute it: not visible in the evidence, an artefact of emulation rather than of the page, contradicted by the Storybook reference (which wins), a duplicate of another finding (same problem seen through another lens or state: keep the clearest one, merged with the others' evidence, and drop the rest), a matter of taste with no user impact, out of scope (RTL, dark mode, a choice recorded in ui/.ai/DECISIONS.md, or a fix that needs a controller, form type, route, security or business-flow change rather than a front-end one), or a proposal that breaks ui/.ai/CONVENTIONS.md. Keep it only if it survives; correct its severity if it is over- or under-rated. When unsure, drop it.
+You are a skeptical design lead. For each finding below, open its evidence (screenshots with the Read tool, files at the given lines) and try to refute it: not visible in the evidence, an artefact of emulation rather than of the page, contradicted by the Storybook reference (which wins), a duplicate of another finding (same problem seen through another lens or state: keep the clearest one, merged with the others' evidence, and drop the rest), a matter of taste with no user impact, out of scope (RTL, dark mode, a choice recorded in ui/.ai/DECISIONS.md, or a fix that needs a controller, form type, route, security or business-flow change rather than a front-end one), or a proposal that breaks ui/.ai/CONVENTIONS.md. Keep it only if it survives; correct its severity if it is over- or under-rated against this scale. When unsure, drop it.
+${SEVERITY_GUIDE}
 ${followUp(page) ? `This is a follow-up review: also drop a new finding (not one of the earlier open findings, not a regression) that is below major.\n${followUp(page)}` : ''}
 
 Findings:
@@ -374,10 +386,12 @@ const reportPath = await agent(
   `Write a self-contained HTML review report to ${outDir}/index.html (overwrite it) from this data:
 ${JSON.stringify(reportData, null, 1)}
 
-Layout: a summary table (page, states captured / emulated / missing, findings per severity), then per page:
+Only blocker and major findings block a page (${JSON.stringify(BLOCKING)}); minor and suggestion are non-blocking: fix them if cheap, leave them otherwise.
+
+Layout: a summary table (page, verdict, states captured / emulated / missing, findings per severity). The verdict is "Done" when the page has no blocking finding, "To fix: n blocking" otherwise. Then per page:
 1. State coverage: every state with its status (captured, emulated, missing), why it matters, its source file:line, and for missing ones the reason and how to reach it by hand. Put rare states first-class, not in a footnote: they are why the report exists.
 2. Gallery grouped by state, one thumbnail per width (img src relative to ${outDir}, click to open full size), an "emulated" badge where it applies.
-3. Findings ranked by severity, each with lens, where, problem, proposal, and its evidence thumbnails.
+3. Findings ranked by severity, each with lens, where, problem, proposal, and its evidence thumbnails, and a badge: "Must fix" on blocker and major, "Non-blocking" on minor, "Nit" on suggestion. Blocking findings first; the non-blocking ones under their own heading "Non-blocking: fix if cheap".
 4. Shop changes made for setup and whether each was restored; highlight any not restored.
 5. Out of scope: the page's outOfScope ideas (back end or business flow), clearly not findings. Each reviewer wrote its own: merge the lines that say the same thing (same change, same place) into one, then keep at most 3, those that matter most to the user.
 Inline CSS only, no external scripts.${reviewsDir ? `
@@ -398,5 +412,6 @@ return {
     screenshots: r.captures.length,
     notRestored: r.restored.filter((x) => !x.verified).map((x) => x.change),
     findings: SEVERITIES.reduce((acc, s) => ({ ...acc, [s]: r.findings.filter((f) => f.severity === s).length }), {}),
+    done: !r.findings.some((f) => BLOCKING.includes(f.severity)),
   })),
 }

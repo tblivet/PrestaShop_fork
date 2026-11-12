@@ -1,45 +1,36 @@
 {
   "page": "login",
   "url": "http://localhost:8001/admin-dev/login",
-  "date": "2026-11-05",
-  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-7/index.html",
+  "date": "2026-11-12",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-8/index.html",
   "states": {
-    "total": 26,
-    "captured": 22,
-    "emulated": 4,
+    "total": 33,
+    "captured": 25,
+    "emulated": 8,
     "missing": []
   },
   "findings": {
     "blocker": 0,
     "major": 0,
-    "minor": 3,
+    "minor": 2,
     "suggestion": 0
   },
   "open": [
     {
       "severity": "minor",
       "title": "'Check again' is the primary button while the real next step is the https link in the alert",
-      "where": "required-actions, all widths; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:19"
+      "where": "required-actions, all widths; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:23"
     },
     {
       "severity": "minor",
       "title": "Focus ring and invalid glow of password inputs are cut off by the eye toggle",
-      "where": "reset-submit-blocked 375, login-client-errors 375 (every PasswordField at all widths); ui/src/scss/forms/_input-group.scss (still only the header comment)"
-    },
-    {
-      "severity": "minor",
-      "title": "Too-long password draws a full-width red strength bar",
-      "where": "reset page, password over the max length (72), all widths; admin-dev/themes/new-theme/js/components/change-password-handler.ts:308-309"
+      "where": "reset-empty-submit 375 (every PasswordField at all widths); ui/src/scss/forms/_input-group.scss:5"
     }
   ],
   "outOfScope": [
-    "Expired or used reset link is only revealed after the user types a new password twice: check the token when the reset page is opened (LoginController.php:158-191).",
-    "'We couldn't reset your password. Try again later.' redirects to the sign-in panel, away from the reset form (LoginController.php:180-184): send the user back to the forgot panel or the reset page instead.",
-    "Reset page: check the token on GET so an expired or used link says so before the user types a new password twice (LoginController.php:158-191).",
-    "'We couldn't reset your password. Try again later.' should land on the reset or forgot panel, not the sign-in panel (LoginController.php:180-184).",
-    "After a successful reset, prefill the sign-in email with the account just reset instead of the last tried address (reset-success capture).",
-    "An expired or used reset link only shows up after the user types a new password twice: check the token when /reset-password/{token} loads (LoginController).",
-    "'We couldn't reset your password. Try again later.' sends the user back to the sign-in panel instead of the reset or forgot form."
+    "Missing fr catalogue entries for the new login strings (title, Stay signed in, Sign in, flashes, forgot intro) give a mixed French/English page: export them for translators (french-default--1280.jpg).",
+    "After a successful reset or a reset-link request, prefill the sign-in email with the address just used instead of the last sign-in attempt (LoginFormDataProvider; sign-in-success-password-changed and sign-in-info-check-inbox captures).",
+    "Reset page: check the token when /reset-password/{token} loads, so an expired or used link says so before the user types a new password twice (LoginController.php:158-191)."
   ],
-  "note": "Validated as the reference page on 2026-11-05: no blocker or major. The 3 minor findings are accepted for now; the out-of-scope ideas are for a back-end change."
+  "note": "Validated as the reference page on 2026-11-05: no blocker or major. Re-checked on 2026-11-12 after the layouts: still no blocker or major. The minor findings are non-blocking; the out-of-scope ideas are for a back-end change."
 }
