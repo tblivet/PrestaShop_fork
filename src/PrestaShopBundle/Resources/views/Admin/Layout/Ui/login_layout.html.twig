@@ -30,10 +30,14 @@
           </div>
 
           {{ loginContent }}
+
+          {# Modules' sign-in additions (single sign-on, notices) close the card; no wrapper when none, so no empty gap #}
+          {% set moduleContent %}{{ renderhook('displayAdminLogin') }}{% endset %}
+          {% if moduleContent|trim is not empty %}
+            <div class="ps-login__modules border-top pt-4">{{ moduleContent }}</div>
+          {% endif %}
         </twig:ui:Layout:Stack>
       </div>
-
-      {{ renderhook('displayAdminLogin') }}
 
       {# Copyright and social links read as one block, set apart from the card #}
       <twig:ui:Layout:Stack gap="lg" class="ps-login__footer">

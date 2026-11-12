@@ -173,6 +173,7 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Markup**
 - `.ps-login__container` and `.ps-login__card-body` are `<twig:ui:Layout:Stack>` (gap `xl` and `md`), `.ps-login__social` a `<twig:ui:Layout:Cluster>`, grouped with `.ps-login__copyright` in a new `.ps-login__footer` (`<twig:ui:Layout:Stack gap="lg">`); each form holds a header stack (title, flash messages, form errors, intro) and a fields stack inside a `gap="lg"` stack; the forgot password buttons are a `<twig:ui:Layout:Cluster stackBelow="sm">`. Classes, ids and `data-ps-*` hooks are kept.
+- The `displayAdminLogin` hook moves from under the card into it, as the card body's last block in `.ps-login__modules` (top border), printed only when a module returns content. Module markup that relied on sitting outside the card now gets the card's padding and width.
 - An emptied `<twig:ui:FlashMessages>` (last alert closed, or removed by the login script) is hidden, so it no longer leaves a gap in its layout.
 - `.ps-login__form` no longer lays out its children (no grid); `.ps-login__title`, `.ps-login__intro`, `.ps-login__logo-big` and `.ps-login__copyright` have no margins (titles and intro get `mb-0`).
 
