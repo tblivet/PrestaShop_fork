@@ -82,3 +82,33 @@
     {%- endif -%}
   {%- endif -%}
 {%- endblock form_errors -%}
+
+{# Every form button is a <twig:ui:Button> (DECISIONS.md #25); the page gives its look as form_widget variables:
+ # form_widget(form.save, {variant: 'primary', icon: 'save'}). A submit button is primary unless told otherwise #}
+{%- block button_widget -%}
+  {%- if label is null or label == '' -%}
+    {%- set label = label_format is not empty ? label_format|replace({'%name%': name, '%id%': id}) : (label is same as(false) ? '' : name|humanize) -%}
+  {%- endif -%}
+  {%- set text = translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain) -%}
+  {%- set buttonProps = attr|merge({
+    id: id,
+    name: full_name,
+    type: type|default('button'),
+    variant: variant ?? (type|default('button') == 'submit' ? 'primary' : 'secondary'),
+    size: size ?? 'md',
+    icon: icon ?? null,
+    iconPosition: iconPosition ?? 'start',
+    disabled: disabled,
+  }) -%}
+  <twig:ui:Button {{ ...buttonProps }}>{% if label_html is same as(false) %}{{ text }}{% else %}{{ text|raw }}{% endif %}</twig:ui:Button>
+{%- endblock button_widget -%}
+
+{%- block submit_widget -%}
+  {%- set type = type|default('submit') -%}
+  {{- block('button_widget') -}}
+{%- endblock submit_widget -%}
+
+{%- block reset_widget -%}
+  {%- set type = type|default('reset') -%}
+  {{- block('button_widget') -}}
+{%- endblock reset_widget -%}

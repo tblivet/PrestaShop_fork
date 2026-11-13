@@ -1,0 +1,36 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set classes = ['btn', 'btn-' ~ variant] -%}
+{%- if size != 'md' -%}
+  {%- set classes = classes|merge(['btn-' ~ size]) -%}
+{%- endif -%}
+{%- set defaults = {class: classes|join(' ')} -%}
+{%- if href is null -%}
+  {%- set tag = 'button' -%}
+  {%- set defaults = defaults|merge({type: type}) -%}
+  {%- if disabled -%}
+    {%- set defaults = defaults|merge({disabled: true}) -%}
+  {%- endif -%}
+  {#- Same state as a kit form being sent (submit-once.js), which removes it when the page comes back from the history -#}
+  {%- if loading -%}
+    {%- set defaults = defaults|merge({'data-ps-state': 'loading', 'aria-busy': 'true', 'aria-disabled': 'true'}) -%}
+  {%- endif -%}
+{%- else -%}
+  {%- set tag = 'a' -%}
+  {#- A disabled link has no href, so it is not focusable and goes nowhere -#}
+  {%- set defaults = disabled ? defaults|merge({class: defaults.class ~ ' disabled', role: 'link', 'aria-disabled': 'true'}) : defaults|merge({href: href}) -%}
+{%- endif -%}
+<{{ tag }}{{ attributes.defaults(defaults) }}>
+  {%- if loading -%}
+    <span class="spinner-border spinner-border-sm" aria-hidden="true" data-ps-ref="submit-spinner"></span>
+  {%- endif -%}
+  {%- if icon and iconPosition == 'start' -%}
+    <twig:ui:Icon :name="icon" size="lg"/>
+  {%- endif -%}
+  {%- block content %}{% endblock -%}
+  {%- if icon and iconPosition == 'end' -%}
+    <twig:ui:Icon :name="icon" size="lg"/>
+  {%- endif -%}
+</{{ tag }}>

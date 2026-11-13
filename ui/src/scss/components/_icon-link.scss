@@ -11,15 +11,32 @@
 
   > .ps-icon {
     margin-block: calc((1lh - var(--ps-icon-size)) / 2);
-    transition: transform 0.2s ease-in-out;
+    // translate, not transform: it adds to the mirroring of ps-icon--flip-rtl instead of replacing it
+    transition: translate 0.2s ease-in-out;
   }
 }
 
+// On hover the icon moves toward the end of the line, in the reading direction
 .icon-link-hover {
+  --ps-icon-link-shift: 0.25em;
+
+  &:dir(rtl) {
+    --ps-icon-link-shift: -0.25em;
+  }
+
   &:hover,
   &:focus-visible {
     > .ps-icon {
-      transform: var(--#{$prefix}icon-link-transform, #{$icon-link-icon-transform});
+      translate: var(--ps-icon-link-shift) 0;
     }
+  }
+}
+
+// Icon before the text (a back link): it moves toward the start instead
+.icon-link-hover-start {
+  --ps-icon-link-shift: -0.25em;
+
+  &:dir(rtl) {
+    --ps-icon-link-shift: 0.25em;
   }
 }

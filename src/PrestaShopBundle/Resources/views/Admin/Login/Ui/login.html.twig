@@ -46,19 +46,18 @@
           {{ form_widget(loginForm.stay_logged_in) }}
         </div>
 
-        <div class="ps-login__form-group">
-          {{ form_widget(loginForm.submit_login, {attr: {class: 'btn-primary w-100'}}) }}
-        </div>
+        {# Full width: the stack stretches it #}
+        {{ form_widget(loginForm.submit_login, {variant: 'primary'}) }}
 
         <div class="ps-login__form-group text-end">
           {# A button: it switches panels in place, it does not navigate #}
-          <button
-            type="button"
+          <twig:ui:Button
+            variant="link"
             id="{{ forgotPasswordLink.attr.id }}"
-            class="btn btn-link link-secondary small p-0"
+            class="link-secondary small p-0"
             aria-controls="{{ requestPasswordResetForm.vars.attr.id }}"
             data-ps-action="{{ forgotPasswordLink.attr['data-ps-action'] }}"
-          >{{ forgotPasswordLink.text }}</button>
+          >{{ forgotPasswordLink.text }}</twig:ui:Button>
         </div>
       </twig:ui:Layout:Stack>
     </twig:ui:Layout:Stack>
@@ -86,8 +85,8 @@
 
         {# Stacked on mobile in reading order, so the visual order and the focus order stay the same #}
         <twig:ui:Layout:Cluster justify="end" stackBelow="sm">
-          {{ form_widget(requestPasswordResetForm.buttons.cancel, {attr: requestPasswordResetForm.buttons.cancel.vars.attr|merge({class: 'btn-outline-secondary'})}) }}
-          {{ form_widget(requestPasswordResetForm.buttons.submit_login, {attr: {class: 'btn-primary'}}) }}
+          {{ form_widget(requestPasswordResetForm.buttons.cancel, {variant: 'outline-secondary'}) }}
+          {{ form_widget(requestPasswordResetForm.buttons.submit_login, {variant: 'primary'}) }}
         </twig:ui:Layout:Cluster>
       </twig:ui:Layout:Stack>
     </twig:ui:Layout:Stack>

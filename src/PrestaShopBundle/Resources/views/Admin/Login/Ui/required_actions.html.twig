@@ -20,7 +20,7 @@
         </ul>
       </twig:ui:Alert>
       {# Once the actions are done, the next step: this page again if one is left, the sign-in form otherwise #}
-      <a class="btn btn-primary" href="{{ path('admin_login') }}">{{ 'Check again'|trans({}, 'Admin.Login.Feature') }}</a>
+      <twig:ui:Button variant="primary" href="{{ path('admin_login') }}">{{ 'Check again'|trans({}, 'Admin.Login.Feature') }}</twig:ui:Button>
     </twig:ui:Layout:Stack>
   </twig:ui:Layout:Stack>
 {% endblock %}

@@ -93,10 +93,16 @@
       inset: 0;
       margin: auto;
     }
+
+    // An SVG icon is drawn in currentColor, not in the text fill: hidden with the label
+    > .ps-icon {
+      visibility: hidden;
+    }
   }
 
-  // Buttons hosting an .icon lay out via flex — no spacing utilities needed in the
-  // markup; covers leading, trailing, and icon-only buttons with the same rule.
+  // An icon beside the label (<twig:ui:Button icon>, or the playground's .icon font) sits centred on it with a fixed
+  // gap, so the markup needs no spacing utilities
+  &:has(> .ps-icon),
   &:has(.icon) {
     display: inline-flex;
     gap: 0.375rem;

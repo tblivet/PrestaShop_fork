@@ -56,7 +56,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | # | Status | Name | Kind | Pages | Sections | Complexity | Depends on | Design workflow |
 |---|--------|------|------|-------|----------|------------|------------|-----------------|
 | 1 | - [x] | [`<twig:ui:Icon>`](#1-twiguiicon) | content | 120 | 7 | S | - | no |
-| 2 | - [ ] | [`<twig:ui:Button>`](#2-twiguibutton) | action | 140 | 6 | M | `<twig:ui:Icon>` | no |
+| 2 | - [x] | [`<twig:ui:Button>`](#2-twiguibutton) | action | 140 | 6 | M | `<twig:ui:Icon>` | no |
 | 3 | - [ ] | [`<twig:ui:IconButton>`](#3-twiguiiconbutton) | action | 45 | 6 | S | `<twig:ui:Button>`, `<twig:ui:Icon>` | no |
 | 4 | - [ ] | [`<twig:ui:Link>`](#4-twiguilink) | navigation | 30 | 5 | S | `<twig:ui:Icon>` | no |
 | 5 | - [ ] | [`<twig:ui:Badge>`](#5-twiguibadge) | content | 30 | 5 | S | `<twig:ui:Icon>` | no |
@@ -160,6 +160,8 @@ Done 2026-11-12 as inline SVG, not a font (DECISIONS.md #35): every Material Sym
 ### 2. `<twig:ui:Button>`
 
 The one button: renders <button type="button"> or <a> when href is set, with variant, size, icon, loading and disabled-with-reason states; covers every Save, Cancel, toolbar action, CTA and link-styled-as-button.
+
+Done 2026-11-13 with `variant` (`danger` is `destructive`, the kit's solid red), `size`, `href`/`type`, `icon` + `iconPosition`, `loading` and `disabled`; kit form buttons render it through `button_widget` of `ui_kit_layout.html.twig`; used by the login pages. Not built yet: `disabledReason`, `method` + `confirm`, the copy action, the modal target, `target=_blank`.
 
 - Role: component, kind: action, complexity: M, pages: 140
 - Sections: card footers, toolbar, modals, empty states, alerts, row actions

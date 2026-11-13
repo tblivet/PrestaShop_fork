@@ -42,7 +42,7 @@ Storybook is the reference for the markup. Every change goes to both sides in th
 - **JS ownership**: if Storybook or a module could use it without a PrestaShop back end, it goes to `ui/src/js` (hooks in `selectors.js`). Otherwise it stays in new-theme. Both bind to `data-ps-*` attributes only.
 - **`ui.js` is a classic IIFE script**: it sets `window.bootstrap` and registers Bootstrap's jQuery plugins at once (`compat/jquery-plugins.js`, temporary until pages call `bootstrap.Modal`… directly). jQuery comes from core `js/jquery`, loaded before it.
 - **Webpack entries** in `admin-dev/themes/new-theme/.webpack/common.js` are grouped: entries loaded only with the toggle off (Bootstrap 4 + prestakit) first, then their `_ui` replacements, then the rest.
-- **Forms**: the kit pages render fields with `@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig` (Bootstrap 5 plus errors and help linked to their field). Fields rendered one by one rely on `form_end()` to output fields added by modules.
+- **Forms**: the kit pages render fields with `@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig` (Bootstrap 5 plus errors and help linked to their field). Fields rendered one by one rely on `form_end()` to output fields added by modules. Form buttons render `<twig:ui:Button>` (`button_widget`): pass `variant` to `form_widget`, never `btn-*` classes.
 - **Build**: `make admin-ui` / `./tools/assets/build.sh admin-ui`. File names are fixed (no hash) because the layouts link them. Watch mode does not empty `dist/`, and Storybook has its own Vite config, so neither wipes the build. Only `ui/dist` ships in a release.
 
 ## Skills

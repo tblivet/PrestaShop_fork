@@ -199,3 +199,18 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Old theme**
 - Unchanged, apart from the social logos' new names.
+
+## Buttons: `<twig:ui:Button>` — 2026-11-13
+
+`Twig/Component/Ui/Button.php`, `Component/Ui/button.html.twig`, `button_widget` in `TwigTemplateForm/ui_kit_layout.html.twig`, `components/_buttons.scss`, the login pages.
+
+**Markup**
+- Kit form buttons (`SubmitType`, `ButtonType`, `ResetType`) render `<twig:ui:Button>`: the page passes `variant` (and `size`, `icon`) to `form_widget` instead of `btn-*` classes. Ids, names and `data-ps-*` attributes are unchanged.
+- Sign in and Set new password lose their `.ps-login__form-group` wrapper and `w-100`: the stack makes them full width. "Forgot your password?", "Back to sign in" and "Check again" are `<twig:ui:Button>` with the same classes.
+- A button with an icon is laid out by `.btn:has(> .ps-icon)` (flex, gap); a busy button hides its icon with its label.
+
+- Icon links with the icon before the text take `icon-link-hover-start` (the login back link): on hover the icon moves toward the start of the line instead of the end. Icon links move with `translate` instead of `transform`.
+
+**Behaviour**
+- None visible on the login pages, apart from the back link's arrow, which now moves left on hover (right in right-to-left languages, where it also stays mirrored: the hover used to undo the mirroring).
+

@@ -60,14 +60,16 @@ export const WithHover = {
   `,
 };
 
+// An icon before the text points back: add icon-link-hover-start so on hover it moves toward the start, not the end
 export const IconBefore = {
+  parameters: { docs: { description: { story: 'An icon before the text (a back link) takes `icon-link-hover-start`: on hover it moves toward the start of the line, the way it points. Mirrored in right-to-left languages.' } } },
   render: () => `
     <div class="d-flex flex-column gap-3">
-      <a class="icon-link icon-link-hover link-primary" href="#">
+      <a class="icon-link icon-link-hover icon-link-hover-start link-primary" href="#">
         ${icon('arrow_back')}
         Back to PrestaShop
       </a>
-      <a class="icon-link icon-link-hover link-secondary" href="#">
+      <a class="icon-link icon-link-hover icon-link-hover-start link-secondary" href="#">
         ${icon('chevron_left')}
         Previous page
       </a>
@@ -92,7 +94,7 @@ export const AllColors = {
 // A long label wraps; the icon stays on the first line (_icon-link.scss)
 export const Wrapping = {
   render: () => `
-    <a class="icon-link icon-link-hover link-secondary small" href="#" style="max-width: 16rem">
+    <a class="icon-link icon-link-hover icon-link-hover-start link-secondary small" href="#" style="max-width: 16rem">
       ${icon('arrow_back')}
       Back to Maison Dupont et Fils - Épicerie fine artisanale depuis 1887
     </a>
