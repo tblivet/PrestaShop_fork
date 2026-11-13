@@ -3,25 +3,25 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Copies every Material Symbols icon (outlined, and its "-fill" style) from npm @material-symbols/svg-400 into
+// Copies every Material Symbols icon (outlined, and its "-fill" style) from npm @material-symbols/svg-600 into
 // ui/icons/material-symbols/, where <twig:ui:Icon> and the stories read it. Icons are SVG files, never a font: a page
 // shows them with its first paint, at their size (no flash, no layout shift), and only the icons it uses are read.
 // The whole set ships so that core pages and modules can use any icon without adding files to the core.
 //
 //   node ui/.ai/bin/sync-icons.mjs [--check]
-//   Run it after bumping @material-symbols/svg-400 in ui/package.json, then commit ui/icons/material-symbols.
+//   Run it after bumping @material-symbols/svg-600 in ui/package.json, then commit ui/icons/material-symbols.
 //   --check exits 1 when the committed icons differ from the package (CI).
 import {existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
 import {dirname, join, relative, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const ui = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
-const source = join(ui, 'node_modules/@material-symbols/svg-400/outlined');
+const source = join(ui, 'node_modules/@material-symbols/svg-600/outlined');
 const target = join(ui, 'icons/material-symbols');
 const check = process.argv.includes('--check');
 
 if (!existsSync(source)) {
-  console.log('Run npm install in ui/ first: @material-symbols/svg-400 is missing.');
+  console.log('Run npm install in ui/ first: @material-symbols/svg-600 is missing.');
   process.exit(1);
 }
 

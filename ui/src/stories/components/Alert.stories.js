@@ -37,7 +37,7 @@ const alert = ({ type, icon, dismissible, content, ...attributes }) => {
   return {
     html: `
     <div class="${classes.join(' ')}" role="${role(type)}"${extra}>
-      ${iconSvg ? `${uiIcon(iconSvg, { class: 'mt-1' })}<div class="ps-alert__content">${content}</div>` : content}
+      ${iconSvg ? `${uiIcon(iconSvg, { size: 'lg', class: 'ps-alert__icon' })}<div class="ps-alert__content">${content}</div>` : content}
       ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
     </div>`,
     twig: twigCall('ui:Alert', { type, icon: iconSvg ? icon : undefined, dismissible, ...attributes }, DEFAULTS, [markup(content)]),

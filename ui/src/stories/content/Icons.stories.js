@@ -29,7 +29,7 @@ export default {
       description: {
         component: [
           `**${icons.length} icons** ship with the back office: every [Material Symbols](https://fonts.google.com/icons) icon (outlined, and filled with the \`filled\` prop) and a few brand logos. Use them with \`<twig:ui:Icon name="…"/>\` (see Components/Icon); never with an icon font.`,
-          'They are SVG files: a page shows them with its first paint, at their size, and only reads the icons it uses. After a bump of `@material-symbols/svg-400`, run `node ui/.ai/bin/sync-icons.mjs` and commit `ui/icons/material-symbols`.',
+          'They are SVG files: a page shows them with its first paint, at their size, and only reads the icons it uses. After a bump of `@material-symbols/svg-600`, run `node ui/.ai/bin/sync-icons.mjs` and commit `ui/icons/material-symbols`.',
         ].join('\n\n'),
       },
     },

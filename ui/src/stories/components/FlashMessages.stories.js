@@ -13,7 +13,7 @@ import { withDefaults } from '../story-defaults';
 
 const alert = (type, icon, role, message, dismissible) => `
   <div class="ps-alert alert alert-${type}${dismissible ? ' alert-dismissible fade show' : ''} d-flex align-items-start gap-2" role="${role}" data-ps-ref="flash-alert">
-    ${uiIcon(icon, { class: 'mt-1' })}
+    ${uiIcon(icon, { size: 'lg', class: 'ps-alert__icon' })}
     <div class="ps-alert__content"><p class="mb-0">${message}</p></div>
     ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
   </div>`;

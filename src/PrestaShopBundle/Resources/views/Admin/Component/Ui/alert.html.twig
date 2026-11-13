@@ -12,8 +12,7 @@
 {# Only a danger alert interrupts screen readers; the others are announced politely #}
 <div{{ attributes.defaults({class: classes|join(' '), role: type == 'danger' ? 'alert' : 'status'}) }}>
   {% if icon %}
-    {# mt-1 centres the 16px icon on the first 24px line, so it stays there when the text wraps #}
-    <twig:ui:Icon :name="icon" filled class="mt-1"/>
+    <twig:ui:Icon :name="icon" filled size="lg" class="ps-alert__icon"/>
     <div class="ps-alert__content">{% block content %}{% endblock %}</div>
   {% else %}
     {{ block('content') }}

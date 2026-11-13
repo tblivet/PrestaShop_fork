@@ -37,4 +37,9 @@ $component-name: ps-alert;
   &__content {
     min-width: 0;
   }
+
+  // Centred on the first line of text, so it stays there when the text wraps
+  &__icon {
+    margin-block: calc((1lh - var(--ps-icon-size)) / 2);
+  }
 }

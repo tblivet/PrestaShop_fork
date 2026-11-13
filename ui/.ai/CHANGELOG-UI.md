@@ -20,7 +20,7 @@ Each entry: the page or component, then only the sections that apply.
 - Password feedback helper (`Helpers/password_feedback.html.twig`, also on the Employee and Customer forms): `password-strength-feedback`, `progress-container`, `progress-bar`, `password-strength-text`, `password-requirements*` and `#password-feedback` → `ps-password-feedback` BEM block with `data-ps-ref` hooks (`password-feedback`, `password-strength-bar`, `password-strength-text`, `password-requirement-length`, `password-requirement-score`) and `data-ps-state` (`met`, `unmet`, `failed`; bar `weak`, `average`, `strong`).
 - Reset confirmation field: `data-invalid-password` → `data-ps-data-mismatch`.
 - Kit form errors: field errors are `#<field id>_error` linked by `aria-describedby`, fields in error carry `aria-invalid="true"`; form-level errors (CSRF) are an alert `#<form id>_error`.
-- Alerts (`<twig:ui:Alert>`): `role="status"` except `danger` (`role="alert"`); icon alignment `align-items-start` + `mt-1`.
+- Alerts (`<twig:ui:Alert>`): `role="status"` except `danger` (`role="alert"`); icon `size="lg"` (20px) centred on the first line by `.ps-alert__icon`.
 - Logo `alt` is "PrestaShop" (was the shop name); social links have translated `aria-label`.
 
 **Behaviour**
@@ -194,6 +194,7 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Behaviour**
 - Kit pages no longer download the Material Symbols font (3.96 MB): icons show with the first paint and do not shift the layout.
 - Icon sizes follow the text (em): the password toggle icon is 21px (was 20px), the requirement icons 1.25em (was 1.125em), with the tip indent following.
+- Icons are drawn at weight 600 (the old font was 400); alert and flash message icons are 1.25em (20px, was 16px).
 - A missing icon name fails the render (Iconify fallback off) instead of being fetched from api.iconify.design.
 
 **Old theme**
