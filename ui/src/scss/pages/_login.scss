@@ -37,11 +37,6 @@ $component-name: ps-login;
     text-align: center;
   }
 
-  &__social-link {
-    width: 2em;
-    height: 2em;
-  }
-
   @include media-breakpoint-up(sm) {
     &__container {
       margin-block-start: 4rem;

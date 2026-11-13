@@ -1,0 +1,11 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set props = {variant: variant, size: size, icon: icon, loading: loading, disabled: disabled, 'aria-label': label} -%}
+{%- set props = props|merge(href is null ? {type: type} : {href: href}) -%}
+{#- The tooltip shows the name the button already has: tooltips.js keeps screen readers from reading it twice -#}
+{%- if tooltip -%}
+  {%- set props = props|merge({'data-bs-toggle': 'tooltip', 'data-bs-title': label}) -%}
+{%- endif -%}
+<twig:ui:Button {{ ...props }} {{ ...attributes.defaults({class: 'ps-icon-button'}).all() }}/>

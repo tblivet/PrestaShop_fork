@@ -1,0 +1,15 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// <twig:ui:IconButton> (Admin/Component/Ui/icon_button.html.twig): a .btn holding only its icon
+$component-name: ps-icon-button;
+
+.#{$component-name} {
+  // Square, as tall as a button with text of the same size (the icon alone is shorter than its line of text)
+  --#{$component-name}-size: calc(var(--#{$prefix}btn-font-size) * var(--#{$prefix}btn-line-height) + 2 * var(--#{$prefix}btn-padding-y) + 2 * var(--#{$prefix}btn-border-width));
+
+  width: var(--#{$component-name}-size);
+  height: var(--#{$component-name}-size);
+  padding: 0;
+}

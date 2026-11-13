@@ -9,6 +9,7 @@ import initPasswordToggle from './components/password-toggle';
 import initFormValidation from './components/form-validation';
 import focusOnLoad from './components/load-focus';
 import initSubmitOnce from './components/submit-once';
+import initTooltips from './components/tooltips';
 import registerJqueryPlugins from './compat/jquery-plugins';
 
 // Single Bootstrap instance shared with the back-office bundles.
@@ -19,5 +20,6 @@ initPasswordToggle();
 initFormValidation();
 initSubmitOnce();
 initAlertDismissFocus();
+initTooltips(bootstrap.Tooltip);
 // The script loads in <head>: wait for the page
 document.addEventListener('DOMContentLoaded', focusOnLoad);

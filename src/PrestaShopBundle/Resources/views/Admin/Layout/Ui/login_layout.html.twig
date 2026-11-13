@@ -47,15 +47,36 @@
         </div>
 
         <twig:ui:Layout:Cluster gap="xs" justify="center" class="ps-login__social">
-          <a href="https://x.com/PrestaShop" class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link" target="_blank" rel="noopener noreferrer" aria-label="{{ '%brand% on %network%'|trans({'%brand%': 'PrestaShop', '%network%': 'X'}, 'Admin.Login.Feature') }}">
-            <twig:ui:Icon name="brand:twitter-x"/>
-          </a>
-          <a href="https://www.facebook.com/prestashop" class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link" target="_blank" rel="noopener noreferrer" aria-label="{{ '%brand% on %network%'|trans({'%brand%': 'PrestaShop', '%network%': 'Facebook'}, 'Admin.Login.Feature') }}">
-            <twig:ui:Icon name="brand:facebook"/>
-          </a>
-          <a href="https://github.com/PrestaShop/PrestaShop" class="link-secondary d-flex align-items-center justify-content-center ps-login__social-link" target="_blank" rel="noopener noreferrer" aria-label="{{ '%brand% on %network%'|trans({'%brand%': 'PrestaShop', '%network%': 'GitHub'}, 'Admin.Login.Feature') }}">
-            <twig:ui:Icon name="brand:github"/>
-          </a>
+          <twig:ui:IconButton
+            icon="brand:twitter-x"
+            label="{{ '%brand% on %network%'|trans({'%brand%': 'PrestaShop', '%network%': 'X'}, 'Admin.Login.Feature') }}"
+            variant="link"
+            size="sm"
+            href="https://x.com/PrestaShop"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-secondary"
+          />
+          <twig:ui:IconButton
+            icon="brand:facebook"
+            label="{{ '%brand% on %network%'|trans({'%brand%': 'PrestaShop', '%network%': 'Facebook'}, 'Admin.Login.Feature') }}"
+            variant="link"
+            size="sm"
+            href="https://www.facebook.com/prestashop"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-secondary"
+          />
+          <twig:ui:IconButton
+            icon="brand:github"
+            label="{{ '%brand% on %network%'|trans({'%brand%': 'PrestaShop', '%network%': 'GitHub'}, 'Admin.Login.Feature') }}"
+            variant="link"
+            size="sm"
+            href="https://github.com/PrestaShop/PrestaShop"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link-secondary"
+          />
         </twig:ui:Layout:Cluster>
       </twig:ui:Layout:Stack>
     </twig:ui:Layout:Stack>

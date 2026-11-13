@@ -227,3 +227,15 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Strings** (`Admin.Global`)
 - New: "(opens in a new tab)".
 
+## Icon buttons: `<twig:ui:IconButton>` — 2026-11-13
+
+`Twig/Component/Ui/IconButton.php`, `Component/Ui/icon_button.html.twig`, `components/_icon-button.scss`, `ui/src/js/components/tooltips.js`, the login layout.
+
+**Markup**
+- Login social links: `link-secondary d-flex … ps-login__social-link` → `<twig:ui:IconButton variant="link" size="sm">` (`btn btn-link btn-sm ps-icon-button link-secondary`); `.ps-login__social-link` is removed. Same `aria-label`, `target` and `rel`.
+- `[data-bs-toggle="tooltip"]` elements get their Bootstrap tooltip on first hover or focus, on every kit page.
+
+**Behaviour**
+- Login social links: 31px squares (were 32px), icons 17.5px (were 16px), the button focus ring.
+- A tooltip that repeats its element's `aria-label` is not linked with `aria-describedby`, so screen readers read it once.
+

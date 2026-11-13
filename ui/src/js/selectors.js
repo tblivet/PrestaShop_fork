@@ -12,4 +12,6 @@ export default {
   clientError: '[data-ps-target="client-error"]',
   flashAlert: '[data-ps-ref="flash-alert"]',
   submitSpinner: '[data-ps-ref="submit-spinner"]',
+  // Bootstrap's own attribute: the tooltip plugin reads its options from data-bs-*
+  tooltip: '[data-bs-toggle="tooltip"]',
 };

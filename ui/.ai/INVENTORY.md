@@ -57,7 +57,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 |---|--------|------|------|-------|----------|------------|------------|-----------------|
 | 1 | - [x] | [`<twig:ui:Icon>`](#1-twiguiicon) | content | 120 | 7 | S | - | no |
 | 2 | - [x] | [`<twig:ui:Button>`](#2-twiguibutton) | action | 140 | 6 | M | `<twig:ui:Icon>` | no |
-| 3 | - [ ] | [`<twig:ui:IconButton>`](#3-twiguiiconbutton) | action | 45 | 6 | S | `<twig:ui:Button>`, `<twig:ui:Icon>` | no |
+| 3 | - [x] | [`<twig:ui:IconButton>`](#3-twiguiiconbutton) | action | 45 | 6 | S | `<twig:ui:Button>`, `<twig:ui:Icon>` | no |
 | 4 | - [x] | [`<twig:ui:Link>`](#4-twiguilink) | navigation | 30 | 5 | S | `<twig:ui:Icon>` | no |
 | 5 | - [ ] | [`<twig:ui:Badge>`](#5-twiguibadge) | content | 30 | 5 | S | `<twig:ui:Icon>` | no |
 | 6 | - [ ] | [`<twig:ui:HelpTip>`](#6-twiguihelptip) | feedback | 25 | 4 | S | `<twig:ui:IconButton>` | no |
@@ -219,6 +219,8 @@ Done 2026-11-13 with `variant` (`danger` is `destructive`, the kit's solid red),
 ### 3. `<twig:ui:IconButton>`
 
 Icon-only button or link with a required accessible label and an optional tooltip showing it; used for row actions, close, delete, edit, refresh, prev/next.
+
+Done 2026-11-13 as a square `<twig:ui:Button>` (same `variant`, `size`, `href`/`type`, `loading`, `disabled`) with required `icon` and `label` (its `aria-label`) and `tooltip`; "ghost" is `variant="link"`. Tooltips start on first hover or focus (`ui/src/js/components/tooltips.js`). Used by the login social links. Not built yet: the close variant (Bootstrap's `.btn-close` stays for now).
 
 - Role: component, kind: action, complexity: S, pages: 45
 - Sections: grid row actions, card headers, collections, modals, pagination, order view
