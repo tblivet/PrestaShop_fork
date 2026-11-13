@@ -13,10 +13,9 @@
 
 <body class="lang-{{ ps.isoUser }}">
   <main class="ps-page ps-page--bg-subtle ps-page--login ps-login">
-    <a class="icon-link icon-link-hover icon-link-hover-start small ps-login__back" href="{{ ps.baseUrl }}">
-      <twig:ui:Icon name="arrow_back" size="lg" flipRtl/>
-      {{ 'Back to %store_name%'|trans({'%store_name%': shopName}, 'Admin.Actions') }}
-    </a>
+    <twig:ui:Link href="{{ ps.baseUrl }}" back class="small ps-login__back">
+      {{- 'Back to %store_name%'|trans({'%store_name%': shopName}, 'Admin.Actions') -}}
+    </twig:ui:Link>
 
     {# Rendered here, not inside the component tags: a block written there would be the component's own block, which the
        pages could not override #}
@@ -42,9 +41,9 @@
       {# Copyright and social links read as one block, set apart from the card #}
       <twig:ui:Layout:Stack gap="lg" class="ps-login__footer">
         <div class="ps-login__copyright small text-center">
-          <a class="link-secondary ps-login__copyright-link" href="https://www.prestashop-project.org" target="_blank" rel="noopener noreferrer">
-            {{ '© %brand% 2007-%year% - All rights reserved'|trans({'%brand%': 'PrestaShop™', '%year%': 'now'|date('Y')}, 'Admin.Login.Feature') }}
-          </a>
+          <twig:ui:Link href="https://www.prestashop-project.org" external class="link-secondary ps-login__copyright-link">
+            {{- '© %brand% 2007-%year% - All rights reserved'|trans({'%brand%': 'PrestaShop™', '%year%': 'now'|date('Y')}, 'Admin.Login.Feature') -}}
+          </twig:ui:Link>
         </div>
 
         <twig:ui:Layout:Cluster gap="xs" justify="center" class="ps-login__social">

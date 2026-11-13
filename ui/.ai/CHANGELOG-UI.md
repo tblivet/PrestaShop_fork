@@ -214,3 +214,16 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Behaviour**
 - None visible on the login pages, apart from the back link's arrow, which now moves left on hover (right in right-to-left languages, where it also stays mirrored: the hover used to undo the mirroring).
 
+## Links: `<twig:ui:Link>` — 2026-11-13
+
+`Twig/Component/Ui/Link.php`, `Component/Ui/link.html.twig`, the login layout and the reset password page.
+
+**Markup**
+- The login back link is `<twig:ui:Link back>`: same classes (`icon-link icon-link-hover icon-link-hover-start`) and icon.
+- The copyright link is `<twig:ui:Link external>`: it gains a visually hidden "(opens in a new tab)".
+- "Back to sign in" (reset password page) is a plain link with `link-secondary small`, no longer `btn btn-link p-0`: same look, 2px shorter (no button border).
+- The Helpers/Icon Link story is removed: Components/Link shows icon links.
+
+**Strings** (`Admin.Global`)
+- New: "(opens in a new tab)".
+

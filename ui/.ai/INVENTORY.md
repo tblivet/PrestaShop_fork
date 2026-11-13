@@ -58,7 +58,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | 1 | - [x] | [`<twig:ui:Icon>`](#1-twiguiicon) | content | 120 | 7 | S | - | no |
 | 2 | - [x] | [`<twig:ui:Button>`](#2-twiguibutton) | action | 140 | 6 | M | `<twig:ui:Icon>` | no |
 | 3 | - [ ] | [`<twig:ui:IconButton>`](#3-twiguiiconbutton) | action | 45 | 6 | S | `<twig:ui:Button>`, `<twig:ui:Icon>` | no |
-| 4 | - [ ] | [`<twig:ui:Link>`](#4-twiguilink) | navigation | 30 | 5 | S | `<twig:ui:Icon>` | no |
+| 4 | - [x] | [`<twig:ui:Link>`](#4-twiguilink) | navigation | 30 | 5 | S | `<twig:ui:Icon>` | no |
 | 5 | - [ ] | [`<twig:ui:Badge>`](#5-twiguibadge) | content | 30 | 5 | S | `<twig:ui:Icon>` | no |
 | 6 | - [ ] | [`<twig:ui:HelpTip>`](#6-twiguihelptip) | feedback | 25 | 4 | S | `<twig:ui:IconButton>` | no |
 | 7 | - [ ] | [`<twig:ui:Alert> (extend)`](#7-twiguialert-extend) | feedback | 75 | 6 | M | `<twig:ui:Icon>`, `<twig:ui:IconButton>` | no |
@@ -265,9 +265,11 @@ Icon-only button or link with a required accessible label and an optional toolti
 
 Text link with optional icon; external prop adds rel=noopener and a 'opens in a new tab' cue; covers Learn more, Manage X, doc links and Back to list links.
 
+Done 2026-11-13 with `href`, `icon` + `iconPosition`, `back` and `external` (no automatic `open_in_new` icon: add it where a new tab would surprise); used by the login back link, the copyright link and "Back to sign in". Replaces the Helpers/Icon Link story.
+
 - Role: component, kind: navigation, complexity: S, pages: 30
 - Sections: showcase cards, form rows (external_link), alerts, grid footers, view pages
-- Builds on: Bootstrap icon-link (ui IconLink story)
+- Builds on: Bootstrap icon-link
 - Depends on: `<twig:ui:Icon>`
 
 **Variants (props)**
