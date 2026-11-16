@@ -37,10 +37,8 @@ $component-name: ps-side-menu;
   }
 
   &__heading {
-    display: flex;
-    gap: .5rem;
-    // The mark's bottom edge is its baseline: it sits on the text baseline
-    align-items: baseline;
+    @include ps-heading-mark(var(--#{$prefix}side-menu-heading-accent));
+
     // Lined up with the link text, inset by the link padding
     padding-inline: $nav-link-padding-x;
     margin-block-end: .5rem;
@@ -49,17 +47,6 @@ $component-name: ps-side-menu;
     color: var(--#{$prefix}side-menu-heading-color);
     text-transform: uppercase;
     letter-spacing: .05em;
-
-    // A brand blue mark that starts each group, centred on the capitals: it sits on the baseline, then moves down
-    // half of what it is taller than them
-    &::before {
-      flex-shrink: 0;
-      width: .25rem;
-      height: .625rem;
-      content: "";
-      background-color: var(--#{$prefix}side-menu-heading-accent);
-      translate: 0 calc((.625rem - 1cap) / 2);
-    }
   }
 
   &__list,

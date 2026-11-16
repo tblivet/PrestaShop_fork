@@ -8,6 +8,7 @@ import initAlertDismissFocus from './components/alert-dismiss-focus';
 import initPasswordToggle from './components/password-toggle';
 import initFormValidation from './components/form-validation';
 import initHeaderSearch from './components/header-search';
+import initNotifications from './components/notifications';
 import initQuickAccess from './components/quick-access';
 import focusOnLoad from './components/load-focus';
 import initSubmitOnce from './components/submit-once';
@@ -22,6 +23,8 @@ initPasswordToggle();
 initFormValidation();
 initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
+// The bell is rendered after this script (in <head>)
+document.addEventListener('DOMContentLoaded', initNotifications);
 initSubmitOnce();
 initAlertDismissFocus();
 initTooltips(bootstrap.Tooltip);

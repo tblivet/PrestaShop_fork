@@ -1,0 +1,23 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Kit mixins, shared by several components
+
+// The brand blue mark that starts a group heading (side menu sections, notification kinds), centred on the capitals:
+// it sits on the baseline, then moves down half of what it is taller than them
+@mixin ps-heading-mark($color: var(--#{$prefix}oceanblue-500)) {
+  display: flex;
+  gap: .5rem;
+  // The mark's bottom edge is its baseline: it sits on the text baseline
+  align-items: baseline;
+
+  &::before {
+    flex-shrink: 0;
+    width: .25rem;
+    height: .625rem;
+    content: "";
+    background-color: $color;
+    translate: 0 calc((.625rem - 1cap) / 2);
+  }
+}

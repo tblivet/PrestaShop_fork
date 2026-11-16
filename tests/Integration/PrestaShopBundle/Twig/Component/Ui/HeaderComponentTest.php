@@ -34,7 +34,7 @@ class HeaderComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('ps-header__search', $html);
         $this->assertStringNotContainsString('ps-header__start', $html);
         $this->assertMatchesRegularExpression('#<a class="ps-header__brand" href="/home"><svg [^>]*class="ps-icon ps-icon--xl ps-header__monogram" role="img" aria-label="PrestaShop">.*</svg>\s*<img class="ps-header__logo" src="/logo.svg" alt="PrestaShop"#s', $html);
-        $this->assertMatchesRegularExpression('#<div class="ps-header__actions"><a class="ps-header-action" href="/" target="_blank" rel="noopener noreferrer"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"#', $html);
+        $this->assertMatchesRegularExpression('#<div id="header_infos" class="ps-header__actions"><a class="ps-header-action" href="/" target="_blank" rel="noopener noreferrer"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"#', $html);
     }
 
     public function testRendersAnIconOnlyLinkWithItsLabelInTheTooltip(): void

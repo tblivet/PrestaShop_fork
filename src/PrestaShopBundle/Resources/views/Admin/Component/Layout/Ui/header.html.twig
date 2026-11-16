@@ -30,6 +30,11 @@
   ~ (ps.frontOfficeAccessibleForAdmins|default(false) ? ' ' ~ 'Signed-in employees can still see it.'|trans({}, 'Admin.Navigation.Notification') : '') -%}
 <twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset('prestashop.svg', 'ui_kit') }}" version="{{ ps.version }}" :search="search">
   <twig:block name="start">{{ component('QuickAccess') }}</twig:block>
+  {#- Module entries first: what displayBackOfficeTop renders, in a box that does not count in the layout. Its old
+   # classes are where AskAI puts its button, before it -#}
+  <div class="ps-header__modules header-list component" data-ps-ref="header-modules">
+    {{- renderhook('displayBackOfficeTop') -}}
+  </div>
   {%- if ps.debugMode|default(false) -%}
     <twig:ui:HeaderAction icon="bug_report" warning iconOnly label="{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_performance') }}" description="{{ 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification') }}"/>
   {%- endif -%}
@@ -37,8 +42,8 @@
     <twig:ui:HeaderAction icon="build" warning iconOnly label="{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_maintenance') }}" description="{{ maintenanceDescription }}"/>
   {%- endif -%}
   <twig:ui:HeaderAction icon="storefront" label="{{ 'View my shop'|trans({}, 'Admin.Navigation.Header') }}" href="{{ ps.baseUrl }}" external iconOnly/>
+  {{- component('NotificationsCenter') -}}
   {%- if employee -%}
     <twig:ui:HeaderAction image="{{ employee.imageUrl }}" label="{{ employeeShortName }}" :items="accountItems"/>
   {%- endif -%}
-  {{- renderhook('displayBackOfficeTop') -}}
 </twig:ui:Header>

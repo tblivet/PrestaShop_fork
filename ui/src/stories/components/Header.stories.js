@@ -113,7 +113,7 @@ const header = ({ homeUrl = '#home', logo = '/prestashop.svg', version = null, m
       + `${version ? badge({ label: version, variant: 'oceanblue', class: 'ps-header__version' }).html : ''}`
       + `${startNodes.length ? `<div class="ps-header__start">${startNodes.map((node) => node.html).join('')}</div>` : ''}`
       + `${searchProps ? searchMarkup(searchProps) : ''}`
-      + `<div class="ps-header__actions">${nodes.map((node) => node.html).join('')}</div>`
+      + `<div id="header_infos" class="ps-header__actions">${nodes.map((node) => node.html).join('')}</div>`
       + '</header>',
     twig: twigCall('ui:Header', { homeUrl, logo, version, menuId, search: searchProps }, DEFAULTS, [...blocks, ...nodes]),
   };

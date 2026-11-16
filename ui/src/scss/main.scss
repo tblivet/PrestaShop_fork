@@ -23,6 +23,7 @@
 @import 'bootstrap/scss/maps';
 @import 'maps'; // after bootstrap/scss/maps so map.merge($theme-colors, …) works
 @import 'bootstrap/scss/mixins';
+@import 'mixins';
 @import 'bootstrap/scss/utilities';
 
 // ── PHASE 4: Bootstrap layout + components ────────────────────────────────────
@@ -82,6 +83,7 @@
 @import 'components/modal';
 @import 'components/nav';
 @import 'components/navbar';
+@import 'components/notifications';
 @import 'components/offcanvas';
 @import 'components/pagination';
 @import 'components/password';

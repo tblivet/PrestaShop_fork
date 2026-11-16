@@ -2,7 +2,10 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
-{% if this.showNewOrders or this.showNewCustomers or this.showNewMessages %}
+{# The kit renders its own notifications; the markup below stays for the old theme (PS_UI_KIT=0) #}
+{% if ui_kit %}
+  {{ include('@PrestaShop/Admin/Component/Layout/Ui/notifications_center.html.twig') }}
+{% elseif this.showNewOrders or this.showNewCustomers or this.showNewMessages %}
   <div class="component header-right-component" id="header-notifications-container">
     <div id="notif" class="notification-center dropdown dropdown-clickable">
       <button class="btn notification js-notification dropdown-toggle" data-toggle="dropdown">

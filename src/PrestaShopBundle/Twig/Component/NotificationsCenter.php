@@ -110,6 +110,14 @@ class NotificationsCenter
         return $this->noCustomerMessageTip;
     }
 
+    /**
+     * The abandoned carts list, linked from the kit's empty orders tip
+     */
+    public function getAbandonedCartsUrl(): string
+    {
+        return $this->router->generate('admin_carts_index', ['cart[filters][status]' => CartStatus::ABANDONED_CART]);
+    }
+
     protected function getNotificationTip(string $type): string
     {
         $tips = [

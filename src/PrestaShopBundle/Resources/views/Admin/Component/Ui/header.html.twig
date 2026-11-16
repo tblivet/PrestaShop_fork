@@ -48,7 +48,8 @@
       <twig:ui:Icon name="search" size="xl"/>
     </button>
   {%- endif -%}
-  <div class="ps-header__actions">
+  {#- The old header's id: modules mount their own entries in it (AskAI) -#}
+  <div id="header_infos" class="ps-header__actions">
     {%- block content %}{% endblock -%}
   </div>
 </header>

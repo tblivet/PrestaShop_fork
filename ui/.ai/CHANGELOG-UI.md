@@ -280,7 +280,7 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - Search: the field keeps `name="bo_query"` and posts to AdminSearch; the type picker is a `<twig:ui:DropdownMenu>` of buttons filling the hidden `bo_search_type` (hooks `data-ps-ref="header-search"`, `header-search-type`, `header-search-input`, `header-search-scope`, `data-ps-action="set-search-type"`). Below md it is a panel sliding from the top (`#ps-header-search`, Bootstrap offcanvas-md).
 - Header entries are `<twig:ui:HeaderAction>`: debug mode, maintenance mode, View my shop, the employee menu (a `<button>`, not a `div`, opening a `<twig:ui:DropdownMenu>`). Modules writing to `displayBackOfficeTop` can render the same entry.
 - `displayBackOfficeEmployeeMenu` links become menu items between "Your profile" and "Sign out"; an icon with no SVG file is left out. `displayBackOfficeTop` keeps its place at the end of the bar.
-- Not on kit pages until their kit version: notifications, the multistore bar (quick access: see its own entry). The kit build (`theme-ui.ts`) no longer runs the old `NavBar` and `Header` scripts nor `components/header/search-form`.
+- Not on kit pages until their kit version: the multistore bar (quick access and notifications: see their own entries). The kit build (`theme-ui.ts`) no longer runs the old `NavBar` and `Header` scripts nor `components/header/search-form`.
 - Kit CSS: `layout/_header.scss` (playground classes, icon font) is replaced by the component partials. Dropdown menus are as wide as their longest label (`width: max-content`, still at most 20rem). Side menu section headings start with a small `oceanblue-500` bar that marks each group. Their text is 14px (`$dropdown-font-size`), items are 30px high in a .5rem inset (`$dropdown-item-padding-y`, `$dropdown-padding-x|y`), their icons use the tertiary text color at rest, the label color when hovered, focused, chosen or disabled.
 - The version is a `<twig:ui:Badge variant="oceanblue">` (`#shop_version` → `.ps-header__version`); search types show their icon as before. Everything on the dark bar (logo, field, type picker, submit, entries) has the same focus ring, the buttons' ring in white at 50% after a gap the color of the bar; its menus keep the default one. Like a Bootstrap button, hover lightens, pressed (`:active`) or open lightens more, keyboard focus adds the ring. The logo has the ring only, no hover or pressed state. The search field and its two buttons sit on a background 10% lighter than the bar (`--psk-header-search-bg`, 15% on hover and focus, 20% pressed or open); the field's clear button is a close icon in the text color.
 - Storybook: Components/Header and Components/HeaderAction are new; Playground/Pages/Home is now Playground/Layout/Page, the playground header uses the new markup. Story Twig code writes array and object props as Twig literals (`{label: 'Edit'}`).
@@ -348,3 +348,25 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - Save → Add (the add dialog's button)
 - New: "This page is now in your quick access.", "This page is no longer in your quick access."
 
+## Notifications in the kit header — 2026-11-16
+
+`Component/Layout/Ui/notifications_center.html.twig` (kit branch of `Component/Layout/notifications_center.html.twig`), `ui/src/js/components/notifications.js`, `components/_notifications.scss`, `Component/Ui/header.html.twig`.
+
+**Markup**
+- With `PS_UI_KIT=1`, the bell is an icon button of the header (`data-ps-ref="notifications"`, toggle `notifications-toggle`) with a `<twig:ui:Badge counter>` total (`notifications-total`), opening a panel: a row of filters that are tabs of the list (`role="tablist"`, each `role="tab"` `data-ps-action="filter-notifications"`, All then one per kind, the shown one `aria-selected="true"`, counts `notifications-count`; the list and empty state are their `role="tabpanel"`, `notifications-panel`), one list (`notifications-list`, grouped by kind under All, each group heading with the side menu's blue mark: `ps-heading-mark()` in `scss/_mixins.scss`, shared with `.ps-side-menu__heading`) and one empty state (`notifications-empty`, its sentence from the pressed filter, a kind's tip `notifications-empty-tip`). See DECISIONS.md #36 for kinds added by modules later. Gone: `#notif`, `.notification-center`, `.js-notification`, `#notifications-total`, `#orders-tab`, `#_nb_new_orders_`, `.notification-elements`, the `<script type="text/html">` templates.
+- Kept for modules: `#header-notifications-container` on the bell, and `#header_infos` on the header actions. AskAI mounts its app in `#header_infos` and its button before `#header-notifications-container`: without them it does not show on kit pages.
+
+**Behaviour**
+- Keyboard, as tabs: Tab reaches the selected filter then the list; ←/→ move to the previous or next filter and show it (wrapping, reversed right to left), Home and End to the first and last. An empty panel takes the focus itself.
+- Same endpoints as before (`admin_common_notifications`, `admin_common_notifications_ack`): loaded on page load, every two minutes and when the panel closes; the kinds shown while it was open are marked seen when it closes, and it opens again on All.
+- Module entries (`displayBackOfficeTop`) come first in the header actions, in `.ps-header__modules` (`display: contents`) which keeps the old `.header-list.component` classes: AskAI puts its button before it.
+- Lines are built with the DOM (no HTML from the server), linking to the order, the customer or the thread.
+
+**Strings** (`Admin.Navigation.Notification`)
+- "No new order for now :(" → "No new orders."
+- "No new customer for now :(" → "No new customers."
+- "No new message for now." → "No new messages."
+- "Registered on:" + date → "Registered on %date%"
+- Empty tips, kit only (the old theme keeps its own): "Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!" → "Check your [1]abandoned carts[/1]: your next order may be waiting there."; "Are you active on social media these days?" → "Share your shop on social media to bring in new customers."; "Seems like all your customers are happy :)" → "Your customers have no questions for now."
+- Message status: the raw value (open, pending1…) → the Customer service labels "Opened", "Closed", "Pending 1", "Pending 2" (`Admin.Catalog.Feature`, existing)
+- New: "Notifications", "Messages", "Filter notifications" (the filters' group name), "Nothing new for now."

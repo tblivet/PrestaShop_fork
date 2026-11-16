@@ -77,6 +77,11 @@ $component-name: ps-header;
     color: var(--#{$prefix}white);
   }
 
+  // The module entries (displayBackOfficeTop): their box does not count, each entry sits in the actions row
+  &__modules {
+    display: contents;
+  }
+
   // What follows the logo (quick access)
   &__start {
     display: flex;
