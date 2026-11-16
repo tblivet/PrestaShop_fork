@@ -15,6 +15,7 @@ export default {
   headerSearch: '[data-ps-ref="header-search"]',
   headerSearchInput: '[data-ps-ref="header-search-input"]',
   headerSearchScope: '[data-ps-ref="header-search-scope"]',
+  headerSearchScopeIcon: '[data-ps-ref="header-search-scope-icon"]',
   headerSearchType: '[data-ps-ref="header-search-type"]',
   setSearchType: '[data-ps-action="set-search-type"]',
   quickAccess: '[data-ps-ref="quick-access"]',

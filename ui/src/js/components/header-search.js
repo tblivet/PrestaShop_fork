@@ -4,7 +4,7 @@
  */
 import selectors from '../selectors';
 
-// The header search (<twig:ui:Header>): picking where to search fills the hidden bo_search_type field, the button text
+// The header search (<twig:ui:Header>): picking where to search fills the hidden bo_search_type field, the button text and icon
 // and the field's placeholder, then goes back to the field. On a phone the search is a panel: opening it focuses the
 // field.
 export default function initHeaderSearch() {
@@ -18,6 +18,17 @@ export default function initHeaderSearch() {
 
     form.querySelector(selectors.headerSearchType).value = choice.dataset.psValue;
     form.querySelector(selectors.headerSearchScope).textContent = choice.textContent.trim();
+
+    // The button shows the chosen type's icon: a copy of the one in its menu item, with the button icon's class
+    const scopeIcon = form.querySelector(selectors.headerSearchScopeIcon);
+    const choiceIcon = choice.querySelector('svg');
+    if (scopeIcon && choiceIcon) {
+      const icon = choiceIcon.cloneNode(true);
+
+      icon.setAttribute('class', scopeIcon.getAttribute('class'));
+      icon.dataset.psRef = 'header-search-scope-icon';
+      scopeIcon.replaceWith(icon);
+    }
     form.querySelectorAll(selectors.setSearchType).forEach((item) => {
       if (item === choice) {
         item.setAttribute('aria-current', 'true');

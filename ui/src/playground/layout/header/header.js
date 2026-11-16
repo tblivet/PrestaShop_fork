@@ -3,6 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // The BO header mockup (<twig:ui:Header>, see Components/Header) with its icons drawn
+import allInclusive from '../../../../icons/material-symbols/all-inclusive.svg?raw';
 import bookmarkAdd from '../../../../icons/material-symbols/bookmark-add.svg?raw';
 import bookmarks from '../../../../icons/material-symbols/bookmarks.svg?raw';
 import keyboardArrowDown from '../../../../icons/material-symbols/keyboard-arrow-down.svg?raw';
@@ -20,6 +21,7 @@ import headerHtml from './header.html?raw';
 
 export default expandIcons(headerHtml, {
   'brand:p-monogram': pMonogram,
+  all_inclusive: allInclusive,
   bookmark_add: bookmarkAdd,
   bookmarks,
   keyboard_arrow_down: keyboardArrowDown,

@@ -45,6 +45,12 @@ final class HeaderAction
     /** Which edge of the button the menu lines up with: end for the actions on the right, start next to the logo */
     public string $align = 'end';
 
+    /** Links only: the icon alone at every width, the label in a tooltip (and still the name for screen readers) */
+    public bool $iconOnly = false;
+
+    /** A state to notice (debug mode, maintenance mode): an amber chip */
+    public bool $warning = false;
+
     #[PreMount]
     public function preMount(array $data): array
     {
@@ -52,7 +58,7 @@ final class HeaderAction
         $resolver
             ->setIgnoreUndefined()
             ->setRequired('label')
-            ->setDefaults(['icon' => null, 'image' => null, 'href' => null, 'external' => false, 'items' => null, 'description' => null, 'align' => 'end'])
+            ->setDefaults(['icon' => null, 'image' => null, 'href' => null, 'external' => false, 'items' => null, 'description' => null, 'align' => 'end', 'iconOnly' => false, 'warning' => false])
             ->setAllowedTypes('label', 'string')
             ->setAllowedValues('label', fn (string $label): bool => '' !== trim($label))
             ->setAllowedTypes('icon', ['null', 'string'])
@@ -62,6 +68,8 @@ final class HeaderAction
             ->setAllowedTypes('items', ['null', 'array'])
             ->setAllowedTypes('description', ['null', 'string'])
             ->setAllowedValues('align', DropdownMenu::ALIGNMENTS)
+            ->setAllowedTypes('iconOnly', 'bool')
+            ->setAllowedTypes('warning', 'bool')
         ;
         $props = $resolver->resolve($data);
 
@@ -71,8 +79,11 @@ final class HeaderAction
         if ((null === $props['href']) === (null === $props['items'])) {
             throw new InvalidOptionsException('A header action is a link (href) or opens a menu (items): give one of them.');
         }
-        if (null !== $props['items'] && ($props['external'] || null !== $props['description'])) {
-            throw new InvalidOptionsException('A header action that opens a menu takes no external or description: put them on its items.');
+        if (null !== $props['items'] && ($props['external'] || null !== $props['description'] || $props['iconOnly'])) {
+            throw new InvalidOptionsException('A header action that opens a menu takes no external, description or iconOnly: its button opens the menu, it has no tooltip.');
+        }
+        if ($props['iconOnly'] && null === $props['icon']) {
+            throw new InvalidOptionsException('An icon-only header action needs an icon.');
         }
 
         return $props + $data;

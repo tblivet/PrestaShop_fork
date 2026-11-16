@@ -110,6 +110,11 @@ $component-name: ps-header;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath d='M249-193.43 193.43-249l231-231-231-231L249-766.57l231 231 231-231L766.57-711l-231 231 231 231L711-193.43l-231-231-231 231Z'/%3E%3C/svg%3E") center / contain no-repeat;
   }
 
+  // Its icon shows only where the label does not fit (see the md to xl range below)
+  &__search-scope-icon {
+    display: none;
+  }
+
   &__search-scope {
     display: inline-flex;
     gap: .25rem;
@@ -117,9 +122,16 @@ $component-name: ps-header;
     border-color: var(--#{$prefix}border-color);
   }
 
+  // A square: as wide as a button is high (its line, padding and borders)
   &__search-submit {
+    display: inline-flex;
+    flex: 0 0 calc(1lh + #{$btn-padding-y * 2} + 2 * #{$btn-border-width});
+    align-items: center;
+    justify-content: center;
+    padding-inline: 0;
     border-color: var(--#{$prefix}border-color);
   }
+
 
   &__actions {
     display: flex;
@@ -177,7 +189,7 @@ $component-name: ps-header;
       &:focus {
         color: var(--#{$prefix}white);
         background-color: var(--#{$prefix}header-search-hover-bg);
-        border-color: var(--#{$prefix}oceanblue-500);
+        border-color: var(--#{$prefix}primary-400);
         box-shadow: $ps-header-focus-ring;
       }
     }
@@ -203,9 +215,22 @@ $component-name: ps-header;
       }
 
       &:focus-visible {
-        border-color: var(--#{$prefix}oceanblue-500);
+        border-color: var(--#{$prefix}primary-400);
         box-shadow: $ps-header-focus-ring;
       }
+    }
+  }
+
+  // Between md and xl the bar is short of room: the search type shows its icon instead of its label, which stays its name
+  // for screen readers. Written as a range: below md the search is a full-width panel, from xl the bar has room, and
+  // both show the label alone.
+  @include media-breakpoint-between(md, xl) {
+    &__search-scope-icon {
+      display: inline-block;
+    }
+
+    &__search-scope:has(.#{$component-name}__search-scope-icon) .#{$component-name}__search-scope-label {
+      @include visually-hidden();
     }
   }
 }

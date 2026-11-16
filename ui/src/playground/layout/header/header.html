@@ -58,13 +58,14 @@
         />
         <button type="button" class="btn ps-header__search-scope" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="visually-hidden">Search in </span>
-          <span data-ps-ref="header-search-scope">Everywhere</span>
+          <!-- ui:Icon all_inclusive size="lg" class="ps-header__search-scope-icon" data-ps-ref="header-search-scope-icon" -->
+          <span class="ps-header__search-scope-label" data-ps-ref="header-search-scope">Everywhere</span>
           <!-- ui:Icon keyboard_arrow_down size="lg" -->
         </button>
         <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
           <li>
             <button type="button" class="dropdown-item ps-dropdown-menu__item" aria-current="true" data-ps-action="set-search-type" data-ps-value="0" data-ps-data-placeholder="Products, orders, customers…">
-              <!-- ui:Icon search size="lg" class="ps-dropdown-menu__icon" -->
+              <!-- ui:Icon all_inclusive size="lg" class="ps-dropdown-menu__icon" -->
               <span class="ps-dropdown-menu__label">Everywhere</span>
             </button>
           </li>
@@ -100,18 +101,19 @@
 
   <div class="ps-header__actions">
     <!-- <twig:ui:HeaderAction icon="storefront" label="View my shop" href="#" external/> -->
-    <a class="ps-header-action" href="#" target="_blank" rel="noopener noreferrer">
+    <a class="ps-header-action ps-header-action--icon-only" href="#" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-title="View my shop">
       <!-- ui:Icon storefront size="xl" class="ps-header-action__icon" -->
       <span class="ps-header-action__label">View my shop<span class="visually-hidden"> (opens in a new tab)</span></span>
     </a>
-    <!-- <twig:ui:HeaderAction image="…" label="Marc Beier" :items="…"/> -->
+    <!-- <twig:ui:HeaderAction image="…" label="Marc B." :items="…"/> -->
     <div class="dropdown">
       <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">
         <img class="ps-header-action__image" src="/playground/avatar.svg" alt="" width="24" height="24" />
-        <span class="ps-header-action__label">Marc Beier</span>
+        <span class="ps-header-action__label">Marc B.</span>
         <!-- ui:Icon keyboard_arrow_down class="ps-header-action__arrow" -->
       </button>
       <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
+        <li><span class="dropdown-header">Marc Beier</span></li>
         <li>
           <a class="dropdown-item ps-dropdown-menu__item" href="#">
             <!-- ui:Icon person size="lg" class="ps-dropdown-menu__icon" -->

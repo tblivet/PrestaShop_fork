@@ -12,19 +12,27 @@
     {%- if external %}<span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>{% endif -%}
   </span>
 {%- endset -%}
+{%- set classes = 'ps-header-action' ~ (warning ? ' ps-header-action--warning') ~ (iconOnly ? ' ps-header-action--icon-only') -%}
 {%- if items is null -%}
-  {%- set defaults = {class: 'ps-header-action', href: href} -%}
+  {%- set defaults = {class: classes, href: href} -%}
   {%- if external -%}
     {%- set defaults = defaults|merge({target: '_blank', rel: 'noopener noreferrer'}) -%}
   {%- endif -%}
-  {%- if description -%}
-    {%- set defaults = defaults|merge({'data-bs-toggle': 'tooltip', 'data-bs-title': description}) -%}
+  {#- An icon-only link shows its label in the tooltip: as a bold title above the description when it has one (escaped
+   # here, then Bootstrap's sanitizer). Below the bar: above, it would leave the window -#}
+  {%- set tooltip = iconOnly ? label : description -%}
+  {%- if iconOnly and description -%}
+    {%- set tooltip = '<strong class="ps-header-action-tooltip__title">' ~ label|e ~ '</strong>' ~ description|e -%}
+    {%- set defaults = defaults|merge({'data-bs-html': 'true'}) -%}
+  {%- endif -%}
+  {%- if tooltip -%}
+    {%- set defaults = defaults|merge({'data-bs-toggle': 'tooltip', 'data-bs-placement': 'bottom', 'data-bs-custom-class': 'ps-header-action-tooltip', 'data-bs-title': tooltip}) -%}
   {%- endif -%}
   <a{{ attributes.defaults(defaults) }}>{{ content }}</a>
 {%- else -%}
   {#- A button: it opens the menu, it does not go anywhere -#}
   <div{{ attributes.defaults({class: 'dropdown'}) }}>
-    <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="{{ classes }}" data-bs-toggle="dropdown" aria-expanded="false">
       {{- content -}}
       <twig:ui:Icon name="keyboard_arrow_down" class="ps-header-action__arrow"/>
     </button>

@@ -37,6 +37,35 @@ class HeaderComponentTest extends KernelTestCase
         $this->assertMatchesRegularExpression('#<div class="ps-header__actions"><a class="ps-header-action" href="/" target="_blank" rel="noopener noreferrer"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"#', $html);
     }
 
+    public function testRendersAnIconOnlyLinkWithItsLabelInTheTooltip(): void
+    {
+        $html = $this->render('<twig:ui:HeaderAction icon="storefront" label="View my shop" href="/" external iconOnly/>');
+
+        $this->assertStringStartsWith('<a class="ps-header-action ps-header-action--icon-only" href="/" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="View my shop">', trim($html));
+    }
+
+    public function testRendersAWarningChip(): void
+    {
+        $html = $this->render('<twig:ui:HeaderAction icon="build" label="Maintenance mode" href="/maintenance" warning description="Your shop is closed."/>');
+
+        $this->assertStringStartsWith('<a class="ps-header-action ps-header-action--warning" href="/maintenance" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="Your shop is closed.">', trim($html));
+    }
+
+    public function testAnIconOnlyWarningShowsItsLabelAboveItsDescription(): void
+    {
+        $html = $this->render('<twig:ui:HeaderAction icon="build" label="Maintenance mode" href="/maintenance" warning iconOnly description="Your shop is closed."/>');
+
+        $this->assertStringContainsString('class="ps-header-action ps-header-action--warning ps-header-action--icon-only"', $html);
+        $this->assertStringContainsString('data-bs-html="true" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="&lt;strong class=&quot;ps-header-action-tooltip__title&quot;&gt;Maintenance mode&lt;/strong&gt;Your shop is closed.">', $html);
+    }
+
+    public function testEscapesTheTitledTooltip(): void
+    {
+        $html = $this->render('<twig:ui:HeaderAction icon="build" label="<b>Mode</b>" href="/m" iconOnly description="<script>x</script>"/>');
+
+        $this->assertStringContainsString('&amp;lt;b&amp;gt;Mode&amp;lt;/b&amp;gt;&lt;/strong&gt;&amp;lt;script&amp;gt;', $html);
+    }
+
     public function testRendersTheStartBlockAfterTheLogo(): void
     {
         $html = $this->render("<twig:ui:Header homeUrl=\"/home\" logo=\"/logo.svg\" version=\"9.3.0\"><twig:block name=\"start\"><twig:ui:HeaderAction icon=\"bookmarks\" label=\"Quick access\" align=\"start\" :items=\"[{label: 'Orders', href: '/orders'}]\"/></twig:block></twig:ui:Header>");
@@ -51,7 +80,7 @@ class HeaderComponentTest extends KernelTestCase
 
         $this->assertStringContainsString('<input type="hidden" name="bo_search_type" value="3" data-ps-ref="header-search-type">', $html);
         $this->assertStringContainsString('value="shoes" class="form-control ps-header__search-input" placeholder="Order ID"', $html);
-        $this->assertStringContainsString('<span data-ps-ref="header-search-scope">Orders</span>', $html);
+        $this->assertMatchesRegularExpression('#<svg [^>]*class="ps-icon ps-icon--lg ps-header__search-scope-icon" aria-hidden="true" data-ps-ref="header-search-scope-icon">.*</svg>\s*<span class="ps-header__search-scope-label" data-ps-ref="header-search-scope">Orders</span>#s', $html);
         $this->assertStringContainsString('aria-current="true" data-ps-action="set-search-type" data-ps-value="3" data-ps-data-placeholder="Order ID"', $html);
         $this->assertMatchesRegularExpression('#data-ps-value="3"[^>]*><svg [^>]*class="ps-icon ps-icon--lg ps-dropdown-menu__icon"#', $html);
     }
@@ -68,7 +97,7 @@ class HeaderComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:HeaderAction icon="bug_report" label="Debug mode" href="/performance" description="Errors are displayed."/>');
 
-        $this->assertStringContainsString('<a class="ps-header-action" href="/performance" data-bs-toggle="tooltip" data-bs-title="Errors are displayed.">', $html);
+        $this->assertStringContainsString('<a class="ps-header-action" href="/performance" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="Errors are displayed.">', $html);
     }
 
     private function render(string $template): string

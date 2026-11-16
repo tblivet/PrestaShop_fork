@@ -395,9 +395,11 @@ $ms-font-family: 'Material Symbols Outlined';
 // ── Back-office layout ────────────────────────────────────────────────────────
 // Fixed header height — the mobile drawer and its backdrop are offset by it
 $ps-header-height: 3.5rem;
-// Focus on the dark header bar: the default ring is dark, so the bar uses the light brand blue, solid.
+// Focus on the dark header bar: the default ring is dark, so the bar has its own.
 // Its menus and the search panel below md are light and keep the default ring.
-$ps-header-focus-ring: 0 0 0 .125rem var(--#{$prefix}oceanblue-500);
+// The buttons' ring (components/_buttons.scss) on the dark bar: the same .125rem gap and .25rem ring at 50%, the gap the
+// color of the bar, the ring white (5:1 on the bar)
+$ps-header-focus-ring: 0 0 0 .125rem var(--#{$prefix}primary), 0 0 0 calc(.125rem + .25rem) rgba(var(--#{$prefix}white-rgb), .5);
 // Fixed, centered design canvas for page content — pages are designed against
 // this width instead of fluid full-width, which is faster to design and build
 $ps-content-max-width: 75rem;

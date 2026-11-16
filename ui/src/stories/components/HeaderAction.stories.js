@@ -15,7 +15,7 @@ import { withDefaults } from '../story-defaults';
 const ICONS = { bug_report: bugReport, build, logout, person, storefront };
 
 // HeaderAction.php defaults; label is required, and an icon or an image, an href or items
-const DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null, align: 'end' };
+const DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null, align: 'end', iconOnly: false, warning: false };
 
 const ACCOUNT_ITEMS = [
   { label: 'Your profile', href: '#profile', icon: 'person' },
@@ -35,7 +35,7 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:HeaderAction icon="storefront" label="{{ \'View my shop\'|trans({}, \'Admin.Navigation.Header\') }}" href="{{ ps.baseUrl }}" external/>`, or a menu: `<twig:ui:HeaderAction image="{{ employee.imageUrl }}" label="{{ employee.firstName }}" :items="[…]"/>`. An entry of `<twig:ui:Header>`, placed in its content; modules writing to `displayBackOfficeTop` render the same entry.',
-          '**Props**: `label` (required: what it is; shown from lg up, below only the icon shows and the label stays its name for screen readers), `icon` (a [Material Symbols](https://fonts.google.com/icons) name) or `image` (URL of a round picture, the employee\'s avatar): one of them, `href` (a link) or `items` (a button opening a menu, the items of `<twig:ui:DropdownMenu>`): one of them, `external` (default `false`, links only: opens a new tab and says so), `description` (default none, links only: more about it in a tooltip), `align` (`start`, `end`; default `end`, menus only: the edge of the button the menu lines up with; `start` next to the logo). Other attributes (`id`, `data-ps-*`) go on the root.',
+          '**Props**: `label` (required: what it is; shown from lg up, below only the icon shows and the label stays its name for screen readers), `icon` (a [Material Symbols](https://fonts.google.com/icons) name) or `image` (URL of a round picture, the employee\'s avatar): one of them, `href` (a link) or `items` (a button opening a menu, the items of `<twig:ui:DropdownMenu>`): one of them, `external` (default `false`, links only: opens a new tab and says so), `description` (default none, links only: more about it in a tooltip), `align` (`start`, `end`; default `end`, menus only: the edge of the button the menu lines up with; `start` next to the logo), `iconOnly` (default `false`, links only: the icon alone at every width, the label in the tooltip, as a bold title above its description, and still its name for screen readers), `warning` (default `false`: a state to notice, debug or maintenance mode, as a compact amber chip; with `iconOnly`, an amber square). Tooltips open below the bar. Other attributes (`id`, `data-ps-*`) go on the root.',
           '**Do**: a short noun for the label ("View my shop", "Debug mode"), a menu for things about the employee, a description that says what a state means and what to do. **Don\'t**: an action of the page (it belongs to the page header), more than five entries, a link and a menu on one entry.',
           '**States**: a link, a link to another tab, a link with a description, a menu with an avatar, a long name.',
         ].join('\n\n'),
@@ -51,8 +51,10 @@ export default {
     items: { control: 'object', description: 'A menu; or href' },
     description: { control: 'text', description: 'Tooltip (links)' },
     align: { control: 'select', options: ['start', 'end'], description: 'Menu edge (menus)' },
+    iconOnly: { control: 'boolean', description: 'Icon alone, label in the tooltip (links)' },
+    warning: { control: 'boolean', description: 'A state to notice: amber chip' },
   }, DEFAULTS),
-  args: { ...DEFAULTS, label: 'View my shop', icon: 'storefront', href: '#store', external: true },
+  args: { ...DEFAULTS, label: 'View my shop', icon: 'storefront', href: '#store', external: true, iconOnly: true },
 };
 
 export const Default = withTwig(({ image, items, href, ...args }) => framedNodes(
@@ -62,8 +64,8 @@ export const Default = withTwig(({ image, items, href, ...args }) => framedNodes
 
 export const WithDescription = withTwig(() => framedNodes(
   [
-    action({ label: 'Debug mode', icon: 'bug_report', href: '#performance', description: 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.' }),
-    action({ label: 'Maintenance mode', icon: 'build', href: '#maintenance', description: 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.' }),
+    action({ label: 'Debug mode', icon: 'bug_report', warning: true, iconOnly: true, href: '#performance', description: 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.' }),
+    action({ label: 'Maintenance mode', icon: 'build', warning: true, iconOnly: true, href: '#maintenance', description: 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.' }),
   ],
   (html) => bar(html),
 ), { docs: { description: { story: 'Hover or focus: the tooltip says what the state means; the link goes where it can be turned off.' } } });

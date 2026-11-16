@@ -4,6 +4,7 @@
  */
 // Twig: <twig:ui:Header> (src/PrestaShopBundle/Twig/Component/Ui/Header.php) renders this markup, keep both in sync.
 // The search panel and the side menu drawer use Bootstrap offcanvas-md, the search type menu Bootstrap dropdown.
+import allInclusive from '../../../icons/material-symbols/all-inclusive.svg?raw';
 import bookmarkAdd from '../../../icons/material-symbols/bookmark-add.svg?raw';
 import bookmarks from '../../../icons/material-symbols/bookmarks.svg?raw';
 import bugReport from '../../../icons/material-symbols/bug-report.svg?raw';
@@ -29,7 +30,7 @@ import { withDefaults } from '../story-defaults';
 const ICONS = { bookmark_add: bookmarkAdd, bookmarks, bug_report: bugReport, build, logout, person, settings, storefront };
 
 // The icons of the search types
-const SEARCH_ICONS = { search, store, group, shopping_basket: shoppingBasket };
+const SEARCH_ICONS = { all_inclusive: allInclusive, store, group, shopping_basket: shoppingBasket };
 
 // Header.php defaults; homeUrl and logo are required
 const DEFAULTS = { version: null, menuId: 'ps-side-menu', search: null };
@@ -39,7 +40,7 @@ const SEARCH = {
   query: '',
   type: 0,
   types: [
-    { value: 0, label: 'Everywhere', placeholder: 'Products, orders, customers…', icon: 'search' },
+    { value: 0, label: 'Everywhere', placeholder: 'Products, orders, customers…', icon: 'all_inclusive' },
     { value: 1, label: 'Catalog', placeholder: 'Product name or reference', icon: 'store' },
     { value: 2, label: 'Customers by name', placeholder: 'Customer name', icon: 'group' },
     { value: 3, label: 'Orders', placeholder: 'Order ID', icon: 'shopping_basket' },
@@ -66,8 +67,9 @@ const QUICK_ACCESS = {
   ],
 };
 
-const STORE = { label: 'View my shop', icon: 'storefront', href: '#store', external: true };
-const ACCOUNT = { label: 'Marc Beier', image: '/playground/avatar.svg', items: ACCOUNT_ITEMS };
+const STORE = { label: 'View my shop', icon: 'storefront', href: '#store', external: true, iconOnly: true };
+// The page shell shows the first name and the last name's initial; the menu opens on the full name
+const ACCOUNT = { label: 'Marc B.', image: '/playground/avatar.svg', items: [{ type: 'heading', label: 'Marc Beier' }, ...ACCOUNT_ITEMS] };
 
 const searchMarkup = ({ action, query = '', type = 0, types = [] }) => {
   const current = types.find((item) => item.value === type) ?? null;
@@ -79,7 +81,9 @@ const searchMarkup = ({ action, query = '', type = 0, types = [] }) => {
   }));
   const scope = current
     ? '<button type="button" class="btn ps-header__search-scope" data-bs-toggle="dropdown" aria-expanded="false">'
-      + `<span class="visually-hidden">Search in </span><span data-ps-ref="header-search-scope">${current.label}</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>`
+      + '<span class="visually-hidden">Search in </span>'
+      + `${current.icon ? uiIcon(SEARCH_ICONS[current.icon], { size: 'lg', class: 'ps-header__search-scope-icon', 'data-ps-ref': 'header-search-scope-icon' }) : ''}`
+      + `<span class="ps-header__search-scope-label" data-ps-ref="header-search-scope">${current.label}</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>`
       + dropdownMenu({ items, align: 'end' }, SEARCH_ICONS)
     : '';
 
@@ -149,8 +153,8 @@ export const ShopStates = withTwig(() => framedNodes([header({
   version: '9.3.0',
   search: SEARCH,
   actions: [
-    { label: 'Debug mode', icon: 'bug_report', href: '#performance', description: 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.' },
-    { label: 'Maintenance mode', icon: 'build', href: '#maintenance', description: 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.' },
+    { label: 'Debug mode', icon: 'bug_report', warning: true, iconOnly: true, href: '#performance', description: 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.' },
+    { label: 'Maintenance mode', icon: 'build', warning: true, iconOnly: true, href: '#maintenance', description: 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.' },
     STORE,
     ACCOUNT,
   ],

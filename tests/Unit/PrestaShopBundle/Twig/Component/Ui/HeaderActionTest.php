@@ -19,7 +19,7 @@ class HeaderActionTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['label' => 'View my store', 'icon' => 'storefront', 'image' => null, 'href' => '/', 'external' => false, 'items' => null, 'description' => null, 'align' => 'end'],
+            ['label' => 'View my store', 'icon' => 'storefront', 'image' => null, 'href' => '/', 'external' => false, 'items' => null, 'description' => null, 'align' => 'end', 'iconOnly' => false, 'warning' => false],
             (new HeaderAction())->preMount(['label' => 'View my store', 'icon' => 'storefront', 'href' => '/'])
         );
     }
@@ -56,6 +56,9 @@ class HeaderActionTest extends TestCase
         yield 'href and items' => [['label' => 'Store', 'icon' => 'storefront', 'href' => '/', 'items' => []]];
         yield 'external menu' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'external' => true]];
         yield 'menu with a description' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'description' => 'More']];
+        yield 'icon-only menu' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'iconOnly' => true]];
+        yield 'icon-only with an image' => [['label' => 'Account', 'image' => '/a.jpg', 'href' => '/', 'iconOnly' => true]];
+        yield 'non boolean warning' => [['label' => 'Debug', 'icon' => 'bug_report', 'href' => '/', 'warning' => 'yes']];
         yield 'unknown alignment' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'align' => 'left']];
     }
 }

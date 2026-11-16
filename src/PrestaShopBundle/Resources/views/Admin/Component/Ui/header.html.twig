@@ -29,7 +29,11 @@
           {%- if current -%}
             <button type="button" class="btn ps-header__search-scope" data-bs-toggle="dropdown" aria-expanded="false">
               <span class="visually-hidden">{{ 'Search in'|trans({}, 'Admin.Navigation.Header') }} </span>
-              <span data-ps-ref="header-search-scope">{{ current.label }}</span>
+              {#- The chosen type's icon: shown only between md and xl, in place of the label, which stays for screen readers -#}
+              {%- if current.icon -%}
+                <twig:ui:Icon :name="current.icon" size="lg" class="ps-header__search-scope-icon" data-ps-ref="header-search-scope-icon"/>
+              {%- endif -%}
+              <span class="ps-header__search-scope-label" data-ps-ref="header-search-scope">{{ current.label }}</span>
               <twig:ui:Icon name="keyboard_arrow_down" size="lg"/>
             </button>
             <twig:ui:DropdownMenu :items="search.types|map(type => {label: type.label, icon: type.icon, active: type.value == search.type, attr: {'data-ps-action': 'set-search-type', 'data-ps-value': type.value, 'data-ps-data-placeholder': type.placeholder}})" align="end"/>

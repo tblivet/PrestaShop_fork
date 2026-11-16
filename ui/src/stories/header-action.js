@@ -10,9 +10,9 @@ import uiIcon from './ui-icon';
 import { twigCall } from './twig-snippet';
 
 // HeaderAction.php defaults; label is required, and an icon or an image, an href or items
-export const HEADER_ACTION_DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null, align: 'end' };
+export const HEADER_ACTION_DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null, align: 'end', iconOnly: false, warning: false };
 
-export default function headerAction({ label, icon = null, image = null, href = null, external = false, items = null, description = null, align = 'end', ...attributes }, icons = {}) {
+export default function headerAction({ label, icon = null, image = null, href = null, external = false, items = null, description = null, align = 'end', iconOnly = false, warning = false, ...attributes }, icons = {}) {
   const picture = image
     ? `<img class="ps-header-action__image" src="${image}" alt="" width="24" height="24">`
     : uiIcon(icons[icon], { size: 'xl', class: 'ps-header-action__icon' });
@@ -21,18 +21,26 @@ export default function headerAction({ label, icon = null, image = null, href = 
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
   let html;
 
+  const own = ['ps-header-action', warning && 'ps-header-action--warning', iconOnly && 'ps-header-action--icon-only'].filter(Boolean).join(' ');
+
   if (items === null) {
-    const classes = ['ps-header-action', attributes.class].filter(Boolean).join(' ');
-    const link = `${external ? ' target="_blank" rel="noopener noreferrer"' : ''}${description ? ` data-bs-toggle="tooltip" data-bs-title="${description}"` : ''}`;
+    const classes = [own, attributes.class].filter(Boolean).join(' ');
+    const titled = iconOnly && description;
+    const tooltip = titled ? `<strong class="ps-header-action-tooltip__title">${label}</strong>${description}` : (iconOnly ? label : description);
+    const escape = (text) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const tooltipAttributes = tooltip
+      ? `${titled ? ' data-bs-html="true"' : ''} data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="${escape(tooltip)}"`
+      : '';
+    const link = `${external ? ' target="_blank" rel="noopener noreferrer"' : ''}${tooltipAttributes}`;
     html = `<a class="${classes}" href="${href}"${link}${extra}>${content}</a>`;
   } else {
     const classes = ['dropdown', attributes.class].filter(Boolean).join(' ');
     const arrow = uiIcon(keyboardArrowDown, { class: 'ps-header-action__arrow' });
-    html = `<div class="${classes}"${extra}><button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">${content}${arrow}</button>${dropdownMenu({ items, align }, icons)}</div>`;
+    html = `<div class="${classes}"${extra}><button type="button" class="${own}" data-bs-toggle="dropdown" aria-expanded="false">${content}${arrow}</button>${dropdownMenu({ items, align }, icons)}</div>`;
   }
 
   return {
     html,
-    twig: twigCall('ui:HeaderAction', { icon, image, label, href, external, items, description, align: items === null ? undefined : align, ...attributes }, HEADER_ACTION_DEFAULTS),
+    twig: twigCall('ui:HeaderAction', { icon, image, label, href, external, items, description, align: items === null ? undefined : align, iconOnly, warning, ...attributes }, HEADER_ACTION_DEFAULTS),
   };
 }

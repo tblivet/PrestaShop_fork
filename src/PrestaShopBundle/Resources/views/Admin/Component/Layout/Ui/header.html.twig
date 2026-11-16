@@ -8,7 +8,7 @@
   query: this.searchQuery,
   type: this.searchType,
   types: [
-    {value: 0, icon: 'search', label: 'Everywhere'|trans({}, 'Admin.Navigation.Header'), placeholder: 'Products, orders, customers…'|trans({}, 'Admin.Navigation.Header')},
+    {value: 0, icon: 'all_inclusive', label: 'Everywhere'|trans({}, 'Admin.Navigation.Header'), placeholder: 'Products, orders, customers…'|trans({}, 'Admin.Navigation.Header')},
     {value: 1, icon: 'store', label: 'Catalog'|trans({}, 'Admin.Global'), placeholder: 'Product name or reference'|trans({}, 'Admin.Navigation.Header')},
     {value: 2, icon: 'group', label: 'Customers by name'|trans({}, 'Admin.Navigation.Header'), placeholder: 'Customer name'|trans({}, 'Admin.Navigation.Header')},
     {value: 6, icon: 'desktop_mac', label: 'Customers by IP address'|trans({}, 'Admin.Navigation.Header'), placeholder: '123.45.67.89'|trans({}, 'Admin.Navigation.Header')},
@@ -19,7 +19,10 @@
   ],
 } -%}
 {%- if employee -%}
-  {%- set accountItems = [{label: 'Your profile'|trans({}, 'Admin.Navigation.Header'), href: path('admin_employees_edit', {employeeId: employee.id}), icon: 'person'}]
+  {#- The bar shows the first name and the last name's initial ("Marc B."); the menu opens on the full name -#}
+  {%- set employeeName = employee.firstName ~ ' ' ~ employee.lastName -%}
+  {%- set employeeShortName = employee.lastName is empty ? employee.firstName : employee.firstName ~ ' ' ~ employee.lastName|first|upper ~ '.' -%}
+  {%- set accountItems = [{type: 'heading', label: employeeName}, {label: 'Your profile'|trans({}, 'Admin.Navigation.Header'), href: path('admin_employees_edit', {employeeId: employee.id}), icon: 'person'}]
     |merge(this.employeeLinks)
     |merge([{type: 'divider'}, {label: 'Sign out'|trans({}, 'Admin.Navigation.Header'), href: path('admin_logout'), icon: 'logout'}]) -%}
 {%- endif -%}
@@ -28,14 +31,14 @@
 <twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset('prestashop.svg', 'ui_kit') }}" version="{{ ps.version }}" :search="search">
   <twig:block name="start">{{ component('QuickAccess') }}</twig:block>
   {%- if ps.debugMode|default(false) -%}
-    <twig:ui:HeaderAction icon="bug_report" label="{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_performance') }}" description="{{ 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification') }}"/>
+    <twig:ui:HeaderAction icon="bug_report" warning iconOnly label="{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_performance') }}" description="{{ 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification') }}"/>
   {%- endif -%}
   {%- if ps.isMaintenanceEnabled|default(false) -%}
-    <twig:ui:HeaderAction icon="build" label="{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_maintenance') }}" description="{{ maintenanceDescription }}"/>
+    <twig:ui:HeaderAction icon="build" warning iconOnly label="{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_maintenance') }}" description="{{ maintenanceDescription }}"/>
   {%- endif -%}
-  <twig:ui:HeaderAction icon="storefront" label="{{ 'View my shop'|trans({}, 'Admin.Navigation.Header') }}" href="{{ ps.baseUrl }}" external/>
+  <twig:ui:HeaderAction icon="storefront" label="{{ 'View my shop'|trans({}, 'Admin.Navigation.Header') }}" href="{{ ps.baseUrl }}" external iconOnly/>
   {%- if employee -%}
-    <twig:ui:HeaderAction image="{{ employee.imageUrl }}" label="{{ employee.firstName }} {{ employee.lastName }}" :items="accountItems"/>
+    <twig:ui:HeaderAction image="{{ employee.imageUrl }}" label="{{ employeeShortName }}" :items="accountItems"/>
   {%- endif -%}
   {{- renderhook('displayBackOfficeTop') -}}
 </twig:ui:Header>

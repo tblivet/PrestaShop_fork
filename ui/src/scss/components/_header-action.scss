@@ -71,4 +71,45 @@ $component-name: ps-header-action;
       text-overflow: ellipsis;
     }
   }
+
+  // The icon alone at every width, in a square; the label is in the tooltip and stays the name for screen readers
+  &--icon-only {
+    aspect-ratio: 1;
+    padding: 0;
+  }
+
+  &--icon-only &__label {
+    @include visually-hidden();
+  }
+
+  // A state to notice (debug, maintenance): amber, dark text, the same size as the other entries
+  &--warning {
+    font-weight: var(--#{$prefix}font-weight-semibold);
+    color: var(--#{$prefix}dark);
+    background-color: var(--#{$prefix}amber-500);
+
+    &:hover {
+      color: var(--#{$prefix}dark);
+      background-color: var(--#{$prefix}amber-400);
+    }
+
+    &:active,
+    &[aria-expanded="true"] {
+      color: var(--#{$prefix}dark);
+      background-color: var(--#{$prefix}amber-300);
+    }
+  }
+}
+
+// Its tooltip (appended to <body>, named by data-bs-custom-class): an icon-only entry's label as a title, then its
+// description, read from the start like a paragraph
+.ps-header-action-tooltip {
+  .tooltip-inner {
+    text-align: start;
+  }
+
+  &__title {
+    display: block;
+    margin-block-end: .125rem;
+  }
 }
