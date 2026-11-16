@@ -47,15 +47,15 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 | Page | Ui template | Components | Raw markup | Last review | Open findings |
 |------|-------------|-----------:|-----------:|-------------|---------------|
-| Login/login.html.twig | Login/Ui/login.html.twig | 10 | 0 | 2026-11-12 | 2 minor |
+| Login/login.html.twig | Login/Ui/login.html.twig | 10 | 0 | 2026-11-13 | 2 minor |
 | Login/required_actions.html.twig | Login/Ui/required_actions.html.twig | 4 | 0 | never | – |
 | Login/reset_password.html.twig | Login/Ui/reset_password.html.twig | 5 | 0 | never | – |
 
 ## Open findings
 
-### login — 2026-11-12
+### login — 2026-11-13
 
-Validated as the reference page on 2026-11-05: no blocker or major. Re-checked on 2026-11-12 after the layouts: still no blocker or major. The minor findings are non-blocking; the out-of-scope ideas are for a back-end change.
+Validated as the reference page on 2026-11-05: no blocker or major. Re-checked on 2026-11-12 after the layouts: still no blocker or major. The minor findings are non-blocking; the out-of-scope ideas are for a back-end change. Re-checked on 2026-11-13 after Button, Link and IconButton: no new blocker or major, axe clean on the four screens.
 
 - **minor** 'Check again' is the primary button while the real next step is the https link in the alert (required-actions, all widths; src/PrestaShopBundle/Resources/views/Admin/Login/Ui/required_actions.html.twig:23)
 - **minor** Focus ring and invalid glow of password inputs are cut off by the eye toggle (reset-empty-submit 375 (every PasswordField at all widths); ui/src/scss/forms/_input-group.scss:5)

@@ -1,8 +1,8 @@
 {
   "page": "login",
   "url": "http://localhost:8001/admin-dev/login",
-  "date": "2026-11-12",
-  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-8/index.html",
+  "date": "2026-11-13",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-9/report.md",
   "states": {
     "total": 33,
     "captured": 25,
@@ -32,5 +32,5 @@
     "After a successful reset or a reset-link request, prefill the sign-in email with the address just used instead of the last sign-in attempt (LoginFormDataProvider; sign-in-success-password-changed and sign-in-info-check-inbox captures).",
     "Reset page: check the token when /reset-password/{token} loads, so an expired or used link says so before the user types a new password twice (LoginController.php:158-191)."
   ],
-  "note": "Validated as the reference page on 2026-11-05: no blocker or major. Re-checked on 2026-11-12 after the layouts: still no blocker or major. The minor findings are non-blocking; the out-of-scope ideas are for a back-end change."
+  "note": "Validated as the reference page on 2026-11-05: no blocker or major. Re-checked on 2026-11-12 after the layouts: still no blocker or major. The minor findings are non-blocking; the out-of-scope ideas are for a back-end change. Re-checked on 2026-11-13 after Button, Link and IconButton: no new blocker or major, axe clean on the four screens."
 }
