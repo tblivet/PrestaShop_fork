@@ -67,7 +67,7 @@ export const NotClosable = withTwig(() => shown(modal({
 
 export const LongTitle = withTwig(() => shown(modal({
   id: 'story-modal-long', title: 'Diese Seite zum Schnellzugriff hinzufügen und in einem neuen Fenster öffnen', static: true, body: FIELD, footer: CANCEL_SAVE,
-})), { docs: { description: { story: 'A long title (here in German) wraps; the close button stays at the end of its first line.' } } });
+})), { docs: { description: { story: 'A long title (here in German) wraps; the close button stays centred beside it.' } } });
 
 const opener = (html) => `<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#story-modal-live">Add to quick access</button>${html}`;
 

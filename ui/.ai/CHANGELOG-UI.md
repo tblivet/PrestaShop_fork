@@ -317,7 +317,7 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Markup**
 - `<div id="{id}" class="modal fade ps-modal" aria-labelledby="{id}-title">` with an `h2.modal-title.ps-modal__title` (level set by `headingLevel`), a named close button (`.btn-close`, "Close"), `.modal-body` and an optional `.modal-footer` (block `footer`). Sizes `sm`, `md`, `lg`, `xl`, `fullscreen`; centred by default; `scrollable`; `static` adds `data-bs-backdrop="static"`; `closable: false` adds `data-bs-keyboard="false"` and drops the close button.
-- Kit CSS: the title is `$h5-font-size`; the close button stays on the title's first line.
+- Kit CSS: the title is `$h5-font-size`; the header is Bootstrap's own (the close button centred on the title).
 - Storybook: Components/Modal is rebuilt on the component (it showed raw Bootstrap markup).
 
 **Behaviour**
