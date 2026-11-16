@@ -85,7 +85,7 @@
 
         {# Stacked on mobile in reading order, so the visual order and the focus order stay the same #}
         <twig:ui:Layout:Cluster justify="end" stackBelow="sm">
-          {{ form_widget(requestPasswordResetForm.buttons.cancel, {variant: 'outline-secondary'}) }}
+          {{ form_widget(requestPasswordResetForm.buttons.cancel) }}
           {{ form_widget(requestPasswordResetForm.buttons.submit_login, {variant: 'primary'}) }}
         </twig:ui:Layout:Cluster>
       </twig:ui:Layout:Stack>

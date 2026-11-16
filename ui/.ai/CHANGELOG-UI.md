@@ -370,3 +370,14 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - Empty tips, kit only (the old theme keeps its own): "Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!" → "Check your [1]abandoned carts[/1]: your next order may be waiting there."; "Are you active on social media these days?" → "Share your shop on social media to bring in new customers."; "Seems like all your customers are happy :)" → "Your customers have no questions for now."
 - Message status: the raw value (open, pending1…) → the Customer service labels "Opened", "Closed", "Pending 1", "Pending 2" (`Admin.Catalog.Feature`, existing)
 - New: "Notifications", "Messages", "Filter notifications" (the filters' group name), "Nothing new for now."
+
+## Buttons: the secondary is drawn like the primary's outline — 2026-11-16
+
+`components/_buttons.scss`, DECISIONS.md #37.
+
+**Markup**
+- None: buttons keep `btn-secondary`.
+
+**Behaviour**
+- `<twig:ui:Button>` defaults to `primary` (was `secondary`): a button alone is the action of its area; pass `variant="secondary"` for the others. `<twig:ui:IconButton>`, `<twig:ui:Dropdown>` and non-submit form buttons stay `secondary` by default.
+- Kit `btn-secondary` buttons (the default of `<twig:ui:IconButton>` and `<twig:ui:Dropdown>`: Cancel in the quick access dialogs and in the forgot password form, which used `outline-secondary` and now takes the default; dropdown triggers) are transparent with a black border and text, with a light grey background on hover and focus, instead of a grey fill. Screenshot tests of kit pages need new references.

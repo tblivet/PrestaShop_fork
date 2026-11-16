@@ -18,14 +18,14 @@
     </div>
   </form>
   <twig:block name="footer">
-    <twig:ui:Button data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button variant="secondary" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
     <twig:ui:Button variant="primary" type="submit" form="ps-quick-access-add-form">{{ 'Add'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
   </twig:block>
 </twig:ui:Modal>
 <twig:ui:Modal id="ps-quick-access-remove" title="{{ 'Remove from quick access?'|trans({}, 'Admin.Navigation.Header') }}" size="sm" data-ps-ref="quick-access-remove">
   <p class="mb-0" data-ps-ref="quick-access-remove-message" data-ps-data-message="{{ '"%name%" will no longer be in your quick access.'|trans({}, 'Admin.Navigation.Header') }}"></p>
   <twig:block name="footer">
-    <twig:ui:Button data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button variant="secondary" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
     <twig:ui:Button variant="destructive" data-ps-action="confirm-remove-quick-access">{{ 'Remove'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
   </twig:block>
 </twig:ui:Modal>

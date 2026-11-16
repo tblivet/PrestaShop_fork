@@ -27,7 +27,7 @@ class ButtonComponentTest extends KernelTestCase
     public function testRendersAButtonThatSendsNoForm(): void
     {
         $this->assertSame(
-            '<button class="btn btn-secondary" type="button">Save</button>',
+            '<button class="btn btn-primary" type="button">Save</button>',
             trim($this->render('<twig:ui:Button>Save</twig:ui:Button>'))
         );
     }
@@ -66,7 +66,7 @@ class ButtonComponentTest extends KernelTestCase
 
     public function testDisabledLinkLosesItsHref(): void
     {
-        $this->assertStringContainsString('<a class="btn btn-secondary disabled" role="link" aria-disabled="true">New</a>', $this->render('<twig:ui:Button href="/new" disabled>New</twig:ui:Button>'));
+        $this->assertStringContainsString('<a class="btn btn-primary disabled" role="link" aria-disabled="true">New</a>', $this->render('<twig:ui:Button href="/new" disabled>New</twig:ui:Button>'));
     }
 
     private function render(string $template, array $context = []): string

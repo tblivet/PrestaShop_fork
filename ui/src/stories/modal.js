@@ -17,7 +17,7 @@ export const modalButton = ({ label, variant = 'secondary', ...attributes }) => 
 
   return {
     html: `<button class="btn btn-${variant}" type="button"${extra}>${label}</button>`,
-    twig: `<twig:ui:Button${variant === 'secondary' ? '' : ` variant="${variant}"`}${extra}>${label}</twig:ui:Button>`,
+    twig: `<twig:ui:Button${variant === 'primary' ? '' : ` variant="${variant}"`}${extra}>${label}</twig:ui:Button>`,
   };
 };
 

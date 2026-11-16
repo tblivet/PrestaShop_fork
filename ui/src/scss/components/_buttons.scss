@@ -115,7 +115,7 @@
 // instead of the solid $theme-colors value, keeping alerts/badges untouched.
 @each $color, $value in $btn-custom-bg {
   .btn {
-    // Solid variant — subtle bg, colored border
+    // Solid variant — subtle bg, colored border (secondary is redrawn at the end of this file)
     &-#{$color} {
       --#{$prefix}btn-bg: #{tint-color($value, 88%)};
       --#{$prefix}btn-border-color: #{$value};
@@ -156,5 +156,38 @@
         --#{$prefix}btn-border-color: #{tint-color($value, 30%)};
       }
     }
+  }
+}
+
+// ── Secondary ─────────────────────────────────────────────────────────────────
+// Last in this file so it wins over the loops above, which also write .btn-secondary.
+// The secondary action (the default of <twig:ui:Button> and <twig:ui:IconButton>): drawn like the primary's outline,
+// transparent with the primary color for border and text, but hover, focus and press only lay a light grey under it,
+// so it never looks as strong as the primary beside it (DECISIONS.md #37)
+.btn-secondary {
+  --#{$prefix}btn-color: #{$primary};
+  --#{$prefix}btn-bg: transparent;
+  --#{$prefix}btn-border-color: #{$primary};
+  --#{$prefix}btn-hover-color: #{$primary};
+  --#{$prefix}btn-hover-bg: #{$gray-300};
+  --#{$prefix}btn-hover-border-color: #{$primary};
+  --#{$prefix}btn-focus-shadow-rgb: #{to-rgb($primary)};
+  --#{$prefix}btn-active-color: #{$primary};
+  --#{$prefix}btn-active-bg: #{$gray-400};
+  --#{$prefix}btn-active-border-color: #{$primary};
+  --#{$prefix}btn-disabled-color: #{$primary};
+  --#{$prefix}btn-disabled-bg: transparent;
+  --#{$prefix}btn-disabled-border-color: #{$primary};
+
+  @at-root [data-bs-theme='dark'] & {
+    --#{$prefix}btn-color: #{$white};
+    --#{$prefix}btn-bg: transparent;
+    --#{$prefix}btn-border-color: #{tint-color($primary, 50%)};
+    --#{$prefix}btn-hover-color: #{$white};
+    --#{$prefix}btn-hover-bg: #{tint-color($primary, 18%)};
+    --#{$prefix}btn-hover-border-color: #{tint-color($primary, 50%)};
+    --#{$prefix}btn-active-color: #{$white};
+    --#{$prefix}btn-active-bg: #{tint-color($primary, 25%)};
+    --#{$prefix}btn-active-border-color: #{tint-color($primary, 50%)};
   }
 }

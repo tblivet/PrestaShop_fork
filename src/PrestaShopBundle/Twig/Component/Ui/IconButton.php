@@ -55,7 +55,8 @@ final class IconButton
             ->setAllowedTypes('tooltip', 'bool')
         ;
         $own = $resolver->resolve(array_intersect_key($data, array_flip(['icon', 'label', 'tooltip'])));
-        $button = (new Button())->preMount(array_diff_key($data, $own));
+        // Secondary unless told otherwise: an icon button is rarely the main action (Button's own default is primary)
+        $button = (new Button())->preMount(array_diff_key($data, $own) + ['variant' => 'secondary']);
         unset($button['icon'], $button['iconPosition']);
 
         return $own + $button;

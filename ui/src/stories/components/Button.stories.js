@@ -16,14 +16,14 @@ import { withDefaults } from '../story-defaults';
 const ICONS = { none: null, add, arrow_forward: arrowForward, delete: deleteIcon, download };
 
 // Button.php defaults
-const DEFAULTS = { variant: 'secondary', size: 'md', href: null, type: 'button', icon: null, iconPosition: 'start', loading: false, disabled: false };
+const DEFAULTS = { variant: 'primary', size: 'md', href: null, type: 'button', icon: null, iconPosition: 'start', loading: false, disabled: false };
 
 const VARIANTS = ['primary', 'secondary', 'outline-primary', 'outline-secondary', 'destructive', 'outline-destructive', 'link'];
 const SIZES = ['sm', 'md', 'lg'];
 
 // The markup of button.html.twig for the given props and the Twig call that renders it; the label is the content block,
 // other attributes (id, class, data-ps-*…) go on the button like in Twig
-const button = ({ label, variant = 'secondary', size = 'md', href = null, type = 'button', icon = null, iconPosition = 'start', loading = false, disabled = false, ...attributes }) => {
+const button = ({ label, variant = 'primary', size = 'md', href = null, type = 'button', icon = null, iconPosition = 'start', loading = false, disabled = false, ...attributes }) => {
   const iconSvg = ICONS[icon] ?? null;
   const classes = ['btn', `btn-${variant}`];
   if (size !== 'md') classes.push(`btn-${size}`);
@@ -63,8 +63,8 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:Button variant="primary" type="submit">{{ \'Save\'|trans({}, \'Admin.Actions\') }}</twig:ui:Button>`, or a link that looks like a button: `<twig:ui:Button href="{{ path(\'admin_products_create\') }}" icon="add">…</twig:ui:Button>`. The label is the content. Kit form buttons (`SubmitType`, `ButtonType`) render it too: `{{ form_widget(form.save, {variant: \'primary\'}) }}`.',
-          '**Props**: `variant` (`primary`, `secondary`, `outline-primary`, `outline-secondary`, `destructive`, `outline-destructive`, `link`; default `secondary`), `size` (`sm`, `md`, `lg`; default `md`), `href` (default none: a `<button>`; set: an `<a>`, for an action that opens a page), `type` (`button`, `submit`, `reset`; default `button`, so a button never sends a form by accident; not with `href`), `icon` (default none: a [Material Symbols](https://fonts.google.com/icons) name, decorative, see Components/Icon), `iconPosition` (`start`, `end`; default `start`), `loading` (default `false`: busy, the spinner covers the label and the button keeps its size; not with `href`), `disabled` (default `false`; a disabled link loses its `href`). Other attributes (`id`, `name`, `value`, `form`, `data-ps-*`, `aria-*`, a `class`) go on the button.',
-          '**Do**: one `primary` per area (the action most people take there), `secondary` or `outline-secondary` for the others, `destructive` for an action that deletes or cannot be undone; a label that says the action ("Save", "Send reset link"); `href` when the button opens a page, a `<button>` when it does something on this one. **Don\'t**: `<a href="#">` or `javascript:void(0)` for an action (use a button), `btn-*` classes written by hand in kit templates, two `primary` side by side, an icon-only button (`<twig:ui:IconButton>`, it needs a label), margins on the button (a layout places it: `<twig:ui:Layout:Cluster>`).',
+          '**Props**: `variant` (`primary`, `secondary`, `outline-primary`, `outline-secondary`, `destructive`, `outline-destructive`, `link`; default `primary`), `size` (`sm`, `md`, `lg`; default `md`), `href` (default none: a `<button>`; set: an `<a>`, for an action that opens a page), `type` (`button`, `submit`, `reset`; default `button`, so a button never sends a form by accident; not with `href`), `icon` (default none: a [Material Symbols](https://fonts.google.com/icons) name, decorative, see Components/Icon), `iconPosition` (`start`, `end`; default `start`), `loading` (default `false`: busy, the spinner covers the label and the button keeps its size; not with `href`), `disabled` (default `false`; a disabled link loses its `href`). Other attributes (`id`, `name`, `value`, `form`, `data-ps-*`, `aria-*`, a `class`) go on the button.',
+          '**Do**: one `primary` per area (the action most people take there), `secondary` for the others (drawn like the primary\'s outline with a light grey hover, so Cancel beside Save reads as one filled, one outlined), `outline-secondary` for a minor one, `destructive` for an action that deletes or cannot be undone; a label that says the action ("Save", "Send reset link"); `href` when the button opens a page, a `<button>` when it does something on this one. **Don\'t**: `<a href="#">` or `javascript:void(0)` for an action (use a button), `btn-*` classes written by hand in kit templates, two `primary` side by side, an icon-only button (`<twig:ui:IconButton>`, it needs a label), margins on the button (a layout places it: `<twig:ui:Layout:Cluster>`).',
           '**States**: the seven variants, three sizes, icon before or after the label, links, disabled, loading, and a long translation.',
         ].join('\n\n'),
       },

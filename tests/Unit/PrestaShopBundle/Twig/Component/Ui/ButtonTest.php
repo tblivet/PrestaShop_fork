@@ -16,7 +16,7 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 class ButtonTest extends TestCase
 {
     private const DEFAULTS = [
-        'variant' => 'secondary',
+        'variant' => 'primary',
         'size' => 'md',
         'href' => null,
         'type' => 'button',

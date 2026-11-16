@@ -30,7 +30,8 @@ final class Button
 
     public const ICON_POSITIONS = ['start', 'end'];
 
-    public string $variant = 'secondary';
+    /** primary by default: a button alone is the action of its area; pass secondary for the others */
+    public string $variant = 'primary';
 
     public string $size = 'md';
 
@@ -55,7 +56,7 @@ final class Button
         $resolver
             ->setIgnoreUndefined()
             ->setDefaults([
-                'variant' => 'secondary',
+                'variant' => 'primary',
                 'size' => 'md',
                 'href' => null,
                 'type' => 'button',
