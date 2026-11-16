@@ -381,3 +381,14 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Behaviour**
 - `<twig:ui:Button>` defaults to `primary` (was `secondary`): a button alone is the action of its area; pass `variant="secondary"` for the others. `<twig:ui:IconButton>`, `<twig:ui:Dropdown>` and non-submit form buttons stay `secondary` by default.
 - Kit `btn-secondary` buttons (the default of `<twig:ui:IconButton>` and `<twig:ui:Dropdown>`: Cancel in the quick access dialogs and in the forgot password form, which used `outline-secondary` and now takes the default; dropdown triggers) are transparent with a black border and text, with a light grey background on hover and focus, instead of a grey fill. Screenshot tests of kit pages need new references.
+
+## Switch: larger, green when on — 2026-11-16
+
+`_variables.scss` (`$form-switch-width`, `$form-switch-color`, `$form-switch-focus-color`, `$form-switch-checked-color`, `$ps-form-switch-off-bg`, `$ps-form-switch-off-border-color`), `forms/_form-check.scss`.
+
+**Markup**
+- None: Bootstrap's `.form-switch` markup.
+
+**Behaviour**
+- Kit switches are 2.5em × 1.25em (were 2em × 1em), centred on the label's first line, a white knob; off: a dark grey track (`$gray-700`, 10.6:1 against the page); on: a green one (`--psk-success`, 5:1). Checkboxes, radios and switches take the buttons' focus ring (`$form-check-input-focus-box-shadow`: a 2px gap in the page color, then the ring). Screenshot tests of kit pages with a switch need new references.
+

@@ -338,6 +338,19 @@ $border-color: $gray-400;
 $focus-ring-color: rgba($primary, 0.5);
 $input-focus-border-color: var(--#{$prefix}border-color);
 
+// ── Switch ────────────────────────────────────────────────────────────────────
+// Larger than Bootstrap's (2.5em × 1.25em, height in forms/_form-check.scss), a white knob. Off: a dark grey track;
+// on: a green one
+$form-switch-width: 2.5em;
+$ps-form-switch-off-border-color: $gray-700;
+$ps-form-switch-off-bg: $gray-700;
+$form-switch-color: #fff;
+$form-switch-focus-color: #fff;
+$form-switch-checked-color: #fff;
+// Checkboxes, radios and switches take the buttons' focus ring (components/_buttons.scss): a gap in the page color,
+// then .25rem of ring
+$form-check-input-focus-box-shadow: 0 0 0 .125rem var(--#{$prefix}body-bg), 0 0 0 .375rem $focus-ring-color;
+
 // ── Alert ─────────────────────────────────────────────────────────────────────
 // A component has no outer margin (CONVENTIONS.md): the layout around an alert spaces it
 $alert-margin-bottom: 0;
