@@ -18,6 +18,21 @@ use Tab;
 #[AsTwigComponent(template: '@PrestaShop/Admin/Component/Layout/nav_bar.html.twig')]
 class NavBar
 {
+    /**
+     * The kit menu icons of the core tabs, by class name: clearer than the ones stored with the tabs, which the old theme
+     * keeps. Module tabs keep their own icon.
+     */
+    private const KIT_ICONS = [
+        'AdminDashboard' => 'home',
+        'AdminParentCustomer' => 'group',
+        'AdminParentCustomerThreads' => 'support_agent',
+        'AdminStats' => 'monitoring',
+        'AdminParentThemes' => 'palette',
+        'AdminParentPayment' => 'payments',
+        'AdminInternational' => 'public',
+        'AdminAdvancedParameters' => 'tune',
+    ];
+
     protected ?array $tabs = null;
 
     public function __construct(
@@ -69,7 +84,7 @@ class NavBar
                 if ([] === $sections || null !== $sections[array_key_last($sections)]['title']) {
                     $sections[] = ['title' => null, 'items' => []];
                 }
-                $sections[array_key_last($sections)]['items'][] = $this->toMenuLink($level1) + ['icon' => $level1['icon']];
+                $sections[array_key_last($sections)]['items'][] = $this->toMenuLink($level1) + ['icon' => $this->getKitIcon($level1)];
 
                 continue;
             }
@@ -85,8 +100,8 @@ class NavBar
                     array_filter($level2['sub_tabs'], fn (array $level3): bool => (bool) $level3['active'])
                 ));
                 $items[] = [] === $children
-                    ? $this->toMenuLink($level2) + ['icon' => $level2['icon']]
-                    : ['label' => $this->getTabName($level2), 'icon' => $level2['icon'], 'children' => $children];
+                    ? $this->toMenuLink($level2) + ['icon' => $this->getKitIcon($level2)]
+                    : ['label' => $this->getTabName($level2), 'icon' => $this->getKitIcon($level2), 'children' => $children];
             }
             $sections[] = ['title' => $this->getTabName($level1), 'items' => $items];
         }
@@ -179,6 +194,11 @@ class NavBar
         }
 
         return '';
+    }
+
+    private function getKitIcon(array $tab): string
+    {
+        return self::KIT_ICONS[$tab['class_name']] ?? (string) $tab['icon'];
     }
 
     private function getTabName(array $tab): string

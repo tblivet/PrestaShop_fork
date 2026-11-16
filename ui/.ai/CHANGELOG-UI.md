@@ -253,6 +253,7 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Behaviour**
 - No collapsed mode yet (icons only): the menu is always expanded from md up, a drawer below md.
 - Tab icons without an SVG file show `extension`; `assessment` and `payment` show `analytics` and `credit_card`.
+- Core tabs take the kit icons of the playground menu, by class name in `NavBar` (the `tab` table and the old theme keep theirs): Dashboard `home` (was `trending_up`), Customers `group` (`account_circle`), Customer service `support_agent` (`chat`), Stats `monitoring` (`assessment`), Design `palette` (`desktop_mac`), Payment `payments` (`payment`), International `public` (`language`), Advanced parameters `tune` (`settings_applications`). Module tabs keep their icon.
 - Items without children and sub-items take an optional `badge` (`{label, logo}`; refused on a parent): a pill after the label, with the PrestaShop mark (`brand:p-monogram`) when `logo` is true. Shown in Storybook only: `NavBar` does not pass badges yet.
 
 **Strings** (`Admin.Navigation.Menu`)
