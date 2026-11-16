@@ -1,0 +1,30 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Menu of <twig:ui:Dropdown> and <twig:ui:DropdownMenu>: Bootstrap's dropdown-menu, items with an icon and long labels
+$component-name: ps-dropdown-menu;
+
+.#{$component-name} {
+  // Long labels wrap instead of stretching the menu past the screen
+  max-width: min(20rem, calc(100vw - 2rem));
+
+  &__item {
+    display: flex;
+    gap: .5rem;
+    align-items: flex-start;
+    white-space: normal;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    // Centred on the first line of the label
+    margin-block: calc((1lh - var(--ps-icon-size)) / 2);
+  }
+
+  &__label {
+    min-width: 0;
+    hyphens: auto;
+    overflow-wrap: anywhere;
+  }
+}

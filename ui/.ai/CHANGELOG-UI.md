@@ -257,3 +257,15 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Strings** (`Admin.Navigation.Menu`)
 - New: "Main menu".
+
+## Dropdowns: `<twig:ui:Dropdown>` and `<twig:ui:DropdownMenu>` — 2026-11-16
+
+`Twig/Component/Ui/Dropdown.php`, `DropdownMenu.php`, `Component/Ui/dropdown.html.twig`, `dropdown_menu.html.twig`, `components/_dropdown-menu.scss`.
+
+**Markup**
+- Trigger: a `<twig:ui:Button>` with a `keyboard_arrow_down` (or `_up`) icon, or a `<twig:ui:IconButton>`; no `.dropdown-toggle` class, so no icon-font caret.
+- Menu: `ul.dropdown-menu.ps-dropdown-menu`, items `dropdown-item ps-dropdown-menu__item` with `ps-dropdown-menu__icon` and `ps-dropdown-menu__label`; the chosen item has `active` and `aria-current="true"`, a disabled link loses its `href`; an external link says "(opens in a new tab)".
+- The Components/Dropdown story (Bootstrap examples) is replaced by the component story; Components/DropdownMenu is new.
+
+**Behaviour**
+- Menus are at most 20rem wide: long labels wrap instead of stretching past the screen.

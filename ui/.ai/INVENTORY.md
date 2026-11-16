@@ -64,7 +64,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | 7 | - [ ] | [`<twig:ui:Alert> (extend)`](#7-twiguialert-extend) | feedback | 75 | 6 | M | `<twig:ui:Icon>`, `<twig:ui:IconButton>` | no |
 | 8 | - [ ] | [`<twig:ui:Spinner>`](#8-twiguispinner) | feedback | 12 | 5 | S | - | no |
 | 12 | - [ ] | [`<twig:ui:Card>`](#12-twiguicard) | content | 120 | 5 | M | `<twig:ui:Icon>`, `<twig:ui:Badge>`, `<twig:ui:HelpTip>` | no |
-| 13 | - [ ] | [`<twig:ui:Dropdown>`](#13-twiguidropdown) | action | 70 | 8 | M | `<twig:ui:Button>`, `<twig:ui:IconButton>` | no |
+| 13 | - [x] | [`<twig:ui:Dropdown>`](#13-twiguidropdown) | action | 70 | 8 | M | `<twig:ui:Button>`, `<twig:ui:IconButton>` | no |
 | 14 | - [ ] | [`<twig:ui:Breadcrumb>`](#14-twiguibreadcrumb) | navigation | 150 | 2 | S | `<twig:ui:Icon>` | no |
 | 15 | - [ ] | [`<twig:ui:Tabs>`](#15-twiguitabs) | navigation | 160 | 6 | M | `<twig:ui:Badge>`, `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
 | 16 | - [ ] | [`<twig:ui:Offcanvas>`](#16-twiguioffcanvas) | overlay | 150 | 2 | S | `<twig:ui:IconButton>`, `<twig:ui:Spinner>` | no |
@@ -728,6 +728,8 @@ The section container: header (title with heading level, icon, count, help tip, 
 ### 13. `<twig:ui:Dropdown>`
 
 Menu of secondary actions behind a labelled toggle (text button, split button or kebab icon); items are links, buttons or POST forms with confirm, with dividers, headers and disabled items. Used for row actions, grid actions, bulk actions, More actions and module actions.
+
+Done 2026-11-16 as two components: `<twig:ui:Dropdown>` (a `<twig:ui:Button>` or icon-only `<twig:ui:IconButton>` trigger with `label`, `variant`, `size`, `align`, `direction`, `disabled`) and `<twig:ui:DropdownMenu>` (the menu alone, for header links and other custom triggers). Items: links, buttons (`attr` for `data-ps-*`), dividers, headings, with `icon`, `active`, `disabled`, `external`. Not built yet: split button, POST items with confirm, disabled trigger with a reason, collapsing inline buttons into the menu. First used by the header.
 
 - Role: component, kind: action, complexity: M, pages: 70
 - Sections: grid row actions, grid actions (settings), bulk actions, order view action bar, order create, module manager, view pages, CMS save split
