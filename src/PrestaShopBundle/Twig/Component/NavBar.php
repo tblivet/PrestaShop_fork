@@ -53,6 +53,47 @@ class NavBar
         return $this->tabs;
     }
 
+    /**
+     * The tabs as <twig:ui:SideMenu> sections: a top tab with an icon is an item, one without is a section title.
+     */
+    public function getSections(): array
+    {
+        $sections = [];
+        foreach ($this->getTabs() as $level1) {
+            if (!$level1['active']) {
+                continue;
+            }
+
+            if (!empty($level1['icon'])) {
+                // Consecutive top items (Dashboard) share one section without a title
+                if ([] === $sections || null !== $sections[array_key_last($sections)]['title']) {
+                    $sections[] = ['title' => null, 'items' => []];
+                }
+                $sections[array_key_last($sections)]['items'][] = $this->toMenuLink($level1) + ['icon' => $level1['icon']];
+
+                continue;
+            }
+
+            $items = [];
+            foreach ($level1['sub_tabs'] as $level2) {
+                if (!$level2['active']) {
+                    continue;
+                }
+
+                $children = array_values(array_map(
+                    fn (array $level3): array => $this->toMenuLink($level3),
+                    array_filter($level2['sub_tabs'], fn (array $level3): bool => (bool) $level3['active'])
+                ));
+                $items[] = [] === $children
+                    ? $this->toMenuLink($level2) + ['icon' => $level2['icon']]
+                    : ['label' => $this->getTabName($level2), 'icon' => $level2['icon'], 'children' => $children];
+            }
+            $sections[] = ['title' => $this->getTabName($level1), 'items' => $items];
+        }
+
+        return $sections;
+    }
+
     protected function buildTabs($parentId = 0, $level = 0): array
     {
         $tabs = Tab::getTabs($this->context->getContext()->language->id, $parentId);
@@ -138,5 +179,18 @@ class NavBar
         }
 
         return '';
+    }
+
+    private function getTabName(array $tab): string
+    {
+        return '' === $tab['name'] ? $tab['class_name'] : $tab['name'];
+    }
+
+    /**
+     * @return array{label: string, href: string, current: bool}
+     */
+    private function toMenuLink(array $tab): array
+    {
+        return ['label' => $this->getTabName($tab), 'href' => (string) $tab['href'], 'current' => (bool) $tab['current']];
     }
 }

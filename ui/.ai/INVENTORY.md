@@ -70,7 +70,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | 16 | - [ ] | [`<twig:ui:Offcanvas>`](#16-twiguioffcanvas) | overlay | 150 | 2 | S | `<twig:ui:IconButton>`, `<twig:ui:Spinner>` | no |
 | 17 | - [ ] | [`<twig:ui:Toast>`](#17-twiguitoast) | feedback | 40 | 4 | S | `<twig:ui:Icon>`, `<twig:ui:IconButton>` | no |
 | 18 | - [ ] | [`<twig:ui:Header>`](#18-twiguiheader) | navigation | 150 | 1 | L | `<twig:ui:IconButton>`, `<twig:ui:Dropdown>`, `<twig:ui:Modal>`, `<twig:ui:Badge>`, `<twig:ui:Tabs>` | yes |
-| 19 | - [ ] | [`<twig:ui:SideMenu>`](#19-twiguisidemenu) | navigation | 150 | 1 | M | `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
+| 19 | - [x] | [`<twig:ui:SideMenu>`](#19-twiguisidemenu) | navigation | 150 | 1 | M | `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
 | 22 | - [ ] | [`<twig:ui:Modal>`](#22-twiguimodal) | overlay | 30 | 7 | M | `<twig:ui:IconButton>`, `<twig:ui:Button>`, `<twig:ui:Spinner>`, `<twig:ui:Layout:Cluster>` | no |
 | 23 | - [ ] | [`data-ps-confirm (ConfirmDialog on <twig:ui:Modal>)`](#23-data-ps-confirm-confirmdialog-on-twiguimodal) | overlay | 25 | 6 | S | `<twig:ui:Modal>`, `<twig:ui:Button>` | no |
 | 24 | - [ ] | [`<twig:ui:Pagination>`](#24-twiguipagination) | navigation | 60 | 3 | M | `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
@@ -986,6 +986,8 @@ Back office top bar: logo and version, quick access, global search (mobile overl
 ### 19. `<twig:ui:SideMenu>`
 
 Collapsible main navigation with level-1 icons, category titles, level-2/3 submenus, collapse toggle persisted per employee and mobile off-canvas.
+
+Done 2026-11-13 without the collapsed mode: `sections` (titles, items, submenus), `label`, content for the `displayAdminNavBarBeforeEnd` hook; owns its rows and buttons (no IconButton), icons through `<twig:ui:Icon>` with an `extension` fallback; a parent row opens its submenu (Bootstrap collapse); offcanvas-md drawer opened by the header. `NavBar::getSections()` feeds it on Symfony pages with `PS_UI_KIT=1`; legacy pages keep the old menu. Optional `badge` on items ("New", with the PrestaShop mark), Storybook only until tabs carry one. Not built yet: the collapsed mode (icons only, persisted per employee), the header's menu button.
 
 - Role: component, kind: navigation, complexity: M, pages: 150
 - Sections: shell

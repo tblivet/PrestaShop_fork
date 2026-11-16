@@ -2,9 +2,9 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// PrestaShop BO menu — instance of the design-system sidebar component (see Components/Sidebar)
+// PrestaShop BO menu — an instance of <twig:ui:SideMenu> (see Components/SideMenu)
 import { playgroundMeta } from '../../playground.meta.js';
-import sidebarHtml from './sidebar.html?raw';
+import sidebarHtml from './sidebar.js';
 
 export default {
   title: 'Playground/Layout/Sidebar',

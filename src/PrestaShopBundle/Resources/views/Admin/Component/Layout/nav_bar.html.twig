@@ -2,6 +2,10 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
+{# The kit renders its own menu; the markup below stays for the old theme (PS_UI_KIT=0) #}
+{% if ui_kit %}
+  {{ include('@PrestaShop/Admin/Component/Layout/Ui/nav_bar.html.twig') }}
+{% else %}
 <nav class="nav-bar d-none d-print-none d-md-block">
   <span class="menu-collapse" data-toggle-url="{{ legacy_path('AdminEmployees', {action: 'toggleMenu'}) }}">
     <i class="material-icons rtl-flip">first_page</i>
@@ -109,3 +113,4 @@
   </div>
   {{ renderhook('displayAdminNavBarBeforeEnd') }}
 </nav>
+{% endif %}

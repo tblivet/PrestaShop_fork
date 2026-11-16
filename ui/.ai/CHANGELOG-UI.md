@@ -239,3 +239,21 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - Login social links: 31px squares (were 32px), icons 17.5px (were 16px), the button focus ring.
 - A tooltip that repeats its element's `aria-label` is not linked with `aria-describedby`, so screen readers read it once.
 
+## Main menu: `<twig:ui:SideMenu>` — 2026-11-13
+
+`Twig/Component/Ui/SideMenu.php`, `Component/Ui/side_menu.html.twig`, `components/_side-menu.scss`, `NavBar::getSections()`, `Component/Layout/nav_bar.html.twig` (kit branch in `Component/Layout/Ui/nav_bar.html.twig`).
+
+**Markup**
+- With `PS_UI_KIT=1`, Symfony pages render `<nav id="ps-side-menu" class="ps-side-menu offcanvas-md offcanvas-start">` instead of `nav.nav-bar`: `.main-menu`, `.link-levelone`, `.link-leveltwo`, `.category-title`, `.has_submenu`, `#tab-*`, `#subtab-*`, `#collapse-*`, `.menu-collapse` and the logo block are gone. Hooks for scripts and tests: `aria-current="page"` on the current link, `aria-expanded` on submenu buttons.
+- A parent row is a `<button>` that opens its submenu; it is no longer a link to its first sub-page.
+- `displayAdminNavBarBeforeEnd` keeps its place at the end of the menu.
+- Legacy (Smarty) pages keep the old menu.
+- Kit CSS: `.sidebar`, `.sidebar-heading`, `.sidebar-toggle`, `.sidebar-subnav` (`layout/_sidebar.scss`) are removed; the Components/Sidebar story is replaced by Components/SideMenu, the playground menu uses `ps-side-menu`.
+
+**Behaviour**
+- No collapsed mode yet (icons only): the menu is always expanded from md up, a drawer below md.
+- Tab icons without an SVG file show `extension`; `assessment` and `payment` show `analytics` and `credit_card`.
+- Items without children and sub-items take an optional `badge` (`{label, logo}`; refused on a parent): a pill after the label, with the PrestaShop mark (`brand:p-monogram`) when `logo` is true. Shown in Storybook only: `NavBar` does not pass badges yet.
+
+**Strings** (`Admin.Navigation.Menu`)
+- New: "Main menu".

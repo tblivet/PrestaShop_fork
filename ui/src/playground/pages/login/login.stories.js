@@ -13,8 +13,8 @@ import cancelFill from '../../../../icons/material-symbols/cancel-fill.svg?raw';
 import visibility from '../../../../icons/material-symbols/visibility.svg?raw';
 import visibilityOff from '../../../../icons/material-symbols/visibility-off.svg?raw';
 import uiIcon from '../../../stories/ui-icon';
+import { expandIcons } from '../../ui-icons';
 
-// login.html marks icons as <!-- ui:Icon name prop=value flag … -->, rendered like <twig:ui:Icon> in the back office
 const icons = {
   arrow_back: arrowBack,
   visibility,
@@ -23,10 +23,7 @@ const icons = {
   'brand:github': github,
   'brand:twitter-x': twitterX,
 };
-const page = loginHtml.replace(/<!-- ui:Icon (\S+)((?: [\w-]+(?:="[^"]*")?)*) -->/g, (_, name, props) => uiIcon(
-  icons[name],
-  Object.fromEntries([...props.matchAll(/ ([\w-]+)(?:="([^"]*)")?/g)].map(([, prop, value]) => [prop, value ?? true])),
-));
+const page = expandIcons(loginHtml, icons);
 
 export default {
   title: 'Playground/Pages/Login',

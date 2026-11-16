@@ -1,0 +1,165 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Main navigation (<twig:ui:SideMenu>): a Bootstrap offcanvas-md drawer below md, a column from md up
+$component-name: ps-side-menu;
+
+.#{$component-name} {
+  --#{$prefix}side-menu-width: 16rem;
+  // The drawer takes the menu width
+  --#{$prefix}offcanvas-width: var(--#{$prefix}side-menu-width);
+  --#{$prefix}side-menu-bg: var(--#{$prefix}body-bg);
+  --#{$prefix}side-menu-border-color: var(--#{$prefix}border-color);
+  --#{$prefix}side-menu-section-gap: 1.5rem;
+  --#{$prefix}side-menu-heading-color: var(--#{$prefix}secondary-color);
+  --#{$prefix}side-menu-link-color: var(--#{$prefix}body-color);
+  --#{$prefix}side-menu-link-hover-bg: var(--#{$prefix}tertiary-bg);
+  --#{$prefix}side-menu-link-current-bg: var(--#{$prefix}oceanblue-bg-subtle);
+  --#{$prefix}side-menu-sublink-inset: 2.5rem;
+
+  width: var(--#{$prefix}side-menu-width);
+  height: 100%;
+
+  // offcanvas-md makes the root transparent from md up, so the body paints the menu
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--#{$prefix}side-menu-section-gap);
+    height: 100%;
+    padding: 1rem .75rem;
+    overflow-y: auto;
+    // Scrolling the menu never scrolls the page behind it
+    overscroll-behavior: contain;
+    background-color: var(--#{$prefix}side-menu-bg);
+    border-inline-end: var(--#{$prefix}border-width) solid var(--#{$prefix}side-menu-border-color);
+  }
+
+  &__heading {
+    // Lined up with the link text, inset by the link padding
+    padding-inline: $nav-link-padding-x;
+    margin-block-end: .5rem;
+    font-size: .75rem;
+    font-weight: var(--#{$prefix}font-weight-semibold);
+    color: var(--#{$prefix}side-menu-heading-color);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  &__list,
+  &__submenu {
+    display: flex;
+    flex-direction: column;
+    gap: .125rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  &__submenu {
+    margin-block-start: .125rem;
+  }
+
+  &__link,
+  &__sublink {
+    display: flex;
+    gap: .5rem;
+    // A label that wraps keeps its icon, badge and arrow on its first line
+    align-items: flex-start;
+    width: 100%;
+    padding: $nav-link-padding-y $nav-link-padding-x;
+    font-size: .875rem;
+    color: var(--#{$prefix}side-menu-link-color);
+    text-align: start;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    @include border-radius(var(--#{$prefix}border-radius));
+    @include transition($nav-link-transition);
+
+    &:hover {
+      color: var(--#{$prefix}side-menu-link-color);
+      background-color: var(--#{$prefix}side-menu-link-hover-bg);
+    }
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 var(--#{$prefix}focus-ring-width) var(--#{$prefix}focus-ring-color);
+    }
+
+    &[aria-current="page"] {
+      font-weight: var(--#{$prefix}font-weight-semibold);
+      background-color: var(--#{$prefix}side-menu-link-current-bg);
+    }
+  }
+
+  // Sub-links start under the parent's label, past its icon
+  &__sublink {
+    padding-inline-start: var(--#{$prefix}side-menu-sublink-inset);
+  }
+
+  &__icon,
+  &__chevron {
+    flex-shrink: 0;
+    // Centred on the first line of the label
+    margin-block: calc((1lh - var(--ps-icon-size)) / 2);
+  }
+
+  // The badge sits on the label's first line, text on text
+  &__label,
+  &__badge {
+    align-self: baseline;
+  }
+
+  &__label {
+    flex-grow: 1;
+    min-width: 0;
+    // A long word (German) breaks rather than running under the badge or the arrow
+    hyphens: auto;
+    overflow-wrap: anywhere;
+  }
+
+  // A short tag after the label ("New"), on the brand's ocean blue so the PrestaShop mark reads as in the logo
+  &__badge {
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: .125rem;
+    align-items: center;
+    // At most half the row: a longer badge is cut, the label keeps the room
+    max-width: 50%;
+    padding: .25em .65em;
+    font-size: .75em;
+    font-weight: $badge-font-weight;
+    line-height: 1;
+    color: var(--#{$prefix}dark);
+    text-transform: uppercase;
+    white-space: nowrap;
+    background-color: var(--#{$prefix}oceanblue-500);
+    border-radius: var(--#{$prefix}border-radius-pill);
+  }
+
+  &__badge-logo {
+    --ps-icon-size: .5rem;
+
+    flex-shrink: 0;
+  }
+
+  &__badge-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__chevron {
+    @include transition(transform var(--#{$prefix}transition-duration) var(--#{$prefix}transition-easing));
+  }
+
+  &__link[aria-expanded="true"] &__chevron {
+    transform: rotate(-180deg);
+  }
+
+  // The parent of the current page reads as the current section, closed or open
+  &__item:has([aria-current="page"]) &__link--parent {
+    font-weight: var(--#{$prefix}font-weight-semibold);
+  }
+}

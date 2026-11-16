@@ -25,7 +25,7 @@ final class Icon
 {
     public const SIZES = ['xs', 'sm', 'md', 'lg', 'xl', 'xxl'];
 
-    private const MATERIAL_SYMBOL = '/^[a-z0-9]+(_[a-z0-9]+)*$/';
+    public const MATERIAL_SYMBOL = '/^[a-z0-9]+(_[a-z0-9]+)*$/';
 
     private const BRAND = '/^brand:[a-z0-9]+(-[a-z0-9]+)*$/';
 

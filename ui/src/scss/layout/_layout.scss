@@ -24,7 +24,7 @@ $component-name: ps-layout;
     // Below md the sidebar is an offcanvas drawer: panel and backdrop start
     // under the header, so the header stays visible and interactive
     @include media-breakpoint-down(md) {
-      .sidebar {
+      .ps-side-menu {
         inset-block-start: $ps-header-height;
         height: auto;
       }

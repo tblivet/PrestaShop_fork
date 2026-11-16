@@ -1,0 +1,61 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- The id names the drawer the header's menu button opens, and prefixes the submenu ids -#}
+{%- set menuId = attributes.all().id|default('ps-side-menu') -%}
+{%- macro badge(badge) -%}
+  {%- if badge -%}
+    <span class="ps-side-menu__badge">
+      {%- if badge.logo -%}<twig:ui:Icon name="brand:p-monogram" class="ps-side-menu__badge-logo"/>{%- endif -%}
+      <span class="ps-side-menu__badge-label">{{ badge.label }}</span>
+    </span>
+  {%- endif -%}
+{%- endmacro -%}
+<nav{{ attributes.defaults({id: menuId, class: 'ps-side-menu offcanvas-md offcanvas-start', tabindex: '-1', 'aria-label': label ?? 'Main menu'|trans({}, 'Admin.Navigation.Menu')}) }}>
+  <div class="ps-side-menu__body">
+    {%- for section in sections -%}
+      {%- set sectionIndex = loop.index0 -%}
+      <div class="ps-side-menu__section">
+        {%- if section.title is not null -%}
+          <h2 class="ps-side-menu__heading">{{ section.title }}</h2>
+        {%- endif -%}
+        <ul class="ps-side-menu__list">
+          {%- for item in section.items -%}
+            <li class="ps-side-menu__item">
+              {%- if item.children is empty -%}
+                <a class="ps-side-menu__link" href="{{ item.href }}"{% if item.current %} aria-current="page"{% endif %}>
+                  <twig:ui:Icon :name="item.icon" size="lg" class="ps-side-menu__icon"/>
+                  <span class="ps-side-menu__label">{{ item.label }}</span>
+                  {{- _self.badge(item.badge) -}}
+                </a>
+              {%- else -%}
+                {%- set submenuId = menuId ~ '-submenu-' ~ sectionIndex ~ '-' ~ loop.index0 -%}
+                {#- The section of the current page starts open -#}
+                {%- set open = item.children|filter(child => child.current) is not empty -%}
+                <button type="button" class="ps-side-menu__link ps-side-menu__link--parent" data-bs-toggle="collapse" data-bs-target="#{{ submenuId }}" aria-controls="{{ submenuId }}" aria-expanded="{{ open ? 'true' : 'false' }}">
+                  <twig:ui:Icon :name="item.icon" size="lg" class="ps-side-menu__icon"/>
+                  <span class="ps-side-menu__label">{{ item.label }}</span>
+                  <twig:ui:Icon name="keyboard_arrow_down" size="lg" class="ps-side-menu__chevron"/>
+                </button>
+                <div class="collapse{% if open %} show{% endif %}" id="{{ submenuId }}">
+                  <ul class="ps-side-menu__submenu">
+                    {%- for child in item.children -%}
+                      <li>
+                        <a class="ps-side-menu__sublink" href="{{ child.href }}"{% if child.current %} aria-current="page"{% endif %}>
+                          <span class="ps-side-menu__label">{{ child.label }}</span>
+                          {{- _self.badge(child.badge) -}}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    {%- endfor -%}
+    {%- block content %}{% endblock -%}
+  </div>
+</nav>

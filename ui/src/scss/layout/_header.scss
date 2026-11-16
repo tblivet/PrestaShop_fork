@@ -69,7 +69,7 @@ $component-name: ps-header;
     }
 
     // Hamburger ⇄ cross, driven by the drawer state — no JS involved
-    @at-root .ps-layout:has(.sidebar.showing, .sidebar.show:not(.hiding)) & {
+    @at-root .ps-layout:has(.ps-side-menu.showing, .ps-side-menu.show:not(.hiding)) & {
       &--open {
         display: none;
       }
