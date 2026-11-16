@@ -1,0 +1,35 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- The dialogs of the header's quick access (quick_access.html.twig), at the end of the page so no header style holds
+ # them; quick-access.js fills and sends them -#}
+<twig:ui:Modal id="ps-quick-access-add" title="{{ 'Add to quick access'|trans({}, 'Admin.Navigation.Header') }}" static data-ps-ref="quick-access-add">
+  <form id="ps-quick-access-add-form" novalidate data-ps-action="validate" data-ps-ref="quick-access-add-form">
+    <twig:ui:Alert type="danger" class="mb-3" hidden data-ps-ref="quick-access-error"/>
+    <div class="mb-3">
+      <label class="form-label" for="ps-quick-access-name">{{ 'Shortcut name'|trans({}, 'Admin.Navigation.Header') }}</label>
+      <input type="text" class="form-control" id="ps-quick-access-name" name="name" maxlength="32" required aria-describedby="ps-quick-access-name_client_error" data-ps-ref="quick-access-name">
+      <div class="invalid-feedback" id="ps-quick-access-name_client_error" role="status" data-ps-target="client-error" data-ps-data-required="{{ 'Enter a name for the shortcut.'|trans({}, 'Admin.Navigation.Header') }}"></div>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" role="switch" id="ps-quick-access-new-tab" name="new_window" value="1" data-ps-ref="quick-access-new-tab">
+      <label class="form-check-label" for="ps-quick-access-new-tab">{{ 'Open in a new tab'|trans({}, 'Admin.Navigation.Header') }}</label>
+    </div>
+  </form>
+  <twig:block name="footer">
+    <twig:ui:Button data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button variant="primary" type="submit" form="ps-quick-access-add-form">{{ 'Add'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:Modal>
+<twig:ui:Modal id="ps-quick-access-remove" title="{{ 'Remove from quick access?'|trans({}, 'Admin.Navigation.Header') }}" size="sm" data-ps-ref="quick-access-remove">
+  <p class="mb-0" data-ps-ref="quick-access-remove-message" data-ps-data-message="{{ '"%name%" will no longer be in your quick access.'|trans({}, 'Admin.Navigation.Header') }}"></p>
+  <twig:block name="footer">
+    <twig:ui:Button data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button variant="destructive" data-ps-action="confirm-remove-quick-access">{{ 'Remove'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:Modal>
+{#- Says what happened once a dialog closes -#}
+<div class="visually-hidden" role="status" data-ps-ref="quick-access-status"
+  data-ps-data-added="{{ 'This page is now in your quick access.'|trans({}, 'Admin.Navigation.Header') }}"
+  data-ps-data-removed="{{ 'This page is no longer in your quick access.'|trans({}, 'Admin.Navigation.Header') }}"></div>

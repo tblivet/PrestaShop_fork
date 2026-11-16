@@ -19,7 +19,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  * <twig:ui:Header homeUrl="…" logo="…" version="9.3.0" :search="{action: '…', types: […]}">
  *   <twig:ui:HeaderAction …/>
  * </twig:ui:Header>
- * The content holds the header actions. Below md, a button opens the side menu (menuId) and the search slides from the top.
+ * The content holds the header actions, the block start what follows the logo (quick access). Below md, a button opens the side menu (menuId) and the search slides from the top.
  */
 #[AsTwigComponent('ui:Header', template: '@PrestaShop/Admin/Component/Ui/header.html.twig')]
 final class Header

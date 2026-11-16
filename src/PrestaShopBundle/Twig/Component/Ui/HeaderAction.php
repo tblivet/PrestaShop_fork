@@ -42,6 +42,9 @@ final class HeaderAction
     /** More about a link, in a tooltip (what debug mode means) */
     public ?string $description = null;
 
+    /** Which edge of the button the menu lines up with: end for the actions on the right, start next to the logo */
+    public string $align = 'end';
+
     #[PreMount]
     public function preMount(array $data): array
     {
@@ -49,7 +52,7 @@ final class HeaderAction
         $resolver
             ->setIgnoreUndefined()
             ->setRequired('label')
-            ->setDefaults(['icon' => null, 'image' => null, 'href' => null, 'external' => false, 'items' => null, 'description' => null])
+            ->setDefaults(['icon' => null, 'image' => null, 'href' => null, 'external' => false, 'items' => null, 'description' => null, 'align' => 'end'])
             ->setAllowedTypes('label', 'string')
             ->setAllowedValues('label', fn (string $label): bool => '' !== trim($label))
             ->setAllowedTypes('icon', ['null', 'string'])
@@ -58,6 +61,7 @@ final class HeaderAction
             ->setAllowedTypes('external', 'bool')
             ->setAllowedTypes('items', ['null', 'array'])
             ->setAllowedTypes('description', ['null', 'string'])
+            ->setAllowedValues('align', DropdownMenu::ALIGNMENTS)
         ;
         $props = $resolver->resolve($data);
 

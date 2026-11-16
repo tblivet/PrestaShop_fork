@@ -1,0 +1,35 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Quick access of the kit header (after the logo): the employee's shortcuts, then add or remove this page and manage.
+ # The dialogs it opens are in quick_access_modals.html.twig, at the end of the page; quick-access.js runs them. -#}
+{%- set active = this.activeQuickAccess -%}
+{%- set links = this.quickAccesses|map(quickAccess => {
+  label: quickAccess.name,
+  href: quickAccess.link,
+  active: quickAccess.active == true,
+  external: quickAccess.new_window == 1,
+  attr: {'data-ps-ref': 'quick-access-link'},
+}) -%}
+{%- set items = links is empty ? [] : links|merge([{type: 'divider'}]) -%}
+{#- Both are rendered, one hidden: the script swaps them after adding or removing this page -#}
+{%- set items = items|merge([
+  {type: 'button', label: 'Add this page to quick access'|trans({}, 'Admin.Navigation.Header'), icon: 'bookmark_add', attr: {'data-ps-action': 'add-quick-access'}|merge(active ? {hidden: 'hidden'} : {})},
+  {type: 'button', label: 'Remove this page from quick access'|trans({}, 'Admin.Navigation.Header'), icon: 'bookmark_remove', attr: {'data-ps-action': 'remove-quick-access'}|merge(active ? {} : {hidden: 'hidden'})},
+  {label: 'Manage quick access'|trans({}, 'Admin.Navigation.Header'), href: this.manageUrl, icon: 'settings'},
+]) -%}
+<twig:ui:HeaderAction
+  icon="bookmarks"
+  label="{{ 'Quick access'|trans({}, 'Admin.Navigation.Header') }}"
+  :items="items"
+  align="start"
+  data-ps-ref="quick-access"
+  data-ps-data-add-url="{{ this.ajaxAddUrl }}"
+  data-ps-data-remove-url="{{ this.ajaxDeleteUrl }}"
+  data-ps-data-page-url="{{ this.currentPageQuickAccessLink }}"
+  data-ps-data-page-name="{{ this.currentPageTitle }}"
+  data-ps-data-page-icon="{{ this.currentPageIcon }}"
+  data-ps-data-id="{{ active ? active.id_quick_access : '' }}"
+  data-ps-data-new-tab="{{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}"
+/>

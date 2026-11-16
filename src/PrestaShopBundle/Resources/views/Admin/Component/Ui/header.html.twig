@@ -7,10 +7,16 @@
     <twig:ui:Icon name="menu" size="xl"/>
   </button>
   <a class="ps-header__brand" href="{{ homeUrl }}">
+    {#- The PrestaShop mark below sm, where the full logo leaves no room for the buttons -#}
+    <twig:ui:Icon name="brand:p-monogram" label="PrestaShop" size="xl" class="ps-header__monogram"/>
     <img class="ps-header__logo" src="{{ logo }}" alt="PrestaShop" width="130" height="14">
   </a>
   {%- if version -%}
     <twig:ui:Badge variant="oceanblue" class="ps-header__version">{{ version }}</twig:ui:Badge>
+  {%- endif -%}
+  {%- set start -%}{%- block start %}{% endblock -%}{%- endset -%}
+  {%- if start|trim is not empty -%}
+    <div class="ps-header__start">{{ start|trim|raw }}</div>
   {%- endif -%}
   {%- if search -%}
     {%- set current = search.types|filter(type => type.value == search.type)|first -%}

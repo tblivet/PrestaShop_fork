@@ -280,7 +280,7 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - Search: the field keeps `name="bo_query"` and posts to AdminSearch; the type picker is a `<twig:ui:DropdownMenu>` of buttons filling the hidden `bo_search_type` (hooks `data-ps-ref="header-search"`, `header-search-type`, `header-search-input`, `header-search-scope`, `data-ps-action="set-search-type"`). Below md it is a panel sliding from the top (`#ps-header-search`, Bootstrap offcanvas-md).
 - Header entries are `<twig:ui:HeaderAction>`: debug mode, maintenance mode, View my shop, the employee menu (a `<button>`, not a `div`, opening a `<twig:ui:DropdownMenu>`). Modules writing to `displayBackOfficeTop` can render the same entry.
 - `displayBackOfficeEmployeeMenu` links become menu items between "Your profile" and "Sign out"; an icon with no SVG file is left out. `displayBackOfficeTop` keeps its place at the end of the bar.
-- Not on kit pages until their kit version: notifications, quick access, the multistore bar. The kit build (`theme-ui.ts`) no longer runs the old `NavBar` and `Header` scripts nor `components/header/search-form`.
+- Not on kit pages until their kit version: notifications, the multistore bar (quick access: see its own entry). The kit build (`theme-ui.ts`) no longer runs the old `NavBar` and `Header` scripts nor `components/header/search-form`.
 - Kit CSS: `layout/_header.scss` (playground classes, icon font) is replaced by the component partials. Dropdown menus are as wide as their longest label (`width: max-content`, still at most 20rem). Side menu section headings start with a small `oceanblue-500` bar that marks each group. Their text is 14px (`$dropdown-font-size`), items are 30px high in a .5rem inset (`$dropdown-item-padding-y`, `$dropdown-padding-x|y`), their icons use the tertiary text color at rest, the label color when hovered, focused, chosen or disabled.
 - The version is a `<twig:ui:Badge variant="oceanblue">` (`#shop_version` → `.ps-header__version`); search types show their icon as before. Everything on the dark bar (logo, field, type picker, submit, entries) has the same focus ring, light brand blue; its menus keep the default one. Like a Bootstrap button, hover lightens, pressed (`:active`) or open lightens more, keyboard focus adds the ring. The logo has the ring only, no hover or pressed state. The search field and its two buttons sit on a background 10% lighter than the bar (`--psk-header-search-bg`, 15% on hover and focus, 20% pressed or open); the field's clear button is a close icon in the text color.
 - Storybook: Components/Header and Components/HeaderAction are new; Playground/Pages/Home is now Playground/Layout/Page, the playground header uses the new markup. Story Twig code writes array and object props as Twig literals (`{label: 'Edit'}`).
@@ -320,3 +320,29 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Behaviour**
 - Bootstrap modal: focus moves in and stays in, Esc closes it (unless not closable), focus goes back to what opened it.
+
+## Quick access in the kit header — 2026-11-16
+
+`Component/Layout/Ui/quick_access.html.twig` (kit branch of `Component/Layout/quick_access.html.twig`), `Component/Layout/Ui/quick_access_modals.html.twig`, `ui/src/js/components/quick-access.js`, `<twig:ui:Header>` block `start`, `<twig:ui:HeaderAction>` prop `align`.
+
+**Markup**
+- With `PS_UI_KIT=1`, quick access follows the logo: a `<twig:ui:HeaderAction>` menu (`data-ps-ref="quick-access"`, icon `bookmarks`) instead of `#quick-access-container`, `.quick-accesses`, `#quick_select`, `.quick-row-link`, `#quick-add-link`, `#quick-remove-link`, `#quick-manage-link`, `.js-quick-link`. Shortcuts carry `data-ps-ref="quick-access-link"` (the current page `aria-current="true"`); actions `data-ps-action="add-quick-access"`, `remove-quick-access`.
+- The dialogs are `<twig:ui:Modal>` at the end of the page: `#ps-quick-access-add` (`data-ps-ref="quick-access-add"`, form `quick-access-add-form`, fields `quick-access-name`, `quick-access-new-tab`, error `quick-access-error`) and `#ps-quick-access-remove` (`data-ps-action="confirm-remove-quick-access"`), instead of `#quick-access-add-modal` and the `ConfirmModal` built by `header.ts`.
+- Below sm, the PrestaShop mark (`brand:p-monogram`, named "PrestaShop") replaces the logo, so the bar keeps its buttons on one line at 375px.
+
+**Behaviour**
+- Same endpoints and data as before (`admin_quick_accesses_ajax_add|delete`, or AdminQuickAccesses without the feature flag). Adding or removing rebuilds the shortcuts in place, without reloading; the result is announced (`role="status"`) and focus goes back to the quick access button.
+- An empty name is stopped by the kit form check (`data-ps-action="validate"`); a server error shows in the dialog.
+
+**Strings** (`Admin.Navigation.Header`, `Admin.Actions`)
+- "Quick Access" → "Quick access"
+- "Add current page to Quick Access" → "Add this page to quick access"
+- "Remove from Quick Access" → "Remove this page from quick access" (menu), "Remove from quick access?" (dialog title)
+- "Manage your quick accesses" → "Manage quick access"
+- "Add to Quick Access" → "Add to quick access"
+- "Shortcut name is required" → "Enter a name for the shortcut."
+- "Open in new window" → "Open in a new tab"
+- "Are you sure you want to remove "%name%" from Quick Access?" → ""%name%" will no longer be in your quick access."
+- Save → Add (the add dialog's button)
+- New: "This page is now in your quick access.", "This page is no longer in your quick access."
+

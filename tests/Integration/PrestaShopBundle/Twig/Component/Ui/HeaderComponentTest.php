@@ -32,7 +32,17 @@ class HeaderComponentTest extends KernelTestCase
         $this->assertStringContainsString('data-bs-target="#main-menu" aria-controls="main-menu" aria-label="Open the menu"', $html);
         $this->assertStringContainsString('<span class="badge ps-badge ps-badge--oceanblue ps-header__version">9.3.0</span>', $html);
         $this->assertStringNotContainsString('ps-header__search', $html);
+        $this->assertStringNotContainsString('ps-header__start', $html);
+        $this->assertMatchesRegularExpression('#<a class="ps-header__brand" href="/home"><svg [^>]*class="ps-icon ps-icon--xl ps-header__monogram" role="img" aria-label="PrestaShop">.*</svg>\s*<img class="ps-header__logo" src="/logo.svg" alt="PrestaShop"#s', $html);
         $this->assertMatchesRegularExpression('#<div class="ps-header__actions"><a class="ps-header-action" href="/" target="_blank" rel="noopener noreferrer"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"#', $html);
+    }
+
+    public function testRendersTheStartBlockAfterTheLogo(): void
+    {
+        $html = $this->render("<twig:ui:Header homeUrl=\"/home\" logo=\"/logo.svg\" version=\"9.3.0\"><twig:block name=\"start\"><twig:ui:HeaderAction icon=\"bookmarks\" label=\"Quick access\" align=\"start\" :items=\"[{label: 'Orders', href: '/orders'}]\"/></twig:block></twig:ui:Header>");
+
+        $this->assertMatchesRegularExpression('#ps-header__version">9.3.0</span>\s*<div class="ps-header__start"><div class="dropdown">\s*<button type="button" class="ps-header-action"#', $html);
+        $this->assertStringContainsString('<ul class="dropdown-menu ps-dropdown-menu">', $html);
     }
 
     public function testRendersTheSearchWithTheChosenType(): void

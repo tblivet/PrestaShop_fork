@@ -6,6 +6,7 @@ import '../src/scss/main.scss';
 import * as bootstrap from 'bootstrap';
 import initPasswordToggle from '../src/js/components/password-toggle';
 import initHeaderSearch from '../src/js/components/header-search';
+import initQuickAccess from '../src/js/components/quick-access';
 import initTooltips from '../src/js/components/tooltips';
 import { addons } from '@storybook/preview-api';
 import { format } from 'prettier/standalone';
@@ -15,6 +16,7 @@ const SNIPPET_RENDERED = 'storybook/docs/snippet-rendered';
 
 initPasswordToggle();
 initHeaderSearch();
+initQuickAccess(bootstrap.Modal);
 initTooltips(bootstrap.Tooltip);
 
 /** @type {import('@storybook/html').Preview} */

@@ -17,6 +17,20 @@ export default {
   headerSearchScope: '[data-ps-ref="header-search-scope"]',
   headerSearchType: '[data-ps-ref="header-search-type"]',
   setSearchType: '[data-ps-action="set-search-type"]',
-  // Bootstrap's own attribute: the tooltip plugin reads its options from data-bs-*
+  quickAccess: '[data-ps-ref="quick-access"]',
+  quickAccessLink: '[data-ps-ref="quick-access-link"]',
+  addQuickAccess: '[data-ps-action="add-quick-access"]',
+  removeQuickAccess: '[data-ps-action="remove-quick-access"]',
+  confirmRemoveQuickAccess: '[data-ps-action="confirm-remove-quick-access"]',
+  quickAccessAdd: '[data-ps-ref="quick-access-add"]',
+  quickAccessAddForm: '[data-ps-ref="quick-access-add-form"]',
+  quickAccessName: '[data-ps-ref="quick-access-name"]',
+  quickAccessNewTab: '[data-ps-ref="quick-access-new-tab"]',
+  quickAccessError: '[data-ps-ref="quick-access-error"]',
+  quickAccessRemove: '[data-ps-ref="quick-access-remove"]',
+  quickAccessRemoveMessage: '[data-ps-ref="quick-access-remove-message"]',
+  quickAccessStatus: '[data-ps-ref="quick-access-status"]',
+  // Bootstrap's own attributes: its plugins read their options from data-bs-*
   tooltip: '[data-bs-toggle="tooltip"]',
+  dropdownToggle: '[data-bs-toggle="dropdown"]',
 };

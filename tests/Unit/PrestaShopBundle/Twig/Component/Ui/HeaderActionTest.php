@@ -19,7 +19,7 @@ class HeaderActionTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['label' => 'View my store', 'icon' => 'storefront', 'image' => null, 'href' => '/', 'external' => false, 'items' => null, 'description' => null],
+            ['label' => 'View my store', 'icon' => 'storefront', 'image' => null, 'href' => '/', 'external' => false, 'items' => null, 'description' => null, 'align' => 'end'],
             (new HeaderAction())->preMount(['label' => 'View my store', 'icon' => 'storefront', 'href' => '/'])
         );
     }
@@ -56,5 +56,6 @@ class HeaderActionTest extends TestCase
         yield 'href and items' => [['label' => 'Store', 'icon' => 'storefront', 'href' => '/', 'items' => []]];
         yield 'external menu' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'external' => true]];
         yield 'menu with a description' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'description' => 'More']];
+        yield 'unknown alignment' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'align' => 'left']];
     }
 }

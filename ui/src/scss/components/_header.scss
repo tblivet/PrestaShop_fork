@@ -65,11 +65,24 @@ $component-name: ps-header;
     }
   }
 
-  // The logo file is near black: shown white on the dark bar
+  // The logo file is near black: shown white on the dark bar. Below sm the PrestaShop mark takes its place.
   &__logo {
+    display: none;
     width: auto;
     height: .875rem;
     filter: brightness(0) invert(1);
+  }
+
+  &__monogram {
+    color: var(--#{$prefix}white);
+  }
+
+  // What follows the logo (quick access)
+  &__start {
+    display: flex;
+    flex-shrink: 0;
+    gap: .25rem;
+    align-items: center;
   }
 
   // A <twig:ui:Badge>, from md up
@@ -112,6 +125,16 @@ $component-name: ps-header;
     display: flex;
     gap: .25rem;
     align-items: center;
+  }
+
+  @include media-breakpoint-up(sm) {
+    &__logo {
+      display: block;
+    }
+
+    &__monogram {
+      display: none;
+    }
   }
 
   @include media-breakpoint-up(md) {

@@ -10,9 +10,9 @@ import uiIcon from './ui-icon';
 import { twigCall } from './twig-snippet';
 
 // HeaderAction.php defaults; label is required, and an icon or an image, an href or items
-export const HEADER_ACTION_DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null };
+export const HEADER_ACTION_DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null, align: 'end' };
 
-export default function headerAction({ label, icon = null, image = null, href = null, external = false, items = null, description = null, ...attributes }, icons = {}) {
+export default function headerAction({ label, icon = null, image = null, href = null, external = false, items = null, description = null, align = 'end', ...attributes }, icons = {}) {
   const picture = image
     ? `<img class="ps-header-action__image" src="${image}" alt="" width="24" height="24">`
     : uiIcon(icons[icon], { size: 'xl', class: 'ps-header-action__icon' });
@@ -28,11 +28,11 @@ export default function headerAction({ label, icon = null, image = null, href = 
   } else {
     const classes = ['dropdown', attributes.class].filter(Boolean).join(' ');
     const arrow = uiIcon(keyboardArrowDown, { class: 'ps-header-action__arrow' });
-    html = `<div class="${classes}"${extra}><button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">${content}${arrow}</button>${dropdownMenu({ items, align: 'end' }, icons)}</div>`;
+    html = `<div class="${classes}"${extra}><button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">${content}${arrow}</button>${dropdownMenu({ items, align }, icons)}</div>`;
   }
 
   return {
     html,
-    twig: twigCall('ui:HeaderAction', { icon, image, label, href, external, items, description, ...attributes }, HEADER_ACTION_DEFAULTS),
+    twig: twigCall('ui:HeaderAction', { icon, image, label, href, external, items, description, align: items === null ? undefined : align, ...attributes }, HEADER_ACTION_DEFAULTS),
   };
 }

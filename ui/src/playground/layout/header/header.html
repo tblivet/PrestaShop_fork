@@ -11,9 +11,37 @@
     <!-- ui:Icon menu size="xl" -->
   </button>
   <a class="ps-header__brand" href="#">
+    <!-- ui:Icon brand:p-monogram label="PrestaShop" size="xl" class="ps-header__monogram" -->
     <img class="ps-header__logo" src="/prestashop.svg" alt="PrestaShop" width="130" height="14" />
   </a>
   <span class="badge ps-badge ps-badge--oceanblue ps-header__version">9.3.0</span>
+  <!-- <twig:block name="start">: the quick access (Component/Layout/Ui/quick_access.html.twig) -->
+  <div class="ps-header__start">
+    <div class="dropdown">
+      <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">
+        <!-- ui:Icon bookmarks size="xl" class="ps-header-action__icon" -->
+        <span class="ps-header-action__label">Quick access</span>
+        <!-- ui:Icon keyboard_arrow_down class="ps-header-action__arrow" -->
+      </button>
+      <ul class="dropdown-menu ps-dropdown-menu">
+        <li><a class="dropdown-item ps-dropdown-menu__item" href="#"><span class="ps-dropdown-menu__label">Orders</span></a></li>
+        <li><a class="dropdown-item ps-dropdown-menu__item" href="#"><span class="ps-dropdown-menu__label">New product</span></a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <button type="button" class="dropdown-item ps-dropdown-menu__item">
+            <!-- ui:Icon bookmark_add size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Add this page to quick access</span>
+          </button>
+        </li>
+        <li>
+          <a class="dropdown-item ps-dropdown-menu__item" href="#">
+            <!-- ui:Icon settings size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Manage quick access</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 
   <div id="ps-header-search" class="ps-header__search offcanvas-md offcanvas-top" tabindex="-1">
     <form class="ps-header__search-form" method="post" action="#" role="search" data-ps-ref="header-search">

@@ -15,7 +15,7 @@ import { withDefaults } from '../story-defaults';
 const ICONS = { bug_report: bugReport, build, logout, person, storefront };
 
 // HeaderAction.php defaults; label is required, and an icon or an image, an href or items
-const DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null };
+const DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null, align: 'end' };
 
 const ACCOUNT_ITEMS = [
   { label: 'Your profile', href: '#profile', icon: 'person' },
@@ -35,7 +35,7 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:HeaderAction icon="storefront" label="{{ \'View my shop\'|trans({}, \'Admin.Navigation.Header\') }}" href="{{ ps.baseUrl }}" external/>`, or a menu: `<twig:ui:HeaderAction image="{{ employee.imageUrl }}" label="{{ employee.firstName }}" :items="[…]"/>`. An entry of `<twig:ui:Header>`, placed in its content; modules writing to `displayBackOfficeTop` render the same entry.',
-          '**Props**: `label` (required: what it is; shown from lg up, below only the icon shows and the label stays its name for screen readers), `icon` (a [Material Symbols](https://fonts.google.com/icons) name) or `image` (URL of a round picture, the employee\'s avatar): one of them, `href` (a link) or `items` (a button opening a menu, the items of `<twig:ui:DropdownMenu>`): one of them, `external` (default `false`, links only: opens a new tab and says so), `description` (default none, links only: more about it in a tooltip). Other attributes (`id`, `data-ps-*`) go on the root.',
+          '**Props**: `label` (required: what it is; shown from lg up, below only the icon shows and the label stays its name for screen readers), `icon` (a [Material Symbols](https://fonts.google.com/icons) name) or `image` (URL of a round picture, the employee\'s avatar): one of them, `href` (a link) or `items` (a button opening a menu, the items of `<twig:ui:DropdownMenu>`): one of them, `external` (default `false`, links only: opens a new tab and says so), `description` (default none, links only: more about it in a tooltip), `align` (`start`, `end`; default `end`, menus only: the edge of the button the menu lines up with; `start` next to the logo). Other attributes (`id`, `data-ps-*`) go on the root.',
           '**Do**: a short noun for the label ("View my shop", "Debug mode"), a menu for things about the employee, a description that says what a state means and what to do. **Don\'t**: an action of the page (it belongs to the page header), more than five entries, a link and a menu on one entry.',
           '**States**: a link, a link to another tab, a link with a description, a menu with an avatar, a long name.',
         ].join('\n\n'),
@@ -50,6 +50,7 @@ export default {
     external: { control: 'boolean', description: 'Opens a new tab (links)' },
     items: { control: 'object', description: 'A menu; or href' },
     description: { control: 'text', description: 'Tooltip (links)' },
+    align: { control: 'select', options: ['start', 'end'], description: 'Menu edge (menus)' },
   }, DEFAULTS),
   args: { ...DEFAULTS, label: 'View my shop', icon: 'storefront', href: '#store', external: true },
 };

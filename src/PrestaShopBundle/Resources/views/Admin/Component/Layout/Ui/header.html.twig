@@ -26,6 +26,7 @@
 {%- set maintenanceDescription = 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.'|trans({}, 'Admin.Navigation.Notification')
   ~ (ps.frontOfficeAccessibleForAdmins|default(false) ? ' ' ~ 'Signed-in employees can still see it.'|trans({}, 'Admin.Navigation.Notification') : '') -%}
 <twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset('prestashop.svg', 'ui_kit') }}" version="{{ ps.version }}" :search="search">
+  <twig:block name="start">{{ component('QuickAccess') }}</twig:block>
   {%- if ps.debugMode|default(false) -%}
     <twig:ui:HeaderAction icon="bug_report" label="{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_performance') }}" description="{{ 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification') }}"/>
   {%- endif -%}
