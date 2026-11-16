@@ -8,6 +8,8 @@ import logout from '../../../../icons/material-symbols/logout.svg?raw';
 import menu from '../../../../icons/material-symbols/menu.svg?raw';
 import person from '../../../../icons/material-symbols/person.svg?raw';
 import search from '../../../../icons/material-symbols/search.svg?raw';
+import shoppingBasket from '../../../../icons/material-symbols/shopping-basket.svg?raw';
+import store from '../../../../icons/material-symbols/store.svg?raw';
 import storefront from '../../../../icons/material-symbols/storefront.svg?raw';
 import { expandIcons } from '../../ui-icons';
 import headerHtml from './header.html?raw';
@@ -18,5 +20,7 @@ export default expandIcons(headerHtml, {
   menu,
   person,
   search,
+  shopping_basket: shoppingBasket,
+  store,
   storefront,
 });

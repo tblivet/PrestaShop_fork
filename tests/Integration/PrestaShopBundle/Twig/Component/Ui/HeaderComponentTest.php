@@ -30,19 +30,20 @@ class HeaderComponentTest extends KernelTestCase
 
         $this->assertStringStartsWith('<header class="ps-header d-print-none">', trim($html));
         $this->assertStringContainsString('data-bs-target="#main-menu" aria-controls="main-menu" aria-label="Open the menu"', $html);
-        $this->assertStringContainsString('<span class="ps-header__version">9.3.0</span>', $html);
+        $this->assertStringContainsString('<span class="badge ps-badge ps-badge--oceanblue ps-header__version">9.3.0</span>', $html);
         $this->assertStringNotContainsString('ps-header__search', $html);
         $this->assertMatchesRegularExpression('#<div class="ps-header__actions"><a class="ps-header-action" href="/" target="_blank" rel="noopener noreferrer"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"#', $html);
     }
 
     public function testRendersTheSearchWithTheChosenType(): void
     {
-        $html = $this->render("<twig:ui:Header homeUrl=\"/home\" logo=\"/logo.svg\" :search=\"{action: '/search', query: 'shoes', type: 3, types: [{value: 0, label: 'Everywhere', placeholder: 'What?'}, {value: 3, label: 'Orders', placeholder: 'Order ID'}]}\"/>");
+        $html = $this->render("<twig:ui:Header homeUrl=\"/home\" logo=\"/logo.svg\" :search=\"{action: '/search', query: 'shoes', type: 3, types: [{value: 0, label: 'Everywhere', placeholder: 'What?'}, {value: 3, label: 'Orders', placeholder: 'Order ID', icon: 'shopping_basket'}]}\"/>");
 
         $this->assertStringContainsString('<input type="hidden" name="bo_search_type" value="3" data-ps-ref="header-search-type">', $html);
         $this->assertStringContainsString('value="shoes" class="form-control ps-header__search-input" placeholder="Order ID"', $html);
         $this->assertStringContainsString('<span data-ps-ref="header-search-scope">Orders</span>', $html);
         $this->assertStringContainsString('aria-current="true" data-ps-action="set-search-type" data-ps-value="3" data-ps-data-placeholder="Order ID"', $html);
+        $this->assertMatchesRegularExpression('#data-ps-value="3"[^>]*><svg [^>]*class="ps-icon ps-icon--lg ps-dropdown-menu__icon"#', $html);
     }
 
     public function testRendersAMenuActionAsAButton(): void

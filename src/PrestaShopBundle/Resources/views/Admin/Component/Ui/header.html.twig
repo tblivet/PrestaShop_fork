@@ -10,7 +10,7 @@
     <img class="ps-header__logo" src="{{ logo }}" alt="PrestaShop" width="130" height="14">
   </a>
   {%- if version -%}
-    <span class="ps-header__version">{{ version }}</span>
+    <twig:ui:Badge variant="oceanblue" class="ps-header__version">{{ version }}</twig:ui:Badge>
   {%- endif -%}
   {%- if search -%}
     {%- set current = search.types|filter(type => type.value == search.type)|first -%}
@@ -26,7 +26,7 @@
               <span data-ps-ref="header-search-scope">{{ current.label }}</span>
               <twig:ui:Icon name="keyboard_arrow_down" size="lg"/>
             </button>
-            <twig:ui:DropdownMenu :items="search.types|map(type => {label: type.label, active: type.value == search.type, attr: {'data-ps-action': 'set-search-type', 'data-ps-value': type.value, 'data-ps-data-placeholder': type.placeholder}})" align="end"/>
+            <twig:ui:DropdownMenu :items="search.types|map(type => {label: type.label, icon: type.icon, active: type.value == search.type, attr: {'data-ps-action': 'set-search-type', 'data-ps-value': type.value, 'data-ps-data-placeholder': type.placeholder}})" align="end"/>
           {%- endif -%}
           <button type="submit" class="btn ps-header__search-submit" aria-label="{{ 'Search'|trans({}, 'Admin.Navigation.Header') }}">
             <twig:ui:Icon name="search" size="lg"/>

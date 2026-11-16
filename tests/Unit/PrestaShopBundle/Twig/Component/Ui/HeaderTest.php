@@ -51,6 +51,16 @@ class HeaderTest extends TestCase
         $this->assertSame(3, $search['type']);
     }
 
+    public function testSearchTypeIconIsOptional(): void
+    {
+        $search = (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg', 'search' => ['action' => '/search', 'types' => [
+            ['value' => 0, 'label' => 'Everywhere', 'placeholder' => 'What?', 'icon' => 'search'],
+            ['value' => 3, 'label' => 'Orders', 'placeholder' => 'Order ID'],
+        ]]])['search'];
+
+        $this->assertSame(['search', null], array_column($search['types'], 'icon'));
+    }
+
     public function testRequiresTheLogo(): void
     {
         $this->expectException(MissingOptionsException::class);
@@ -72,6 +82,7 @@ class HeaderTest extends TestCase
         yield 'search type as a string' => [['search' => ['action' => '/search', 'type' => '3']], InvalidOptionsException::class];
         yield 'search type without placeholder' => [['search' => ['action' => '/search', 'types' => [['value' => 0, 'label' => 'Everywhere']]]], MissingOptionsException::class];
         yield 'search type that is not an array' => [['search' => ['action' => '/search', 'types' => ['Everywhere']]], InvalidOptionsException::class];
+        yield 'search type icon that is not a string' => [['search' => ['action' => '/search', 'types' => [['value' => 0, 'label' => 'Everywhere', 'placeholder' => 'What?', 'icon' => true]]]], InvalidOptionsException::class];
         yield 'non string version' => [['version' => 9], InvalidOptionsException::class];
     }
 }

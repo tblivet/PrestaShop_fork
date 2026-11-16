@@ -27,6 +27,12 @@ $component-name: ps-dropdown-menu;
     flex-shrink: 0;
     // Centred on the first line of the label
     margin-block: calc((1lh - var(--ps-icon-size)) / 2);
+    // Quieter than the label at rest; it takes the label color once the item is hovered, focused, chosen or disabled
+    color: var(--#{$prefix}tertiary-color);
+  }
+
+  &__item:is(:hover, :focus-visible, :active, [aria-current="true"], .disabled, :disabled) &__icon {
+    color: inherit;
   }
 
   &__label {

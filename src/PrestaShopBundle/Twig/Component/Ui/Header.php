@@ -37,7 +37,7 @@ final class Header
     /**
      * The search form, none without it.
      *
-     * @var array{action: string, query: string, type: int, types: list<array{value: int, label: string, placeholder: string}>}|null
+     * @var array{action: string, query: string, type: int, types: list<array{value: int, label: string, placeholder: string, icon: string|null}>}|null
      */
     public ?array $search = null;
 
@@ -76,9 +76,11 @@ final class Header
         $type = new OptionsResolver();
         $type
             ->setRequired(['value', 'label', 'placeholder'])
+            ->setDefault('icon', null)
             ->setAllowedTypes('value', 'int')
             ->setAllowedTypes('label', 'string')
             ->setAllowedTypes('placeholder', 'string')
+            ->setAllowedTypes('icon', ['null', 'string'])
         ;
         $search['types'] = array_map(fn (mixed $item): array => is_array($item) ? $type->resolve($item) : throw new InvalidOptionsException('A search type is an array.'), array_values($search['types']));
 

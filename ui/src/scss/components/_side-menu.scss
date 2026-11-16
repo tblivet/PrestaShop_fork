@@ -13,6 +13,7 @@ $component-name: ps-side-menu;
   --#{$prefix}side-menu-border-color: var(--#{$prefix}border-color);
   --#{$prefix}side-menu-section-gap: 1.5rem;
   --#{$prefix}side-menu-heading-color: var(--#{$prefix}secondary-color);
+  --#{$prefix}side-menu-heading-accent: var(--#{$prefix}oceanblue-500);
   --#{$prefix}side-menu-link-color: var(--#{$prefix}body-color);
   --#{$prefix}side-menu-link-hover-bg: var(--#{$prefix}tertiary-bg);
   --#{$prefix}side-menu-link-current-bg: var(--#{$prefix}oceanblue-bg-subtle);
@@ -36,6 +37,10 @@ $component-name: ps-side-menu;
   }
 
   &__heading {
+    display: flex;
+    gap: .5rem;
+    // The mark's bottom edge is its baseline: it sits on the text baseline
+    align-items: baseline;
     // Lined up with the link text, inset by the link padding
     padding-inline: $nav-link-padding-x;
     margin-block-end: .5rem;
@@ -44,6 +49,17 @@ $component-name: ps-side-menu;
     color: var(--#{$prefix}side-menu-heading-color);
     text-transform: uppercase;
     letter-spacing: .05em;
+
+    // A brand blue mark that starts each group, centred on the capitals: it sits on the baseline, then moves down
+    // half of what it is taller than them
+    &::before {
+      flex-shrink: 0;
+      width: .25rem;
+      height: .625rem;
+      content: "";
+      background-color: var(--#{$prefix}side-menu-heading-accent);
+      translate: 0 calc((.625rem - 1cap) / 2);
+    }
   }
 
   &__list,

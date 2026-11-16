@@ -13,7 +13,7 @@
   <a class="ps-header__brand" href="#">
     <img class="ps-header__logo" src="/prestashop.svg" alt="PrestaShop" width="130" height="14" />
   </a>
-  <span class="ps-header__version">9.3.0</span>
+  <span class="badge ps-badge ps-badge--oceanblue ps-header__version">9.3.0</span>
 
   <div id="ps-header-search" class="ps-header__search offcanvas-md offcanvas-top" tabindex="-1">
     <form class="ps-header__search-form" method="post" action="#" role="search" data-ps-ref="header-search">
@@ -36,16 +36,19 @@
         <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
           <li>
             <button type="button" class="dropdown-item ps-dropdown-menu__item" aria-current="true" data-ps-action="set-search-type" data-ps-value="0" data-ps-data-placeholder="Products, orders, customers…">
+              <!-- ui:Icon search size="lg" class="ps-dropdown-menu__icon" -->
               <span class="ps-dropdown-menu__label">Everywhere</span>
             </button>
           </li>
           <li>
             <button type="button" class="dropdown-item ps-dropdown-menu__item" data-ps-action="set-search-type" data-ps-value="1" data-ps-data-placeholder="Product name or reference">
+              <!-- ui:Icon store size="lg" class="ps-dropdown-menu__icon" -->
               <span class="ps-dropdown-menu__label">Catalog</span>
             </button>
           </li>
           <li>
             <button type="button" class="dropdown-item ps-dropdown-menu__item" data-ps-action="set-search-type" data-ps-value="3" data-ps-data-placeholder="Order ID">
+              <!-- ui:Icon shopping_basket size="lg" class="ps-dropdown-menu__icon" -->
               <span class="ps-dropdown-menu__label">Orders</span>
             </button>
           </li>
