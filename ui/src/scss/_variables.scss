@@ -369,9 +369,10 @@ $btn-active-bg-tint-amount: 22%;
 $btn-active-border-tint-amount: 22%;
 
 // ── Badge ─────────────────────────────────────────────────────────────────────
-$badge-padding-y: 0.5rem;
-$badge-padding-x: 0.75rem;
-$badge-font-size: 0.875em;
+// em throughout: a badge takes its size from the text around it (a heading, a table cell, the header bar)
+$badge-padding-y: 0.25em;
+$badge-padding-x: 0.5em;
+$badge-font-size: 0.75em;
 $badge-font-weight: 500;
 
 // ── Progress ──────────────────────────────────────────────────────────────────

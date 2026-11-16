@@ -2,23 +2,51 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Override Bootstrap badge — https://getbootstrap.com/docs/5.3/components/badge/
+// A state, a count or a flag (<twig:ui:Badge>), on Bootstrap .badge — https://getbootstrap.com/docs/5.3/components/badge/
+$component-name: ps-badge;
 
-.badge {
-  // ── Counter modifier ────────────────────────────────────────────────────────
-  // Circle for short counts, stretches into a pill as the number grows.
-  // rem on purpose — a count indicator keeps the same size in any font context.
-  &-counter {
-    --#{$prefix}badge-font-size: 0.75rem;
-    --#{$prefix}badge-padding-x: 0.3rem;
+.#{$component-name} {
+  display: inline-flex;
+  gap: .25rem;
+  align-items: center;
+  vertical-align: middle;
+
+  // Subtle background, emphasis text: readable on any page background
+  @each $variant in map-keys($theme-colors) {
+    &--#{$variant} {
+      color: var(--#{$prefix}#{$variant}-text-emphasis);
+      background-color: var(--#{$prefix}#{$variant}-bg-subtle);
+    }
+  }
+
+  // The kit palette colors Bootstrap has no theme color for: their 800 shade reads at 6.4:1 or more on their subtle
+  // background
+  @each $variant in map-keys($palette-bg-subtle) {
+    &--#{$variant} {
+      color: var(--#{$prefix}#{$variant}-800);
+      background-color: var(--#{$prefix}#{$variant}-bg-subtle);
+    }
+  }
+
+  &--pill {
+    // Shape is asked for: stays round even with $enable-rounded: false
+    border-radius: var(--#{$prefix}border-radius-pill);
+  }
+
+  // A circle for short counts, stretching into a pill as the number grows.
+  // rem on purpose: a count keeps the same size in any font context.
+  &--counter {
+    --#{$prefix}badge-font-size: .75rem;
+    --#{$prefix}badge-padding-x: .3rem;
     --#{$prefix}badge-padding-y: 0;
 
-    display: inline-flex;
-    align-items: center;
     justify-content: center;
     min-width: 1.25rem;
     height: 1.25rem;
-    // Shape is functional — stays round even with $enable-rounded: false
-    border-radius: var(--#{$prefix}border-radius-pill, #{$border-radius-pill});
+    border-radius: var(--#{$prefix}border-radius-pill);
+  }
+
+  &__icon {
+    flex-shrink: 0;
   }
 }

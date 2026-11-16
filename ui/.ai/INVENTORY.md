@@ -59,7 +59,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | 2 | - [x] | [`<twig:ui:Button>`](#2-twiguibutton) | action | 140 | 6 | M | `<twig:ui:Icon>` | no |
 | 3 | - [x] | [`<twig:ui:IconButton>`](#3-twiguiiconbutton) | action | 45 | 6 | S | `<twig:ui:Button>`, `<twig:ui:Icon>` | no |
 | 4 | - [x] | [`<twig:ui:Link>`](#4-twiguilink) | navigation | 30 | 5 | S | `<twig:ui:Icon>` | no |
-| 5 | - [ ] | [`<twig:ui:Badge>`](#5-twiguibadge) | content | 30 | 5 | S | `<twig:ui:Icon>` | no |
+| 5 | - [x] | [`<twig:ui:Badge>`](#5-twiguibadge) | content | 30 | 5 | S | `<twig:ui:Icon>` | no |
 | 6 | - [ ] | [`<twig:ui:HelpTip>`](#6-twiguihelptip) | feedback | 25 | 4 | S | `<twig:ui:IconButton>` | no |
 | 7 | - [ ] | [`<twig:ui:Alert> (extend)`](#7-twiguialert-extend) | feedback | 75 | 6 | M | `<twig:ui:Icon>`, `<twig:ui:IconButton>` | no |
 | 8 | - [ ] | [`<twig:ui:Spinner>`](#8-twiguispinner) | feedback | 12 | 5 | S | - | no |

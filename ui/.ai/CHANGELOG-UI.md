@@ -299,3 +299,10 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - "View my store" → "View my shop" (the old pages keep "View my store" until they move to the kit)
 - New: "Open the menu", "Search in".
 
+## Badge: `<twig:ui:Badge>` — 2026-11-16
+
+`Twig/Component/Ui/Badge.php`, `Component/Ui/badge.html.twig`, `components/_badge.scss`.
+
+**Markup**
+- `<span class="badge ps-badge ps-badge--{variant}">`, variants `primary`… `dark` (subtle background, emphasis text) and the kit palette colors `oceanblue`, `purple`, `amber` (subtle background, 800 text); `ps-badge--pill`, `ps-badge--counter`, `ps-badge__icon`. Square corners unless `pill`. Font size and padding are in em (`$badge-font-size: .75em`, `$badge-padding-y|x: .25em .5em`, were `.875em` and `.5rem .75rem`): a badge follows the text around it; a counter keeps its rem size.
+- Kit CSS: `.badge-counter` → `.ps-badge--counter` (used by no page yet).

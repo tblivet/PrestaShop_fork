@@ -1,0 +1,10 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+<span{{ attributes.defaults({class: 'badge ps-badge ps-badge--' ~ variant ~ (pill ? ' ps-badge--pill') ~ (counter ? ' ps-badge--counter')}) }}>
+  {%- if icon -%}
+    <twig:ui:Icon :name="icon" class="ps-badge__icon"/>
+  {%- endif -%}
+  {%- block content %}{% endblock -%}
+</span>
