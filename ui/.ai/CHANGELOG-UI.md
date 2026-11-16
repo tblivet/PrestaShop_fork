@@ -264,8 +264,38 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Markup**
 - Trigger: a `<twig:ui:Button>` with a `keyboard_arrow_down` (or `_up`) icon, or a `<twig:ui:IconButton>`; no `.dropdown-toggle` class, so no icon-font caret.
-- Menu: `ul.dropdown-menu.ps-dropdown-menu`, items `dropdown-item ps-dropdown-menu__item` with `ps-dropdown-menu__icon` and `ps-dropdown-menu__label`; the chosen item has `active` and `aria-current="true"`, a disabled link loses its `href`; an external link says "(opens in a new tab)".
+- Menu: `ul.dropdown-menu.ps-dropdown-menu`, items `dropdown-item ps-dropdown-menu__item` with `ps-dropdown-menu__icon` and `ps-dropdown-menu__label`; the chosen item has `aria-current="true"` (styled like Bootstrap's `.active`, without the class), a disabled link loses its `href`; an external link says "(opens in a new tab)".
 - The Components/Dropdown story (Bootstrap examples) is replaced by the component story; Components/DropdownMenu is new.
 
 **Behaviour**
 - Menus are at most 20rem wide: long labels wrap instead of stretching past the screen.
+
+## Header: `<twig:ui:Header>` and `<twig:ui:HeaderAction>` — 2026-11-16
+
+`Twig/Component/Ui/Header.php`, `HeaderAction.php`, `Twig/Component/Header.php` (feeds it), `Component/Ui/header.html.twig`, `header_action.html.twig`, `Component/Layout/Ui/header.html.twig`, `Layout/default_layout.html.twig`, `components/_header.scss`, `components/_header-action.scss`, `ui/src/js/components/header-search.js`.
+
+**Markup**
+- With `PS_UI_KIT=1`, Symfony pages render `<header class="ps-header">` in a `ps-layout` grid (header, side menu, `main.ps-layout__content`) instead of `#header`, `#header_infos`, `.main-header`, `#header_logo`, `#shop_version`, `#header_search`, `.component-search`, `#header-employee-container`, `.employee-dropdown`, `#header_logout`, `.mobile-layer`.
+- Search: the field keeps `name="bo_query"` and posts to AdminSearch; the type picker is a `<twig:ui:DropdownMenu>` of buttons filling the hidden `bo_search_type` (hooks `data-ps-ref="header-search"`, `header-search-type`, `header-search-input`, `header-search-scope`, `data-ps-action="set-search-type"`). Below md it is a panel sliding from the top (`#ps-header-search`, Bootstrap offcanvas-md).
+- Header entries are `<twig:ui:HeaderAction>`: debug mode, maintenance mode, View my shop, the employee menu (a `<button>`, not a `div`, opening a `<twig:ui:DropdownMenu>`). Modules writing to `displayBackOfficeTop` can render the same entry.
+- `displayBackOfficeEmployeeMenu` links become menu items between "Your profile" and "Sign out"; an icon with no SVG file is left out. `displayBackOfficeTop` keeps its place at the end of the bar.
+- Not on kit pages until their kit version: notifications, quick access, the multistore bar. The kit build (`theme-ui.ts`) no longer runs the old `NavBar` and `Header` scripts nor `components/header/search-form`.
+- Kit CSS: `layout/_header.scss` (playground classes, icon font) is replaced by the component partials. Dropdown menus are as wide as their longest label (`width: max-content`, still at most 20rem).
+- Storybook: Components/Header and Components/HeaderAction are new; Playground/Pages/Home is now Playground/Layout/Page, the playground header uses the new markup. Story Twig code writes array and object props as Twig literals (`{label: 'Edit'}`).
+
+**Behaviour**
+- Below md: a menu button opens the side menu, a search button opens the search panel and focuses the field; actions show their icon only (label kept for screen readers) until lg.
+- Debug and maintenance modes explain themselves in a plain-text tooltip instead of an HTML one; their link goes to the page that turns them off.
+
+**Strings** (`Admin.Navigation.Header`, `Admin.Navigation.Notification`)
+- "What are you looking for?" → "Products, orders, customers…"
+- "Product name, reference, etc." → "Product name or reference"
+- "Name" (customer search placeholder) → "Customer name"
+- "Customers" + "by name" / "by ip address" (concatenated) → "Customers by name", "Customers by IP address"
+- "Searchbar", "SEARCH" → "Search"
+- "Your shop is in debug mode." + "All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode." → "All PHP errors and messages are shown. Turn debug mode off when you no longer need it."
+- "Your store is in maintenance mode." + "Your visitors and customers cannot access your store while in maintenance mode." + "To manage the maintenance settings, go to Shop Parameters > Maintenance tab." → "Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready."
+- "Admins can access the store front office without storing their IP." → "Signed-in employees can still see it."
+- "View my store" → "View my shop" (the old pages keep "View my store" until they move to the kit)
+- New: "Open the menu", "Search in".
+

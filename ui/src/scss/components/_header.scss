@@ -1,0 +1,156 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Top bar of the back office (<twig:ui:Header>): menu button, logo, version, search, header actions
+$component-name: ps-header;
+
+.#{$component-name} {
+  display: flex;
+  gap: .25rem;
+  align-items: center;
+  height: $ps-header-height;
+  padding-inline: .5rem;
+  color: var(--#{$prefix}white);
+  background-color: var(--#{$prefix}primary);
+
+  // The two buttons that open a panel below md: the side menu and the search
+  &__menu-toggle,
+  &__search-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    color: rgba(var(--#{$prefix}white-rgb), .85);
+    background: none;
+    border: 0;
+    @include border-radius(var(--#{$prefix}border-radius));
+
+    &:hover {
+      color: var(--#{$prefix}white);
+      background-color: rgba(var(--#{$prefix}white-rgb), .1);
+    }
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 var(--#{$prefix}focus-ring-width) rgba(var(--#{$prefix}white-rgb), .6);
+    }
+  }
+
+  // Pushes the search button and the actions to the end of the bar
+  &__search-toggle {
+    margin-inline-start: auto;
+  }
+
+  &__brand {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    padding: .25rem;
+    @include border-radius(var(--#{$prefix}border-radius));
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: 0 0 0 var(--#{$prefix}focus-ring-width) rgba(var(--#{$prefix}white-rgb), .6);
+    }
+  }
+
+  // The logo file is near black: shown white on the dark bar
+  &__logo {
+    width: auto;
+    height: .875rem;
+    filter: brightness(0) invert(1);
+  }
+
+  &__version {
+    display: none;
+    padding: .25rem .5rem;
+    font-size: .75rem;
+    line-height: 1;
+    color: var(--#{$prefix}white);
+    background-color: var(--#{$prefix}primary-400);
+    @include border-radius(var(--#{$prefix}border-radius-pill));
+  }
+
+  // Below md: a light panel sliding from the top (offcanvas-top), the field at full width
+  &__search {
+    --#{$prefix}offcanvas-height: auto;
+
+    // The offcanvas pins the bottom edge too: freed, the panel is as tall as the field
+    inset-block-end: auto;
+    padding: .75rem;
+  }
+
+  &__search-scope {
+    display: inline-flex;
+    gap: .25rem;
+    align-items: center;
+    border-color: var(--#{$prefix}border-color);
+  }
+
+  &__search-submit {
+    border-color: var(--#{$prefix}border-color);
+  }
+
+  &__actions {
+    display: flex;
+    gap: .25rem;
+    align-items: center;
+  }
+
+  @include media-breakpoint-up(md) {
+    gap: .75rem;
+    padding-inline: 1rem;
+
+    &__menu-toggle,
+    &__search-toggle {
+      display: none;
+    }
+
+    &__version {
+      display: inline-block;
+    }
+
+    // In the bar: a dark field in the middle of the free space
+    &__search {
+      flex: 0 1 28rem;
+      padding: 0;
+      margin-inline: auto;
+    }
+
+    &__search-input {
+      --#{$prefix}form-control-autofill-bg: var(--#{$prefix}primary-800);
+      --#{$prefix}form-control-autofill-color: var(--#{$prefix}white);
+
+      color: var(--#{$prefix}white);
+      background-color: var(--#{$prefix}primary-800);
+      border-color: var(--#{$prefix}primary-400);
+
+      &::placeholder {
+        color: rgba(var(--#{$prefix}white-rgb), .6);
+      }
+
+      &:focus {
+        color: var(--#{$prefix}white);
+        background-color: var(--#{$prefix}primary-700);
+      }
+    }
+
+    &__search-scope,
+    &__search-submit {
+      color: rgba(var(--#{$prefix}white-rgb), .85);
+      background-color: var(--#{$prefix}primary-800);
+      border-color: var(--#{$prefix}primary-400);
+
+      &:hover,
+      &[aria-expanded="true"] {
+        color: var(--#{$prefix}white);
+        background-color: var(--#{$prefix}primary-700);
+        border-color: var(--#{$prefix}primary-400);
+      }
+    }
+  }
+}

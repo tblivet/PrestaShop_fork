@@ -10,7 +10,7 @@
       {%- elseif 'heading' == item.type -%}
         <span class="dropdown-header">{{ item.label }}</span>
       {%- else -%}
-        {%- set classes = 'dropdown-item ps-dropdown-menu__item' ~ (item.active ? ' active') ~ (item.disabled and 'link' == item.type ? ' disabled') -%}
+        {%- set classes = 'dropdown-item ps-dropdown-menu__item' ~ (item.disabled and 'link' == item.type ? ' disabled') -%}
         {%- set state = (item.active ? ' aria-current="true"') ~ (item.disabled and 'link' == item.type ? ' aria-disabled="true"') -%}
         {%- set extra -%}{% for name, value in item.attr %} {{ name }}="{{ value }}"{% endfor %}{%- endset -%}
         {%- if 'link' == item.type -%}

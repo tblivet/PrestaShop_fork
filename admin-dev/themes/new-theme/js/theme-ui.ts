@@ -17,16 +17,11 @@ import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
 import 'jquery-serializejson';
 
-// Theme Javascript
-import NavBar from '@js/nav_bar';
-
 // this needs to be ported into the UI kit
 import '@js/clickable-dropdown';
 
 import '@js/maintenance-page';
 import '@js/translation-page/index';
-
-import Header from '@js/header';
 
 import initDatePickers from '@js/app/utils/datepicker';
 import initInvalidFields from '@js/app/utils/fields';
@@ -34,15 +29,14 @@ import initEmailFields from '@js/app/utils/email-idn';
 import initNumberCommaTransformer from '@js/app/utils/number-comma-transformer';
 import initPrestashopComponents from '@app/utils/init-components';
 import watchSymfonyDebugBar from '@app/utils/watch-symfony-debug-bar';
-import '@js/components/header/search-form';
 
 const {$} = window;
 
 // Theme Javascript
 window.Dropzone.autoDiscover = false;
 
-new NavBar();
-new Header();
+// The kit renders its own header and menu (<twig:ui:Header>, <twig:ui:SideMenu>): the old NavBar and Header scripts are
+// not loaded. Notifications and quick access come back with their kit version.
 
 $(() => {
   initPrestashopComponents();

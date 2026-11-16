@@ -20,7 +20,7 @@ const item = (entry, icons) => {
   }
 
   const link = type === 'link';
-  const classes = ['dropdown-item', 'ps-dropdown-menu__item', entry.active && 'active', entry.disabled && link && 'disabled'].filter(Boolean).join(' ');
+  const classes = ['dropdown-item', 'ps-dropdown-menu__item', entry.disabled && link && 'disabled'].filter(Boolean).join(' ');
   const state = `${entry.active ? ' aria-current="true"' : ''}${entry.disabled && link ? ' aria-disabled="true"' : ''}`;
   const extra = Object.entries(entry.attr ?? {}).map(([name, value]) => ` ${name}="${value}"`).join('');
   const icon = entry.icon ? uiIcon(icons[entry.icon], { size: 'lg', class: 'ps-dropdown-menu__icon' }) : '';

@@ -5,7 +5,7 @@
 // Generic BO page shell — full-width header, sidebar menu, scrollable content section.
 // Compose a page story with: boLayout(contentHtml, { fluid: false })
 // fluid: true stretches the content zone full width instead of the centered design canvas.
-import headerHtml from './header/header.html?raw';
+import headerHtml from './header/header.js';
 import sidebarHtml from './sidebar/sidebar.js';
 
 export const boLayout = (content, { fluid = false } = {}) => `

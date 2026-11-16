@@ -6,7 +6,8 @@
 $component-name: ps-dropdown-menu;
 
 .#{$component-name} {
-  // Long labels wrap instead of stretching the menu past the screen
+  // As wide as its longest label, not as the trigger's wrapper; past 20rem, labels wrap instead of leaving the screen
+  width: max-content;
   max-width: min(20rem, calc(100vw - 2rem));
 
   &__item {
@@ -14,6 +15,12 @@ $component-name: ps-dropdown-menu;
     gap: .5rem;
     align-items: flex-start;
     white-space: normal;
+
+    // The chosen value: aria-current, which scripts flip, styled like Bootstrap's .active
+    &[aria-current="true"] {
+      color: var(--#{$prefix}dropdown-link-active-color);
+      background-color: var(--#{$prefix}dropdown-link-active-bg);
+    }
   }
 
   &__icon {

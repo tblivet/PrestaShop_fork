@@ -12,8 +12,27 @@ const indent = (text) => text.split('\n').map((line) => (line ? `  ${line}` : li
 
 export const markup = (html) => ({ html, twig: html });
 
-// Props equal to their default are left out, like a developer would write the call; true booleans are bare, false ones
-// and arrays are bound (:name="…")
+// A JS value as a Twig literal, as a developer writes it in a bound prop: [a, b], {key: value}, 'text'
+const twigLiteral = (value) => {
+  if (Array.isArray(value)) {
+    return `[${value.map(twigLiteral).join(', ')}]`;
+  }
+
+  if (value !== null && typeof value === 'object') {
+    const entries = Object.entries(value).filter(([, item]) => item !== undefined);
+
+    return `{${entries.map(([key, item]) => `${/^[A-Za-z_]\w*$/.test(key) ? key : twigLiteral(key)}: ${twigLiteral(item)}`).join(', ')}}`;
+  }
+
+  if (typeof value === 'string') {
+    return `'${value.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`;
+  }
+
+  return String(value);
+};
+
+// Props equal to their default are left out, like a developer would write the call; true booleans are bare, false ones,
+// arrays and objects are bound (:name="…")
 const twigAttributes = (props, defaults) => Object.entries(props)
   .filter(([name, value]) => value !== undefined && value !== '' && JSON.stringify(value) !== JSON.stringify(defaults[name]))
   .map(([name, value]) => {
@@ -21,8 +40,8 @@ const twigAttributes = (props, defaults) => Object.entries(props)
       return value ? ` ${name}` : ` :${name}="false"`;
     }
 
-    if (Array.isArray(value)) {
-      return ` :${name}="${JSON.stringify(value).replace(/"/g, "'").replace(/,/g, ', ')}"`;
+    if (value !== null && typeof value === 'object') {
+      return ` :${name}="${twigLiteral(value)}"`;
     }
 
     return ` ${name}="${value}"`;

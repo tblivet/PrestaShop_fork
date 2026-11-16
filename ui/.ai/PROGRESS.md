@@ -62,8 +62,8 @@ Validated as the reference page on 2026-11-05: no blocker or major. Re-checked o
 
 ## Kit components
 
-Twig components (14): `ui:Alert`, `ui:Button`, `ui:Cluster`, `ui:Dropdown`, `ui:DropdownMenu`, `ui:FlashMessages`, `ui:Gap`, `ui:Icon`, `ui:IconButton`, `ui:Link`, `ui:PasswordField`, `ui:SideMenu`, `ui:Stack`, `ui:Tiles`.
+Twig components (16): `ui:Alert`, `ui:Button`, `ui:Cluster`, `ui:Dropdown`, `ui:DropdownMenu`, `ui:FlashMessages`, `ui:Gap`, `ui:Header`, `ui:HeaderAction`, `ui:Icon`, `ui:IconButton`, `ui:Link`, `ui:PasswordField`, `ui:SideMenu`, `ui:Stack`, `ui:Tiles`.
 
-Storybook component stories (30): Accordion, Alert, Badge, Breadcrumb, Button, ButtonGroup, Card, Carousel, CloseButton, Collapse, Dropdown, DropdownMenu, FlashMessages, Icon, IconButton, Link, ListGroup, Modal, Navbar, Navs, Offcanvas, Pagination, PasswordField, Placeholder, Popover, Progress, SideMenu, Spinner, Toast, Tooltip.
+Storybook component stories (32): Accordion, Alert, Badge, Breadcrumb, Button, ButtonGroup, Card, Carousel, CloseButton, Collapse, Dropdown, DropdownMenu, FlashMessages, Header, HeaderAction, Icon, IconButton, Link, ListGroup, Modal, Navbar, Navs, Offcanvas, Pagination, PasswordField, Placeholder, Popover, Progress, SideMenu, Spinner, Toast, Tooltip.
 
 The component backlog is in [INVENTORY.md](INVENTORY.md).

@@ -44,7 +44,7 @@ class DropdownComponentTest extends KernelTestCase
         $html = $this->render("<twig:ui:DropdownMenu :items=\"[{type: 'heading', label: 'Search in'}, {label: 'Catalog', active: true, attr: {'data-ps-value': '1'}}, {type: 'divider'}, {label: 'Off', href: '/off', disabled: true}, {label: 'Docs', href: 'https://docs', external: true}]\"/>");
 
         $this->assertStringContainsString('<li><span class="dropdown-header">Search in</span></li>', $html);
-        $this->assertStringContainsString('<button type="button" class="dropdown-item ps-dropdown-menu__item active" aria-current="true" data-ps-value="1">', $html);
+        $this->assertStringContainsString('<button type="button" class="dropdown-item ps-dropdown-menu__item" aria-current="true" data-ps-value="1">', $html);
         $this->assertStringContainsString('<li><hr class="dropdown-divider"></li>', $html);
         $this->assertStringContainsString('<a class="dropdown-item ps-dropdown-menu__item disabled" role="link" aria-disabled="true">', $html);
         $this->assertStringContainsString('target="_blank" rel="noopener noreferrer"><span class="ps-dropdown-menu__label">Docs<span class="visually-hidden"> (opens in a new tab)</span></span></a>', $html);

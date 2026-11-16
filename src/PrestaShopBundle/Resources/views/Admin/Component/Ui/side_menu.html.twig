@@ -9,7 +9,7 @@
     <span class="ps-side-menu__badge">
       {%- if badge.logo -%}<twig:ui:Icon name="brand:p-monogram" class="ps-side-menu__badge-logo"/>{%- endif -%}
       <span class="ps-side-menu__badge-label">{{ badge.label }}</span>
-    </span>
+    {#- -#}</span>
   {%- endif -%}
 {%- endmacro -%}
 <nav{{ attributes.defaults({id: menuId, class: 'ps-side-menu offcanvas-md offcanvas-start', tabindex: '-1', 'aria-label': label ?? 'Main menu'|trans({}, 'Admin.Navigation.Menu')}) }}>

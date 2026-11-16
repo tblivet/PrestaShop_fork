@@ -1,0 +1,44 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+<header{{ attributes.defaults({class: 'ps-header d-print-none'}) }}>
+  <button type="button" class="ps-header__menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#{{ menuId }}" aria-controls="{{ menuId }}" aria-label="{{ 'Open the menu'|trans({}, 'Admin.Navigation.Header') }}">
+    <twig:ui:Icon name="menu" size="xl"/>
+  </button>
+  <a class="ps-header__brand" href="{{ homeUrl }}">
+    <img class="ps-header__logo" src="{{ logo }}" alt="PrestaShop" width="130" height="14">
+  </a>
+  {%- if version -%}
+    <span class="ps-header__version">{{ version }}</span>
+  {%- endif -%}
+  {%- if search -%}
+    {%- set current = search.types|filter(type => type.value == search.type)|first -%}
+    {#- Below md the search is a panel that slides from the top, like the menu drawer -#}
+    <div id="ps-header-search" class="ps-header__search offcanvas-md offcanvas-top" tabindex="-1">
+      <form class="ps-header__search-form" method="post" action="{{ search.action }}" role="search" data-ps-ref="header-search">
+        <input type="hidden" name="bo_search_type" value="{{ search.type }}" data-ps-ref="header-search-type">
+        <div class="input-group">
+          <input type="search" name="bo_query" value="{{ search.query }}" class="form-control ps-header__search-input" placeholder="{{ current ? current.placeholder : 'Search'|trans({}, 'Admin.Navigation.Header') }}" aria-label="{{ 'Search'|trans({}, 'Admin.Navigation.Header') }}" data-ps-ref="header-search-input">
+          {%- if current -%}
+            <button type="button" class="btn ps-header__search-scope" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="visually-hidden">{{ 'Search in'|trans({}, 'Admin.Navigation.Header') }} </span>
+              <span data-ps-ref="header-search-scope">{{ current.label }}</span>
+              <twig:ui:Icon name="keyboard_arrow_down" size="lg"/>
+            </button>
+            <twig:ui:DropdownMenu :items="search.types|map(type => {label: type.label, active: type.value == search.type, attr: {'data-ps-action': 'set-search-type', 'data-ps-value': type.value, 'data-ps-data-placeholder': type.placeholder}})" align="end"/>
+          {%- endif -%}
+          <button type="submit" class="btn ps-header__search-submit" aria-label="{{ 'Search'|trans({}, 'Admin.Navigation.Header') }}">
+            <twig:ui:Icon name="search" size="lg"/>
+          </button>
+        </div>
+      </form>
+    </div>
+    <button type="button" class="ps-header__search-toggle" data-bs-toggle="offcanvas" data-bs-target="#ps-header-search" aria-controls="ps-header-search" aria-label="{{ 'Search'|trans({}, 'Admin.Navigation.Header') }}">
+      <twig:ui:Icon name="search" size="xl"/>
+    </button>
+  {%- endif -%}
+  <div class="ps-header__actions">
+    {%- block content %}{% endblock -%}
+  </div>
+</header>

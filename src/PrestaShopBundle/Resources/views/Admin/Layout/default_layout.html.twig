@@ -23,8 +23,14 @@
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token is defined %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
   >
+{# The kit places header, menu and content in one grid: the header on top, the menu beside the content #}
+{% if ui_kit %}<div class="ps-layout">{% endif %}
 {# Layout header #}
 {% block layout_header %}
+  {% if ui_kit %}
+    <div class="ps-layout__header">{{ component('Header') }}</div>
+    <div class="ps-layout__sidebar">{{ component('NavBar') }}</div>
+  {% else %}
   <header id="header" class="d-print-none">
     <nav id="header_infos" class="main-header">
       <button class="btn btn-primary-reverse onclick btn-lg unbind ajax-spinner"></button>
@@ -114,7 +120,9 @@
   </header>
 
   {{ component('NavBar') }}
+  {% endif %}
 {% endblock %}
+{% if ui_kit %}<main class="ps-layout__content">{% endif %}
 
 {# Page header toolbar #}
 {% if showContentHeader %}
@@ -154,7 +162,9 @@
   </div>
 </div>
 
+{% if ui_kit %}</main></div>{% else %}
   <div class="mobile-layer"></div>
+{% endif %}
 
   {{ component('Footer') }}
 

@@ -1,66 +1,98 @@
-<header class="ps-header">
-  <div class="container-fluid">
-    <div class="ps-header__inner">
-      <div class="ps-header__brand">
-        <button
-          class="ps-header__menu-toggle"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#bo-sidebar"
-          aria-controls="bo-sidebar"
-          aria-label="Toggle menu"
-        >
-          <span class="icon ps-header__menu-icon ps-header__menu-icon--open" aria-hidden="true">menu</span>
-          <span class="icon ps-header__menu-icon ps-header__menu-icon--close" aria-hidden="true">close</span>
-        </button>
-        <a class="ps-header__brand-link" href="#">
-          <img class="ps-header__logo" src="/prestashop.svg" alt="PrestaShop" height="14" />
-        </a>
-        <span class="badge rounded-pill ps-header__version">9.2.0</span>
-      </div>
+<!-- <twig:ui:Header homeUrl="#" logo="/prestashop.svg" version="9.3.0" menuId="bo-sidebar" :search="…"> -->
+<header class="ps-header d-print-none">
+  <button
+    type="button"
+    class="ps-header__menu-toggle"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#bo-sidebar"
+    aria-controls="bo-sidebar"
+    aria-label="Open the menu"
+  >
+    <!-- ui:Icon menu size="xl" -->
+  </button>
+  <a class="ps-header__brand" href="#">
+    <img class="ps-header__logo" src="/prestashop.svg" alt="PrestaShop" width="130" height="14" />
+  </a>
+  <span class="ps-header__version">9.3.0</span>
 
-      <!-- data-bs-theme: form defaults (placeholder…) must resolve for the dark surface -->
-      <form class="ps-header__search" role="search" data-bs-theme="dark">
-        <span class="icon ps-header__search-icon" aria-hidden="true">search</span>
+  <div id="ps-header-search" class="ps-header__search offcanvas-md offcanvas-top" tabindex="-1">
+    <form class="ps-header__search-form" method="post" action="#" role="search" data-ps-ref="header-search">
+      <input type="hidden" name="bo_search_type" value="0" data-ps-ref="header-search-type" />
+      <div class="input-group">
         <input
           type="search"
-          id="header-search"
-          name="search"
-          class="form-control form-control-sm ps-header__search-input"
-          placeholder="Search"
+          name="bo_query"
+          value=""
+          class="form-control ps-header__search-input"
+          placeholder="Products, orders, customers…"
           aria-label="Search"
+          data-ps-ref="header-search-input"
         />
-      </form>
+        <button type="button" class="btn ps-header__search-scope" data-bs-toggle="dropdown" aria-expanded="false">
+          <span class="visually-hidden">Search in </span>
+          <span data-ps-ref="header-search-scope">Everywhere</span>
+          <!-- ui:Icon keyboard_arrow_down size="lg" -->
+        </button>
+        <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
+          <li>
+            <button type="button" class="dropdown-item ps-dropdown-menu__item" aria-current="true" data-ps-action="set-search-type" data-ps-value="0" data-ps-data-placeholder="Products, orders, customers…">
+              <span class="ps-dropdown-menu__label">Everywhere</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item ps-dropdown-menu__item" data-ps-action="set-search-type" data-ps-value="1" data-ps-data-placeholder="Product name or reference">
+              <span class="ps-dropdown-menu__label">Catalog</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item ps-dropdown-menu__item" data-ps-action="set-search-type" data-ps-value="3" data-ps-data-placeholder="Order ID">
+              <span class="ps-dropdown-menu__label">Orders</span>
+            </button>
+          </li>
+        </ul>
+        <button type="submit" class="btn ps-header__search-submit" aria-label="Search">
+          <!-- ui:Icon search size="lg" -->
+        </button>
+      </div>
+    </form>
+  </div>
+  <button
+    type="button"
+    class="ps-header__search-toggle"
+    data-bs-toggle="offcanvas"
+    data-bs-target="#ps-header-search"
+    aria-controls="ps-header-search"
+    aria-label="Search"
+  >
+    <!-- ui:Icon search size="xl" -->
+  </button>
 
-      <ul class="ps-header__nav">
-        <li class="ps-header__nav-item">
-          <a class="ps-header__nav-link" href="#">
-            <span class="icon" aria-hidden="true">storefront</span>
-            <span class="ps-header__nav-label">View my store</span>
+  <div class="ps-header__actions">
+    <!-- <twig:ui:HeaderAction icon="storefront" label="View my shop" href="#" external/> -->
+    <a class="ps-header-action" href="#" target="_blank" rel="noopener noreferrer">
+      <!-- ui:Icon storefront size="xl" class="ps-header-action__icon" -->
+      <span class="ps-header-action__label">View my shop<span class="visually-hidden"> (opens in a new tab)</span></span>
+    </a>
+    <!-- <twig:ui:HeaderAction image="…" label="Marc Beier" :items="…"/> -->
+    <div class="dropdown">
+      <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">
+        <img class="ps-header-action__image" src="/playground/avatar.svg" alt="" width="24" height="24" />
+        <span class="ps-header-action__label">Marc Beier</span>
+        <!-- ui:Icon keyboard_arrow_down class="ps-header-action__arrow" -->
+      </button>
+      <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
+        <li>
+          <a class="dropdown-item ps-dropdown-menu__item" href="#">
+            <!-- ui:Icon person size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Your profile</span>
           </a>
         </li>
-        <li class="ps-header__nav-item">
-          <a class="ps-header__nav-link" href="#">
-            <span class="icon" aria-hidden="true">notifications</span>
-            <span class="ps-header__nav-label">Notifications</span>
-            <span class="badge badge-counter text-bg-danger">3</span>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <a class="dropdown-item ps-dropdown-menu__item" href="#">
+            <!-- ui:Icon logout size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Sign out</span>
           </a>
-        </li>
-        <li class="dropdown ps-header__nav-item">
-          <button
-            class="dropdown-toggle ps-header__nav-link"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <span class="icon" aria-hidden="true">account_circle</span>
-            <span class="ps-header__nav-label">John Doe</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li><a class="dropdown-item" href="#">Your profile</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
-          </ul>
         </li>
       </ul>
     </div>
