@@ -71,7 +71,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | 17 | - [ ] | [`<twig:ui:Toast>`](#17-twiguitoast) | feedback | 40 | 4 | S | `<twig:ui:Icon>`, `<twig:ui:IconButton>` | no |
 | 18 | - [ ] | [`<twig:ui:Header>`](#18-twiguiheader) | navigation | 150 | 1 | L | `<twig:ui:IconButton>`, `<twig:ui:Dropdown>`, `<twig:ui:Modal>`, `<twig:ui:Badge>`, `<twig:ui:Tabs>` | yes |
 | 19 | - [x] | [`<twig:ui:SideMenu>`](#19-twiguisidemenu) | navigation | 150 | 1 | M | `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
-| 22 | - [ ] | [`<twig:ui:Modal>`](#22-twiguimodal) | overlay | 30 | 7 | M | `<twig:ui:IconButton>`, `<twig:ui:Button>`, `<twig:ui:Spinner>`, `<twig:ui:Layout:Cluster>` | no |
+| 22 | - [x] | [`<twig:ui:Modal>`](#22-twiguimodal) | overlay | 30 | 7 | M | `<twig:ui:IconButton>`, `<twig:ui:Button>`, `<twig:ui:Spinner>`, `<twig:ui:Layout:Cluster>` | no |
 | 23 | - [ ] | [`data-ps-confirm (ConfirmDialog on <twig:ui:Modal>)`](#23-data-ps-confirm-confirmdialog-on-twiguimodal) | overlay | 25 | 6 | S | `<twig:ui:Modal>`, `<twig:ui:Button>` | no |
 | 24 | - [ ] | [`<twig:ui:Pagination>`](#24-twiguipagination) | navigation | 60 | 3 | M | `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
 | 25 | - [ ] | [`<twig:ui:EmptyState>`](#25-twiguiemptystate) | feedback | 30 | 4 | S | `<twig:ui:Icon>`, `<twig:ui:Button>`, `<twig:ui:Spinner>` | no |

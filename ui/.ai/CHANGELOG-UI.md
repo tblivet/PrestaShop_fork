@@ -308,3 +308,15 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Markup**
 - `<span class="badge ps-badge ps-badge--{variant}">`, variants `primary`… `dark` (subtle background, emphasis text) and the kit palette colors `oceanblue`, `purple`, `amber` (subtle background, 800 text); `ps-badge--pill`, `ps-badge--counter`, `ps-badge__icon`. Square corners unless `pill`. Font size and padding are in em (`$badge-font-size: .75em`, `$badge-padding-y|x: .25em .5em`, were `.875em` and `.5rem .75rem`): a badge follows the text around it; a counter keeps its rem size.
 - Kit CSS: `.badge-counter` → `.ps-badge--counter` (used by no page yet).
+
+## Modal: `<twig:ui:Modal>` — 2026-11-16
+
+`Twig/Component/Ui/Modal.php`, `Component/Ui/modal.html.twig`, `components/_modal.scss`.
+
+**Markup**
+- `<div id="{id}" class="modal fade ps-modal" aria-labelledby="{id}-title">` with an `h2.modal-title.ps-modal__title` (level set by `headingLevel`), a named close button (`.btn-close`, "Close"), `.modal-body` and an optional `.modal-footer` (block `footer`). Sizes `sm`, `md`, `lg`, `xl`, `fullscreen`; centred by default; `scrollable`; `static` adds `data-bs-backdrop="static"`; `closable: false` adds `data-bs-keyboard="false"` and drops the close button.
+- Kit CSS: the title is `$h5-font-size`; the close button stays on the title's first line.
+- Storybook: Components/Modal is rebuilt on the component (it showed raw Bootstrap markup).
+
+**Behaviour**
+- Bootstrap modal: focus moves in and stays in, Esc closes it (unless not closable), focus goes back to what opened it.

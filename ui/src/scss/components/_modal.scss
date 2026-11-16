@@ -2,4 +2,22 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Override Bootstrap modal — https://getbootstrap.com/docs/5.3/components/modal/
+// Dialog of the /ui kit (<twig:ui:Modal>), on Bootstrap's modal — https://getbootstrap.com/docs/5.3/components/modal/
+$component-name: ps-modal;
+
+.#{$component-name} {
+  // A long title wraps; the close button stays on its first line
+  .modal-header {
+    align-items: flex-start;
+  }
+
+  .modal-header .btn-close {
+    // Centred on the title's first line: (title line - close button box) / 2
+    margin-block: calc((#{$h5-font-size} * #{$modal-title-line-height} - #{$btn-close-width} - 2 * #{$btn-close-padding-y}) / 2);
+  }
+
+  // The title is an h2 for the page outline, sized for a dialog
+  &__title {
+    font-size: $h5-font-size;
+  }
+}
