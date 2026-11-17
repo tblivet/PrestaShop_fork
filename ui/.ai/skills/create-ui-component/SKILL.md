@@ -39,7 +39,7 @@ Icons through `ui/src/stories/ux-icon.js`. Check it in Storybook, including the 
 
 ## 3. Styles
 
-`ui/src/scss/components/_{name}.scss` starting with `$component-name: ps-{name};` then `.#{$component-name} { … }` (layouts: `ui/src/scss/layout/`), imported in `ui/src/scss/main.scss` in alphabetical order. Only what utilities and Bootstrap cannot express.
+`ui/src/scss/components/_{name}.scss` starting with `$component-name: ps-{name};` then `.#{$component-name} { … }` (layouts: `ui/src/scss/layout/`), imported in `ui/src/scss/main.scss` in alphabetical order. Only what Bootstrap cannot express, in the order of CONVENTIONS.md "Bootstrap first": a Bootstrap class or utility in the markup, then a Bootstrap Sass variable in `ui/src/scss/_variables.scss`, then a Bootstrap CSS variable, and a rule last.
 
 ## 4. Twig component
 
