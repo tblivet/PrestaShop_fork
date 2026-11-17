@@ -4,7 +4,7 @@
  -#}
 {#- The dialogs of the header's quick access (quick_access.html.twig), at the end of the page so no header style holds
  # them; quick-access.js fills and sends them -#}
-<twig:ui:Modal id="ps-quick-access-add" title="{{ 'Add to quick access'|trans({}, 'Admin.Navigation.Header') }}" static data-ps-ref="quick-access-add">
+<twig:ui:Modal id="ps-quick-access-add" title="{{ 'Add to quick access'|trans({}, 'Admin.Navigation.Header') }}" icon="bookmark_add" static data-ps-ref="quick-access-add">
   <form id="ps-quick-access-add-form" novalidate data-ps-action="validate" data-ps-ref="quick-access-add-form">
     <twig:ui:Alert type="danger" class="mb-3" hidden data-ps-ref="quick-access-error"/>
     <div class="mb-3">
@@ -18,14 +18,14 @@
     </div>
   </form>
   <twig:block name="footer">
-    <twig:ui:Button variant="secondary" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button variant="link" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
     <twig:ui:Button variant="primary" type="submit" form="ps-quick-access-add-form">{{ 'Add'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
   </twig:block>
 </twig:ui:Modal>
-<twig:ui:Modal id="ps-quick-access-remove" title="{{ 'Remove from quick access?'|trans({}, 'Admin.Navigation.Header') }}" size="sm" data-ps-ref="quick-access-remove">
+<twig:ui:Modal id="ps-quick-access-remove" title="{{ 'Remove from quick access?'|trans({}, 'Admin.Navigation.Header') }}" icon="bookmark_remove" variant="danger" data-ps-ref="quick-access-remove">
   <p class="mb-0" data-ps-ref="quick-access-remove-message" data-ps-data-message="{{ '"%name%" will no longer be in your quick access.'|trans({}, 'Admin.Navigation.Header') }}"></p>
   <twig:block name="footer">
-    <twig:ui:Button variant="secondary" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button variant="link" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
     <twig:ui:Button variant="destructive" data-ps-action="confirm-remove-quick-access">{{ 'Remove'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
   </twig:block>
 </twig:ui:Modal>

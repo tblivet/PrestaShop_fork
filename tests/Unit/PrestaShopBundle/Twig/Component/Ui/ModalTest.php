@@ -19,7 +19,7 @@ class ModalTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['id' => 'qa', 'title' => 'Add', 'headingLevel' => 2, 'size' => 'md', 'centered' => true, 'scrollable' => false, 'static' => false, 'closable' => true],
+            ['id' => 'qa', 'title' => 'Add', 'headingLevel' => null, 'icon' => null, 'variant' => null, 'size' => 'md', 'scrollable' => false, 'static' => false, 'closable' => true],
             (new Modal())->preMount(['id' => 'qa', 'title' => 'Add'])
         );
     }
@@ -59,9 +59,11 @@ class ModalTest extends TestCase
     public static function provideInvalidProps(): iterable
     {
         yield 'unknown size' => [['size' => 'huge']];
+        yield 'unknown variant' => [['icon' => 'check', 'variant' => 'warning']];
+        yield 'variant without an icon' => [['variant' => 'danger']];
+        yield 'non string icon' => [['icon' => true]];
         yield 'heading level 1' => [['headingLevel' => 1]];
-        yield 'heading level as a word' => [['headingLevel' => 'three']];
-        yield 'non boolean centered' => [['centered' => 'yes']];
+        yield 'heading level as a word' => [['headingLevel' => 'none']];
         yield 'non boolean static' => [['static' => 1]];
         yield 'non boolean closable' => [['closable' => 'false']];
     }

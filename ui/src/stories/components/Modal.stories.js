@@ -4,15 +4,21 @@
  */
 // https://getbootstrap.com/docs/5.3/components/modal/
 // Twig: <twig:ui:Modal> (src/PrestaShopBundle/Twig/Component/Ui/Modal.php) renders this markup, keep both in sync.
+import bookmarkAdd from '../../../icons/material-symbols/bookmark-add.svg?raw';
+import bookmarkRemove from '../../../icons/material-symbols/bookmark-remove.svg?raw';
+import checkCircle from '../../../icons/material-symbols/check-circle.svg?raw';
 import modal, { modalButton } from '../modal';
 import { framedNodes, markup, withTwig } from '../twig-snippet';
 import { withDefaults } from '../story-defaults';
 
 // Modal.php defaults; id and title are required
-const DEFAULTS = { headingLevel: 2, size: 'md', centered: true, scrollable: false, static: false, closable: true };
+// Some <twig:ui:Icon> names a dialog can show; any icon works (Content/Icons)
+const ICONS = { none: null, bookmark_add: bookmarkAdd, bookmark_remove: bookmarkRemove, check_circle: checkCircle };
+
+const DEFAULTS = { headingLevel: null, icon: null, variant: null, size: 'md', scrollable: false, static: false, closable: true };
 
 const FIELD = markup('<label class="form-label" for="story-shortcut-name">Shortcut name</label><input type="text" class="form-control" id="story-shortcut-name" value="Customers">');
-const CANCEL_SAVE = [modalButton({ label: 'Cancel', 'data-bs-dismiss': 'modal' }), modalButton({ label: 'Save', variant: 'primary' })];
+const CANCEL_SAVE = [modalButton({ label: 'Cancel', variant: 'link', 'data-bs-dismiss': 'modal' }), modalButton({ label: 'Save', variant: 'primary' })];
 const LONG_TEXT = markup(Array(10).fill('<p>Every product of the catalog is checked against the file, then its price, stock and categories are updated. Products that are not in the file stay as they are.</p>').join(''));
 
 // Story chrome: shown in place, as an open dialog, instead of waiting for a button
@@ -25,10 +31,10 @@ export default {
     docs: {
       description: {
         component: [
-          '**Twig usage**: `<twig:ui:Modal id="quick-access-add" title="{{ \'Add to quick access\'|trans({}, \'Admin.Navigation.Header\') }}" static>…<twig:block name="footer"><twig:ui:Button data-bs-dismiss="modal">…</twig:ui:Button><twig:ui:Button variant="primary">…</twig:ui:Button></twig:block></twig:ui:Modal>`. A button with `data-bs-toggle="modal" data-bs-target="#quick-access-add"` opens it (Bootstrap modal: focus moves in and stays in, Esc closes it, focus goes back to the button).',
-          '**Props**: `id` (required: what opens it, and the title is `{id}-title`, its name for screen readers), `title` (required), `headingLevel` (2 to 6; default 2), `size` (`sm`, `md`, `lg`, `xl`, `fullscreen`; default `md`), `centered` (default `true`), `scrollable` (default `false`: a long body scrolls inside, the title and the footer stay), `static` (default `false`: a click outside does not close it, so typed input is not lost; Esc and the close button still do), `closable` (default `true`; `false`: no close button, no Esc, no click outside, only for a step that must finish, like a progress). Content: the body. Block `footer`: the buttons, Cancel first, the action last. Other attributes (`class`, `data-ps-*`) go on the root.',
+          '**Twig usage**: `<twig:ui:Modal id="quick-access-add" title="{{ \'Add to quick access\'|trans({}, \'Admin.Navigation.Header\') }}" static>…<twig:block name="footer"><twig:ui:Button variant="link" data-bs-dismiss="modal">…</twig:ui:Button><twig:ui:Button variant="primary">…</twig:ui:Button></twig:block></twig:ui:Modal>`. A button with `data-bs-toggle="modal" data-bs-target="#quick-access-add"` opens it (Bootstrap modal: focus moves in and stays in, Esc closes it, focus goes back to the button).',
+          '**Props**: `id` (required: what opens it, and the title is `{id}-title`, its name for screen readers), `title` (required), `headingLevel` (2 to 6; default none: the title is a `<p>` that names the dialog without being a heading of the page; a level makes it one), `icon` (default none: a [Material Symbols](https://fonts.google.com/icons) name in a round tinted badge before the title, decorative), `variant` (`info`, `success`, `danger`; default none, which shows `info`; only with an `icon`, it colors the badge: `success` for something done, `danger` for a deletion, with a `destructive` action), `size` (`sm`, `md`, `lg`, `xl`, `fullscreen`; default `md`), `scrollable` (default `false`: a long body scrolls inside, the title and the footer stay), `static` (default `false`: a click outside does not close it, so typed input is not lost; Esc and the close button still do), `closable` (default `true`; `false`: no close button, no Esc, no click outside, only for a step that must finish, like a progress). Content: the body. Block `footer`: the buttons, Cancel first (a `link` button: leaving is not an action), the action last. Other attributes (`class`, `data-ps-*`) go on the root.',
           '**Do**: a short task or a confirmation that needs an answer before going on; a title naming the task ("Add to quick access"); the main button named by its action ("Save", "Remove"), never "OK" or "Yes"; `static` around a form. **Don\'t**: a modal for information a page section can show, a modal opening another modal, `closable: false` for a form (the user must always be able to leave), one hidden modal per row of a list (render one, fill it when it opens).',
-          '**States**: a form with its buttons, the sizes, a long body that scrolls, not closable, a long title. Shown open in place here; "Opened by a button" shows the real behaviour.',
+          '**States**: a form with its buttons and an icon, a deletion (`danger`), something done (`success`), the sizes, a long body that scrolls, not closable, a long title. Shown open in place here; "Opened by a button" shows the real behaviour.',
         ].join('\n\n'),
       },
     },
@@ -36,19 +42,38 @@ export default {
   argTypes: withDefaults({
     id: { control: 'text', description: 'What opens it (data-bs-target) and names it (required)' },
     title: { control: 'text', description: 'Title, the name of the dialog (required)' },
-    headingLevel: { control: 'select', options: [2, 3, 4, 5, 6], description: 'Heading level of the title' },
+    icon: { control: 'select', options: Object.keys(ICONS), description: 'Icon in a round badge before the title' },
+    variant: { control: 'select', options: [null, 'info', 'success', 'danger'], description: 'Color of the icon badge (with an icon); info when not set' },
+    headingLevel: { control: 'select', options: [null, 2, 3, 4, 5, 6], description: 'Heading level of the title; not set: not a heading' },
     size: { control: 'select', options: ['sm', 'md', 'lg', 'xl', 'fullscreen'], description: 'Width' },
-    centered: { control: 'boolean', description: 'Vertically centred' },
     scrollable: { control: 'boolean', description: 'The body scrolls, the title and the footer stay' },
     static: { control: 'boolean', description: 'A click outside does not close it' },
     closable: { control: 'boolean', description: 'Close button, Esc and click outside' },
   }, DEFAULTS),
-  args: { id: 'story-modal', title: 'Add to quick access', ...DEFAULTS, static: true },
+  args: { id: 'story-modal', title: 'Add to quick access', ...DEFAULTS, icon: 'bookmark_add', static: true },
 };
 
-export const Default = withTwig((args) => shown(modal({
-  ...args, size: args.size === 'fullscreen' ? 'md' : args.size, body: FIELD, footer: CANCEL_SAVE,
-})));
+export const Default = withTwig(({ icon, variant, ...args }) => shown(modal({
+  ...args, icon: icon === 'none' ? null : icon, variant: icon === 'none' ? null : (variant || null), size: args.size === 'fullscreen' ? 'md' : args.size, body: FIELD, footer: CANCEL_SAVE,
+}, ICONS)));
+
+export const Danger = withTwig(() => shown(modal({
+  id: 'story-modal-danger',
+  title: 'Remove from quick access?',
+  icon: 'bookmark_remove',
+  variant: 'danger',
+  body: markup('<p class="mb-0">"Customers" will no longer be in your quick access.</p>'),
+  footer: [modalButton({ label: 'Cancel', variant: 'link', 'data-bs-dismiss': 'modal' }), modalButton({ label: 'Remove', variant: 'destructive' })],
+}, ICONS)), { docs: { description: { story: 'A deletion to confirm: a red badge and a `destructive` button named by the action.' } } });
+
+export const Success = withTwig(() => shown(modal({
+  id: 'story-modal-success',
+  title: 'Import finished',
+  icon: 'check_circle',
+  variant: 'success',
+  body: markup('<p class="mb-0">3,000 products were imported.</p>'),
+  footer: [modalButton({ label: 'View the products', variant: 'primary' })],
+}, ICONS)), { docs: { description: { story: 'Something done: a green badge and the next step.' } } });
 
 export const Sizes = withTwig(() => framedNodes(
   ['sm', 'lg', 'xl'].map((size) => modal({

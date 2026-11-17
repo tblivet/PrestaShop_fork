@@ -317,7 +317,12 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Markup**
 - `<div id="{id}" class="modal fade ps-modal" aria-labelledby="{id}-title">` with an `h2.modal-title.ps-modal__title` (level set by `headingLevel`), a named close button (`.btn-close`, "Close"), `.modal-body` and an optional `.modal-footer` (block `footer`). Sizes `sm`, `md`, `lg`, `xl`, `fullscreen`; centred by default; `scrollable`; `static` adds `data-bs-backdrop="static"`; `closable: false` adds `data-bs-keyboard="false"` and drops the close button.
-- Kit CSS: the title is `$h5-font-size`; the header is Bootstrap's own (the close button centred on the title).
+- Kit CSS: the title is `$h5-font-size`, semibold; the header is Bootstrap's own (the close button centred on the title), its cross drawn smaller (`background-size: .75em`) in the same 32px box.
+- Cancel in a dialog footer is a `link` button (quick access dialogs, Modal stories).
+- No `centered` prop any more: every dialog is vertically centred.
+- `headingLevel` is not set by default (was 2): the title is a `<p class="modal-title">`, not a heading of the page, still the dialog's name through `aria-labelledby`; pass 2 to 6 to make it a heading.
+- New props `icon` (a round tinted badge before the title) and `variant` (`info` light blue, `success` green, `danger` red; only with an icon, none means `info`): `ps-modal__icon`, `ps-modal__icon--{variant}`. The quick access dialogs take `bookmark_add` (info) and `bookmark_remove` (danger, now at the default width).
+- 24px around header, body and footer (`$modal-inner-padding: 1.5rem`), no lines between them (`$modal-header-border-width`, `$modal-footer-border-width`: 0); close buttons are darker (`$btn-close-opacity: .85`, 1 on hover), in dialogs and dismissible alerts.
 - Storybook: Components/Modal is rebuilt on the component (it showed raw Bootstrap markup).
 
 **Behaviour**

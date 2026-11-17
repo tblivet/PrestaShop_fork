@@ -351,6 +351,18 @@ $form-switch-checked-color: #fff;
 // then .25rem of ring
 $form-check-input-focus-box-shadow: 0 0 0 .125rem var(--#{$prefix}body-bg), 0 0 0 .375rem $focus-ring-color;
 
+// ── Modal ─────────────────────────────────────────────────────────────────────
+// Header, body and footer read as one block: no lines between them (Bootstrap draws them by default), 24px around
+// each (the header and footer paddings derive from it)
+$modal-inner-padding: 1.5rem;
+$modal-header-border-width: 0;
+$modal-footer-border-width: 0;
+
+// ── Close button ──────────────────────────────────────────────────────────────
+// Darker than Bootstrap's 50%: the cross reads as a control, not as a hint (dialogs, dismissible alerts)
+$btn-close-opacity: .85;
+$btn-close-hover-opacity: 1;
+
 // ── Alert ─────────────────────────────────────────────────────────────────────
 // A component has no outer margin (CONVENTIONS.md): the layout around an alert spaces it
 $alert-margin-bottom: 0;

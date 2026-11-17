@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Ui;
 
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -25,16 +26,24 @@ final class Modal
 
     public const HEADING_LEVELS = [2, 3, 4, 5, 6];
 
+    /** The color of the icon's circle: info, success for something done, danger for a deletion */
+    public const VARIANTS = ['info', 'success', 'danger'];
+
     /** Opens it (data-bs-target) and names it: the title is "{id}-title" */
     public string $id;
 
     public string $title;
 
-    public int $headingLevel = 2;
+    /** Not set: the title names the dialog without being a heading of the page; 2 to 6 makes it one */
+    public ?int $headingLevel = null;
+
+    /** <twig:ui:Icon> name, in a round tinted badge before the title; decorative */
+    public ?string $icon = null;
+
+    /** The color of the icon's circle, only with an icon; info when not set */
+    public ?string $variant = null;
 
     public string $size = 'md';
-
-    public bool $centered = true;
 
     /** A long body scrolls inside the dialog, the title and the footer stay */
     public bool $scrollable = false;
@@ -53,9 +62,10 @@ final class Modal
             ->setIgnoreUndefined()
             ->setRequired(['id', 'title'])
             ->setDefaults([
-                'headingLevel' => 2,
+                'headingLevel' => null,
+                'icon' => null,
+                'variant' => null,
                 'size' => 'md',
-                'centered' => true,
                 'scrollable' => false,
                 'static' => false,
                 'closable' => true,
@@ -63,10 +73,18 @@ final class Modal
             ->setAllowedTypes('id', 'string')
             ->setAllowedTypes('title', 'string')
             // headingLevel="3" in Twig is a string
-            ->setAllowedValues('headingLevel', fn (mixed $level): bool => is_numeric($level) && in_array((int) $level, self::HEADING_LEVELS, true))
-            ->setNormalizer('headingLevel', fn (Options $options, int|string $level): int => (int) $level)
+            ->setAllowedValues('headingLevel', fn (mixed $level): bool => null === $level || (is_numeric($level) && in_array((int) $level, self::HEADING_LEVELS, true)))
+            ->setNormalizer('headingLevel', fn (Options $options, int|string|null $level): ?int => null === $level ? null : (int) $level)
+            ->setAllowedTypes('icon', ['null', 'string'])
+            ->setAllowedValues('variant', [null, ...self::VARIANTS])
+            ->setNormalizer('variant', function (Options $options, ?string $variant): ?string {
+                if (null !== $variant && null === $options['icon']) {
+                    throw new InvalidOptionsException('A modal variant colors its icon: give an icon, or no variant.');
+                }
+
+                return $variant;
+            })
             ->setAllowedValues('size', self::SIZES)
-            ->setAllowedTypes('centered', 'bool')
             ->setAllowedTypes('scrollable', 'bool')
             ->setAllowedTypes('static', 'bool')
             ->setAllowedTypes('closable', 'bool')

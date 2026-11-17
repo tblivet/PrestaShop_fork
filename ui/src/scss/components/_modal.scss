@@ -10,5 +10,38 @@ $component-name: ps-modal;
   // The title is an h2 for the page outline, sized for a dialog
   &__title {
     font-size: $h5-font-size;
+    font-weight: var(--#{$prefix}font-weight-semibold);
+  }
+
+  // The icon before the title: a round tinted badge, the kit's light blue, green for something done, red for a deletion
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    margin-inline-end: .75rem;
+    border-radius: 50%;
+
+    &--info {
+      color: var(--#{$prefix}oceanblue-800);
+      background-color: var(--#{$prefix}oceanblue-bg-subtle);
+    }
+
+    &--success {
+      color: var(--#{$prefix}success-text-emphasis);
+      background-color: var(--#{$prefix}success-bg-subtle);
+    }
+
+    &--danger {
+      color: var(--#{$prefix}danger-text-emphasis);
+      background-color: var(--#{$prefix}danger-bg-subtle);
+    }
+  }
+
+  // A smaller cross in the same box: only the drawn icon shrinks, the click target keeps Bootstrap's size
+  .btn-close {
+    background-size: .75em;
   }
 }

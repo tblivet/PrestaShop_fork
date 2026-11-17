@@ -2,9 +2,10 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
+{#- Always vertically centred -#}
 {%- set dialogClasses = ['modal-dialog']
   |merge(size != 'md' ? [size == 'fullscreen' ? 'modal-fullscreen' : 'modal-' ~ size] : [])
-  |merge(centered ? ['modal-dialog-centered'] : [])
+  |merge(['modal-dialog-centered'])
   |merge(scrollable ? ['modal-dialog-scrollable'] : []) -%}
 {%- set defaults = {class: 'modal fade ps-modal', tabindex: '-1', 'aria-labelledby': id ~ '-title', 'aria-hidden': 'true'} -%}
 {#- Static: a click outside does not close it; not closable: Esc does not either -#}
@@ -19,7 +20,11 @@
   {#- -#}<div class="{{ dialogClasses|join(' ') }}">
     {#- -#}<div class="modal-content">
       {#- -#}<div class="modal-header">
-        {#- -#}<h{{ headingLevel }} class="modal-title ps-modal__title" id="{{ id }}-title">{{ title }}</h{{ headingLevel }}>
+        {%- if icon -%}
+          <span class="ps-modal__icon ps-modal__icon--{{ variant ?? 'info' }}"><twig:ui:Icon :name="icon" size="lg"/></span>
+        {%- endif -%}
+        {%- set titleTag = headingLevel is null ? 'p' : 'h' ~ headingLevel -%}
+        <{{ titleTag }} class="modal-title ps-modal__title" id="{{ id }}-title">{{ title }}</{{ titleTag }}>
         {%- if closable -%}
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>
         {%- endif -%}
