@@ -28,7 +28,7 @@ class IconButtonComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:IconButton icon="delete" label="Delete"/>');
 
-        $this->assertMatchesRegularExpression('#^<button class="btn btn-secondary ps-icon-button" type="button" aria-label="Delete"><svg [^>]*class="ps-icon ps-icon--lg" aria-hidden="true">.*</svg></button>$#s', trim($html));
+        $this->assertMatchesRegularExpression('#^<button class="btn btn-primary ps-icon-button" type="button" aria-label="Delete"><svg [^>]*class="ps-icon ps-icon--lg" aria-hidden="true">.*</svg></button>$#s', trim($html));
     }
 
     public function testRendersLinkWithTooltipAndAttributes(): void
@@ -36,6 +36,14 @@ class IconButtonComponentTest extends KernelTestCase
         $html = $this->render('<twig:ui:IconButton icon="edit" label="Edit" variant="link" size="sm" href="/edit" tooltip class="link-secondary" data-ps-ref="edit"/>');
 
         $this->assertStringStartsWith('<a class="btn btn-link btn-sm ps-icon-button link-secondary" href="/edit" aria-label="Edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-ps-ref="edit">', trim($html));
+    }
+
+    public function testPlacesTooltipOnALogicalSide(): void
+    {
+        $html = $this->render('<twig:ui:IconButton icon="edit" label="Edit" tooltip tooltipPlacement="end"/>');
+
+        $this->assertStringContainsString('data-bs-toggle="tooltip" data-bs-title="Edit" data-bs-placement="right"', $html);
+        $this->assertStringNotContainsString('data-bs-placement', $this->render('<twig:ui:IconButton icon="edit" label="Edit" tooltip/>'));
     }
 
     public function testRendersLoadingState(): void

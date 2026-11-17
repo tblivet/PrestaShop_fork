@@ -9,12 +9,11 @@ import infoFill from '../../../icons/material-symbols/info-fill.svg?raw';
 import warningFill from '../../../icons/material-symbols/warning-fill.svg?raw';
 import uiIcon from '../ui-icon';
 import { joinNodes, markup, twigCall, withTwig } from '../twig-snippet';
-import { withDefaults } from '../story-defaults';
+import { NONE, nullableSelect, withDefaults } from '../story-defaults';
 // Twig: <twig:ui:Alert> (src/PrestaShopBundle/Twig/Component/Ui/Alert.php) renders this markup, keep both in sync.
 
 // <twig:ui:Icon> names the alert shows filled; any icon works, these are the status ones
 const ICONS = {
-  none: null,
   info: infoFill,
   check_circle: checkCircleFill,
   warning: warningFill,
@@ -26,11 +25,12 @@ const role = (type) => (type === 'danger' ? 'alert' : 'status');
 
 // The markup of alert.html.twig for the given props and the Twig call that renders it; the content is the content block,
 // attributes (class, style…) go on the alert like in Twig
-const alert = ({ type, icon, dismissible, content, ...attributes }) => {
+const alert = ({ type, icon, dismissible, borderless = false, content, ...attributes }) => {
   const iconSvg = ICONS[icon] ?? null;
   const classes = ['ps-alert', 'alert', `alert-${type}`];
+  if (borderless) classes.push('ps-alert--borderless');
   if (dismissible) classes.push('alert-dismissible', 'fade', 'show');
-  if (iconSvg) classes.push('d-flex', 'align-items-start', 'gap-2');
+  if (iconSvg) classes.push('ps-alert--icon');
   if (attributes.class) classes.push(attributes.class);
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
 
@@ -40,14 +40,14 @@ const alert = ({ type, icon, dismissible, content, ...attributes }) => {
       ${iconSvg ? `${uiIcon(iconSvg, { size: 'lg', class: 'ps-alert__icon' })}<div class="ps-alert__content">${content}</div>` : content}
       ${dismissible ? '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>' : ''}
     </div>`,
-    twig: twigCall('ui:Alert', { type, icon: iconSvg ? icon : undefined, dismissible, ...attributes }, DEFAULTS, [markup(content)]),
+    twig: twigCall('ui:Alert', { type, icon: iconSvg ? icon : undefined, dismissible, borderless, ...attributes }, DEFAULTS, [markup(content)]),
   };
 };
 
 const column = (html) => `<div class="d-flex flex-column gap-2">${html}</div>`;
 
-// Alert.php defaults (no icon: the control's "none")
-const DEFAULTS = { type: 'info', icon: null, dismissible: false };
+// Alert.php defaults
+const DEFAULTS = { type: 'info', icon: null, dismissible: false, borderless: false };
 
 export default {
   title: 'Components/Alert',
@@ -56,9 +56,9 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:Alert type="danger" icon="cancel" dismissible>…message…</twig:ui:Alert>`. The content block is the message: text, a list, links; there is no title prop, emphasise a first sentence with `<strong>` in the message.',
-          '**Props**: `type` (`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`; default `info`), `icon` (a `<twig:ui:Icon>` name, shown filled: `info`, `check_circle`, `warning`, `cancel` for the status ones; default none), `dismissible` (default `false`). Other attributes (`id`, `data-ps-*`, `aria-*`) go on the alert.',
+          '**Props**: `type` (`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`; default `info`), `icon` (a `<twig:ui:Icon>` name, shown filled: `info`, `check_circle`, `warning`, `cancel` for the status ones; default none), `dismissible` (default `false`), `borderless` (default `false`: no border, only the tinted background; for an alert inside a card or a panel that already frames it). Other attributes (`id`, `data-ps-*`, `aria-*`) go on the alert.',
           '**Do**: let a layout or `<twig:ui:FlashMessages>` space alerts (the alert has no outer margin); use `danger` only for errors, it is the only type announced at once (`role="alert"`). **Don\'t**: add margins or `.alert-link` by hand: links in the message take the alert link color.',
-          '**States**: each type, with and without icon, dismissible, long text wrapping with its icon on the first line, a long unbreakable word (path, token) breaking inside the box, a link and `<code>` in the message, a first sentence in `<strong>`.',
+          '**States**: each type, with and without icon, with and without border, dismissible, long text wrapping with its icon on the first line, a long unbreakable word (path, token) breaking inside the box, a link and `<code>` in the message, a first sentence in `<strong>`.',
         ].join('\n\n'),
       },
     },
@@ -69,17 +69,14 @@ export default {
       options: ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'],
       description: 'Bootstrap contextual type',
     },
-    icon: {
-      control: 'select',
-      options: Object.keys(ICONS),
-      description: '<twig:ui:Icon> name, shown filled; none by default',
-    },
+    icon: nullableSelect(Object.keys(ICONS), '<twig:ui:Icon> name, shown filled'),
     dismissible: { control: 'boolean', description: 'Close button' },
+    borderless: { control: 'boolean', description: 'No border, only the background' },
     content: { control: 'text', description: 'The content block (HTML)' },
   }, DEFAULTS),
   args: {
     ...DEFAULTS,
-    icon: 'none',
+    icon: NONE,
     content: 'A simple alert — check it out!',
   },
 };
@@ -91,6 +88,13 @@ export const AllVariants = withTwig(() => joinNodes(
     .map((type) => alert({ type, content: `A simple <strong>${type}</strong> alert — check it out!` })),
   column,
 ));
+
+export const Borderless = withTwig(() => joinNodes(
+  ['info', 'success', 'warning', 'danger'].map((type) => alert({
+    type, icon: { info: 'info', success: 'check_circle', warning: 'warning', danger: 'cancel' }[type], borderless: true, content: `A borderless <strong>${type}</strong> alert: only its background frames it.`,
+  })),
+  column,
+), { docs: { description: { story: '`borderless`: the same size and colors, without the border, for an alert inside a card or a panel that already frames it.' } } });
 
 export const WithIcon = withTwig(() => joinNodes([
   alert({ type: 'info', icon: 'info', content: 'An example alert with an icon' }),

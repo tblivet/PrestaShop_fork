@@ -26,7 +26,7 @@ class BadgeComponentTest extends KernelTestCase
 
     public function testRendersTheDefaultBadge(): void
     {
-        $this->assertSame('<span class="badge ps-badge ps-badge--secondary">Disabled</span>', trim($this->render('<twig:ui:Badge>Disabled</twig:ui:Badge>')));
+        $this->assertSame('<span class="badge ps-badge ps-badge--primary">Disabled</span>', trim($this->render('<twig:ui:Badge>Disabled</twig:ui:Badge>')));
     }
 
     public function testRendersModifiersAndAttributes(): void

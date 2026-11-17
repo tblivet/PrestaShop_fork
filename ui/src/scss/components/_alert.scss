@@ -29,10 +29,41 @@
   }
 }
 
+// The type's colors ($ps-alert-colors in _variables.scss) through Bootstrap's own alert variables; the text and its
+// links stay in the body color, the type shows in the tint, the border and the icon
+@each $state, $colors in $ps-alert-colors {
+  .alert-#{$state} {
+    --#{$prefix}alert-color: var(--#{$prefix}body-color);
+    --#{$prefix}alert-bg: #{map-get($colors, bg)};
+    --#{$prefix}alert-border-color: #{map-get($colors, border)};
+    --#{$prefix}alert-link-color: var(--#{$prefix}body-color);
+    --ps-alert-icon-color: #{map-get($colors, icon)};
+
+    @at-root [data-bs-theme='dark'] & {
+      --#{$prefix}alert-bg: var(--#{$prefix}#{$state}-bg-subtle);
+      --#{$prefix}alert-border-color: var(--#{$prefix}#{$state}-border-subtle);
+      --ps-alert-icon-color: var(--#{$prefix}#{$state}-text-emphasis);
+    }
+  }
+}
+
 // <twig:ui:Alert> (Admin/Component/Ui/alert.html.twig)
 $component-name: ps-alert;
 
 .#{$component-name} {
+  // The icon beside the text. Not the .d-flex utility: its !important display beats Bootstrap's [hidden], and a hidden
+  // alert (an error slot a script fills) must stay hidden
+  &--icon {
+    display: flex;
+    gap: $spacer * .5;
+    align-items: flex-start;
+  }
+
+  // No border: transparent, so the alert keeps the same size as a bordered one
+  &--borderless {
+    --#{$prefix}alert-border-color: transparent;
+  }
+
   // Beside the icon the text is a flex item, which does not shrink below its longest word without this
   &__content {
     min-width: 0;
@@ -41,5 +72,6 @@ $component-name: ps-alert;
   // Centred on the first line of text, so it stays there when the text wraps
   &__icon {
     margin-block: calc((1lh - var(--ps-icon-size)) / 2);
+    color: var(--ps-alert-icon-color);
   }
 }

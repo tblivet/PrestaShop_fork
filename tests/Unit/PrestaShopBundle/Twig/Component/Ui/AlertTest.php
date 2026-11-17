@@ -16,15 +16,21 @@ class AlertTest extends TestCase
 {
     public function testDefaults(): void
     {
-        $this->assertSame(['type' => 'info', 'dismissible' => false, 'icon' => null], (new Alert())->preMount([]));
+        $this->assertSame(['type' => 'info', 'dismissible' => false, 'borderless' => false, 'icon' => null], (new Alert())->preMount([]));
     }
 
     public function testKeepsExtraAttributes(): void
     {
         $this->assertSame(
-            ['type' => 'danger', 'dismissible' => true, 'icon' => 'cancel', 'class' => 'mb-0'],
-            (new Alert())->preMount(['type' => 'danger', 'dismissible' => true, 'icon' => 'cancel', 'class' => 'mb-0'])
+            ['type' => 'danger', 'dismissible' => true, 'borderless' => false, 'icon' => 'cancel', 'class' => 'mb-0'],
+            (new Alert())->preMount(['type' => 'danger', 'dismissible' => true, 'borderless' => false, 'icon' => 'cancel', 'class' => 'mb-0'])
         );
+    }
+
+    public function testRejectsNonBoolBorderless(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+        (new Alert())->preMount(['borderless' => 'yes']);
     }
 
     public function testRejectsUnknownType(): void

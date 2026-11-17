@@ -17,6 +17,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 /**
  * The menu of a Bootstrap dropdown, mirrors ui/src/stories/components/DropdownMenu.stories.js:
  * <twig:ui:DropdownMenu :items="[{label: 'Edit', href: '…', icon: 'edit'}, {type: 'divider'}, {label: 'Delete', …}]"/>
+ * or, without items, any markup: <twig:ui:DropdownMenu><form>…</form></twig:ui:DropdownMenu>
  * Placed after a trigger with data-bs-toggle="dropdown"; <twig:ui:Dropdown> renders both.
  */
 #[AsTwigComponent('ui:DropdownMenu', template: '@PrestaShop/Admin/Component/Ui/dropdown_menu.html.twig')]
@@ -24,12 +25,14 @@ final class DropdownMenu
 {
     public const ALIGNMENTS = ['start', 'end'];
 
-    public const ITEM_TYPES = ['button', 'divider', 'heading', 'link'];
+    public const ITEM_TYPES = ['button', 'divider', 'heading', 'link', 'text'];
 
     /**
      * @var list<array{type: string, label: ?string, href: ?string, icon: ?string, active: bool, disabled: bool, external: bool, attr: array<string, string>}>
+     *
+     * Not set: the menu shows its content instead (a form, text)
      */
-    public array $items;
+    public ?array $items = null;
 
     /** The side the menu lines up with: end for a trigger at the end of a row */
     public string $align = 'start';
@@ -40,11 +43,10 @@ final class DropdownMenu
         $resolver = new OptionsResolver();
         $resolver
             ->setIgnoreUndefined()
-            ->setRequired('items')
-            ->setDefault('align', 'start')
+            ->setDefaults(['items' => null, 'align' => 'start'])
             ->setAllowedValues('align', self::ALIGNMENTS)
-            ->setAllowedTypes('items', 'array')
-            ->setNormalizer('items', fn (Options $options, array $items): array => array_map($this->resolveItem(...), array_values($items)))
+            ->setAllowedTypes('items', ['null', 'array'])
+            ->setNormalizer('items', fn (Options $options, ?array $items): ?array => null === $items ? null : array_map($this->resolveItem(...), array_values($items)))
         ;
 
         return $resolver->resolve($data) + $data;
@@ -81,7 +83,7 @@ final class DropdownMenu
         ;
         $item = $resolver->resolve($item);
 
-        if (in_array($item['type'], ['divider', 'heading'], true) && (null !== $item['href'] || null !== $item['icon'] || $item['active'] || $item['disabled'] || $item['external'])) {
+        if (in_array($item['type'], ['divider', 'heading', 'text'], true) && (null !== $item['href'] || null !== $item['icon'] || $item['active'] || $item['disabled'] || $item['external'])) {
             throw new InvalidOptionsException(sprintf('A %s item only takes a label.', $item['type']));
         }
         if ('divider' !== $item['type'] && (null === $item['label'] || '' === trim($item['label']))) {

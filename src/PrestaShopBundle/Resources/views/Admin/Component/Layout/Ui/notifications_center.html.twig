@@ -5,17 +5,21 @@
 {#- Notifications of the kit header: a bell opening one list of what is new (orders, customers, messages), with a
  # filter per kind, filled by notifications.js from admin_common_notifications. Kinds are described here once; the list,
  # the counts and the empty state are generic (ui/.ai/DECISIONS.md #36 for kinds added later by modules).
- # Its id is kept from the old header: modules place their header button before it (AskAI). -#}
+ # Its id is kept from the old header: modules place their header button before it. -#}
 {%- set kinds = [] -%}
+
 {%- if this.showNewOrders -%}
   {%- set kinds = kinds|merge([{type: 'order', label: 'Orders'|trans({}, 'Admin.Global'), icon: 'shopping_basket', empty: 'No new orders.'|trans({}, 'Admin.Navigation.Notification'), tip: 'Check your [1]abandoned carts[/1]: your next order may be waiting there.'|trans({'[1]': '<a href="' ~ this.abandonedCartsUrl|e('html_attr') ~ '">', '[/1]': '</a>'}, 'Admin.Navigation.Notification')}]) -%}
 {%- endif -%}
+
 {%- if this.showNewCustomers -%}
   {%- set kinds = kinds|merge([{type: 'customer', label: 'Customers'|trans({}, 'Admin.Global'), icon: 'group', empty: 'No new customers.'|trans({}, 'Admin.Navigation.Notification'), tip: 'Share your shop on social media to bring in new customers.'|trans({}, 'Admin.Navigation.Notification')|e}]) -%}
 {%- endif -%}
+
 {%- if this.showNewMessages -%}
   {%- set kinds = kinds|merge([{type: 'customer_message', label: 'Messages'|trans({}, 'Admin.Navigation.Notification'), icon: 'chat', empty: 'No new messages.'|trans({}, 'Admin.Navigation.Notification'), tip: 'Your customers have no questions for now.'|trans({}, 'Admin.Navigation.Notification')|e}]) -%}
 {%- endif -%}
+
 {%- if kinds is not empty -%}
   <div class="dropdown ps-notifications" id="header-notifications-container" data-ps-ref="notifications"
     data-ps-data-url="{{ path('admin_common_notifications') }}"
@@ -28,6 +32,7 @@
       <span class="ps-header-action__label">{{ 'Notifications'|trans({}, 'Admin.Navigation.Notification') }}</span>
       <twig:ui:Badge variant="danger" counter class="ps-notifications__total" hidden data-ps-ref="notifications-total">0</twig:ui:Badge>
     </button>
+
     <div class="dropdown-menu dropdown-menu-end ps-notifications__panel">
       {#- Filters: All, then one per kind, as tabs of the list below (arrows move between them, Tab goes into the list).
        # They scroll sideways when there are many -#}
@@ -37,6 +42,7 @@
           {{- 'All'|trans({}, 'Admin.Global') -}}
           <twig:ui:Badge variant="danger" counter hidden data-ps-ref="notifications-count" data-ps-data-type="">0</twig:ui:Badge>
         </button>
+
         {%- for kind in kinds -%}
           <button type="button" class="ps-notifications__filter" id="ps-notifications-filter-{{ kind.type }}" role="tab" aria-selected="false" tabindex="-1" aria-controls="ps-notifications-panel" data-ps-action="filter-notifications" data-ps-data-type="{{ kind.type }}" data-ps-data-label="{{ kind.label }}" data-ps-data-empty="{{ kind.empty }}">
             {{- kind.label -}}
@@ -44,18 +50,22 @@
           </button>
         {%- endfor -%}
       </div>
+
       {#- Each kind's icon, copied on its lines -#}
       <template data-ps-ref="notifications-icons">
         {%- for kind in kinds -%}
           <twig:ui:Icon :name="kind.icon" size="lg" class="ps-notifications__item-icon" data-ps-data-type="{{ kind.type }}"/>
         {%- endfor -%}
       </template>
+
       <div id="ps-notifications-panel" role="tabpanel" aria-labelledby="ps-notifications-filter-all" data-ps-ref="notifications-panel">
         <ul class="list-unstyled mb-0 ps-notifications__list" data-ps-ref="notifications-list"></ul>
+
         {#- One empty state for every filter: its sentence comes from the selected filter, a kind may add a tip -#}
         <div class="ps-notifications__empty" hidden data-ps-ref="notifications-empty">
           <twig:ui:Icon name="notifications_off" size="xxl" class="ps-notifications__empty-icon"/>
           <p class="ps-notifications__empty-title" data-ps-ref="notifications-empty-title"></p>
+
           {%- for kind in kinds|filter(kind => kind.tip is not empty) -%}
             <p class="ps-notifications__empty-tip" hidden data-ps-ref="notifications-empty-tip" data-ps-data-type="{{ kind.type }}">{{ kind.tip|raw }}</p>
           {%- endfor -%}

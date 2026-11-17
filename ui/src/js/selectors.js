@@ -38,6 +38,7 @@ export default {
   quickAccessName: '[data-ps-ref="quick-access-name"]',
   quickAccessNewTab: '[data-ps-ref="quick-access-new-tab"]',
   quickAccessError: '[data-ps-ref="quick-access-error"]',
+  quickAccessErrorMessage: '[data-ps-ref="quick-access-error-message"]',
   quickAccessRemove: '[data-ps-ref="quick-access-remove"]',
   quickAccessRemoveMessage: '[data-ps-ref="quick-access-remove-message"]',
   quickAccessStatus: '[data-ps-ref="quick-access-status"]',

@@ -161,7 +161,7 @@
 
 // ── Secondary ─────────────────────────────────────────────────────────────────
 // Last in this file so it wins over the loops above, which also write .btn-secondary.
-// The secondary action (the default of <twig:ui:Button> and <twig:ui:IconButton>): drawn like the primary's outline,
+// The secondary action: drawn like the primary's outline,
 // transparent with the primary color for border and text, but hover, focus and press only lay a light grey under it,
 // so it never looks as strong as the primary beside it (DECISIONS.md #37)
 .btn-secondary {
@@ -191,3 +191,27 @@
     --#{$prefix}btn-active-border-color: #{tint-color($primary, 50%)};
   }
 }
+
+// ── Outline secondary ─────────────────────────────────────────────────────────
+// A minor action, a step below secondary: the light border of the fields and grey text (5.1:1 on white), only a light
+// grey under it on hover, focus and press (Bootstrap fills it dark grey)
+.btn-outline-secondary {
+  --#{$prefix}btn-color: #{tint-color($gray-600, 10%)};
+  --#{$prefix}btn-border-color: #{$border-color};
+  --#{$prefix}btn-hover-color: #{$gray-800};
+  --#{$prefix}btn-hover-bg: #{$gray-200};
+  --#{$prefix}btn-hover-border-color: #{$gray-500};
+  --#{$prefix}btn-active-color: #{$gray-800};
+  --#{$prefix}btn-active-bg: #{$gray-300};
+  --#{$prefix}btn-active-border-color: #{$gray-500};
+  --#{$prefix}btn-disabled-color: #{tint-color($gray-600, 10%)};
+  --#{$prefix}btn-disabled-border-color: #{$border-color};
+}
+
+// ── Link ──────────────────────────────────────────────────────────────────────
+// The same weight as the other buttons (Bootstrap lowers it to normal): beside Save, Cancel reads as a lighter action
+// through its underline, not a thinner text
+.btn-link {
+  --#{$prefix}btn-font-weight: #{$btn-font-weight};
+}
+

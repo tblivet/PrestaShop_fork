@@ -19,7 +19,7 @@ class ModalTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['id' => 'qa', 'title' => 'Add', 'headingLevel' => null, 'icon' => null, 'variant' => null, 'size' => 'md', 'scrollable' => false, 'static' => false, 'closable' => true],
+            ['id' => 'qa', 'title' => 'Add', 'headingLevel' => null, 'icon' => null, 'variant' => null, 'size' => 'md', 'scrollable' => true, 'static' => false, 'closable' => true],
             (new Modal())->preMount(['id' => 'qa', 'title' => 'Add'])
         );
     }

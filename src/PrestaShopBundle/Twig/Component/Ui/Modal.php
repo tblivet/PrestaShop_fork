@@ -45,8 +45,8 @@ final class Modal
 
     public string $size = 'md';
 
-    /** A long body scrolls inside the dialog, the title and the footer stay */
-    public bool $scrollable = false;
+    /** A long body scrolls inside the dialog, the title and the footer stay; false: the whole dialog scrolls with the page */
+    public bool $scrollable = true;
 
     /** A click outside does not close it, so typed input is not lost; Esc and the close button still do */
     public bool $static = false;
@@ -66,7 +66,7 @@ final class Modal
                 'icon' => null,
                 'variant' => null,
                 'size' => 'md',
-                'scrollable' => false,
+                'scrollable' => true,
                 'static' => false,
                 'closable' => true,
             ])

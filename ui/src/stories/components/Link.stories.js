@@ -10,10 +10,10 @@ import download from '../../../icons/material-symbols/download.svg?raw';
 import openInNew from '../../../icons/material-symbols/open-in-new.svg?raw';
 import uiIcon from '../ui-icon';
 import { framedNodes, markup, twigCall, withTwig } from '../twig-snippet';
-import { withDefaults } from '../story-defaults';
+import { NONE, nullableSelect, withDefaults } from '../story-defaults';
 
 // Some <twig:ui:Icon> names a link can show; any icon works (Content/Icons)
-const ICONS = { none: null, arrow_forward: arrowForward, download, open_in_new: openInNew };
+const ICONS = { arrow_forward: arrowForward, download, open_in_new: openInNew };
 
 // Link.php defaults; href is required
 const DEFAULTS = { icon: null, iconPosition: 'start', back: false, external: false };
@@ -58,15 +58,15 @@ export default {
   argTypes: withDefaults({
     label: { control: 'text', description: 'Content block: the link text' },
     href: { control: 'text', description: 'Where the link goes (required)' },
-    icon: { control: 'select', options: Object.keys(ICONS), description: '<twig:ui:Icon> name, decorative (not with back)' },
+    icon: nullableSelect(Object.keys(ICONS), '<twig:ui:Icon> name, decorative (not with back)'),
     iconPosition: { control: 'select', options: ['start', 'end'], description: 'Icon before or after the text; the hover moves it that way' },
     back: { control: 'boolean', description: 'Back link: arrow before the text, mirrored in right-to-left languages' },
     external: { control: 'boolean', description: 'Opens in a new tab, and says so to screen readers' },
   }, DEFAULTS),
-  args: { label: 'View the order', href: '#', ...DEFAULTS, icon: 'none' },
+  args: { label: 'View the order', href: '#', ...DEFAULTS, icon: NONE },
 };
 
-export const Default = withTwig(({ icon, back, ...args }) => link({ ...args, back, icon: back || icon === 'none' ? null : icon }));
+export const Default = withTwig(({ icon, back, ...args }) => link({ ...args, back, icon: back ? null : icon }));
 
 export const WithIcon = withTwig(() => framedNodes(
   [

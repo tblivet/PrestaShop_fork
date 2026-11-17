@@ -8,18 +8,19 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Ui;
 
-use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
  * Top bar of the back office, mirrors ui/src/stories/components/Header.stories.js:
- * <twig:ui:Header homeUrl="…" logo="…" version="9.3.0" :search="{action: '…', types: […]}">
- *   <twig:ui:HeaderAction …/>
+ * <twig:ui:Header homeUrl="…" logo="…" version="9.3.0">
+ *   <twig:block name="start">quick access</twig:block>
+ *   <twig:block name="search"><twig:ui:HeaderSearch …/></twig:block>
+ *   <twig:block name="actions"><twig:ui:HeaderAction …/></twig:block>
  * </twig:ui:Header>
- * The content holds the header actions, the block start what follows the logo (quick access). Below md, a button opens the side menu (menuId) and the search slides from the top.
+ * The version, the quick access (start) and the search are always shown: every back office page has them.
+ * Below md, a button opens the side menu (menuId).
  */
 #[AsTwigComponent('ui:Header', template: '@PrestaShop/Admin/Component/Ui/header.html.twig')]
 final class Header
@@ -29,17 +30,11 @@ final class Header
     /** URL of the logo image, a dark logo the header shows light */
     public string $logo;
 
-    public ?string $version = null;
+    /** The PrestaShop version, a badge after the logo from md up */
+    public string $version;
 
     /** Id of the <twig:ui:SideMenu> the menu button opens below md */
     public string $menuId = 'ps-side-menu';
-
-    /**
-     * The search form, none without it.
-     *
-     * @var array{action: string, query: string, type: int, types: list<array{value: int, label: string, placeholder: string, icon: string|null}>}|null
-     */
-    public ?array $search = null;
 
     #[PreMount]
     public function preMount(array $data): array
@@ -47,49 +42,14 @@ final class Header
         $resolver = new OptionsResolver();
         $resolver
             ->setIgnoreUndefined()
-            ->setRequired(['homeUrl', 'logo'])
-            ->setDefaults(['version' => null, 'menuId' => 'ps-side-menu', 'search' => null])
+            ->setRequired(['homeUrl', 'logo', 'version'])
+            ->setDefaults(['menuId' => 'ps-side-menu'])
             ->setAllowedTypes('homeUrl', 'string')
             ->setAllowedTypes('logo', 'string')
-            ->setAllowedTypes('version', ['null', 'string'])
+            ->setAllowedTypes('version', 'string')
             ->setAllowedTypes('menuId', 'string')
-            ->setAllowedTypes('search', ['null', 'array'])
-            ->setNormalizer('search', fn (Options $options, ?array $search): ?array => null === $search ? null : $this->resolveSearch($search))
         ;
 
         return $resolver->resolve($data) + $data;
-    }
-
-    private function resolveSearch(array $search): array
-    {
-        $resolver = new OptionsResolver();
-        $resolver
-            ->setRequired('action')
-            ->setDefaults(['query' => '', 'type' => 0, 'types' => []])
-            ->setAllowedTypes('action', 'string')
-            ->setAllowedTypes('query', 'string')
-            ->setAllowedTypes('type', 'int')
-            ->setAllowedTypes('types', 'array')
-        ;
-        $search = $resolver->resolve($search);
-
-        $type = new OptionsResolver();
-        $type
-            ->setRequired(['value', 'label', 'placeholder'])
-            ->setDefault('icon', null)
-            ->setAllowedTypes('value', 'int')
-            ->setAllowedTypes('label', 'string')
-            ->setAllowedTypes('placeholder', 'string')
-            ->setAllowedTypes('icon', ['null', 'string'])
-        ;
-        $search['types'] = array_map(fn (mixed $item): array => is_array($item) ? $type->resolve($item) : throw new InvalidOptionsException('A search type is an array.'), array_values($search['types']));
-
-        // The chosen type must be one of the list, the first one otherwise (an old or unknown bo_search_type)
-        $values = array_column($search['types'], 'value');
-        if ([] !== $values && !in_array($search['type'], $values, true)) {
-            $search['type'] = $values[0];
-        }
-
-        return $search;
     }
 }

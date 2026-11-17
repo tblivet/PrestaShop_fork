@@ -19,7 +19,7 @@ class DropdownTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['label' => 'Export', 'items' => [], 'icon' => null, 'variant' => 'secondary', 'size' => 'md', 'align' => 'start', 'direction' => 'down', 'disabled' => false],
+            ['label' => 'Export', 'items' => [], 'icon' => null, 'variant' => 'primary', 'size' => 'md', 'align' => 'start', 'direction' => 'down', 'disabled' => false],
             (new Dropdown())->preMount(['label' => 'Export', 'items' => []])
         );
     }

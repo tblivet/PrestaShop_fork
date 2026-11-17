@@ -5,6 +5,7 @@
 {#- Quick access of the kit header (after the logo): the employee's shortcuts, then add or remove this page and manage.
  # The dialogs it opens are in quick_access_modals.html.twig, at the end of the page; quick-access.js runs them. -#}
 {%- set active = this.activeQuickAccess -%}
+
 {%- set links = this.quickAccesses|map(quickAccess => {
   label: quickAccess.name,
   href: quickAccess.link,
@@ -12,13 +13,16 @@
   external: quickAccess.new_window == 1,
   attr: {'data-ps-ref': 'quick-access-link'},
 }) -%}
+
 {%- set items = links is empty ? [] : links|merge([{type: 'divider'}]) -%}
+
 {#- Both are rendered, one hidden: the script swaps them after adding or removing this page -#}
 {%- set items = items|merge([
   {type: 'button', label: 'Add this page to quick access'|trans({}, 'Admin.Navigation.Header'), icon: 'bookmark_add', attr: {'data-ps-action': 'add-quick-access'}|merge(active ? {hidden: 'hidden'} : {})},
   {type: 'button', label: 'Remove this page from quick access'|trans({}, 'Admin.Navigation.Header'), icon: 'bookmark_remove', attr: {'data-ps-action': 'remove-quick-access'}|merge(active ? {} : {hidden: 'hidden'})},
   {label: 'Manage quick access'|trans({}, 'Admin.Navigation.Header'), href: this.manageUrl, icon: 'settings'},
 ]) -%}
+
 <twig:ui:HeaderAction
   icon="bookmarks"
   label="{{ 'Quick access'|trans({}, 'Admin.Navigation.Header') }}"

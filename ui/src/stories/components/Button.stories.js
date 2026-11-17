@@ -10,10 +10,10 @@ import deleteIcon from '../../../icons/material-symbols/delete.svg?raw';
 import download from '../../../icons/material-symbols/download.svg?raw';
 import uiIcon from '../ui-icon';
 import { framedNodes, markup, twigCall, withTwig } from '../twig-snippet';
-import { withDefaults } from '../story-defaults';
+import { NONE, nullableSelect, withDefaults } from '../story-defaults';
 
 // Some <twig:ui:Icon> names a button can show; any icon works (Content/Icons)
-const ICONS = { none: null, add, arrow_forward: arrowForward, delete: deleteIcon, download };
+const ICONS = { add, arrow_forward: arrowForward, delete: deleteIcon, download };
 
 // Button.php defaults
 const DEFAULTS = { variant: 'primary', size: 'md', href: null, type: 'button', icon: null, iconPosition: 'start', loading: false, disabled: false };
@@ -76,15 +76,15 @@ export default {
     size: { control: 'select', options: SIZES, description: 'Button size' },
     href: { control: 'text', description: 'Set: renders an <a>' },
     type: { control: 'select', options: ['button', 'submit', 'reset'], description: 'Button type (not with href)' },
-    icon: { control: 'select', options: Object.keys(ICONS), description: '<twig:ui:Icon> name, decorative' },
+    icon: nullableSelect(Object.keys(ICONS), '<twig:ui:Icon> name, decorative'),
     iconPosition: { control: 'select', options: ['start', 'end'], description: 'Icon before or after the label' },
     loading: { control: 'boolean', description: 'Busy: spinner over the label, aria-busy (not with href)' },
     disabled: { control: 'boolean', description: 'Disabled; a link loses its href' },
   }, DEFAULTS),
-  args: { label: 'Save', ...DEFAULTS, icon: 'none' },
+  args: { label: 'Save', ...DEFAULTS, icon: NONE },
 };
 
-export const Default = withTwig(({ href, icon, ...args }) => button({ ...args, href: href || null, icon: icon === 'none' ? null : icon }));
+export const Default = withTwig(({ href, ...args }) => button({ ...args, href: href || null }));
 
 export const Variants = withTwig(() => framedNodes(
   VARIANTS.map((variant) => button({ label: variant === 'destructive' || variant === 'outline-destructive' ? 'Delete' : 'Save', variant })),

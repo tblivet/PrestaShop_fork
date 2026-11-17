@@ -39,7 +39,7 @@ export const Default = {
 // Same markup as <twig:ui:FlashMessages/> with one error, printed under the form title (Login/Ui/login.html.twig)
 const errorAlert = `
   <div class="ps-flash-messages" data-ps-ref="flash-messages">
-    <div class="ps-alert alert alert-danger alert-dismissible fade show d-flex align-items-start gap-2" role="alert" data-ps-ref="flash-alert">
+    <div class="ps-alert alert alert-danger alert-dismissible fade show ps-alert--icon" role="alert" data-ps-ref="flash-alert">
       ${uiIcon(cancelFill, { class: 'mt-1' })}
       <div class="ps-alert__content"><p class="mb-0">The email address or password is incorrect.</p></div>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

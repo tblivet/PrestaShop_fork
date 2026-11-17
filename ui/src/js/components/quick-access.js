@@ -108,7 +108,7 @@ export default function initQuickAccess(Modal) {
       dialog.querySelector(selectors.quickAccessName).value = (root().dataset.psDataPageName ?? '').slice(0, NAME_MAX_LENGTH);
       dialog.querySelector(selectors.quickAccessNewTab).checked = false;
       error.hidden = true;
-      error.textContent = '';
+      error.querySelector(selectors.quickAccessErrorMessage).textContent = '';
       Modal.getOrCreateInstance(dialog).show();
 
       return;
@@ -176,7 +176,7 @@ export default function initQuickAccess(Modal) {
         announce('psDataAdded');
       })
       .catch((reason) => {
-        error.textContent = reason.message;
+        error.querySelector(selectors.quickAccessErrorMessage).textContent = reason.message;
         error.hidden = false;
       })
       .finally(() => {

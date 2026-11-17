@@ -1,0 +1,130 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// The search of the header (<twig:ui:HeaderSearch>, in the search block of <twig:ui:Header>): a field in the bar from md
+// up; below, a button that opens it as a light panel sliding from the top
+$component-name: ps-header-search;
+
+// Below md: the panel (offcanvas-top), the field at full width
+.#{$component-name} {
+  --#{$prefix}offcanvas-height: auto;
+
+  // The offcanvas pins the bottom edge too: freed, the panel is as tall as the field
+  inset-block-end: auto;
+  padding: .75rem;
+
+  // The browser's clear button (WebKit, Blink): a close icon in the field's text color, so it shows on the dark
+  // field as well as in the light panel
+  &__input::-webkit-search-cancel-button {
+    width: 1rem;
+    height: 1rem;
+    appearance: none;
+    cursor: pointer;
+    background-color: currentcolor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath d='M249-193.43 193.43-249l231-231-231-231L249-766.57l231 231 231-231L766.57-711l-231 231 231 231L711-193.43l-231-231-231 231Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  // Its icon shows only where the label does not fit (see the md to xl range below)
+  &__scope-icon {
+    display: none;
+  }
+
+  &__scope {
+    display: inline-flex;
+    gap: .25rem;
+    align-items: center;
+    border-color: var(--#{$prefix}border-color);
+  }
+
+  // A square: as wide as a button is high (its line, padding and borders)
+  &__submit {
+    display: inline-flex;
+    flex: 0 0 calc(1lh + #{$btn-padding-y * 2} + 2 * #{$btn-border-width});
+    align-items: center;
+    justify-content: center;
+    padding-inline: 0;
+    border-color: var(--#{$prefix}border-color);
+  }
+
+  // Opens the panel; pushes itself and the actions to the end of the bar
+  &__toggle {
+    @include ps-header-bar-button();
+    margin-inline-start: auto;
+  }
+
+  // In the bar: a field a little lighter than the bar, in the middle of the free space; the field and its two
+  // buttons share one background, a step lighter on hover, focus and press
+  @include media-breakpoint-up(md) {
+    --#{$prefix}header-search-bg: color-mix(in srgb, var(--#{$prefix}white) 10%, var(--#{$prefix}primary));
+    --#{$prefix}header-search-hover-bg: color-mix(in srgb, var(--#{$prefix}white) 15%, var(--#{$prefix}primary));
+    --#{$prefix}header-search-active-bg: color-mix(in srgb, var(--#{$prefix}white) 20%, var(--#{$prefix}primary));
+
+    flex: 0 1 28rem;
+    padding: 0;
+    margin-inline: auto;
+
+    &__toggle {
+      display: none;
+    }
+
+    &__input {
+      --#{$prefix}form-control-autofill-bg: var(--#{$prefix}header-search-bg);
+      --#{$prefix}form-control-autofill-color: var(--#{$prefix}white);
+
+      color: var(--#{$prefix}white);
+      background-color: var(--#{$prefix}header-search-bg);
+      border-color: var(--#{$prefix}primary-400);
+
+      &::placeholder {
+        color: rgba(var(--#{$prefix}white-rgb), .6);
+      }
+
+      &:focus {
+        color: var(--#{$prefix}white);
+        background-color: var(--#{$prefix}header-search-hover-bg);
+        border-color: var(--#{$prefix}primary-400);
+        box-shadow: $ps-header-focus-ring;
+      }
+    }
+
+    &__scope,
+    &__submit {
+      color: rgba(var(--#{$prefix}white-rgb), .85);
+      background-color: var(--#{$prefix}header-search-bg);
+      border-color: var(--#{$prefix}primary-400);
+
+      &:hover {
+        color: var(--#{$prefix}white);
+        background-color: var(--#{$prefix}header-search-hover-bg);
+        border-color: var(--#{$prefix}primary-400);
+      }
+
+      // Pressed or open, like Bootstrap's .btn:active and .show
+      &:active,
+      &[aria-expanded="true"] {
+        color: var(--#{$prefix}white);
+        background-color: var(--#{$prefix}header-search-active-bg);
+        border-color: var(--#{$prefix}primary-400);
+      }
+
+      &:focus-visible {
+        border-color: var(--#{$prefix}primary-400);
+        box-shadow: $ps-header-focus-ring;
+      }
+    }
+  }
+
+  // Between md and xl the bar is short of room: the search type shows its icon instead of its label, which stays its name
+  // for screen readers. Written as a range: below md the search is a full-width panel, from xl the bar has room, and
+  // both show the label alone.
+  @include media-breakpoint-between(md, xl) {
+    &__scope-icon {
+      display: inline-block;
+    }
+
+    &__scope:has(.#{$component-name}__scope-icon) .#{$component-name}__scope-label {
+      @include visually-hidden();
+    }
+  }
+}

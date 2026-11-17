@@ -4,22 +4,33 @@
  */
 // Twig: <twig:ui:Icon> (src/PrestaShopBundle/Twig/Component/Ui/Icon.php) renders this markup, keep both in sync.
 import add from '../../../icons/material-symbols/add.svg?raw';
+import addFill from '../../../icons/material-symbols/add-fill.svg?raw';
 import arrowBack from '../../../icons/material-symbols/arrow-back.svg?raw';
+import arrowBackFill from '../../../icons/material-symbols/arrow-back-fill.svg?raw';
 import cancel from '../../../icons/material-symbols/cancel.svg?raw';
 import cancelFill from '../../../icons/material-symbols/cancel-fill.svg?raw';
 import checkCircle from '../../../icons/material-symbols/check-circle.svg?raw';
 import checkCircleFill from '../../../icons/material-symbols/check-circle-fill.svg?raw';
 import chevronRight from '../../../icons/material-symbols/chevron-right.svg?raw';
+import chevronRightFill from '../../../icons/material-symbols/chevron-right-fill.svg?raw';
 import deleteIcon from '../../../icons/material-symbols/delete.svg?raw';
+import deleteFill from '../../../icons/material-symbols/delete-fill.svg?raw';
 import edit from '../../../icons/material-symbols/edit.svg?raw';
+import editFill from '../../../icons/material-symbols/edit-fill.svg?raw';
 import home from '../../../icons/material-symbols/home.svg?raw';
+import homeFill from '../../../icons/material-symbols/home-fill.svg?raw';
 import info from '../../../icons/material-symbols/info.svg?raw';
 import infoFill from '../../../icons/material-symbols/info-fill.svg?raw';
 import openInNew from '../../../icons/material-symbols/open-in-new.svg?raw';
+import openInNewFill from '../../../icons/material-symbols/open-in-new-fill.svg?raw';
 import search from '../../../icons/material-symbols/search.svg?raw';
+import searchFill from '../../../icons/material-symbols/search-fill.svg?raw';
 import settings from '../../../icons/material-symbols/settings.svg?raw';
+import settingsFill from '../../../icons/material-symbols/settings-fill.svg?raw';
 import visibility from '../../../icons/material-symbols/visibility.svg?raw';
+import visibilityFill from '../../../icons/material-symbols/visibility-fill.svg?raw';
 import visibilityOff from '../../../icons/material-symbols/visibility-off.svg?raw';
+import visibilityOffFill from '../../../icons/material-symbols/visibility-off-fill.svg?raw';
 import warning from '../../../icons/material-symbols/warning.svg?raw';
 import warningFill from '../../../icons/material-symbols/warning-fill.svg?raw';
 import facebook from '../../../icons/brand/facebook.svg?raw';
@@ -29,26 +40,37 @@ import uiIcon from '../ui-icon';
 import { framedNodes, twigCall, withTwig } from '../twig-snippet';
 import { withDefaults } from '../story-defaults';
 
-// Some files of ui/icons, by the name a template passes (filled styles are "-fill" files, see Icon.php); the full
-// catalogue is Content/Icons
+// Some files of ui/icons, by the name a template passes, each with its filled style ("-fill" files, see Icon.php); the
+// full catalogue is Content/Icons
 const FILES = {
   add,
+  'add-fill': addFill,
   arrow_back: arrowBack,
+  'arrow_back-fill': arrowBackFill,
   cancel,
   'cancel-fill': cancelFill,
   check_circle: checkCircle,
   'check_circle-fill': checkCircleFill,
   chevron_right: chevronRight,
+  'chevron_right-fill': chevronRightFill,
   delete: deleteIcon,
+  'delete-fill': deleteFill,
   edit,
+  'edit-fill': editFill,
   home,
+  'home-fill': homeFill,
   info,
   'info-fill': infoFill,
   open_in_new: openInNew,
+  'open_in_new-fill': openInNewFill,
   search,
+  'search-fill': searchFill,
   settings,
+  'settings-fill': settingsFill,
   visibility,
+  'visibility-fill': visibilityFill,
   visibility_off: visibilityOff,
+  'visibility_off-fill': visibilityOffFill,
   warning,
   'warning-fill': warningFill,
   'brand:facebook': facebook,
@@ -70,7 +92,7 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:Icon name="arrow_back"/>`, or with a meaning of its own `<twig:ui:Icon name="warning" filled label="{{ \'Warning\'|trans }}"/>`. An inline SVG: it shows with the first paint at its size (no flash of text, no layout shift) and a page only ships the icons it uses.',
-          '**Props**: `name` (required: a [Material Symbols](https://fonts.google.com/icons) name, `arrow_back`, or a brand logo, `brand:github`), `label` (default none: the icon is hidden from screen readers; set it when the icon is the only thing saying what it means), `size` (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`: 0.75em, 0.875em, 1em, 1.25em, 1.5em, 2em of the text around it, centred on its capital letters; default `md`; bigger: raise the text size around it, `fs-1`), `filled` (default `false`: the filled style, for status icons; not for brand logos), `flipRtl` (default `false`: mirrored in right-to-left languages, for arrows and chevrons). Other attributes (`class`, `id`, `data-ps-*`) go on the `<svg>`.',
+          '**Props**: `name` (required: a [Material Symbols](https://fonts.google.com/icons) name, `arrow_back`, or a brand logo, `brand:github`), `label` (default none: the icon is hidden from screen readers; set it when the icon is the only thing saying what it means), `size` (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`: 0.75em, 0.875em, 1em, 1.25em, 1.5em, 2em of the text around it, centred on its capital letters; default `md`; bigger: raise the text size around it, `fs-1`), `filled` (default `false`: the filled style, for status icons; not for brand logos; line icons such as `arrow_back`, `add` or `search` look the same filled, Material Symbols has nothing to fill), `flipRtl` (default `false`: mirrored in right-to-left languages, for arrows and chevrons). Other attributes (`class`, `id`, `data-ps-*`) go on the `<svg>`.',
           '**Which icons**: all of them. Every Material Symbols icon ships in `ui/icons/material-symbols/` (synced from Google\'s package by `ui/.ai/bin/sync-icons.mjs`), logos in `ui/icons/brand/`: search them in Content/Icons. A name without a file fails the render: nothing is fetched at runtime.',
           '**Do**: a decorative icon next to a text that says the same (no `label`); a `label` on a status icon standing alone; color it with a text utility (`text-success`), it uses `currentColor`. **Don\'t**: give a label to an icon inside a button or link that already has a text or an `aria-label` (it would be read twice), use an icon font or `<i class="material-symbols-outlined">` in kit templates, or size it with `width`/`height` (use `size`, or the text around it).',
           '**States**: decorative and labelled, the six sizes in a text, outlined and filled, right-to-left, brand logos, and common icons.',
@@ -85,13 +107,14 @@ export default {
     filled: { control: 'boolean', description: 'Filled style (Material Symbols only)' },
     flipRtl: { control: 'boolean', description: 'Mirrored in right-to-left languages' },
   }, DEFAULTS),
-  args: { name: 'arrow_back', ...DEFAULTS },
+  args: { name: 'info', ...DEFAULTS },
 };
 
 // The markup of icon.html.twig and the Twig call that renders it; other props are attributes (class…)
 const icon = ({ name, filled = false, ...props }) => ({
-  html: uiIcon(FILES[filled ? `${name}-fill` : name], props),
-  twig: twigCall('ui:Icon', { name, filled, ...props }, DEFAULTS),
+  // A brand logo has no filled style (Icon.php refuses it): the control is ignored for brands
+  html: uiIcon(FILES[filled && !name.startsWith('brand:') ? `${name}-fill` : name], props),
+  twig: twigCall('ui:Icon', { name, filled: filled && !name.startsWith('brand:'), ...props }, DEFAULTS),
 });
 
 const caption = (text) => `<span class="small text-body-secondary">${text}</span>`;

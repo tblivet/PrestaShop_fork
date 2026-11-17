@@ -1,0 +1,37 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set current = types|filter(item => item.value == type)|first -%}
+
+{#- Below md the search is a panel that slides from the top, like the menu drawer -#}
+<div id="ps-header-search"{{ attributes.defaults({class: 'ps-header-search offcanvas-md offcanvas-top'}) }} tabindex="-1">
+  <form class="ps-header-search__form" method="post" action="{{ action }}" role="search" data-ps-ref="header-search">
+    <input type="hidden" name="bo_search_type" value="{{ type }}" data-ps-ref="header-search-type">
+
+    <div class="input-group">
+      <input type="search" name="bo_query" value="{{ query }}" class="form-control ps-header-search__input" placeholder="{{ current.placeholder }}" aria-label="{{ 'Search'|trans({}, 'Admin.Navigation.Header') }}" data-ps-ref="header-search-input">
+
+      <button type="button" class="btn ps-header-search__scope" data-bs-toggle="dropdown" aria-expanded="false">
+        <span class="visually-hidden">{{ 'Search in'|trans({}, 'Admin.Navigation.Header') }} </span>
+        {#- The chosen type's icon: shown only between md and xl, in place of the label, which stays for screen readers -#}
+        {%- if current.icon -%}
+          <twig:ui:Icon :name="current.icon" size="lg" class="ps-header-search__scope-icon" data-ps-ref="header-search-scope-icon"/>
+        {%- endif -%}
+        <span class="ps-header-search__scope-label" data-ps-ref="header-search-scope">{{ current.label }}</span>
+        <twig:ui:Icon name="keyboard_arrow_down" size="lg"/>
+      </button>
+
+      <twig:ui:DropdownMenu :items="types|map(item => {label: item.label, icon: item.icon, active: item.value == type, attr: {'data-ps-action': 'set-search-type', 'data-ps-value': item.value, 'data-ps-data-placeholder': item.placeholder}})" align="end"/>
+
+      <button type="submit" class="btn ps-header-search__submit" aria-label="{{ 'Search'|trans({}, 'Admin.Navigation.Header') }}">
+        <twig:ui:Icon name="search" size="lg"/>
+      </button>
+    </div>
+  </form>
+</div>
+
+{#- Below md: opens the panel -#}
+<button type="button" class="ps-header-search__toggle" data-bs-toggle="offcanvas" data-bs-target="#ps-header-search" aria-controls="ps-header-search" aria-label="{{ 'Search'|trans({}, 'Admin.Navigation.Header') }}">
+  <twig:ui:Icon name="search" size="xl"/>
+</button>

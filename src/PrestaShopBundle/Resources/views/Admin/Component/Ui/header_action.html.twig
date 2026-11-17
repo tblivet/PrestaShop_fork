@@ -3,31 +3,35 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
 {%- set content -%}
-  {%- if image -%}
-    <img class="ps-header-action__image" src="{{ image }}" alt="" width="24" height="24">
-  {%- else -%}
-    <twig:ui:Icon :name="icon" size="xl" class="ps-header-action__icon"/>
-  {%- endif -%}
+  <twig:ui:Icon :name="icon" size="xl" class="ps-header-action__icon"/>
+
   <span class="ps-header-action__label">{{ label }}
     {%- if external %}<span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>{% endif -%}
   </span>
 {%- endset -%}
+
 {%- set classes = 'ps-header-action' ~ (warning ? ' ps-header-action--warning') ~ (iconOnly ? ' ps-header-action--icon-only') -%}
+
 {%- if items is null -%}
   {%- set defaults = {class: classes, href: href} -%}
+
   {%- if external -%}
     {%- set defaults = defaults|merge({target: '_blank', rel: 'noopener noreferrer'}) -%}
   {%- endif -%}
+
   {#- An icon-only link shows its label in the tooltip: as a bold title above the description when it has one (escaped
    # here, then Bootstrap's sanitizer). Below the bar: above, it would leave the window -#}
   {%- set tooltip = iconOnly ? label : description -%}
+
   {%- if iconOnly and description -%}
     {%- set tooltip = '<strong class="ps-header-action-tooltip__title">' ~ label|e ~ '</strong>' ~ description|e -%}
     {%- set defaults = defaults|merge({'data-bs-html': 'true'}) -%}
   {%- endif -%}
+
   {%- if tooltip -%}
     {%- set defaults = defaults|merge({'data-bs-toggle': 'tooltip', 'data-bs-placement': 'bottom', 'data-bs-custom-class': 'ps-header-action-tooltip', 'data-bs-title': tooltip}) -%}
   {%- endif -%}
+
   <a{{ attributes.defaults(defaults) }}>{{ content }}</a>
 {%- else -%}
   {#- A button: it opens the menu, it does not go anywhere -#}
@@ -36,6 +40,7 @@
       {{- content -}}
       <twig:ui:Icon name="keyboard_arrow_down" class="ps-header-action__arrow"/>
     </button>
+
     <twig:ui:DropdownMenu :items="items" :align="align"/>
   </div>
 {%- endif -%}

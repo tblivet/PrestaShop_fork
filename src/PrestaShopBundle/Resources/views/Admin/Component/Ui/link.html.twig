@@ -4,21 +4,27 @@
  -#}
 {%- set iconName = this.iconName -%}
 {%- set defaults = {href: href} -%}
+
 {%- if iconName -%}
   {#- The icon moves on hover the way the link goes: toward the end, or toward the start when it leads -#}
   {%- set defaults = defaults|merge({class: 'icon-link icon-link-hover' ~ (this.iconAtStart ? ' icon-link-hover-start' : '')}) -%}
 {%- endif -%}
+
 {%- if external -%}
   {%- set defaults = defaults|merge({target: '_blank', rel: 'noopener noreferrer'}) -%}
 {%- endif -%}
+
 <a{{ attributes.defaults(defaults) }}>
   {%- if iconName and this.iconAtStart -%}
     <twig:ui:Icon :name="iconName" size="lg" :flipRtl="back"/>
   {%- endif -%}
+
   {%- block content %}{% endblock -%}
+
   {%- if external -%}
     <span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>
   {%- endif -%}
+
   {%- if iconName and not this.iconAtStart -%}
     <twig:ui:Icon :name="iconName" size="lg"/>
   {%- endif -%}

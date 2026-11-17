@@ -17,14 +17,16 @@ import { withDefaults } from '../story-defaults';
 const ICONS = { add, delete: deleteIcon, edit, more_vert: moreVert, refresh, 'brand:github': github };
 
 // IconButton.php defaults; icon and label are required
-const DEFAULTS = { tooltip: false, variant: 'secondary', size: 'md', href: null, type: 'button', loading: false, disabled: false };
+const DEFAULTS = { tooltip: false, tooltipPlacement: 'top', variant: 'primary', size: 'md', href: null, type: 'button', loading: false, disabled: false };
 
 const VARIANTS = ['primary', 'secondary', 'outline-primary', 'outline-secondary', 'destructive', 'outline-destructive', 'link'];
 const SIZES = ['sm', 'md', 'lg'];
 
 // The markup of icon_button.html.twig (a <twig:ui:Button> holding only the icon) and the Twig call that renders it;
 // other attributes (id, class, data-ps-*…) go on the button like in Twig
-const iconButton = ({ icon, label, tooltip = false, variant = 'secondary', size = 'md', href = null, type = 'button', loading = false, disabled = false, ...attributes }) => {
+const BS_PLACEMENTS = { start: 'left', end: 'right' };
+
+const iconButton = ({ icon, label, tooltip = false, tooltipPlacement = 'top', variant = 'primary', size = 'md', href = null, type = 'button', loading = false, disabled = false, ...attributes }) => {
   const classes = ['btn', `btn-${variant}`, ...(size !== 'md' ? [`btn-${size}`] : []), 'ps-icon-button', ...(attributes.class ? [attributes.class] : [])];
   let attrs;
 
@@ -41,6 +43,7 @@ const iconButton = ({ icon, label, tooltip = false, variant = 'secondary', size 
     ...attrs,
     'aria-label': label,
     ...(tooltip ? { 'data-bs-toggle': 'tooltip', 'data-bs-title': label } : {}),
+    ...(tooltip && tooltipPlacement !== 'top' ? { 'data-bs-placement': BS_PLACEMENTS[tooltipPlacement] ?? tooltipPlacement } : {}),
     ...Object.fromEntries(Object.entries(attributes).filter(([name]) => name !== 'class')),
   };
   const html = Object.entries(all).map(([name, value]) => (value === '' ? ` ${name}` : ` ${name}="${value}"`)).join('');
@@ -50,7 +53,7 @@ const iconButton = ({ icon, label, tooltip = false, variant = 'secondary', size 
   return {
     html: `<${tag} class="${classes.join(' ')}"${html}>${spinner}${uiIcon(ICONS[icon], { size: 'lg' })}</${tag}>`,
     twig: twigCall('ui:IconButton', {
-      icon, label, tooltip, variant, size, href: href ?? undefined, type: href === null ? type : undefined, loading, disabled, ...attributes,
+      icon, label, tooltip, tooltipPlacement: tooltip ? tooltipPlacement : undefined, variant, size, href: href ?? undefined, type: href === null ? type : undefined, loading, disabled, ...attributes,
     }, DEFAULTS),
   };
 };
@@ -65,7 +68,7 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:IconButton icon="delete" label="{{ \'Delete\'|trans({}, \'Admin.Actions\') }}" variant="link" tooltip/>`. A `<twig:ui:Button>` that shows only its icon, square at every size.',
-          '**Props**: `icon` (required: a [Material Symbols](https://fonts.google.com/icons) name, or `brand:…`, see Components/Icon), `label` (required: what the button does, its only name for screen readers, read as its `aria-label`), `tooltip` (default `false`: shows the label on hover and focus), and the props of `<twig:ui:Button>`: `variant` (`primary`, `secondary`, `outline-primary`, `outline-secondary`, `destructive`, `outline-destructive`, `link`; default `secondary`), `size` (`sm`, `md`, `lg`; default `md`), `href` (default none; set: an `<a>`), `type` (`button`, `submit`, `reset`; default `button`; not with `href`), `loading` (default `false`; not with `href`), `disabled` (default `false`). Other attributes (`id`, `aria-controls`, `aria-expanded`, `data-ps-*`, a `class`) go on the button.',
+          '**Props**: `icon` (required: a [Material Symbols](https://fonts.google.com/icons) name, or `brand:…`, see Components/Icon), `label` (required: what the button does, its only name for screen readers, read as its `aria-label`), `tooltip` (default `false`: shows the label on hover and focus), `tooltipPlacement` (`top`, `bottom`, `start`, `end`; default `top`; only with `tooltip`: `start` and `end` follow the reading direction; Bootstrap moves it to the other side when there is no room), and the props of `<twig:ui:Button>`: `variant` (`primary`, `secondary`, `outline-primary`, `outline-secondary`, `destructive`, `outline-destructive`, `link`; default `primary`), `size` (`sm`, `md`, `lg`; default `md`), `href` (default none; set: an `<a>`), `type` (`button`, `submit`, `reset`; default `button`; not with `href`), `loading` (default `false`; not with `href`), `disabled` (default `false`). Other attributes (`id`, `aria-controls`, `aria-expanded`, `data-ps-*`, a `class`) go on the button.',
           '**Do**: an icon everybody reads the same way (edit, delete, refresh, more actions) in a row of many where text would not fit; a `label` that names the action ("Delete", not "Trash icon"); `tooltip` when sighted users may not know the icon. **Don\'t**: an icon button for the main action of a page (use `<twig:ui:Button>` with text), a label made of the icon\'s name, two icon buttons with the same label in one row without saying what each acts on ("Delete Summer sale").',
           '**States**: the variants, three sizes, with a tooltip, as a link, disabled and loading.',
         ].join('\n\n'),
@@ -76,6 +79,7 @@ export default {
     icon: { control: 'select', options: Object.keys(ICONS), description: '<twig:ui:Icon> name (required)' },
     label: { control: 'text', description: 'Accessible name, and tooltip text (required)' },
     tooltip: { control: 'boolean', description: 'Shows the label on hover and focus' },
+    tooltipPlacement: { control: 'select', options: ['top', 'bottom', 'start', 'end'], description: 'Side of the tooltip (with tooltip)' },
     variant: { control: 'select', options: VARIANTS, description: 'As <twig:ui:Button>' },
     size: { control: 'select', options: SIZES, description: 'As <twig:ui:Button>' },
     href: { control: 'text', description: 'Set: renders an <a>' },
@@ -105,6 +109,13 @@ export const WithTooltip = withTwig(() => framedNodes(
   ],
   (html) => cell(html),
 ), { docs: { description: { story: 'Hover or focus a button: the tooltip shows its label. Screen readers read the label once, as the button\'s name (the tooltip is not linked to it a second time).' } } });
+
+const PLACEMENTS = ['top', 'bottom', 'start', 'end'];
+
+export const TooltipPlacements = withTwig(() => framedNodes(
+  PLACEMENTS.map((tooltipPlacement) => iconButton({ icon: 'edit', label: `Edit (${tooltipPlacement})`, variant: 'outline-secondary', tooltip: true, tooltipPlacement })),
+  (html, index) => `<div class="d-inline-block text-center mx-5 my-4 align-top">${html}${caption(`tooltipPlacement="${PLACEMENTS[index]}"`)}</div>`,
+), { docs: { description: { story: '`tooltipPlacement`: `top` by default; `bottom` under a header or a toolbar at the top of the screen, `start` or `end` in a column of buttons. `start` and `end` follow the reading direction. When the side has no room, Bootstrap shows the tooltip on the other one.' } } });
 
 export const AsLink = withTwig(() => framedNodes(
   [

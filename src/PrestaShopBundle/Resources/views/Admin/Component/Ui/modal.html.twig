@@ -7,15 +7,20 @@
   |merge(size != 'md' ? [size == 'fullscreen' ? 'modal-fullscreen' : 'modal-' ~ size] : [])
   |merge(['modal-dialog-centered'])
   |merge(scrollable ? ['modal-dialog-scrollable'] : []) -%}
+
 {%- set defaults = {class: 'modal fade ps-modal', tabindex: '-1', 'aria-labelledby': id ~ '-title', 'aria-hidden': 'true'} -%}
+
 {#- Static: a click outside does not close it; not closable: Esc does not either -#}
 {%- if static or not closable -%}
   {%- set defaults = defaults|merge({'data-bs-backdrop': 'static'}) -%}
 {%- endif -%}
+
 {%- if not closable -%}
   {%- set defaults = defaults|merge({'data-bs-keyboard': 'false'}) -%}
 {%- endif -%}
+
 {%- set footer -%}{%- block footer %}{% endblock -%}{%- endset -%}
+
 <div id="{{ id }}"{{ attributes.defaults(defaults) }}>
   {#- -#}<div class="{{ dialogClasses|join(' ') }}">
     {#- -#}<div class="modal-content">
@@ -23,15 +28,19 @@
         {%- if icon -%}
           <span class="ps-modal__icon ps-modal__icon--{{ variant ?? 'info' }}"><twig:ui:Icon :name="icon" size="lg"/></span>
         {%- endif -%}
+
         {%- set titleTag = headingLevel is null ? 'p' : 'h' ~ headingLevel -%}
         <{{ titleTag }} class="modal-title ps-modal__title" id="{{ id }}-title">{{ title }}</{{ titleTag }}>
+
         {%- if closable -%}
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>
         {%- endif -%}
       </div>
+
       {#- -#}<div class="modal-body">
         {%- block content %}{% endblock -%}
       </div>
+
       {%- if footer|trim is not empty -%}
         <div class="modal-footer">{{ footer|trim|raw }}</div>
       {%- endif -%}

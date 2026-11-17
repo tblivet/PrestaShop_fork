@@ -4,7 +4,7 @@
  */
 import selectors from '../selectors';
 
-// The header search (<twig:ui:Header>): picking where to search fills the hidden bo_search_type field, the button text and icon
+// The header search (<twig:ui:HeaderSearch>): picking where to search fills the hidden bo_search_type field, the button text and icon
 // and the field's placeholder, then goes back to the field. On a phone the search is a panel: opening it focuses the
 // field.
 export default function initHeaderSearch() {

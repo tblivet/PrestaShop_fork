@@ -947,7 +947,7 @@ Transient notification announced in a polite live region for async results (save
 
 Back office top bar: logo and version, quick access, global search (mobile overlay), debug/maintenance state, View my store, notifications center, employee menu and the multistore context bar with shop switcher.
 
-Part 1 done 2026-11-16: `<twig:ui:Header>` (logo, version, menu button for the side menu, search with its type picker, a top panel below md) and `<twig:ui:HeaderAction>` (a link with an optional tooltip, or a button opening a `<twig:ui:DropdownMenu>`) for debug mode, maintenance mode, View my shop and the employee menu; `displayBackOfficeEmployeeMenu` and `displayBackOfficeTop` kept. Fed by `Twig/Component/Header.php` on Symfony pages with `PS_UI_KIT=1`, in the `ps-layout` grid. Not built yet: notifications, quick access, the multistore bar.
+Part 1 done 2026-11-16: `<twig:ui:Header>` (logo, version, menu button for the side menu, search with its type picker, a top panel below md) and `<twig:ui:HeaderAction>` (a link with an optional tooltip, or a button opening a `<twig:ui:DropdownMenu>`) for debug mode, maintenance mode, View my shop and the employee menu; `displayBackOfficeEmployeeMenu` and `displayBackOfficeTop` kept. Fed by `Twig/Component/Header.php` on Symfony pages with `PS_UI_KIT=1`, in the `ps-layout` grid. Not built yet: notifications, quick access, the multistore bar. Update 2026-11-17: the search is `<twig:ui:HeaderSearch>`; the employee menu is `EmployeeDropdown`'s kit template (the avatar), so `<twig:ui:HeaderAction>` takes an icon only; quick access and notifications are done.
 
 - Role: component, kind: navigation, complexity: L, pages: 150
 - Sections: shell

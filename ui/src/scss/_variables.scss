@@ -36,6 +36,7 @@ $grays: (
 $red: #ba151a;
 $yellow: #ffa000;
 $amber: #f8e08e;
+$orange: #fd7e14; // Bootstrap's own
 $green: #207f4b;
 $blue: #174eef;
 $oceanblue: #a4dbe8;
@@ -114,6 +115,31 @@ $ambers: (
   'amber-700': $amber-700,
   'amber-800': $amber-800,
   'amber-900': $amber-900,
+);
+
+// ── Orange ────────────────────────────────────────────────────────────────────
+$orange-50: tint-color($orange, 90%);
+$orange-100: tint-color($orange, 80%);
+$orange-200: tint-color($orange, 60%);
+$orange-300: tint-color($orange, 40%);
+$orange-400: tint-color($orange, 20%);
+$orange-500: $orange;
+$orange-600: shade-color($orange, 20%);
+$orange-700: shade-color($orange, 40%);
+$orange-800: shade-color($orange, 60%);
+$orange-900: shade-color($orange, 80%);
+
+$oranges: (
+  'orange-50': $orange-50,
+  'orange-100': $orange-100,
+  'orange-200': $orange-200,
+  'orange-300': $orange-300,
+  'orange-400': $orange-400,
+  'orange-500': $orange-500,
+  'orange-600': $orange-600,
+  'orange-700': $orange-700,
+  'orange-800': $orange-800,
+  'orange-900': $orange-900,
 );
 
 // ── Green ─────────────────────────────────────────────────────────────────────
@@ -366,6 +392,18 @@ $btn-close-hover-opacity: 1;
 // ── Alert ─────────────────────────────────────────────────────────────────────
 // A component has no outer margin (CONVENTIONS.md): the layout around an alert spaces it
 $alert-margin-bottom: 0;
+// Light mode alert colors per type: a light tint, a border and an icon in the type's color, the text in the body color.
+// Warning is orange; its icon is a shade darker than its border: the 500 orange is 2.4:1 on its tint, under the 3:1
+// a graphic needs.
+// Dark mode keeps Bootstrap's -bg-subtle backgrounds.
+$ps-alert-colors: (
+  'primary': (bg: $primary-50, border: $primary, icon: $primary),
+  'secondary': (bg: $secondary-50, border: $gray-600, icon: $gray-600),
+  'success': (bg: $green-50, border: $green, icon: $green),
+  'info': (bg: $blue-50, border: $blue, icon: $blue),
+  'warning': (bg: $orange-50, border: $orange, icon: $orange-600),
+  'danger': (bg: $red-50, border: $red, icon: $red),
+);
 
 // ── Breadcrumb ────────────────────────────────────────────────────────────────
 $breadcrumb-font-size: 0.75rem;

@@ -37,11 +37,26 @@ class AlertComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:Alert type="info" icon="info" dismissible class="mb-0">{{ message }}</twig:ui:Alert>', ['message' => 'Hello']);
 
-        $this->assertStringContainsString('class="ps-alert alert alert-info alert-dismissible fade show d-flex align-items-start gap-2 mb-0"', $html);
+        $this->assertStringContainsString('class="ps-alert alert alert-info alert-dismissible fade show ps-alert--icon mb-0"', $html);
         $this->assertStringContainsString('role="status"', $html);
         $this->assertStringContainsString('<svg width="1em" height="1em" fill="currentColor" viewBox="0 -960 960 960" class="ps-icon ps-icon--lg ps-alert__icon" aria-hidden="true">', $html);
         $this->assertStringContainsString('<div class="ps-alert__content">Hello</div>', $html);
         $this->assertStringContainsString('data-bs-dismiss="alert"', $html);
+    }
+
+    public function testRendersBorderlessAlert(): void
+    {
+        $html = $this->render('<twig:ui:Alert type="success" borderless dismissible>Saved</twig:ui:Alert>');
+
+        $this->assertStringContainsString('class="ps-alert alert alert-success ps-alert--borderless alert-dismissible fade show"', $html);
+    }
+
+    public function testHiddenAlertWithIconHasNoDisplayUtility(): void
+    {
+        $html = $this->render('<twig:ui:Alert type="danger" icon="cancel" hidden><span></span></twig:ui:Alert>');
+
+        $this->assertStringContainsString('class="ps-alert alert alert-danger ps-alert--icon" role="alert" hidden', $html);
+        $this->assertStringNotContainsString('d-flex', $html);
     }
 
     public function testDangerAlertInterruptsScreenReaders(): void

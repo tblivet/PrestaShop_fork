@@ -39,16 +39,8 @@ $component-name: ps-header-action;
   }
 
   &__icon,
-  &__image,
   &__arrow {
     flex-shrink: 0;
-  }
-
-  &__image {
-    width: 1.5rem;
-    height: 1.5rem;
-    object-fit: cover;
-    border-radius: 50%;
   }
 
   // Below lg only the icon shows; the label stays the name for screen readers.
@@ -66,7 +58,7 @@ $component-name: ps-header-action;
   @include media-breakpoint-up(lg) {
     &__label {
       // A long name stays on one line, cut
-      max-width: 12rem;
+      max-width: 6rem;
       overflow: hidden;
       text-overflow: ellipsis;
     }

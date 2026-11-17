@@ -23,7 +23,8 @@ class IconButtonTest extends TestCase
                 'icon' => 'delete',
                 'label' => 'Delete',
                 'tooltip' => false,
-                'variant' => 'secondary',
+                'tooltipPlacement' => 'top',
+                'variant' => 'primary',
                 'size' => 'md',
                 'href' => null,
                 'type' => 'button',
@@ -67,6 +68,8 @@ class IconButtonTest extends TestCase
     {
         yield 'blank label' => [['label' => ' ']];
         yield 'non boolean tooltip' => [['tooltip' => 'yes']];
+        yield 'unknown tooltip placement' => [['tooltip' => true, 'tooltipPlacement' => 'left']];
+        yield 'tooltip placement without tooltip' => [['tooltipPlacement' => 'bottom']];
         yield 'unknown variant (Button rule)' => [['variant' => 'ghost']];
         yield 'link with a type (Button rule)' => [['href' => '/x', 'type' => 'button']];
     }

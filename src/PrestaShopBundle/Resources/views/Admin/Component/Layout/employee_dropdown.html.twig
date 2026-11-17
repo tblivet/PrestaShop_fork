@@ -2,51 +2,56 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
-<div class="component" id="header-employee-container">
-  <div class="dropdown employee-dropdown">
-      <div class="rounded-circle person" data-toggle="dropdown">
-        <i class="material-icons">account_circle</i>
-      </div>
-      <div class="dropdown-menu dropdown-menu-right">
-        <div class="employee-wrapper-avatar">
-          <div class="employee-top">
-            <span class="employee-avatar">
-              <img class="avatar rounded-circle" src="{{ this.employee.imageUrl }}" alt="{{ this.employee.firstName }}" />
-            </span>
-            <span class="employee_profile">
-              {{ 'Welcome back %name%'|trans({'%name%': this.employee.firstName}, 'Admin.Navigation.Header') }}
-            </span>
+{# The kit renders its own employee menu; the markup below stays for the old theme (PS_UI_KIT=0) #}
+{% if ui_kit %}
+  {{ include('@PrestaShop/Admin/Component/Layout/Ui/employee_dropdown.html.twig') }}
+{% else %}
+  <div class="component" id="header-employee-container">
+    <div class="dropdown employee-dropdown">
+        <div class="rounded-circle person" data-toggle="dropdown">
+          <i class="material-icons">account_circle</i>
+        </div>
+        <div class="dropdown-menu dropdown-menu-right">
+          <div class="employee-wrapper-avatar">
+            <div class="employee-top">
+              <span class="employee-avatar">
+                <img class="avatar rounded-circle" src="{{ this.employee.imageUrl }}" alt="{{ this.employee.firstName }}" />
+              </span>
+              <span class="employee_profile">
+                {{ 'Welcome back %name%'|trans({'%name%': this.employee.firstName}, 'Admin.Navigation.Header') }}
+              </span>
+            </div>
+
+            <a class="dropdown-item employee-link profile-link" href="{{ path('admin_employees_edit', {employeeId: this.employee.id}) }}">
+              <i class="material-icons">edit</i>
+              <span>
+                {{ 'Your profile'|trans({}, 'Admin.Navigation.Header') }}
+              </span>
+            </a>
           </div>
 
-          <a class="dropdown-item employee-link profile-link" href="{{ path('admin_employees_edit', {employeeId: this.employee.id}) }}">
-            <i class="material-icons">edit</i>
+          <p class="divider"></p>
+
+          {% for menuItem in displayBackOfficeEmployeeMenu %}
+            {% set menuItemProperties = menuItem.getProperties %}
+            <a class="dropdown-item {{ menuItem.getClass }}" href="{{ menuItemProperties.link }}" {% if menuItemProperties.isExternalLink %} target="_blank"{% endif %} rel="noopener noreferrer nofollow">
+              {% if menuItemProperties.icon is defined %}
+                <i class="material-icons">{{ menuItemProperties.icon }}</i>
+              {% endif %}
+              {{ menuItem.getContent }}
+            </a>
+            {% if loop.last %}
+              <p class="divider"></p>
+            {% endif %}
+          {% endfor %}
+
+          <a class="dropdown-item employee-link text-center" id="header_logout" href="{{ path('admin_logout') }}">
+            <i class="material-icons d-lg-none">power_settings_new</i>
             <span>
-              {{ 'Your profile'|trans({}, 'Admin.Navigation.Header') }}
+              {{ 'Sign out'|trans({}, 'Admin.Navigation.Header') }}
             </span>
           </a>
         </div>
-
-        <p class="divider"></p>
-
-        {% for menuItem in displayBackOfficeEmployeeMenu %}
-          {% set menuItemProperties = menuItem.getProperties %}
-          <a class="dropdown-item {{ menuItem.getClass }}" href="{{ menuItemProperties.link }}" {% if menuItemProperties.isExternalLink %} target="_blank"{% endif %} rel="noopener noreferrer nofollow">
-            {% if menuItemProperties.icon is defined %}
-              <i class="material-icons">{{ menuItemProperties.icon }}</i>
-            {% endif %}
-            {{ menuItem.getContent }}
-          </a>
-          {% if loop.last %}
-            <p class="divider"></p>
-          {% endif %}
-        {% endfor %}
-
-        <a class="dropdown-item employee-link text-center" id="header_logout" href="{{ path('admin_logout') }}">
-          <i class="material-icons d-lg-none">power_settings_new</i>
-          <span>
-            {{ 'Sign out'|trans({}, 'Admin.Navigation.Header') }}
-          </span>
-        </a>
-      </div>
+    </div>
   </div>
-</div>
+{% endif %}

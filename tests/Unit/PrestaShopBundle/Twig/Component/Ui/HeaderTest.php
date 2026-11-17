@@ -16,56 +16,26 @@ use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 class HeaderTest extends TestCase
 {
-    private const TYPES = [
-        ['value' => 0, 'label' => 'Everywhere', 'placeholder' => 'What are you looking for?'],
-        ['value' => 3, 'label' => 'Orders', 'placeholder' => 'Order ID'],
-    ];
-
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['homeUrl' => '/home', 'logo' => '/logo.svg', 'version' => null, 'menuId' => 'ps-side-menu', 'search' => null],
-            (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg'])
+            ['homeUrl' => '/home', 'logo' => '/logo.svg', 'version' => '9.3.0', 'menuId' => 'ps-side-menu'],
+            (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg', 'version' => '9.3.0'])
         );
-    }
-
-    public function testResolvesTheSearch(): void
-    {
-        $this->assertEquals(
-            ['action' => '/search', 'query' => '', 'type' => 0, 'types' => []],
-            (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg', 'search' => ['action' => '/search']])['search']
-        );
-    }
-
-    public function testFallsBackToTheFirstSearchType(): void
-    {
-        $search = (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg', 'search' => ['action' => '/search', 'type' => 42, 'types' => self::TYPES]])['search'];
-
-        $this->assertSame(0, $search['type']);
-    }
-
-    public function testKeepsAKnownSearchType(): void
-    {
-        $search = (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg', 'search' => ['action' => '/search', 'type' => 3, 'types' => self::TYPES]])['search'];
-
-        $this->assertSame(3, $search['type']);
-    }
-
-    public function testSearchTypeIconIsOptional(): void
-    {
-        $search = (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg', 'search' => ['action' => '/search', 'types' => [
-            ['value' => 0, 'label' => 'Everywhere', 'placeholder' => 'What?', 'icon' => 'search'],
-            ['value' => 3, 'label' => 'Orders', 'placeholder' => 'Order ID'],
-        ]]])['search'];
-
-        $this->assertSame(['search', null], array_column($search['types'], 'icon'));
     }
 
     public function testRequiresTheLogo(): void
     {
         $this->expectException(MissingOptionsException::class);
 
-        (new Header())->preMount(['homeUrl' => '/home']);
+        (new Header())->preMount(['homeUrl' => '/home', 'version' => '9.3.0']);
+    }
+
+    public function testRequiresTheVersion(): void
+    {
+        $this->expectException(MissingOptionsException::class);
+
+        (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg']);
     }
 
     #[DataProvider('provideInvalidProps')]
@@ -73,16 +43,11 @@ class HeaderTest extends TestCase
     {
         $this->expectException($exception);
 
-        (new Header())->preMount($data + ['homeUrl' => '/home', 'logo' => '/logo.svg']);
+        (new Header())->preMount($data + ['homeUrl' => '/home', 'logo' => '/logo.svg', 'version' => '9.3.0']);
     }
 
     public static function provideInvalidProps(): iterable
     {
-        yield 'search without action' => [['search' => ['query' => 'shoes']], MissingOptionsException::class];
-        yield 'search type as a string' => [['search' => ['action' => '/search', 'type' => '3']], InvalidOptionsException::class];
-        yield 'search type without placeholder' => [['search' => ['action' => '/search', 'types' => [['value' => 0, 'label' => 'Everywhere']]]], MissingOptionsException::class];
-        yield 'search type that is not an array' => [['search' => ['action' => '/search', 'types' => ['Everywhere']]], InvalidOptionsException::class];
-        yield 'search type icon that is not a string' => [['search' => ['action' => '/search', 'types' => [['value' => 0, 'label' => 'Everywhere', 'placeholder' => 'What?', 'icon' => true]]]], InvalidOptionsException::class];
         yield 'non string version' => [['version' => 9], InvalidOptionsException::class];
     }
 }

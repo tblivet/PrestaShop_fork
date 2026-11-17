@@ -19,14 +19,14 @@ class HeaderActionTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['label' => 'View my store', 'icon' => 'storefront', 'image' => null, 'href' => '/', 'external' => false, 'items' => null, 'description' => null, 'align' => 'end', 'iconOnly' => false, 'warning' => false],
+            ['label' => 'View my store', 'icon' => 'storefront', 'href' => '/', 'external' => false, 'items' => null, 'description' => null, 'align' => 'end', 'iconOnly' => false, 'warning' => false],
             (new HeaderAction())->preMount(['label' => 'View my store', 'icon' => 'storefront', 'href' => '/'])
         );
     }
 
-    public function testAcceptsAMenuWithAnImage(): void
+    public function testAcceptsAMenu(): void
     {
-        $props = (new HeaderAction())->preMount(['label' => 'Marc Beier', 'image' => '/avatar.jpg', 'items' => [], 'id' => 'account']);
+        $props = (new HeaderAction())->preMount(['label' => 'Quick access', 'icon' => 'bookmarks', 'items' => [], 'id' => 'account']);
 
         $this->assertSame([], $props['items']);
         $this->assertSame('account', $props['id']);
@@ -37,6 +37,13 @@ class HeaderActionTest extends TestCase
         $this->expectException(MissingOptionsException::class);
 
         (new HeaderAction())->preMount(['icon' => 'storefront', 'href' => '/']);
+    }
+
+    public function testRequiresAnIcon(): void
+    {
+        $this->expectException(MissingOptionsException::class);
+
+        (new HeaderAction())->preMount(['label' => 'Store', 'href' => '/']);
     }
 
     #[DataProvider('provideInvalidProps')]
@@ -50,14 +57,11 @@ class HeaderActionTest extends TestCase
     public static function provideInvalidProps(): iterable
     {
         yield 'blank label' => [['label' => ' ', 'icon' => 'storefront', 'href' => '/']];
-        yield 'neither icon nor image' => [['label' => 'Store', 'href' => '/']];
-        yield 'icon and image' => [['label' => 'Store', 'icon' => 'storefront', 'image' => '/a.jpg', 'href' => '/']];
         yield 'neither href nor items' => [['label' => 'Store', 'icon' => 'storefront']];
         yield 'href and items' => [['label' => 'Store', 'icon' => 'storefront', 'href' => '/', 'items' => []]];
         yield 'external menu' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'external' => true]];
         yield 'menu with a description' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'description' => 'More']];
         yield 'icon-only menu' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'iconOnly' => true]];
-        yield 'icon-only with an image' => [['label' => 'Account', 'image' => '/a.jpg', 'href' => '/', 'iconOnly' => true]];
         yield 'non boolean warning' => [['label' => 'Debug', 'icon' => 'bug_report', 'href' => '/', 'warning' => 'yes']];
         yield 'unknown alignment' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'align' => 'left']];
     }

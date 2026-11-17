@@ -40,4 +40,12 @@ $component-name: ps-dropdown-menu;
     hyphens: auto;
     overflow-wrap: anywhere;
   }
+
+  // Any markup instead of items (a form, text): Bootstrap's own padding variables give it room, wide enough for a field
+  &--content {
+    --#{$prefix}dropdown-padding-x: #{$spacer};
+    --#{$prefix}dropdown-padding-y: #{$spacer};
+
+    min-width: 16rem;
+  }
 }

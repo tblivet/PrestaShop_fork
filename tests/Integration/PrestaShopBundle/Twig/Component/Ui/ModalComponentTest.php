@@ -28,7 +28,7 @@ class ModalComponentTest extends KernelTestCase
     {
         $this->assertSame(
             '<div id="qa" class="modal fade ps-modal" tabindex="-1" aria-labelledby="qa-title" aria-hidden="true">'
-            . '<div class="modal-dialog modal-dialog-centered"><div class="modal-content">'
+            . '<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"><div class="modal-content">'
             . '<div class="modal-header"><p class="modal-title ps-modal__title" id="qa-title">Add</p>'
             . '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>'
             . '<div class="modal-body"><p>Body</p></div>'
@@ -46,10 +46,10 @@ class ModalComponentTest extends KernelTestCase
 
     public function testRendersOptions(): void
     {
-        $html = $this->render('<twig:ui:Modal id="qa" title="Add" size="lg" scrollable static headingLevel="3" data-ps-ref="quick-access"><p>Body</p></twig:ui:Modal>');
+        $html = $this->render('<twig:ui:Modal id="qa" title="Add" size="lg" :scrollable="false" static headingLevel="3" data-ps-ref="quick-access"><p>Body</p></twig:ui:Modal>');
 
         $this->assertStringContainsString('<div id="qa" class="modal fade ps-modal" tabindex="-1" aria-labelledby="qa-title" aria-hidden="true" data-bs-backdrop="static" data-ps-ref="quick-access">', $html);
-        $this->assertStringContainsString('<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">', $html);
+        $this->assertStringContainsString('<div class="modal-dialog modal-lg modal-dialog-centered">', $html);
         $this->assertStringContainsString('<h3 class="modal-title ps-modal__title" id="qa-title">Add</h3>', $html);
     }
 

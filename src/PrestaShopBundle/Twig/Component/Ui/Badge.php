@@ -23,7 +23,7 @@ final class Badge
     /** The Bootstrap theme colors, then the kit palette colors (oceanblue: the light brand blue of the current menu entry) */
     public const VARIANTS = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'oceanblue', 'purple', 'amber'];
 
-    public string $variant = 'secondary';
+    public string $variant = 'primary';
 
     /** <twig:ui:Icon> name, decorative: the text says the state, the icon only repeats it */
     public ?string $icon = null;
@@ -39,7 +39,7 @@ final class Badge
         $resolver = new OptionsResolver();
         $resolver
             ->setIgnoreUndefined()
-            ->setDefaults(['variant' => 'secondary', 'icon' => null, 'pill' => false, 'counter' => false])
+            ->setDefaults(['variant' => 'primary', 'icon' => null, 'pill' => false, 'counter' => false])
             ->setAllowedValues('variant', self::VARIANTS)
             ->setAllowedTypes('icon', ['null', 'string'])
             ->setAllowedTypes('pill', 'bool')

@@ -12,7 +12,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Twig\Component\Ui\DropdownMenu;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
-use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 class DropdownMenuTest extends TestCase
 {
@@ -34,9 +33,10 @@ class DropdownMenuTest extends TestCase
             ['label' => 'Delete', 'attr' => ['data-ps-action' => 'delete']],
             ['type' => 'divider'],
             ['type' => 'heading', 'label' => 'Export'],
+            ['type' => 'text', 'label' => 'Pick a format.'],
         ]])['items'];
 
-        $this->assertSame(['link', 'button', 'divider', 'heading'], array_column($items, 'type'));
+        $this->assertSame(['link', 'button', 'divider', 'heading', 'text'], array_column($items, 'type'));
     }
 
     public function testKeepsExtraAttributes(): void
@@ -44,11 +44,9 @@ class DropdownMenuTest extends TestCase
         $this->assertSame('row-actions', (new DropdownMenu())->preMount(['items' => [], 'id' => 'row-actions'])['id']);
     }
 
-    public function testRequiresItems(): void
+    public function testItemsAreOptional(): void
     {
-        $this->expectException(MissingOptionsException::class);
-
-        (new DropdownMenu())->preMount([]);
+        $this->assertSame(['items' => null, 'align' => 'end'], (new DropdownMenu())->preMount(['align' => 'end']));
     }
 
     #[DataProvider('provideInvalidItems')]
@@ -70,6 +68,9 @@ class DropdownMenuTest extends TestCase
         yield 'external button' => [['items' => [['type' => 'button', 'label' => 'Print', 'external' => true]]]];
         yield 'divider with an icon' => [['items' => [['type' => 'divider', 'icon' => 'edit']]]];
         yield 'heading with a link' => [['items' => [['type' => 'heading', 'label' => 'Export', 'href' => '/export']]]];
+        yield 'text with an icon' => [['items' => [['type' => 'text', 'label' => 'Pick one.', 'icon' => 'info']]]];
+        yield 'text without label' => [['items' => [['type' => 'text']]]];
+        yield 'items that are not a list' => [['items' => 'Edit']];
         yield 'invalid attribute name' => [['items' => [['label' => 'Edit', 'href' => '/edit', 'attr' => ['onclick="x"' => '1']]]]];
         yield 'non scalar attribute' => [['items' => [['label' => 'Edit', 'href' => '/edit', 'attr' => ['data-ps-ids' => [1, 2]]]]]];
     }

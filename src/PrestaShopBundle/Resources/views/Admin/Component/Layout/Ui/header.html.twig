@@ -2,48 +2,52 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
-{%- set employee = this.employee -%}
-{%- set search = {
-  action: legacy_path('AdminSearch'),
-  query: this.searchQuery,
-  type: this.searchType,
-  types: [
-    {value: 0, icon: 'all_inclusive', label: 'Everywhere'|trans({}, 'Admin.Navigation.Header'), placeholder: 'Products, orders, customers…'|trans({}, 'Admin.Navigation.Header')},
-    {value: 1, icon: 'store', label: 'Catalog'|trans({}, 'Admin.Global'), placeholder: 'Product name or reference'|trans({}, 'Admin.Navigation.Header')},
-    {value: 2, icon: 'group', label: 'Customers by name'|trans({}, 'Admin.Navigation.Header'), placeholder: 'Customer name'|trans({}, 'Admin.Navigation.Header')},
-    {value: 6, icon: 'desktop_mac', label: 'Customers by IP address'|trans({}, 'Admin.Navigation.Header'), placeholder: '123.45.67.89'|trans({}, 'Admin.Navigation.Header')},
-    {value: 3, icon: 'shopping_basket', label: 'Orders'|trans({}, 'Admin.Global'), placeholder: 'Order ID'|trans({}, 'Admin.Navigation.Header')},
-    {value: 4, icon: 'book', label: 'Invoices'|trans({}, 'Admin.Global'), placeholder: 'Invoice number'|trans({}, 'Admin.Navigation.Header')},
-    {value: 5, icon: 'shopping_cart', label: 'Carts'|trans({}, 'Admin.Global'), placeholder: 'Cart ID'|trans({}, 'Admin.Navigation.Header')},
-    {value: 7, icon: 'extension', label: 'Modules'|trans({}, 'Admin.Global'), placeholder: 'Module name'|trans({}, 'Admin.Navigation.Header')},
-  ],
-} -%}
-{%- if employee -%}
-  {#- The bar shows the first name and the last name's initial ("Marc B."); the menu opens on the full name -#}
-  {%- set employeeName = employee.firstName ~ ' ' ~ employee.lastName -%}
-  {%- set employeeShortName = employee.lastName is empty ? employee.firstName : employee.firstName ~ ' ' ~ employee.lastName|first|upper ~ '.' -%}
-  {%- set accountItems = [{type: 'heading', label: employeeName}, {label: 'Your profile'|trans({}, 'Admin.Navigation.Header'), href: path('admin_employees_edit', {employeeId: employee.id}), icon: 'person'}]
-    |merge(this.employeeLinks)
-    |merge([{type: 'divider'}, {label: 'Sign out'|trans({}, 'Admin.Navigation.Header'), href: path('admin_logout'), icon: 'logout'}]) -%}
-{%- endif -%}
+{#- Read here: in the blocks below, this is <twig:ui:Header> -#}
+{%- set searchQuery = this.searchQuery -%}
+{%- set searchType = this.searchType -%}
+
+{%- set searchTypes = [
+  {value: 0, icon: 'all_inclusive', label: 'Everywhere'|trans({}, 'Admin.Navigation.Header'), placeholder: 'Products, orders, customers…'|trans({}, 'Admin.Navigation.Header')},
+  {value: 1, icon: 'store', label: 'Catalog'|trans({}, 'Admin.Global'), placeholder: 'Product name or reference'|trans({}, 'Admin.Navigation.Header')},
+  {value: 2, icon: 'group', label: 'Customers by name'|trans({}, 'Admin.Navigation.Header'), placeholder: 'Customer name'|trans({}, 'Admin.Navigation.Header')},
+  {value: 6, icon: 'desktop_mac', label: 'Customers by IP address'|trans({}, 'Admin.Navigation.Header'), placeholder: '123.45.67.89'|trans({}, 'Admin.Navigation.Header')},
+  {value: 3, icon: 'shopping_basket', label: 'Orders'|trans({}, 'Admin.Global'), placeholder: 'Order ID'|trans({}, 'Admin.Navigation.Header')},
+  {value: 4, icon: 'book', label: 'Invoices'|trans({}, 'Admin.Global'), placeholder: 'Invoice number'|trans({}, 'Admin.Navigation.Header')},
+  {value: 5, icon: 'shopping_cart', label: 'Carts'|trans({}, 'Admin.Global'), placeholder: 'Cart ID'|trans({}, 'Admin.Navigation.Header')},
+  {value: 7, icon: 'extension', label: 'Modules'|trans({}, 'Admin.Global'), placeholder: 'Module name'|trans({}, 'Admin.Navigation.Header')},
+] -%}
+
 {%- set maintenanceDescription = 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.'|trans({}, 'Admin.Navigation.Notification')
   ~ (ps.frontOfficeAccessibleForAdmins|default(false) ? ' ' ~ 'Signed-in employees can still see it.'|trans({}, 'Admin.Navigation.Notification') : '') -%}
-<twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset('prestashop.svg', 'ui_kit') }}" version="{{ ps.version }}" :search="search">
-  <twig:block name="start">{{ component('QuickAccess') }}</twig:block>
-  {#- Module entries first: what displayBackOfficeTop renders, in a box that does not count in the layout. Its old
-   # classes are where AskAI puts its button, before it -#}
-  <div class="ps-header__modules header-list component" data-ps-ref="header-modules">
-    {{- renderhook('displayBackOfficeTop') -}}
-  </div>
-  {%- if ps.debugMode|default(false) -%}
-    <twig:ui:HeaderAction icon="bug_report" warning iconOnly label="{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_performance') }}" description="{{ 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification') }}"/>
-  {%- endif -%}
-  {%- if ps.isMaintenanceEnabled|default(false) -%}
-    <twig:ui:HeaderAction icon="build" warning iconOnly label="{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_maintenance') }}" description="{{ maintenanceDescription }}"/>
-  {%- endif -%}
-  <twig:ui:HeaderAction icon="storefront" label="{{ 'View my shop'|trans({}, 'Admin.Navigation.Header') }}" href="{{ ps.baseUrl }}" external iconOnly/>
-  {{- component('NotificationsCenter') -}}
-  {%- if employee -%}
-    <twig:ui:HeaderAction image="{{ employee.imageUrl }}" label="{{ employeeShortName }}" :items="accountItems"/>
-  {%- endif -%}
+
+<twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset('prestashop.svg', 'ui_kit') }}" version="{{ ps.version }}">
+  <twig:block name="start">
+    {{ component('QuickAccess') }}
+  </twig:block>
+
+  <twig:block name="search">
+    <twig:ui:HeaderSearch action="{{ legacy_path('AdminSearch') }}" query="{{ searchQuery }}" :type="searchType" :types="searchTypes"/>
+  </twig:block>
+
+  <twig:block name="actions">
+    {#- Modules are called here (displayBackOfficeTop), first, in a box that does not count in the layout; its old
+     # classes are kept for modules that add their entries by script -#}
+    <div class="ps-header__modules header-list component" data-ps-ref="header-modules">
+      {{- renderhook('displayBackOfficeTop') -}}
+    </div>
+
+    {%- if ps.debugMode|default(false) -%}
+      <twig:ui:HeaderAction icon="bug_report" warning iconOnly label="{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_performance') }}" description="{{ 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification') }}"/>
+    {%- endif -%}
+
+    {%- if ps.isMaintenanceEnabled|default(false) -%}
+      <twig:ui:HeaderAction icon="build" warning iconOnly label="{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_maintenance') }}" description="{{ maintenanceDescription }}"/>
+    {%- endif -%}
+
+    <twig:ui:HeaderAction icon="storefront" label="{{ 'View my shop'|trans({}, 'Admin.Navigation.Header') }}" href="{{ ps.baseUrl }}" external iconOnly/>
+
+    {{- component('NotificationsCenter') -}}
+
+    {{- component('EmployeeDropdown') -}}
+  </twig:block>
 </twig:ui:Header>

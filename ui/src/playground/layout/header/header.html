@@ -43,23 +43,23 @@
     </div>
   </div>
 
-  <div id="ps-header-search" class="ps-header__search offcanvas-md offcanvas-top" tabindex="-1">
-    <form class="ps-header__search-form" method="post" action="#" role="search" data-ps-ref="header-search">
+  <div id="ps-header-search" class="ps-header-search offcanvas-md offcanvas-top" tabindex="-1">
+    <form class="ps-header-search__form" method="post" action="#" role="search" data-ps-ref="header-search">
       <input type="hidden" name="bo_search_type" value="0" data-ps-ref="header-search-type" />
       <div class="input-group">
         <input
           type="search"
           name="bo_query"
           value=""
-          class="form-control ps-header__search-input"
+          class="form-control ps-header-search__input"
           placeholder="Products, orders, customers…"
           aria-label="Search"
           data-ps-ref="header-search-input"
         />
-        <button type="button" class="btn ps-header__search-scope" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn ps-header-search__scope" data-bs-toggle="dropdown" aria-expanded="false">
           <span class="visually-hidden">Search in </span>
-          <!-- ui:Icon all_inclusive size="lg" class="ps-header__search-scope-icon" data-ps-ref="header-search-scope-icon" -->
-          <span class="ps-header__search-scope-label" data-ps-ref="header-search-scope">Everywhere</span>
+          <!-- ui:Icon all_inclusive size="lg" class="ps-header-search__scope-icon" data-ps-ref="header-search-scope-icon" -->
+          <span class="ps-header-search__scope-label" data-ps-ref="header-search-scope">Everywhere</span>
           <!-- ui:Icon keyboard_arrow_down size="lg" -->
         </button>
         <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
@@ -82,7 +82,7 @@
             </button>
           </li>
         </ul>
-        <button type="submit" class="btn ps-header__search-submit" aria-label="Search">
+        <button type="submit" class="btn ps-header-search__submit" aria-label="Search">
           <!-- ui:Icon search size="lg" -->
         </button>
       </div>
@@ -90,7 +90,7 @@
   </div>
   <button
     type="button"
-    class="ps-header__search-toggle"
+    class="ps-header-search__toggle"
     data-bs-toggle="offcanvas"
     data-bs-target="#ps-header-search"
     aria-controls="ps-header-search"
@@ -105,10 +105,10 @@
       <!-- ui:Icon storefront size="xl" class="ps-header-action__icon" -->
       <span class="ps-header-action__label">View my shop<span class="visually-hidden"> (opens in a new tab)</span></span>
     </a>
-    <!-- <twig:ui:HeaderAction image="…" label="Marc B." :items="…"/> -->
-    <div class="dropdown">
+    <!-- {{ component('EmployeeDropdown') }}: Component/Layout/Ui/employee_dropdown.html.twig -->
+    <div class="dropdown ps-employee-dropdown" id="header-employee-container">
       <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">
-        <img class="ps-header-action__image" src="/playground/avatar.svg" alt="" width="24" height="24" />
+        <img class="ps-employee-dropdown__avatar" src="/playground/avatar.svg" alt="" width="24" height="24" />
         <span class="ps-header-action__label">Marc B.</span>
         <!-- ui:Icon keyboard_arrow_down class="ps-header-action__arrow" -->
       </button>

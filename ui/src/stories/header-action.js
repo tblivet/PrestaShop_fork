@@ -9,13 +9,11 @@ import dropdownMenu from './dropdown-menu';
 import uiIcon from './ui-icon';
 import { twigCall } from './twig-snippet';
 
-// HeaderAction.php defaults; label is required, and an icon or an image, an href or items
-export const HEADER_ACTION_DEFAULTS = { icon: null, image: null, href: null, external: false, items: null, description: null, align: 'end', iconOnly: false, warning: false };
+// HeaderAction.php defaults; label and icon are required, and an href or items
+export const HEADER_ACTION_DEFAULTS = { href: null, external: false, items: null, description: null, align: 'end', iconOnly: false, warning: false };
 
-export default function headerAction({ label, icon = null, image = null, href = null, external = false, items = null, description = null, align = 'end', iconOnly = false, warning = false, ...attributes }, icons = {}) {
-  const picture = image
-    ? `<img class="ps-header-action__image" src="${image}" alt="" width="24" height="24">`
-    : uiIcon(icons[icon], { size: 'xl', class: 'ps-header-action__icon' });
+export default function headerAction({ label, icon, href = null, external = false, items = null, description = null, align = 'end', iconOnly = false, warning = false, ...attributes }, icons = {}) {
+  const picture = uiIcon(icons[icon], { size: 'xl', class: 'ps-header-action__icon' });
   const hidden = external ? '<span class="visually-hidden"> (opens in a new tab)</span>' : '';
   const content = `${picture}<span class="ps-header-action__label">${label}${hidden}</span>`;
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
@@ -41,6 +39,6 @@ export default function headerAction({ label, icon = null, image = null, href = 
 
   return {
     html,
-    twig: twigCall('ui:HeaderAction', { icon, image, label, href, external, items, description, align: items === null ? undefined : align, iconOnly, warning, ...attributes }, HEADER_ACTION_DEFAULTS),
+    twig: twigCall('ui:HeaderAction', { icon, label, href, external, items, description, align: items === null ? undefined : align, iconOnly, warning, ...attributes }, HEADER_ACTION_DEFAULTS),
   };
 }

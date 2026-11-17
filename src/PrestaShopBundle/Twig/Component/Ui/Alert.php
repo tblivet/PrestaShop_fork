@@ -25,6 +25,9 @@ final class Alert
 
     public bool $dismissible = false;
 
+    /** No border around the alert, only its tinted background */
+    public bool $borderless = false;
+
     /** <twig:ui:Icon> name, e.g. "info", shown filled */
     public ?string $icon = null;
 
@@ -40,10 +43,12 @@ final class Alert
             ->setDefaults([
                 'type' => 'info',
                 'dismissible' => false,
+                'borderless' => false,
                 'icon' => null,
             ])
             ->setAllowedValues('type', self::TYPES)
             ->setAllowedTypes('dismissible', 'bool')
+            ->setAllowedTypes('borderless', 'bool')
             ->setAllowedTypes('icon', ['null', 'string'])
         ;
 

@@ -386,6 +386,8 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Behaviour**
 - `<twig:ui:Button>` defaults to `primary` (was `secondary`): a button alone is the action of its area; pass `variant="secondary"` for the others. `<twig:ui:IconButton>`, `<twig:ui:Dropdown>` and non-submit form buttons stay `secondary` by default.
 - Kit `btn-secondary` buttons (the default of `<twig:ui:IconButton>` and `<twig:ui:Dropdown>`: Cancel in the quick access dialogs and in the forgot password form, which used `outline-secondary` and now takes the default; dropdown triggers) are transparent with a black border and text, with a light grey background on hover and focus, instead of a grey fill. Screenshot tests of kit pages need new references.
+- `outline-secondary` is lighter, a step below `secondary`: the fields' light border (`$border-color`) and grey text (`tint-color($gray-600, 10%)`, #6e6e6e, 5.1:1), a light grey background on hover, focus and press instead of a dark grey fill (2026-11-17).
+- `link` buttons take the same weight as the others (`$btn-font-weight`, was normal).
 
 ## Switch: larger, green when on — 2026-11-16
 
@@ -397,3 +399,38 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 **Behaviour**
 - Kit switches are 2.5em × 1.25em (were 2em × 1em), centred on the label's first line, a white knob; off: a dark grey track (`$gray-700`, 10.6:1 against the page); on: a green one (`--psk-success`, 5:1). Checkboxes, radios and switches take the buttons' focus ring (`$form-check-input-focus-box-shadow`: a 2px gap in the page color, then the ring). Screenshot tests of kit pages with a switch need new references.
 
+
+## Alert: the type's colors, borderless — 2026-11-17
+
+`Twig/Component/Ui/Alert.php`, `Component/Ui/alert.html.twig`, `_variables.scss` (`$ps-alert-colors`), `components/_alert.scss`.
+
+**Markup**
+- New prop `borderless` (default `false`): adds `ps-alert--borderless` after `alert-{type}`; the border is transparent, the alert keeps its size.
+
+**Behaviour**
+- Light mode, types `primary`, `secondary`, `success`, `info`, `warning`, `danger` (set through Bootstrap's `--psk-alert-*` variables from `$ps-alert-colors`):
+  - the text and its links are in the body color (were the type's dark emphasis color);
+  - the background is the palette's 50 shade (lighter than `-bg-subtle`);
+  - the border is the type's color (was the light `-border-subtle`);
+  - the icon is in the type's color (`--ps-alert-icon-color`); warning alerts are orange (new `$orange` scale, Bootstrap's `#fd7e14`; were yellow), their icon `$orange-600`, since the 500 orange is under 3:1 on its tint.
+- Dark mode keeps Bootstrap's background and border, the icon takes the type's `-text-emphasis`. `light` and `dark` alerts are unchanged.
+- Screenshot tests of kit pages with an alert need new references.
+- Kit pages need no change: the login, password reset and required actions pages, form errors and flash messages use `<twig:ui:Alert>` and take the new colors. The quick access error alert gets the `cancel` icon like every other danger alert; its message goes into a new `data-ps-ref="quick-access-error-message"` inside it (the alert itself keeps `quick-access-error`).
+- An alert with an icon carries `ps-alert--icon` instead of the `d-flex align-items-start gap-2` utilities (same layout): the utility's `!important` display beat `hidden`, so a hidden alert with an icon showed empty (the quick access error).
+- `<twig:ui:Badge>` defaults to `variant="primary"` (was `secondary`). Every badge in the back office sets its variant, so none changes; a module badge without one turns from grey to the primary color.
+- `<twig:ui:IconButton>`: new prop `tooltipPlacement` (`top`, `bottom`, `start`, `end`; default `top`; only with `tooltip`), rendered as `data-bs-placement` (`start` → `left`, `end` → `right`, which Bootstrap swaps in right-to-left languages); nothing is added for `top`.
+- `<twig:ui:IconButton>` defaults to `primary` (was `secondary`), like `<twig:ui:Button>`. Kit pages are unchanged: the login links pass `link`, `<twig:ui:Dropdown>` passes its own variant (still `secondary`).
+- `<twig:ui:Dropdown>` defaults to `primary` too (was `secondary`); no kit page relied on it.
+- Icon story: the `filled` control works for every icon of the story (it only knew 4 filled files and broke on the others) and is ignored for brand logos; the Default story starts on `info`, whose filled style shows. The docs say line icons (`arrow_back`, `add`, `search`) look the same filled.
+- Storybook: a Direction switch in the toolbar (Left to right / Right to left) sets `dir` on the preview page, so `flipRtl` and the kit's logical properties can be checked in RTL on any story. Bootstrap's own physical utilities do not flip with it: `ui.css` is Bootstrap's left-to-right build (DECISIONS.md #4, RTL later).
+- `<twig:ui:Modal>` is `scrollable` by default (was not): a long body scrolls inside, the title and the buttons stay in view; `:scrollable="false"` for the old behaviour. The quick access dialogs get `modal-dialog-scrollable`; their content is short, so they look the same.
+- New `<twig:ui:HeaderSearch>` (`HeaderSearch.php`, `header_search.html.twig`, `_header-search.scss`, a story): the header search, taken out of `<twig:ui:Header>`. Its props are the old `search` keys: `action`, `query`, `type`, `types`. Same markup and behaviour; its classes move from `ps-header__search*` to their own block: `ps-header-search`, `__form`, `__input`, `__scope`, `__scope-icon`, `__scope-label`, `__submit`, `__toggle`. The `data-ps-ref` hooks and `#ps-header-search` do not change.
+- `<twig:ui:HeaderSearch>`: `types` is required, with at least one type, as the back office always gives them; the search without a type menu (and its "Search" placeholder) is gone.
+- `<twig:ui:Header>`: no `search` prop any more; three named blocks, each optional: `start`, `search` (a `<twig:ui:HeaderSearch>`), `actions` (was the unnamed content, which is no longer shown). The page shell (`Component/Layout/Ui/header.html.twig`) uses them.
+- `<twig:ui:Header>`: the version, the quick access and the search are always shown, as on every back office page: `version` is required, the `.ps-header__start` box is always rendered, and the story without search and version is gone.
+- `.ps-header-action__label` is cut at `6rem` (was `12rem`), from lg up: a long label or employee name ends with an ellipsis sooner; screen readers still read it whole.
+- The employee menu is its own component again, like the notifications: `EmployeeDropdown` (the old header's) renders `Component/Layout/Ui/employee_dropdown.html.twig` on kit pages and gives it the employee and the module links (`getModuleItems()`, moved from `Header.php`, which now only reads the search). Same markup as before, except the avatar class: `ps-header-action__image` → `ps-employee-dropdown__avatar` (`_employee-dropdown.scss`); the root gets the old header's id `header-employee-container`.
+- `<twig:ui:HeaderAction>`: no `image` prop any more, `icon` is required. The avatar, sent by the core, was the only picture, and only the employee menu needs it.
+- `<twig:ui:DropdownMenu>`: `items` is optional. Without it, the menu holds its content, any markup (a short form, text), in a `<div class="dropdown-menu ps-dropdown-menu ps-dropdown-menu--content">` with Bootstrap's dropdown padding variables set to `$spacer` and a 16rem minimum width; a trigger around a form takes `data-bs-auto-close="outside"`. New item type `text` (`dropdown-item-text`), a line of plain text. The "no form inside the menu" rule of its docs is now "no long form".
+- The menu and search toggles share the `ps-header-bar-button` mixin (`_mixins.scss`).
+- Story Twig code binds numbers (`:type="3"`, `:headingLevel="3"`) instead of passing them as text.

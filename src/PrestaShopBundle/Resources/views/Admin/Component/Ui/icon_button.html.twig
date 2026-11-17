@@ -4,8 +4,13 @@
  -#}
 {%- set props = {variant: variant, size: size, icon: icon, loading: loading, disabled: disabled, 'aria-label': label} -%}
 {%- set props = props|merge(href is null ? {type: type} : {href: href}) -%}
+
 {#- The tooltip shows the name the button already has: tooltips.js keeps screen readers from reading it twice -#}
 {%- if tooltip -%}
   {%- set props = props|merge({'data-bs-toggle': 'tooltip', 'data-bs-title': label}) -%}
+  {%- if tooltipPlacement != 'top' -%}
+    {%- set props = props|merge({'data-bs-placement': {start: 'left', end: 'right'}[tooltipPlacement] ?? tooltipPlacement}) -%}
+  {%- endif -%}
 {%- endif -%}
+
 <twig:ui:Button {{ ...props }} {{ ...attributes.defaults({class: 'ps-icon-button'}).all() }}/>

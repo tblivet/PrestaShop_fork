@@ -32,7 +32,7 @@ final class Dropdown
     /** Set: the trigger shows only this icon (a kebab for "More actions") */
     public ?string $icon = null;
 
-    public string $variant = 'secondary';
+    public string $variant = 'primary';
 
     public string $size = 'md';
 
@@ -49,7 +49,7 @@ final class Dropdown
         $resolver
             ->setIgnoreUndefined()
             ->setRequired(['label', 'items'])
-            ->setDefaults(['icon' => null, 'variant' => 'secondary', 'size' => 'md', 'align' => 'start', 'direction' => 'down', 'disabled' => false])
+            ->setDefaults(['icon' => null, 'variant' => 'primary', 'size' => 'md', 'align' => 'start', 'direction' => 'down', 'disabled' => false])
             ->setAllowedTypes('label', 'string')
             ->setAllowedValues('label', fn (string $label): bool => '' !== trim($label))
             ->setAllowedTypes('items', 'array')

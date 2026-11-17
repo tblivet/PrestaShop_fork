@@ -74,12 +74,21 @@ export const storyMarkup = async () => {
         continue;
       }
 
-      snapshot[`${meta.title}/${name}`] = {component, ...story.parameters.twigParity({...meta.args, ...story.args})};
+      snapshot[`${meta.title}/${name}`] = {component, ...story.parameters.twigParity(mapArgs({...meta.args, ...story.args}, {...meta.argTypes, ...story.argTypes}))};
     }
   }
 
   return {snapshot, missing};
 };
+
+// What Storybook does before rendering: a control value with a mapping (nullableSelect's "none") becomes the mapped one
+function mapArgs(args, argTypes) {
+  return Object.fromEntries(Object.entries(args).map(([name, value]) => {
+    const mapping = argTypes[name]?.mapping;
+
+    return [name, mapping && value in mapping ? mapping[value] : value];
+  }));
+}
 
 export const serialize = (snapshot) => `${JSON.stringify(snapshot, null, 2)}\n`;
 

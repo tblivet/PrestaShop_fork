@@ -32,7 +32,7 @@ const twigLiteral = (value) => {
 };
 
 // Props equal to their default are left out, like a developer would write the call; true booleans are bare, false ones,
-// arrays and objects are bound (:name="…")
+// numbers, arrays and objects are bound (:name="…")
 const twigAttributes = (props, defaults) => Object.entries(props)
   .filter(([name, value]) => value !== undefined && value !== '' && JSON.stringify(value) !== JSON.stringify(defaults[name]))
   .map(([name, value]) => {
@@ -40,7 +40,7 @@ const twigAttributes = (props, defaults) => Object.entries(props)
       return value ? ` ${name}` : ` :${name}="false"`;
     }
 
-    if (value !== null && typeof value === 'object') {
+    if (typeof value === 'number' || (value !== null && typeof value === 'object')) {
       return ` :${name}="${twigLiteral(value)}"`;
     }
 

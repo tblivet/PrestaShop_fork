@@ -4,11 +4,13 @@
  -#}
 <div{{ attributes.defaults({class: 'up' == direction ? 'dropup' : 'dropdown'}) }}>
   {%- set toggle = {variant: variant, size: size, disabled: disabled, 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false'} -%}
+
   {%- if icon -%}
     <twig:ui:IconButton {{ ...toggle }} :icon="icon" :label="label"/>
   {%- else -%}
     {#- The arrow says a menu opens, and which way -#}
     <twig:ui:Button {{ ...toggle }} :icon="'up' == direction ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" iconPosition="end">{{ label }}</twig:ui:Button>
   {%- endif -%}
+
   <twig:ui:DropdownMenu :items="items" :align="align"/>
 </div>

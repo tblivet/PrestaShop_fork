@@ -2,31 +2,46 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
-<ul{{ attributes.defaults({class: 'dropdown-menu ps-dropdown-menu' ~ ('end' == align ? ' dropdown-menu-end' : '')}) }}>
-  {%- for item in items -%}
-    <li>
-      {%- if 'divider' == item.type -%}
-        <hr class="dropdown-divider">
-      {%- elseif 'heading' == item.type -%}
-        <span class="dropdown-header">{{ item.label }}</span>
-      {%- else -%}
-        {%- set classes = 'dropdown-item ps-dropdown-menu__item' ~ (item.disabled and 'link' == item.type ? ' disabled') -%}
-        {%- set state = (item.active ? ' aria-current="true"') ~ (item.disabled and 'link' == item.type ? ' aria-disabled="true"') -%}
-        {%- set extra -%}{% for name, value in item.attr %} {{ name }}="{{ value }}"{% endfor %}{%- endset -%}
-        {%- if 'link' == item.type -%}
-          {#- A disabled link loses its href, like <twig:ui:Button> -#}
-          <a class="{{ classes }}"{% if not item.disabled %} href="{{ item.href }}"{% else %} role="link"{% endif %}{{ state|raw }}{% if item.external %} target="_blank" rel="noopener noreferrer"{% endif %}{{ extra|raw }}>
+{%- set classes = 'dropdown-menu ps-dropdown-menu' ~ ('end' == align ? ' dropdown-menu-end') -%}
+
+{%- if items is null -%}
+  {#- Any markup (a form, text): a div, as a list may only hold items -#}
+  <div{{ attributes.defaults({class: classes ~ ' ps-dropdown-menu--content'}) }}>
+    {%- block content %}{% endblock -%}
+  </div>
+{%- else -%}
+  <ul{{ attributes.defaults({class: classes}) }}>
+    {%- for item in items -%}
+      <li>
+        {%- if 'divider' == item.type -%}
+          <hr class="dropdown-divider">
+        {%- elseif 'heading' == item.type -%}
+          <span class="dropdown-header">{{ item.label }}</span>
+        {%- elseif 'text' == item.type -%}
+          <span class="dropdown-item-text">{{ item.label }}</span>
         {%- else -%}
-          <button type="button" class="{{ classes }}"{{ state|raw }}{% if item.disabled %} disabled{% endif %}{{ extra|raw }}>
-        {%- endif -%}
-          {%- if item.icon -%}
-            <twig:ui:Icon :name="item.icon" size="lg" class="ps-dropdown-menu__icon"/>
+          {%- set classes = 'dropdown-item ps-dropdown-menu__item' ~ (item.disabled and 'link' == item.type ? ' disabled') -%}
+          {%- set state = (item.active ? ' aria-current="true"') ~ (item.disabled and 'link' == item.type ? ' aria-disabled="true"') -%}
+          {%- set extra -%}{% for name, value in item.attr %} {{ name }}="{{ value }}"{% endfor %}{%- endset -%}
+
+          {%- if 'link' == item.type -%}
+            {#- A disabled link loses its href, like <twig:ui:Button> -#}
+            <a class="{{ classes }}"{% if not item.disabled %} href="{{ item.href }}"{% else %} role="link"{% endif %}{{ state|raw }}{% if item.external %} target="_blank" rel="noopener noreferrer"{% endif %}{{ extra|raw }}>
+          {%- else -%}
+            <button type="button" class="{{ classes }}"{{ state|raw }}{% if item.disabled %} disabled{% endif %}{{ extra|raw }}>
           {%- endif -%}
-          <span class="ps-dropdown-menu__label">{{ item.label }}
-            {%- if item.external %}<span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>{% endif -%}
-          </span>
-        {%- if 'link' == item.type -%}</a>{%- else -%}</button>{%- endif -%}
-      {%- endif -%}
-    </li>
-  {%- endfor -%}
-</ul>
+
+            {%- if item.icon -%}
+              <twig:ui:Icon :name="item.icon" size="lg" class="ps-dropdown-menu__icon"/>
+            {%- endif -%}
+
+            <span class="ps-dropdown-menu__label">{{ item.label }}
+              {%- if item.external %}<span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>{% endif -%}
+            </span>
+
+          {%- if 'link' == item.type -%}</a>{%- else -%}</button>{%- endif -%}
+        {%- endif -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

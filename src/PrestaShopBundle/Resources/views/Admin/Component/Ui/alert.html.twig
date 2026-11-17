@@ -3,12 +3,19 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 {% set classes = ['ps-alert', 'alert', 'alert-' ~ type] %}
+
+{% if borderless %}
+  {% set classes = classes|merge(['ps-alert--borderless']) %}
+{% endif %}
+
 {% if dismissible %}
   {% set classes = classes|merge(['alert-dismissible', 'fade', 'show']) %}
 {% endif %}
+
 {% if icon %}
-  {% set classes = classes|merge(['d-flex', 'align-items-start', 'gap-2']) %}
+  {% set classes = classes|merge(['ps-alert--icon']) %}
 {% endif %}
+
 {# Only a danger alert interrupts screen readers; the others are announced politely #}
 <div{{ attributes.defaults({class: classes|join(' '), role: type == 'danger' ? 'alert' : 'status'}) }}>
   {% if icon %}
@@ -17,6 +24,7 @@
   {% else %}
     {{ block('content') }}
   {% endif %}
+
   {% if dismissible %}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>
   {% endif %}

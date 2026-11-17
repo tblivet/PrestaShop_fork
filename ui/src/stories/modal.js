@@ -8,7 +8,7 @@ import uiIcon from './ui-icon';
 import { markup, twigCall } from './twig-snippet';
 
 // Modal.php defaults; id and title are required
-export const MODAL_DEFAULTS = { headingLevel: null, icon: null, variant: null, size: 'md', scrollable: false, static: false, closable: true };
+export const MODAL_DEFAULTS = { headingLevel: null, icon: null, variant: null, size: 'md', scrollable: true, static: false, closable: true };
 
 const indent = (text) => text.split('\n').map((line) => (line ? `  ${line}` : line)).join('\n');
 
@@ -24,7 +24,7 @@ export const modalButton = ({ label, variant = 'secondary', ...attributes }) => 
 
 // icons maps an icon name to its SVG file, imported with ?raw from ui/icons
 export default function modal({
-  id, title, headingLevel = null, icon = null, variant = null, size = 'md', scrollable = false, static: isStatic = false, closable = true, body, footer = [], ...attributes
+  id, title, headingLevel = null, icon = null, variant = null, size = 'md', scrollable = true, static: isStatic = false, closable = true, body, footer = [], ...attributes
 }, icons = {}) {
   const dialog = ['modal-dialog'];
   if (size !== 'md') dialog.push(size === 'fullscreen' ? 'modal-fullscreen' : `modal-${size}`);

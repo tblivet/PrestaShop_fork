@@ -18,7 +18,7 @@ class BadgeTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['variant' => 'secondary', 'icon' => null, 'pill' => false, 'counter' => false],
+            ['variant' => 'primary', 'icon' => null, 'pill' => false, 'counter' => false],
             (new Badge())->preMount([])
         );
     }

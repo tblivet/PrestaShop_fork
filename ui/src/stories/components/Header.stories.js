@@ -4,54 +4,28 @@
  */
 // Twig: <twig:ui:Header> (src/PrestaShopBundle/Twig/Component/Ui/Header.php) renders this markup, keep both in sync.
 // The search panel and the side menu drawer use Bootstrap offcanvas-md, the search type menu Bootstrap dropdown.
-import allInclusive from '../../../icons/material-symbols/all-inclusive.svg?raw';
 import bookmarkAdd from '../../../icons/material-symbols/bookmark-add.svg?raw';
 import bookmarks from '../../../icons/material-symbols/bookmarks.svg?raw';
 import bugReport from '../../../icons/material-symbols/bug-report.svg?raw';
 import build from '../../../icons/material-symbols/build.svg?raw';
-import group from '../../../icons/material-symbols/group.svg?raw';
-import keyboardArrowDown from '../../../icons/material-symbols/keyboard-arrow-down.svg?raw';
-import logout from '../../../icons/material-symbols/logout.svg?raw';
 import menu from '../../../icons/material-symbols/menu.svg?raw';
-import person from '../../../icons/material-symbols/person.svg?raw';
 import pMonogram from '../../../icons/brand/p-monogram.svg?raw';
-import search from '../../../icons/material-symbols/search.svg?raw';
 import settings from '../../../icons/material-symbols/settings.svg?raw';
-import shoppingBasket from '../../../icons/material-symbols/shopping-basket.svg?raw';
-import store from '../../../icons/material-symbols/store.svg?raw';
 import storefront from '../../../icons/material-symbols/storefront.svg?raw';
 import badge from '../badge';
-import dropdownMenu from '../dropdown-menu';
 import headerAction from '../header-action';
+import headerSearch, { SEARCH_ICONS, SEARCH_TYPES } from '../header-search';
 import uiIcon from '../ui-icon';
 import { framedNodes, markup, twigCall, withTwig } from '../twig-snippet';
 import { withDefaults } from '../story-defaults';
 
-const ICONS = { bookmark_add: bookmarkAdd, bookmarks, bug_report: bugReport, build, logout, person, settings, storefront };
+const ICONS = { bookmark_add: bookmarkAdd, bookmarks, bug_report: bugReport, build, settings, storefront };
 
-// The icons of the search types
-const SEARCH_ICONS = { all_inclusive: allInclusive, store, group, shopping_basket: shoppingBasket };
+// Header.php defaults; homeUrl, logo and version are required
+const DEFAULTS = { menuId: 'ps-side-menu' };
 
-// Header.php defaults; homeUrl and logo are required
-const DEFAULTS = { version: null, menuId: 'ps-side-menu', search: null };
-
-const SEARCH = {
-  action: '#search',
-  query: '',
-  type: 0,
-  types: [
-    { value: 0, label: 'Everywhere', placeholder: 'Products, orders, customers…', icon: 'all_inclusive' },
-    { value: 1, label: 'Catalog', placeholder: 'Product name or reference', icon: 'store' },
-    { value: 2, label: 'Customers by name', placeholder: 'Customer name', icon: 'group' },
-    { value: 3, label: 'Orders', placeholder: 'Order ID', icon: 'shopping_basket' },
-  ],
-};
-
-const ACCOUNT_ITEMS = [
-  { label: 'Your profile', href: '#profile', icon: 'person' },
-  { type: 'divider' },
-  { label: 'Sign out', href: '#sign-out', icon: 'logout' },
-];
+// The <twig:ui:HeaderSearch> props
+const SEARCH = { action: '#search', types: SEARCH_TYPES };
 
 // The quick access of the page shell (Component/Layout/Ui/quick_access.html.twig), in the start block
 const QUICK_ACCESS = {
@@ -69,53 +43,32 @@ const QUICK_ACCESS = {
 
 const STORE = { label: 'View my shop', icon: 'storefront', href: '#store', external: true, iconOnly: true };
 // The page shell shows the first name and the last name's initial; the menu opens on the full name
-const ACCOUNT = { label: 'Marc B.', image: '/playground/avatar.svg', items: [{ type: 'heading', label: 'Marc Beier' }, ...ACCOUNT_ITEMS] };
 
-const searchMarkup = ({ action, query = '', type = 0, types = [] }) => {
-  const current = types.find((item) => item.value === type) ?? null;
-  const items = types.map((item) => ({
-    label: item.label,
-    icon: item.icon ?? null,
-    active: item.value === type,
-    attr: { 'data-ps-action': 'set-search-type', 'data-ps-value': item.value, 'data-ps-data-placeholder': item.placeholder },
-  }));
-  const scope = current
-    ? '<button type="button" class="btn ps-header__search-scope" data-bs-toggle="dropdown" aria-expanded="false">'
-      + '<span class="visually-hidden">Search in </span>'
-      + `${current.icon ? uiIcon(SEARCH_ICONS[current.icon], { size: 'lg', class: 'ps-header__search-scope-icon', 'data-ps-ref': 'header-search-scope-icon' }) : ''}`
-      + `<span class="ps-header__search-scope-label" data-ps-ref="header-search-scope">${current.label}</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>`
-      + dropdownMenu({ items, align: 'end' }, SEARCH_ICONS)
-    : '';
+// A <twig:block> of the Header and its content
+const block = (name, nodes) => markup(`<twig:block name="${name}">\n${nodes.map((node) => node.twig.split('\n').map((line) => `  ${line}`).join('\n')).join('\n')}\n</twig:block>`);
 
-  return '<div id="ps-header-search" class="ps-header__search offcanvas-md offcanvas-top" tabindex="-1">'
-    + `<form class="ps-header__search-form" method="post" action="${action}" role="search" data-ps-ref="header-search">`
-    + `<input type="hidden" name="bo_search_type" value="${type}" data-ps-ref="header-search-type">`
-    + '<div class="input-group">'
-    + `<input type="search" name="bo_query" value="${query}" class="form-control ps-header__search-input" placeholder="${current ? current.placeholder : 'Search'}" aria-label="Search" data-ps-ref="header-search-input">`
-    + `${scope}<button type="submit" class="btn ps-header__search-submit" aria-label="Search">${uiIcon(search, { size: 'lg' })}</button>`
-    + '</div></form></div>'
-    + '<button type="button" class="ps-header__search-toggle" data-bs-toggle="offcanvas" data-bs-target="#ps-header-search" aria-controls="ps-header-search" aria-label="Search">'
-    + `${uiIcon(search, { size: 'xl' })}</button>`;
-};
-
-// The markup of header.html.twig around its actions (the content, <twig:ui:HeaderAction> calls)
-const header = ({ homeUrl = '#home', logo = '/prestashop.svg', version = null, menuId = 'ps-side-menu', search: searchProps = null, start = [], actions = [] }) => {
-  const nodes = actions.map((props) => headerAction(props, ICONS));
-  const startNodes = start.map((props) => headerAction(props, ICONS));
-  const blocks = startNodes.length
-    ? [markup(`<twig:block name="start">\n${startNodes.map((node) => `  ${node.twig}`).join('\n')}\n</twig:block>`)]
-    : [];
+// The markup of header.html.twig around its blocks: the quick access in start, a <twig:ui:HeaderSearch> in search (props),
+// <twig:ui:HeaderAction> props in actions. The version, the quick access and the search are always there.
+const header = ({ homeUrl = '#home', logo = '/prestashop.svg', version = '9.3.0', menuId = 'ps-side-menu', search = SEARCH, actions = [] }) => {
+  const startNodes = [headerAction(QUICK_ACCESS, ICONS)];
+  const searchNode = headerSearch(search, SEARCH_ICONS);
+  const actionNodes = actions.map((props) => headerAction(props, ICONS));
+  const blocks = [
+    block('start', startNodes),
+    block('search', [searchNode]),
+    ...(actionNodes.length ? [block('actions', actionNodes)] : []),
+  ];
 
   return {
     html: '<header class="ps-header d-print-none">'
       + `<button type="button" class="ps-header__menu-toggle" data-bs-toggle="offcanvas" data-bs-target="#${menuId}" aria-controls="${menuId}" aria-label="Open the menu">${uiIcon(menu, { size: 'xl' })}</button>`
       + `<a class="ps-header__brand" href="${homeUrl}">${uiIcon(pMonogram, { label: 'PrestaShop', size: 'xl', class: 'ps-header__monogram' })}<img class="ps-header__logo" src="${logo}" alt="PrestaShop" width="130" height="14"></a>`
-      + `${version ? badge({ label: version, variant: 'oceanblue', class: 'ps-header__version' }).html : ''}`
-      + `${startNodes.length ? `<div class="ps-header__start">${startNodes.map((node) => node.html).join('')}</div>` : ''}`
-      + `${searchProps ? searchMarkup(searchProps) : ''}`
-      + `<div id="header_infos" class="ps-header__actions">${nodes.map((node) => node.html).join('')}</div>`
+      + badge({ label: version, variant: 'oceanblue', class: 'ps-header__version' }).html
+      + `<div class="ps-header__start">${startNodes.map((node) => node.html).join('')}</div>`
+      + searchNode.html
+      + `<div id="header_infos" class="ps-header__actions">${actionNodes.map((node) => node.html).join('')}</div>`
       + '</header>',
-    twig: twigCall('ui:Header', { homeUrl, logo, version, menuId, search: searchProps }, DEFAULTS, [...blocks, ...nodes]),
+    twig: twigCall('ui:Header', { homeUrl, logo, version, menuId }, DEFAULTS, blocks),
   };
 };
 
@@ -129,10 +82,10 @@ export default {
     docs: {
       description: {
         component: [
-          '**Twig usage**: `<twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset(\'prestashop.svg\', \'ui_kit\') }}" version="{{ ps.version }}" :search="{action: …, types: […]}"><twig:ui:HeaderAction …/></twig:ui:Header>`. The top bar of every kit page, rendered once by the page shell (`Component/Layout/Ui/header.html.twig`, fed by the `Header` component), never by a page.',
-          '**Props**: `homeUrl` (required: where the logo goes), `logo` (required: URL of the logo image, a dark logo shown white), `version` (default none: the PrestaShop version, an `oceanblue` `<twig:ui:Badge>` shown from md up), `menuId` (default `ps-side-menu`: the `<twig:ui:SideMenu>` its menu button opens below md), `search` (default none: `{action, query, type, types}`. The field posts `bo_query`, the hidden `bo_search_type` takes the chosen type; `types` is a list of `{value, label, placeholder, icon}` (icon optional) picked in a menu after the field, the chosen one sets the placeholder; an unknown `type` falls back to the first). Content: the header actions, `<twig:ui:HeaderAction>`. Block `start`: what follows the logo, the quick access (a `<twig:ui:HeaderAction>` menu with `align="start"`). Other attributes go on the `<header>`.',
-          '**Do**: what is about the whole back office (search, the store, the shop state, the employee). **Don\'t**: page actions (they go in the page header), more than five actions.',
-          '**States**: the full bar, the shop states (debug, maintenance), without search, long labels. Below sm the PrestaShop mark replaces the logo. Below md (use the viewport toolbar): the menu button opens the side menu, the search button a panel sliding from the top, actions show their icon only.',
+          '**Twig usage**: `<twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset(\'prestashop.svg\', \'ui_kit\') }}" version="{{ ps.version }}"><twig:block name="start">…</twig:block><twig:block name="search"><twig:ui:HeaderSearch …/></twig:block><twig:block name="actions"><twig:ui:HeaderAction …/></twig:block></twig:ui:Header>`. The top bar of every kit page, rendered once by the page shell (`Component/Layout/Ui/header.html.twig`, fed by the `Header` component), never by a page.',
+          '**Props**: `homeUrl` (required: where the logo goes), `logo` (required: URL of the logo image, a dark logo shown white), `version` (required: the PrestaShop version, an `oceanblue` `<twig:ui:Badge>` shown from md up), `menuId` (default `ps-side-menu`: the `<twig:ui:SideMenu>` its menu button opens below md). Blocks: `start` (the quick access after the logo, a `<twig:ui:HeaderAction>` menu with `align="start"`), `search` (a `<twig:ui:HeaderSearch>`, see Components/HeaderSearch), `actions` (the header actions, `<twig:ui:HeaderAction>`). The version, the quick access and the search are on every back office page: always give them. Content outside these blocks is not shown. Other attributes go on the `<header>`.',
+          '**Do**: what is about the whole back office (search, the store, the shop state). The page shell ends the `actions` block with the notifications and the employee menu, components of their own (`NotificationsCenter`, `EmployeeDropdown`), shown in the playground. **Don\'t**: page actions (they go in the page header), more than five actions.',
+          '**States**: the full bar, the shop states (debug, maintenance), long labels. Below sm the PrestaShop mark replaces the logo. Below md (use the viewport toolbar): the menu button opens the side menu, the search button a panel sliding from the top, actions show their icon only.',
         ].join('\n\n'),
       },
     },
@@ -140,35 +93,26 @@ export default {
   argTypes: withDefaults({
     homeUrl: { control: 'text', description: 'Where the logo goes (required)' },
     logo: { control: 'text', description: 'Logo image URL (required)' },
-    version: { control: 'text', description: 'PrestaShop version' },
+    version: { control: 'text', description: 'PrestaShop version (required)' },
     menuId: { control: 'text', description: 'Id of the side menu it opens below md' },
-    search: { control: 'object', description: 'The search form, none without it' },
+    search: { control: 'object', description: 'Story only: the <twig:ui:HeaderSearch> props of the search block' },
   }, DEFAULTS),
   args: { homeUrl: '#home', logo: '/prestashop.svg', ...DEFAULTS, version: '9.3.0', search: SEARCH },
 };
 
-export const Default = withTwig(({ version, ...args }) => framedNodes([header({ ...args, version: version || null, start: [QUICK_ACCESS], actions: [STORE, ACCOUNT] })], room));
+export const Default = withTwig((args) => framedNodes([header({ ...args, actions: [STORE] })], room));
 
 export const ShopStates = withTwig(() => framedNodes([header({
-  version: '9.3.0',
-  search: SEARCH,
   actions: [
     { label: 'Debug mode', icon: 'bug_report', warning: true, iconOnly: true, href: '#performance', description: 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.' },
     { label: 'Maintenance mode', icon: 'build', warning: true, iconOnly: true, href: '#maintenance', description: 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.' },
     STORE,
-    ACCOUNT,
   ],
 })], room), { docs: { description: { story: 'Debug and maintenance modes stay visible on every page while they are on; their tooltip says what they mean.' } } });
 
-export const WithoutSearch = withTwig(() => framedNodes([header({ actions: [STORE, ACCOUNT] })], room), {
-  docs: { description: { story: 'Without `search` and `version`: the logo and the actions.' } },
-});
-
 export const LongLabels = withTwig(() => framedNodes([header({
-  version: '9.3.0',
   search: { ...SEARCH, type: 2, types: [...SEARCH.types.slice(0, 2), { value: 2, label: 'Kunden nach Namen', placeholder: 'Vor- oder Nachname des Kunden', icon: 'group' }] },
   actions: [
-    { ...STORE, label: 'Meinen Shop ansehen' },
-    { ...ACCOUNT, label: 'Maximilian Alexander von Hohenzollern-Sigmaringen' },
+    { ...STORE, label: 'Meinen Shop ansehen', iconOnly: false },
   ],
-})], room), { docs: { description: { story: 'German labels and a long name: the field shrinks first, a long name is cut at 12rem.' } } });
+})], room), { docs: { description: { story: 'German labels: the field shrinks first, a long label is cut at 6rem.' } } });

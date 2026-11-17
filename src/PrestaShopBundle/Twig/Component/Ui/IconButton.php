@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Ui;
 
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
@@ -20,6 +22,9 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 #[AsTwigComponent('ui:IconButton', template: '@PrestaShop/Admin/Component/Ui/icon_button.html.twig')]
 final class IconButton
 {
+    /** Logical sides: start and end are Bootstrap's left and right, which it swaps in right-to-left languages */
+    public const TOOLTIP_PLACEMENTS = ['top', 'bottom', 'start', 'end'];
+
     public string $icon;
 
     public string $label;
@@ -27,7 +32,10 @@ final class IconButton
     /** Shows the label on hover and focus */
     public bool $tooltip = false;
 
-    public string $variant = 'secondary';
+    /** Where the tooltip shows, only with tooltip; Bootstrap moves it to the other side when there is no room */
+    public string $tooltipPlacement = 'top';
+
+    public string $variant = 'primary';
 
     public string $size = 'md';
 
@@ -48,15 +56,22 @@ final class IconButton
         $resolver = new OptionsResolver();
         $resolver
             ->setRequired(['icon', 'label'])
-            ->setDefault('tooltip', false)
+            ->setDefaults(['tooltip' => false, 'tooltipPlacement' => 'top'])
             ->setAllowedTypes('icon', 'string')
             ->setAllowedTypes('label', 'string')
             ->setAllowedValues('label', fn (string $label): bool => '' !== trim($label))
             ->setAllowedTypes('tooltip', 'bool')
+            ->setAllowedValues('tooltipPlacement', self::TOOLTIP_PLACEMENTS)
+            ->setNormalizer('tooltipPlacement', function (Options $options, string $placement) use ($data): string {
+                if (!$options['tooltip'] && array_key_exists('tooltipPlacement', $data)) {
+                    throw new InvalidOptionsException('tooltipPlacement places the tooltip: add tooltip, or leave it out.');
+                }
+
+                return $placement;
+            })
         ;
-        $own = $resolver->resolve(array_intersect_key($data, array_flip(['icon', 'label', 'tooltip'])));
-        // Secondary unless told otherwise: an icon button is rarely the main action (Button's own default is primary)
-        $button = (new Button())->preMount(array_diff_key($data, $own) + ['variant' => 'secondary']);
+        $own = $resolver->resolve(array_intersect_key($data, array_flip(['icon', 'label', 'tooltip', 'tooltipPlacement'])));
+        $button = (new Button())->preMount(array_diff_key($data, $own));
         unset($button['icon'], $button['iconPosition']);
 
         return $own + $button;

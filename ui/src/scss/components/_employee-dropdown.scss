@@ -1,0 +1,17 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// The employee's menu at the end of the header (Component/Layout/Ui/employee_dropdown.html.twig): a header entry
+// (ps-header-action) whose picture is the employee's avatar, sent by the core
+$component-name: ps-employee-dropdown;
+
+.#{$component-name} {
+  &__avatar {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+}

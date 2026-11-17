@@ -8,9 +8,9 @@ import uiIcon from './ui-icon';
 import { markup, twigCall } from './twig-snippet';
 
 // Badge.php defaults
-export const BADGE_DEFAULTS = { variant: 'secondary', icon: null, pill: false, counter: false };
+export const BADGE_DEFAULTS = { variant: 'primary', icon: null, pill: false, counter: false };
 
-export default function badge({ label, variant = 'secondary', icon = null, pill = false, counter = false, ...attributes }, icons = {}) {
+export default function badge({ label, variant = 'primary', icon = null, pill = false, counter = false, ...attributes }, icons = {}) {
   const classes = ['badge', 'ps-badge', `ps-badge--${variant}`, pill && 'ps-badge--pill', counter && 'ps-badge--counter', attributes.class].filter(Boolean).join(' ');
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
   const iconHtml = icon ? uiIcon(icons[icon], { class: 'ps-badge__icon' }) : '';

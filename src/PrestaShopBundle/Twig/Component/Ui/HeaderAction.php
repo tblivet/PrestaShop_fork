@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 /**
  * An entry of <twig:ui:Header>, mirrors ui/src/stories/components/HeaderAction.stories.js: a link
  * <twig:ui:HeaderAction icon="storefront" label="…" href="…" external/> or a button opening a menu
- * <twig:ui:HeaderAction image="…" label="…" :items="[…]"/> (items of <twig:ui:DropdownMenu>).
+ * <twig:ui:HeaderAction icon="bookmarks" label="…" :items="[…]"/> (items of <twig:ui:DropdownMenu>).
  * The label shows from lg up; below, the icon alone, the label kept for screen readers.
  */
 #[AsTwigComponent('ui:HeaderAction', template: '@PrestaShop/Admin/Component/Ui/header_action.html.twig')]
@@ -24,11 +24,8 @@ final class HeaderAction
 {
     public string $label;
 
-    /** <twig:ui:Icon> name; or image */
-    public ?string $icon = null;
-
-    /** URL of a round picture instead of an icon (the employee's avatar) */
-    public ?string $image = null;
+    /** <twig:ui:Icon> name */
+    public string $icon;
 
     /** Set: a link; or items */
     public ?string $href = null;
@@ -57,12 +54,11 @@ final class HeaderAction
         $resolver = new OptionsResolver();
         $resolver
             ->setIgnoreUndefined()
-            ->setRequired('label')
-            ->setDefaults(['icon' => null, 'image' => null, 'href' => null, 'external' => false, 'items' => null, 'description' => null, 'align' => 'end', 'iconOnly' => false, 'warning' => false])
+            ->setRequired(['label', 'icon'])
+            ->setDefaults(['href' => null, 'external' => false, 'items' => null, 'description' => null, 'align' => 'end', 'iconOnly' => false, 'warning' => false])
             ->setAllowedTypes('label', 'string')
             ->setAllowedValues('label', fn (string $label): bool => '' !== trim($label))
-            ->setAllowedTypes('icon', ['null', 'string'])
-            ->setAllowedTypes('image', ['null', 'string'])
+            ->setAllowedTypes('icon', 'string')
             ->setAllowedTypes('href', ['null', 'string'])
             ->setAllowedTypes('external', 'bool')
             ->setAllowedTypes('items', ['null', 'array'])
@@ -73,17 +69,11 @@ final class HeaderAction
         ;
         $props = $resolver->resolve($data);
 
-        if ((null === $props['icon']) === (null === $props['image'])) {
-            throw new InvalidOptionsException('A header action shows an icon or an image: give one of them.');
-        }
         if ((null === $props['href']) === (null === $props['items'])) {
             throw new InvalidOptionsException('A header action is a link (href) or opens a menu (items): give one of them.');
         }
         if (null !== $props['items'] && ($props['external'] || null !== $props['description'] || $props['iconOnly'])) {
             throw new InvalidOptionsException('A header action that opens a menu takes no external, description or iconOnly: its button opens the menu, it has no tooltip.');
-        }
-        if ($props['iconOnly'] && null === $props['icon']) {
-            throw new InvalidOptionsException('An icon-only header action needs an icon.');
         }
 
         return $props + $data;

@@ -19,6 +19,10 @@ const item = (entry, icons) => {
     return `<li><span class="dropdown-header">${entry.label}</span></li>`;
   }
 
+  if (type === 'text') {
+    return `<li><span class="dropdown-item-text">${entry.label}</span></li>`;
+  }
+
   const link = type === 'link';
   const classes = ['dropdown-item', 'ps-dropdown-menu__item', entry.disabled && link && 'disabled'].filter(Boolean).join(' ');
   const state = `${entry.active ? ' aria-current="true"' : ''}${entry.disabled && link ? ' aria-disabled="true"' : ''}`;
@@ -37,9 +41,15 @@ const item = (entry, icons) => {
   return `<li><button type="button" class="${classes}"${state}${entry.disabled ? ' disabled' : ''}${extra}>${content}</button></li>`;
 };
 
-export default function dropdownMenu({ items, align = 'start', ...attributes }, icons = {}) {
-  const classes = ['dropdown-menu', 'ps-dropdown-menu', align === 'end' && 'dropdown-menu-end', attributes.class].filter(Boolean).join(' ');
+// Without items, content is the HTML the menu holds (a form, text)
+export default function dropdownMenu({ items = null, content = '', align = 'start', ...attributes }, icons = {}) {
+  const own = ['dropdown-menu', 'ps-dropdown-menu', align === 'end' && 'dropdown-menu-end', items === null && 'ps-dropdown-menu--content'];
+  const classes = [...own, attributes.class].filter(Boolean).join(' ');
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
+
+  if (items === null) {
+    return `<div class="${classes}"${extra}>${content}</div>`;
+  }
 
   return `<ul class="${classes}"${extra}>${items.map((entry) => item(entry, icons)).join('')}</ul>`;
 }

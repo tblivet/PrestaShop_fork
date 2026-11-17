@@ -71,6 +71,7 @@
           <twig:ui:FlashMessages/>
         {% endif %}
         {{ form_errors(requestPasswordResetForm) }}
+
         <p class="ps-login__intro small text-body-secondary text-center mb-0" id="{{ forgotIntroId }}">
           {{- 'Enter your email address and we\'ll send you a link to reset your password.'|trans({}, 'Admin.Login.Feature') -}}
         </p>

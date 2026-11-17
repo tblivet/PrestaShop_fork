@@ -36,10 +36,25 @@ const preview = {
         dynamicTitle: true,
       },
     },
+    // Only what the kit writes with logical properties flips (DECISIONS.md #4): ui.css is Bootstrap's left-to-right
+    // build, so its physical utilities (ms-*, dropdown-menu-end…) do not
+    direction: {
+      description: 'Reading direction of the page (dir on <html>)',
+      toolbar: {
+        icon: 'transfer',
+        title: 'Direction',
+        items: [
+          { value: 'ltr', title: 'Left to right', right: 'LTR' },
+          { value: 'rtl', title: 'Right to left', right: 'RTL' },
+        ],
+        dynamicTitle: true,
+      },
+    },
   },
 
   initialGlobals: {
     colorMode: 'light',
+    direction: 'ltr',
   },
 
   decorators: [
@@ -60,6 +75,7 @@ const preview = {
       // effect across the entire canvas, not just the component root.
       const colorMode = context.globals.colorMode ?? 'light';
       document.documentElement.setAttribute('data-bs-theme', colorMode);
+      document.documentElement.setAttribute('dir', context.globals.direction ?? 'ltr');
 
       const result = story();
       const html = typeof result === 'string' ? result : result.outerHTML;
@@ -69,7 +85,8 @@ const preview = {
       const twig = typeof context.parameters.twig === 'function' ? context.parameters.twig(context.args) : '';
       const emitSource = (htmlSource) => addons.getChannel().emit(SNIPPET_RENDERED, {
         id: context.id,
-        args: context.args,
+        // The docs source block matches a snippet to the story by its control values, before mapping ("none", not null)
+        args: context.unmappedArgs ?? context.args,
         source: twig ? `${htmlSource}\n\n<!-- ---------- Twig ---------- -->\n\n${twig}` : htmlSource,
       });
 

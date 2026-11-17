@@ -97,7 +97,7 @@ for (const path of files('src/PrestaShopBundle/Twig/Component/Ui', '.php')) {
       gaps.push(`${name}: prop "${prop}" missing from the **Props** line of ${story.path}`);
     }
 
-    if (!prop.endsWith('Id') && !new RegExp(`\\b${prop}\\s*:\\s*{`).test(argTypes)) {
+    if (!prop.endsWith('Id') && !new RegExp(`\\b${prop}\\s*:\\s*(?:{|nullableSelect\\()`).test(argTypes)) {
       gaps.push(`${name}: prop "${prop}" has no control (argTypes) in ${story.path}`);
     }
   }

@@ -1,0 +1,34 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{#- The employee's menu, last in the kit header: the avatar and short name, a menu opening on the full name. Its id is
+ # kept from the old header. -#}
+{%- set employee = this.employee -%}
+
+{%- if employee -%}
+  {#- The bar shows the first name and the last name's initial ("Marc B.") -#}
+  {%- set name = employee.firstName ~ ' ' ~ employee.lastName -%}
+  {%- set shortName = employee.lastName is empty ? employee.firstName : employee.firstName ~ ' ' ~ employee.lastName|first|upper ~ '.' -%}
+
+  {%- set items = [
+    {type: 'heading', label: name},
+    {label: 'Your profile'|trans({}, 'Admin.Navigation.Header'), href: path('admin_employees_edit', {employeeId: employee.id}), icon: 'person'},
+  ]
+    |merge(this.moduleItems)
+    |merge([
+      {type: 'divider'},
+      {label: 'Sign out'|trans({}, 'Admin.Navigation.Header'), href: path('admin_logout'), icon: 'logout'},
+    ]) -%}
+
+  <div class="dropdown ps-employee-dropdown" id="header-employee-container">
+    {#- A header entry, like <twig:ui:HeaderAction>, with the employee's picture in place of an icon -#}
+    <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">
+      <img class="ps-employee-dropdown__avatar" src="{{ employee.imageUrl }}" alt="" width="24" height="24">
+      <span class="ps-header-action__label">{{ shortName }}</span>
+      <twig:ui:Icon name="keyboard_arrow_down" class="ps-header-action__arrow"/>
+    </button>
+
+    <twig:ui:DropdownMenu :items="items" align="end"/>
+  </div>
+{%- endif -%}

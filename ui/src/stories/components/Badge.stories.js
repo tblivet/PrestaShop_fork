@@ -9,13 +9,13 @@ import check from '../../../icons/material-symbols/check.svg?raw';
 import schedule from '../../../icons/material-symbols/schedule.svg?raw';
 import badge from '../badge';
 import { framedNodes, joinNodes, withTwig } from '../twig-snippet';
-import { withDefaults } from '../story-defaults';
+import { NONE, nullableSelect, withDefaults } from '../story-defaults';
 
 // Some <twig:ui:Icon> names a badge can show; any icon works (Content/Icons)
-const ICONS = { none: null, check, schedule, block };
+const ICONS = { check, schedule, block };
 
 // Badge.php defaults
-const DEFAULTS = { variant: 'secondary', icon: null, pill: false, counter: false };
+const DEFAULTS = { variant: 'primary', icon: null, pill: false, counter: false };
 
 const VARIANTS = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'oceanblue', 'purple', 'amber'];
 
@@ -30,7 +30,7 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:Badge variant="success" icon="check">{{ \'Paid\'|trans({}, \'Admin.Orderscustomers.Feature\') }}</twig:ui:Badge>`, `<twig:ui:Badge counter>{{ count }}</twig:ui:Badge>`. The text is the content: it says the state, the count or the flag. Its size follows the text around it (font size and padding in em): larger in a heading, smaller in a table cell; a count keeps one size.',
-          '**Props**: `variant` (`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`, then the kit palette colors `oceanblue`, `purple`, `amber`; default `secondary`: a subtle background with a darker text of the same color; `oceanblue` is the light brand blue of the current menu entry), `icon` (default none: a [Material Symbols](https://fonts.google.com/icons) name before the text, decorative), `pill` (default `false`: round ends; the kit has square corners), `counter` (default `false`: a number, round while short, a pill as it grows). Other attributes (`class`, `id`, `data-ps-*`) go on the `<span>`.',
+          '**Props**: `variant` (`primary`, `secondary`, `success`, `danger`, `warning`, `info`, `light`, `dark`, then the kit palette colors `oceanblue`, `purple`, `amber`; default `primary`; each a subtle background with a darker text of the same color; `oceanblue` is the light brand blue of the current menu entry), `icon` (default none: a [Material Symbols](https://fonts.google.com/icons) name before the text, decorative), `pill` (default `false`: round ends; the kit has square corners), `counter` (default `false`: a number, round while short, a pill as it grows). Other attributes (`class`, `id`, `data-ps-*`) go on the `<span>`.',
           '**Do**: a short state ("Paid", "Disabled"), a count, a version; an icon with a state so its meaning is not carried by the color only; the same variant for the same meaning everywhere. **Don\'t**: a badge as a button or a link (it is not interactive), a sentence, a color as the only meaning ("green" for paid, without the word), a count in a heading without words around it for screen readers.',
           '**States**: every variant, in context (heading, text, table cell), with an icon, pill, counters from 3 to 1234, a long translation.',
         ].join('\n\n'),
@@ -40,14 +40,14 @@ export default {
   argTypes: withDefaults({
     label: { control: 'text', description: 'Content block: the text' },
     variant: { control: 'select', options: VARIANTS, description: 'Color' },
-    icon: { control: 'select', options: Object.keys(ICONS), description: '<twig:ui:Icon> name before the text, decorative' },
+    icon: nullableSelect(Object.keys(ICONS), '<twig:ui:Icon> name before the text, decorative'),
     pill: { control: 'boolean', description: 'Round ends' },
     counter: { control: 'boolean', description: 'A number: round while short' },
   }, DEFAULTS),
-  args: { label: 'Badge', ...DEFAULTS, icon: 'none' },
+  args: { label: 'Badge', ...DEFAULTS, icon: NONE },
 };
 
-export const Default = withTwig(({ icon, ...args }) => node({ ...args, icon: icon === 'none' ? null : icon }));
+export const Default = withTwig((args) => node(args));
 
 export const Variants = withTwig(() => joinNodes(
   VARIANTS.map((variant) => node({ label: variant.charAt(0).toUpperCase() + variant.slice(1), variant })),
