@@ -5,15 +5,15 @@ Rules for any markup rendered with the `/ui` kit: Twig components, `Ui/` page te
 ## One element, three jobs
 
 ```html
-<p class="ps-password-feedback__requirement d-flex align-items-center gap-1 mb-0"
+<p class="ps-password-feedback__requirement"
    data-ps-ref="password-requirement-length"
    data-ps-state="met">
 ```
 
 | Part | Job | Rule |
 |------|-----|------|
-| BEM class `ps-block__element--modifier` | What the element **is**, and its own look | Styled in `ui/src/scss` |
-| Bootstrap utilities (`d-flex`, `gap-1`, `mb-0`, `text-truncate`…) | Generic layout and spacing | Never re-written in SCSS |
+| BEM class `ps-block__element--modifier` | What the element **is**, its look and its layout (spacing too, #38) | Styled in `ui/src/scss` with Bootstrap's values |
+| Bootstrap classes: components (`btn`, `dropdown-menu`) and behaviour utilities (`visually-hidden`, `d-md-none` of an `offcanvas-md`) | Bootstrap's own components and behaviour | Never re-written in SCSS; no layout or spacing utilities |
 | `data-ps-*` | What **JS** needs, and runtime **state** | Never styled, except state |
 
 ## Classes: BEM with the `ps-` prefix
@@ -27,13 +27,20 @@ Rules for any markup rendered with the `/ui` kit: Twig components, `Ui/` page te
   3. **A `$selectors` map** when one partial reads better with several of the page's own blocks: `$selectors: (page: 'ps-dashboard', kpi: 'ps-dashboard-kpi');` then `.#{map.get($selectors, kpi)} { … }`. Pages only, and only the page's own blocks, never a component's classes. Stylelint checks that every value is a `ps-` BEM class.
 - **Page wrapper**: every page's root element carries `ps-page ps-page--{page}` and the page's own block `ps-{page}`: `<main class="ps-page ps-page--login ps-login">`. `ps-page--{page}` names the page wrapper for whoever reads the markup and may have no styles; the page's styles go on `ps-{page}` in `pages/_{page}.scss`. `ps-page--{page}` gets styles only for a real variant of the page layout, in `layout/_page.scss`. Stylelint checks the variable's value and the `&__` / `&--` names (it cannot read a full `.#{$component-name}__…` selector, one more reason to avoid it).
 - **Modifiers are fixed variants** chosen in the template (size, tone, layout): `ps-page--bg-subtle`. Never a runtime state.
-- **Bootstrap first**: stay as close to Bootstrap as possible, so the kit keeps what Bootstrap gives (its components and plugins, themes and dark mode through its variables, its updates). Take the first of these that does the job:
-  1. **A Bootstrap class or utility in the markup** (`btn btn-primary`, `modal-dialog-centered`, `d-flex`, `gap-2`, `text-truncate`…), never re-written in SCSS.
-  2. **A Bootstrap Sass variable** in `ui/src/scss/_variables.scss`, to change how a Bootstrap component looks everywhere: its padding, borders, colors, sizes (`$modal-inner-padding`, `$btn-close-opacity`, `$form-switch-width`, `$dropdown-font-size`…). Look it up in `bootstrap/scss/_variables.scss`.
-  3. **A Bootstrap CSS variable** (`--#{$prefix}btn-*`, `--#{$prefix}dropdown-*`…), to change one variant or one place without a new rule.
-  4. **A rule in the component's partial**, last, only for what none of the above covers (a kit shape, a BEM element of its own, a state), with a comment saying why when it overrides Bootstrap.
-  Tokens through `var(--#{$prefix}…)`, never hard-coded colors.
-- **Mobile-first CSS**, like Bootstrap: in the kit and in pages, the base rule is the narrow screen and `media-breakpoint-up(…)` adds what wider screens need; `media-breakpoint-down(…)` only with a comment saying why. The back office is still designed for desktop users first (DECISIONS #14): this is about how CSS is written, so our rules follow the same direction as the Bootstrap utilities in the markup (`flex-sm-row`, `col-lg-*`) and never fight them on the same property. Breakpoints are grouped at the end of the root block, one `media-breakpoint-up` per breakpoint in ascending order, holding the element rules (`&__container { … }`): every responsive change of a file is in one place, and a wider breakpoint always comes after a narrower one (see `pages/_login.scss`, `layout/_tiles.scss`).
+- **Bootstrap first** (`DECISIONS.md` #38): Bootstrap's components and values, not its utility classes. Every style has one owner; take the first that fits:
+
+  | Is it… | Then | Written as |
+  |---|---|---|
+  | 1. A Bootstrap component (button, dropdown, badge, offcanvas, alert, field…) | Its classes in the markup (`btn btn-primary`, `dropdown-menu`, `offcanvas-md`, `btn-close`), never re-written | Its Sass variable in `ui/src/scss/_variables.scss` to change it everywhere (`$modal-inner-padding`, `$dropdown-font-size`; see `bootstrap/scss/_variables.scss`), then its CSS variable (`--#{$prefix}btn-*`) for one variant or one place |
+  | 2. The look or inner layout of one element (its parts, background, rows, states) | The component's BEM partial (`ps-side-menu__footer`) | A rule in `components/_{name}.scss` |
+  | 3. The arrangement of several elements (space between, alignment, wrapping, columns) | A generic layout, reused (`<twig:ui:Layout:Stack>`, `Cluster`, `Tiles`) | Its block and size modifiers (`ps-stack ps-stack--gap-lg`) in `layout/` |
+  | 4. Found on one page only | The page's block (#28) | `pages/_{page}.scss` |
+
+  Modifiers are always written with their block (`ps-cluster ps-cluster--gap-sm ps-cluster--wrap`, never a bare `--wrap`) and generated by the component from its props, so templates never list them; a prop left at its default renders no modifier.
+  To pick between 2, 3 and 4: would the same thing be written a second time somewhere else? Yes: a layout or a modifier of an existing component. No: the element's or the page's own block.
+  - **Rules use Bootstrap's values**: `var(--#{$prefix}…)` tokens, `map-get($spacers, 2)`, `media-breakpoint-up(…)`, its mixins (`visually-hidden`, `border-radius`). Never a hard-coded color; an off-scale size only with a comment saying why.
+  - **Utilities in the markup only for Bootstrap behaviour**: `visually-hidden`, a `d-{bp}-none` that follows an `offcanvas-{bp}`. Not for layout or spacing, in components, layouts or pages: they are `!important` (nothing can override them) and the kit's compile to physical properties (`ms-auto` is `margin-left`). Stack, Cluster and Tiles still render utilities until their migration.
+- **Mobile-first CSS**, like Bootstrap: in the kit and in pages, the base rule is the narrow screen and `media-breakpoint-up(…)` adds what wider screens need; `media-breakpoint-down(…)` only with a comment saying why. The back office is still designed for desktop users first (DECISIONS #14): this is about how CSS is written, so our rules follow the same direction as Bootstrap's own responsive classes and never fight them on the same property. Breakpoints are grouped at the end of the root block, one `media-breakpoint-up` per breakpoint in ascending order, holding the element rules (`&__container { … }`): every responsive change of a file is in one place, and a wider breakpoint always comes after a narrower one (see `pages/_login.scss`, `layout/_tiles.scss`).
 - **Logical properties and values only**, so the BO can go RTL without rewriting styles: `margin-inline-start`, `padding-block`, `inset-inline-end`, `border-start-start-radius`, `text-align: start`, `float: inline-end`; utilities `ms-*` / `me-*` / `ps-*` / `pe-*`, `text-start` / `text-end`, `float-start` / `float-end`. `width` / `height` stay allowed.
 - **Bootstrap component classes** (`btn btn-primary`, `form-control`, `alert alert-danger`) stay as they are; add a BEM class beside them only when the element needs its own styles. A variant takes Bootstrap's class when Bootstrap ships one (`btn-secondary`, `alert-danger`); a `ps-` modifier only when it has none, for example badge colors (`ps-badge--primary`): Bootstrap 5 colors badges with utilities only, and a pair of `!important` utilities (`bg-*-subtle text-*-emphasis`) would split one look in two and could not be overridden.
 
@@ -49,7 +56,7 @@ Two kinds of `<twig:ui:*>`, never mixed (`DECISIONS.md` #24):
 | Name, folder | `ui:{Name}`, `Twig/Component/Ui/`, `scss/components/`, Storybook "Components" | `ui:Layout:{Name}`, `Twig/Component/Ui/Layout/`, `scss/layout/`, Storybook "Layouts" |
 
 - **Spacing comes from the layout**: a page wraps components in a layout instead of putting `mb-3`, `ms-auto` or `w-100` on them. A component's SCSS root has no `margin`; a Bootstrap class that brings one (`.alert`, `.form-group` style margins) is reset in the kit.
-- **A layout takes any child**: it lays out its content block and named slots with Bootstrap's flex and grid utilities driven by props (`gap`, `align`, `justify`, `direction`, `breakpoint`), and never selects its children's classes.
+- **A layout takes any child**: it lays out its content block and named slots with its own BEM classes and size modifiers driven by props (`gap`, `align`, `justify`, `direction`, `breakpoint`; Stack, Cluster and Tiles still render utilities until their migration, #38), and never selects its children's classes.
 - **A component with regions keeps them inside**: a modal's header, body and footer, a card's body are the component's own parts. What goes into a region (the buttons of a modal footer) is arranged by a layout placed in that region (`ui:Layout:Cluster`).
 - **The page template is the top layout**: slots title, breadcrumb, actions, tabs, content; inside content, sections and stacks; inside those, components.
 - **Attribute pass-through stays for hooks and ARIA** (`data-ps-*`, `aria-*`, `id`); spacing and placement utilities on a component are a sign a layout is missing.
@@ -63,7 +70,7 @@ Templates write `<twig:ui:*>` components and layouts, not raw Bootstrap markup (
 
 - **Props for meaning, not for looks**: `variant`, `size`, `type`, `state`, `icon`, `label`, with allowed values checked in `preMount()` (see `Alert.php`). No prop that only maps to one utility class.
 - **Attributes pass through**: any other attribute (`id`, `data-ps-*`, `aria-*`, `title`, an extra `class`) lands on the root element through `attributes.defaults()`, so a page adds a hook without a new prop. Placement and spacing are not passed this way: they belong to a layout.
-- **Content in blocks**: any markup fits inside. The main slot is the content (`{% block content %}`) and the others are named blocks: `<twig:ui:Modal>` takes its body as content and its buttons in `footer`. When no slot is the main one, every slot is named and nothing outside them is shown, so the call reads as the parts it fills: `<twig:ui:Header>` has `start`, `search` and `actions`.
+- **Content in blocks**: any markup fits inside. The main slot is the content (`{% block content %}`) and the others are named blocks: `<twig:ui:Modal>` takes its body as content and its buttons in `footer`. When no slot is the main one, every slot is named and nothing outside them is shown, so the call reads as the parts it fills: `<twig:ui:Header>` has `search` and `actions`.
 - **The right element**: when the same look has different semantics, a prop chooses it (a button-like link gets `href` and renders `<a>`, otherwise `<button type="button">`).
 - **Accessible by default**: the correct role, `type` and ARIA come from the component; a prop is required when accessibility needs it (an icon button's `label`).
 - **Bootstrap underneath**: the component outputs Bootstrap's own classes, so Bootstrap docs, utilities and JS keep working on it.
@@ -137,11 +144,11 @@ Check these in every template and story before committing:
 | `selector-attribute-name-disallowed-list` | No `data-ps-*` selector in SCSS except `data-ps-state` |
 | ESLint `no-restricted-syntax` (`admin-dev/themes/new-theme/.eslintrc.js`, `uiKitFiles`) | Kit page scripts never select a class or an id |
 
-Add a page's scripts to `uiKitFiles` when it moves to the kit. Not linted, check by hand or with the `ui-review` skill: utilities rewritten in SCSS, accessibility, and the kit's own `ui/src/js` (no JS lint in `ui/` yet).
+Add a page's scripts to `uiKitFiles` when it moves to the kit. Not linted, check by hand or with the `ui-review` skill: layout or spacing utilities in the markup (#38), accessibility, and the kit's own `ui/src/js` (no JS lint in `ui/` yet).
 
 ## Canonical examples
 
-- `src/PrestaShopBundle/Resources/views/Admin/Helpers/password_feedback.html.twig` + `admin-dev/themes/new-theme/js/components/change-password-handler.ts` + `ui/src/scss/components/_password.scss` — BEM + utilities + hooks, `data-ps-state`, shape-changing icon, debounced live region, `aria-describedby`, shared by both themes
+- `src/PrestaShopBundle/Resources/views/Admin/Helpers/password_feedback.html.twig` + `admin-dev/themes/new-theme/js/components/change-password-handler.ts` + `ui/src/scss/components/_password.scss` — BEM + hooks, `data-ps-state`, shape-changing icon, debounced live region, `aria-describedby`, shared by both themes
 - `ui/src/scss/pages/_login.scss` — page block with elements and a modifier
 - `ui/src/js/components/password-toggle.js` — `data-ps-action` behaviour with `aria-pressed` and a translated `aria-label`
 - `themes/hummingbird/templates/components/password-policy-template.tpl` — the same widget in the front theme

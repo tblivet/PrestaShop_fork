@@ -19,7 +19,7 @@ List, with file paths: the templates and blocks it renders, the shared helpers a
 
 ## 2. Mockup first
 
-`ui/src/playground/pages/{page}/{page}.html` + `{page}.stories.js`: the target markup with `ps-` BEM blocks, utilities and `data-ps-*` hooks, static content. The page fills the slots of the page template; missing kit components → `create-ui-component` first. This mockup is `ui-rework` checkpoint 2: show it and wait for approval.
+`ui/src/playground/pages/{page}/{page}.html` + `{page}.stories.js`: the target markup with Bootstrap components, `ps-` BEM blocks (layout and spacing too, no utilities for them: CONVENTIONS.md "Bootstrap first") and `data-ps-*` hooks, static content. The page fills the slots of the page template; missing kit components → `create-ui-component` first. This mockup is `ui-rework` checkpoint 2: show it and wait for approval.
 
 ## 3. Template
 

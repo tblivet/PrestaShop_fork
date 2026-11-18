@@ -15,7 +15,7 @@ Why: the team is developers and integrators, no designer owns Figma files. Left 
 
 ## 3. Markup: BEM `ps-`, utilities, `data-ps-*` — 2026-11-02
 
-A `ps-` BEM class for what an element is, Bootstrap utilities for layout and spacing, `data-ps-*` for JS (Hummingbird vocabulary). Runtime state is ARIA first, else `data-ps-state`; modifiers only for fixed variants. Rules in `CONVENTIONS.md`.
+A `ps-` BEM class for what an element is, Bootstrap utilities for layout and spacing (replaced by #38: layout and spacing go in BEM partials too), `data-ps-*` for JS (Hummingbird vocabulary). Runtime state is ARIA first, else `data-ps-state`; modifiers only for fixed variants. Rules in `CONVENTIONS.md`.
 Why: renaming a class never breaks a script, moving a hook never changes the look, state is announced.
 
 ## 4. Logical properties only, RTL later — 2026-11-02
@@ -186,3 +186,19 @@ Later, so modules can add kinds (not built yet): a `NotificationSourceInterface`
 
 `btn-secondary` (the default of non-submit form buttons; `<twig:ui:Button>`, `<twig:ui:IconButton>` and `<twig:ui:Dropdown>` default to `primary`: a button alone is the action of its area) is transparent with the primary color for border and text; hover and focus lay a light grey under it (`$gray-300`, `$gray-400` pressed) instead of filling it (`components/_buttons.scss`). The markup keeps `btn-secondary`; `outline-primary` stays as a variant (it fills black on hover).
 Why: next to a filled primary button, the grey fill of Bootstrap's secondary pulled the eye almost as much and read as dated or disabled; an outline in the primary color makes the pair read as one filled, one outlined. A black fill on hover (the `outline-primary` behaviour) made the secondary look like the primary under the pointer, so it only greys. `outline-secondary` is kept for minor actions, lighter still: the fields' light border and grey text, a light grey hover. Left aside: switching each template to `outline-primary` (every page to touch, and the default would still be grey).
+
+## 38. Every style has one owner, its BEM partial; utilities only for Bootstrap behaviour — 2026-11-18
+
+Bootstrap first means Bootstrap's components and values, not its utility classes. A style belongs to the first owner that fits:
+1. a Bootstrap component, in the markup and tuned by its variables;
+2. a kit component's own look and inner layout, in its BEM partial;
+3. the arrangement of several elements, in a generic layout (`ps-stack`, `ps-cluster`, `ps-tiles`) with size modifiers (`ps-stack--gap-lg`);
+4. a page's one-off arrangement, in the page's block.
+
+The rules are written with Bootstrap's values (`var(--#{$prefix}…)`, `$spacers`, `media-breakpoint-*`, its mixins). Utilities stay in the markup only for what is Bootstrap behaviour: `visually-hidden`, a `d-{bp}-none` that follows an `offcanvas-{bp}`. This applies to layouts too: Stack, Cluster and Tiles render their own classes instead of `d-flex gap-3 align-items-*`. Rules in "Bootstrap first" of `CONVENTIONS.md`.
+Why:
+- templates say what an element is, not how it is drawn;
+- one component's styles live in one file instead of being split between Twig, story, mockup and tests;
+- utilities are `!important`, so a theme, a module or a page cannot override them;
+- the kit's utilities compile to physical properties (`ms-auto` is `margin-left`), against #4.
+Left aside: utilities for page layouts (a page would mix two systems), and keeping utilities inside layouts (the DOM stays heavy and they still cannot be overridden). Stack, Cluster, Tiles and the utilities left in templates are migrated in a separate change.

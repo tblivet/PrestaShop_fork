@@ -45,7 +45,7 @@ Update or create the story (component) or the playground mockup (page) first: it
 
 ## 4. Implement
 
-Follow `CONVENTIONS.md`: BEM + utilities + `data-ps-*`, ARIA state, logical properties, the page template slots, `ui_kit_layout.html.twig` for forms. The old theme may break; do not bend kit code to keep it working. Add the page's scripts to `uiKitFiles` in `admin-dev/themes/new-theme/.eslintrc.js`. Keep the story in sync and update the tests.
+Follow `CONVENTIONS.md`: Bootstrap components, BEM for look and layout (no layout or spacing utilities, #38) + `data-ps-*`, ARIA state, logical properties, the page template slots, `ui_kit_layout.html.twig` for forms. The old theme may break; do not bend kit code to keep it working. Add the page's scripts to `uiKitFiles` in `admin-dev/themes/new-theme/.eslintrc.js`. Keep the story in sync and update the tests.
 
 While working, check with a quick `ui-review` (a few states, inline).
 
