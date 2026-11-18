@@ -1,0 +1,90 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// <twig:ui:Layout:Cluster>: items side by side, wrapping, the space between them its gap. The modifiers set the row's
+// alignment through variables, so a cluster that stacks below a breakpoint applies them only from it.
+$component-name: ps-cluster;
+
+.#{$component-name} {
+  --#{$prefix}cluster-justify: flex-start;
+  --#{$prefix}cluster-align: center;
+  --#{$prefix}cluster-wrap: wrap;
+
+  display: flex;
+  flex-wrap: var(--#{$prefix}cluster-wrap);
+  gap: map-get($spacers, map-get($ps-layout-gaps, sm));
+  align-items: var(--#{$prefix}cluster-align);
+  justify-content: var(--#{$prefix}cluster-justify);
+
+  > * {
+    margin-block: 0;
+  }
+
+  @each $size, $spacer in $ps-layout-gaps {
+    &--gap-#{$size} {
+      gap: map-get($spacers, $spacer);
+    }
+  }
+
+  &--justify-end {
+    --#{$prefix}cluster-justify: flex-end;
+  }
+
+  &--justify-between {
+    --#{$prefix}cluster-justify: space-between;
+  }
+
+  &--justify-center {
+    --#{$prefix}cluster-justify: center;
+  }
+
+  &--align-start {
+    --#{$prefix}cluster-align: flex-start;
+  }
+
+  &--align-baseline {
+    --#{$prefix}cluster-align: baseline;
+  }
+
+  &--align-end {
+    --#{$prefix}cluster-align: flex-end;
+  }
+
+  &--nowrap {
+    --#{$prefix}cluster-wrap: nowrap;
+  }
+
+  // Rendered as ul or ol: the items are its li
+  &--list {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+
+  // Below the breakpoint: one full-width item per line, in reading order; from it, the row as set
+  &--stack-below-sm,
+  &--stack-below-md {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  @include media-breakpoint-up(sm) {
+    &--stack-below-sm {
+      flex-direction: row;
+      flex-wrap: var(--#{$prefix}cluster-wrap);
+      align-items: var(--#{$prefix}cluster-align);
+      justify-content: var(--#{$prefix}cluster-justify);
+    }
+  }
+
+  @include media-breakpoint-up(md) {
+    &--stack-below-md {
+      flex-direction: row;
+      flex-wrap: var(--#{$prefix}cluster-wrap);
+      align-items: var(--#{$prefix}cluster-align);
+      justify-content: var(--#{$prefix}cluster-justify);
+    }
+  }
+}

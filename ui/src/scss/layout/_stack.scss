@@ -1,0 +1,41 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// <twig:ui:Layout:Stack>: items one under the other, the space between them its gap. The stack owns that space, so its
+// items lose their own block margins (a p, an h2 inside it needs no mb-0).
+$component-name: ps-stack;
+
+.#{$component-name} {
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacers, map-get($ps-layout-gaps, md));
+
+  > * {
+    margin-block: 0;
+  }
+
+  @each $size, $spacer in $ps-layout-gaps {
+    &--gap-#{$size} {
+      gap: map-get($spacers, $spacer);
+    }
+  }
+
+  &--align-start {
+    align-items: flex-start;
+  }
+
+  &--align-center {
+    align-items: center;
+  }
+
+  &--align-end {
+    align-items: flex-end;
+  }
+
+  // Rendered as ul or ol: the items are its li
+  &--list {
+    padding-inline-start: 0;
+    list-style: none;
+  }
+}

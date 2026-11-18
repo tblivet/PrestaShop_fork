@@ -17,7 +17,7 @@ class StackTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertSame(['gap' => 'md', 'align' => 'stretch', 'as' => 'div'], (new Stack())->preMount([]));
-        $this->assertSame('ps-stack d-flex flex-column gap-3 align-items-stretch', (new Stack())->getClasses());
+        $this->assertSame('ps-stack', (new Stack())->getClasses());
     }
 
     public function testKeepsExtraAttributes(): void
@@ -28,13 +28,13 @@ class StackTest extends TestCase
         );
     }
 
-    public function testListDropsBulletsAndMargin(): void
+    public function testListDropsBullets(): void
     {
         $stack = new Stack();
         $stack->gap = 'none';
         $stack->as = 'ul';
 
-        $this->assertSame('ps-stack d-flex flex-column gap-0 align-items-stretch list-unstyled mb-0', $stack->getClasses());
+        $this->assertSame('ps-stack ps-stack--gap-none ps-stack--list', $stack->getClasses());
     }
 
     /**

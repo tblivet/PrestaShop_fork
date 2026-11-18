@@ -37,27 +37,31 @@ final class Cluster
 
     public string $as = 'div';
 
+    /**
+     * The block and a modifier for each prop away from its default (layout/_cluster.scss: with stackBelow, the row's
+     * justify, align and wrap apply from that breakpoint).
+     */
     public function getClasses(): string
     {
-        $classes = ['ps-cluster', 'd-flex', Gap::utility($this->gap)];
+        $classes = ['ps-cluster'];
 
-        if ($this->stackBelow === 'none') {
-            $classes = [...$classes, $this->wrap ? 'flex-wrap' : 'flex-nowrap', 'justify-content-' . $this->justify, 'align-items-' . $this->align];
-        } else {
-            // Below the breakpoint: one full-width item per line, in reading order; from it: the row
-            $breakpoint = $this->stackBelow;
-            $classes = [
-                ...$classes,
-                'flex-column',
-                'flex-' . $breakpoint . '-row',
-                'flex-' . $breakpoint . ($this->wrap ? '-wrap' : '-nowrap'),
-                'justify-content-' . $breakpoint . '-' . $this->justify,
-                'align-items-' . $breakpoint . '-' . $this->align,
-            ];
+        if ('sm' !== $this->gap) {
+            $classes[] = 'ps-cluster--gap-' . $this->gap;
         }
-
+        if ('start' !== $this->justify) {
+            $classes[] = 'ps-cluster--justify-' . $this->justify;
+        }
+        if ('center' !== $this->align) {
+            $classes[] = 'ps-cluster--align-' . $this->align;
+        }
+        if (!$this->wrap) {
+            $classes[] = 'ps-cluster--nowrap';
+        }
+        if ('none' !== $this->stackBelow) {
+            $classes[] = 'ps-cluster--stack-below-' . $this->stackBelow;
+        }
         if (in_array($this->as, ['ul', 'ol'], true)) {
-            $classes = [...$classes, 'list-unstyled', 'mb-0'];
+            $classes[] = 'ps-cluster--list';
         }
 
         return implode(' ', $classes);

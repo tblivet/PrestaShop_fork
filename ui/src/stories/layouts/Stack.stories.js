@@ -18,7 +18,7 @@ export default {
     docs: {
       description: {
         component: [
-          '**Twig usage**: `<twig:ui:Layout:Stack gap="lg">…blocks…</twig:ui:Layout:Stack>`. Places blocks one under the other with one gap; the blocks keep their own look.',
+          '**Twig usage**: `<twig:ui:Layout:Stack gap="lg">…blocks…</twig:ui:Layout:Stack>`. Places blocks one under the other with one gap; the blocks keep their own look. Renders its own BEM classes (`layout/_stack.scss`): the block, then one modifier per prop away from its default (`ps-stack--gap-lg`); its direct children lose their block margins, so a `p` or a heading needs no `mb-0`.',
           '**Props**: `gap` (`none`, `xs`, `sm`, `md`, `lg`, `xl`: Bootstrap spacers 0 to 5, the same scale as every layout; default `md`), `align` (`stretch`, `start`, `center`, `end`; default `stretch`: every block takes the full width), `as` (`div`, `section`, `ul`, `ol`; default `div`; a list when the blocks are a list, then each block is an `<li>`). Other attributes (`id`, `data-ps-*`, `aria-*`) go on the stack.',
           '**Do**: wrap page blocks, card bodies and form groups in a stack instead of putting `mb-3` or `mt-3` on them; nest stacks for a different gap inside a block. **Don\'t**: style the children through the stack, give a child its own outer margin, or use it for a row of buttons (that is `ui:Layout:Cluster`).',
           '**States**: each gap, each alignment, as a list, a long unbreakable word (the stack never grows wider than its parent), nested stacks.',
@@ -42,7 +42,7 @@ const stack = ({ as = 'div', ...props }, items) => {
     .map((node) => (list ? { html: `<li>${node.html}</li>`, twig: `<li>${node.twig}</li>` } : node));
 
   return {
-    html: `<${as} class="${stackClasses(props)}${list ? ' list-unstyled mb-0' : ''}">${nodes.map((node) => node.html).join('')}</${as}>`,
+    html: `<${as} class="${stackClasses({ ...props, as })}">${nodes.map((node) => node.html).join('')}</${as}>`,
     twig: twigCall('ui:Layout:Stack', { ...props, as }, DEFAULTS, nodes),
   };
 };

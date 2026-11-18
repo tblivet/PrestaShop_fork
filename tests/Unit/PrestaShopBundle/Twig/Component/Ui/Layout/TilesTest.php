@@ -17,7 +17,7 @@ class TilesTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertSame(['columns' => 3, 'gap' => 'md', 'as' => 'div'], (new Tiles())->preMount([]));
-        $this->assertSame('ps-tiles ps-tiles--3 d-grid gap-3', (new Tiles())->getClasses());
+        $this->assertSame('ps-tiles ps-tiles--3', (new Tiles())->getClasses());
     }
 
     public function testColumnsFromAStringAttribute(): void
@@ -37,7 +37,7 @@ class TilesTest extends TestCase
         $tiles->gap = 'sm';
         $tiles->as = 'ul';
 
-        $this->assertSame('ps-tiles ps-tiles--6 d-grid gap-2 list-unstyled mb-0', $tiles->getClasses());
+        $this->assertSame('ps-tiles ps-tiles--6 ps-tiles--gap-sm ps-tiles--list', $tiles->getClasses());
     }
 
     /**

@@ -9,14 +9,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Twig\Component\Ui\Layout;
 
 /**
- * The gap scale shared by every layout: Bootstrap spacers 0 to 5 (gap-0 ... gap-5).
+ * The gap scale shared by every layout, a size to a Bootstrap spacer index ($ps-layout-gaps in ui/src/scss/_variables.scss).
  */
 final class Gap
 {
     public const SCALE = ['none' => 0, 'xs' => 1, 'sm' => 2, 'md' => 3, 'lg' => 4, 'xl' => 5];
-
-    public static function utility(string $gap): string
-    {
-        return 'gap-' . self::SCALE[$gap];
-    }
 }

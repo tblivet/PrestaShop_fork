@@ -114,6 +114,8 @@
 @import 'custom';
 
 // ── PHASE 7: Back-office layout and pages (ps- prefixed classes) ──────────────
+@import 'layout/cluster';
+@import 'layout/stack';
 @import 'layout/tiles';
 @import 'layout/page';
 @import 'layout/layout';

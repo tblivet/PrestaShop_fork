@@ -22,7 +22,7 @@
     {# The panel header (title, messages), then the fields #}
     <twig:ui:Layout:Stack gap="lg">
       <twig:ui:Layout:Stack>
-        <h1 class="ps-login__title mb-0" data-ps-ref="panel-title">{{ 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
+        <h1 class="ps-login__title" data-ps-ref="panel-title">{{ 'Sign in to your back office'|trans({}, 'Admin.Login.Feature') }}</h1>
         {% if not showRequestPasswordResetForm %}
           <twig:ui:FlashMessages/>
         {% endif %}
@@ -66,13 +66,13 @@
   {{ form_start(requestPasswordResetForm, {action: path('admin_request_password_reset'), attr: requestPasswordResetForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? '' : ' d-none'), 'data-ps-action': 'submit-once'})}) }}
     <twig:ui:Layout:Stack gap="lg">
       <twig:ui:Layout:Stack>
-        <h1 class="ps-login__title mb-0" data-ps-ref="panel-title">{{ requestPasswordResetForm.vars.label }}</h1>
+        <h1 class="ps-login__title" data-ps-ref="panel-title">{{ requestPasswordResetForm.vars.label }}</h1>
         {% if showRequestPasswordResetForm %}
           <twig:ui:FlashMessages/>
         {% endif %}
         {{ form_errors(requestPasswordResetForm) }}
 
-        <p class="ps-login__intro small text-body-secondary text-center mb-0" id="{{ forgotIntroId }}">
+        <p class="ps-login__intro small text-body-secondary text-center" id="{{ forgotIntroId }}">
           {{- 'Enter your email address and we\'ll send you a link to reset your password.'|trans({}, 'Admin.Login.Feature') -}}
         </p>
       </twig:ui:Layout:Stack>

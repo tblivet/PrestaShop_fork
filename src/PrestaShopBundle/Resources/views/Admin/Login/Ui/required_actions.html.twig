@@ -9,7 +9,7 @@
 {% block login_content %}
   {# Stacks, not a grid: a grid column grows to fit a long unbreakable word (the folder name) and overflows the card #}
   <twig:ui:Layout:Stack gap="lg">
-    <h1 class="ps-login__title mb-0">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
+    <h1 class="ps-login__title">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
 
     <twig:ui:Layout:Stack>
       <twig:ui:Alert type="warning" icon="warning">

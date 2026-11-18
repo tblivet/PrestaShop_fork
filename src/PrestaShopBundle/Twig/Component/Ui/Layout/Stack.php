@@ -28,12 +28,21 @@ final class Stack
 
     public string $as = 'div';
 
+    /**
+     * The block and a modifier for each prop away from its default (layout/_stack.scss).
+     */
     public function getClasses(): string
     {
-        $classes = ['ps-stack', 'd-flex', 'flex-column', Gap::utility($this->gap), 'align-items-' . $this->align];
+        $classes = ['ps-stack'];
 
+        if ('md' !== $this->gap) {
+            $classes[] = 'ps-stack--gap-' . $this->gap;
+        }
+        if ('stretch' !== $this->align) {
+            $classes[] = 'ps-stack--align-' . $this->align;
+        }
         if (in_array($this->as, ['ul', 'ol'], true)) {
-            $classes = [...$classes, 'list-unstyled', 'mb-0'];
+            $classes[] = 'ps-stack--list';
         }
 
         return implode(' ', $classes);

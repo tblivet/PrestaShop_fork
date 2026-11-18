@@ -25,7 +25,7 @@ export default {
     docs: {
       description: {
         component: [
-          '**Twig usage**: equal columns for repeated items (cards, KPIs, logo blocks): one per line on phones, more as the width grows. The items are its direct children.',
+          '**Twig usage**: equal columns for repeated items (cards, KPIs, logo blocks): one per line on phones, more as the width grows. The items are its direct children. Renders its own BEM classes (`layout/_tiles.scss`): the block, then one modifier per prop away from its default (`ps-tiles--gap-lg`; `ps-tiles--{columns}` is always there); its direct children lose their block margins, so a `p` or a heading needs no `mb-0`.',
           '```twig\n<twig:ui:Layout:Tiles columns="3" as="ul">\n  {% for theme in themes %}\n    <li><div class="card">…</div></li>\n  {% endfor %}\n</twig:ui:Layout:Tiles>\n```',
           '**Props**: `columns` (`2`, `3`, `4`, `6`: items per line at full width; default `3`), `gap` (`none`, `xs`, `sm`, `md`, `lg`, `xl`: the same scale as every layout; default `md`), `as` (`div`, `section`, `ul`, `ol`; default `div`; with a list, write each item as an `<li>`). Other attributes (`id`, `class`, `data-ps-*`, `aria-*`) go on the tiles.',
           '**Steps** (built in, no breakpoint prop): `2` → 1, then 2 from `md`; `3` → 1, then 3 from `lg`; `4` → 1, 2 from `md`, 4 from `xl`; `6` → 2, 3 from `md`, 6 from `xl` (small items). Items in a line share its height, so cards line up.',
@@ -54,7 +54,7 @@ const tiles = ({ as = 'div', extraClass = '', ...props }, items) => {
     .map((node) => (list ? { html: `<li>${node.html}</li>`, twig: `<li>\n${node.twig.replace(/^/gm, '  ')}\n</li>` } : node));
 
   return {
-    html: `<${as} class="${tilesClasses(props)}${list ? ' list-unstyled mb-0' : ''}${extraClass ? ` ${extraClass}` : ''}">${nodes.map((node) => node.html).join('')}</${as}>`,
+    html: `<${as} class="${tilesClasses({ ...props, as })}${extraClass ? ` ${extraClass}` : ''}">${nodes.map((node) => node.html).join('')}</${as}>`,
     twig: twigCall('ui:Layout:Tiles', { ...props, as, class: extraClass }, DEFAULTS, nodes),
   };
 };

@@ -30,12 +30,18 @@ final class Tiles
 
     public string $as = 'div';
 
+    /**
+     * The block, its columns, and a modifier for each other prop away from its default (layout/_tiles.scss).
+     */
     public function getClasses(): string
     {
-        $classes = ['ps-tiles', 'ps-tiles--' . $this->columns, 'd-grid', Gap::utility($this->gap)];
+        $classes = ['ps-tiles', 'ps-tiles--' . $this->columns];
 
+        if ('md' !== $this->gap) {
+            $classes[] = 'ps-tiles--gap-' . $this->gap;
+        }
         if (in_array($this->as, ['ul', 'ol'], true)) {
-            $classes = [...$classes, 'list-unstyled', 'mb-0'];
+            $classes[] = 'ps-tiles--list';
         }
 
         return implode(' ', $classes);

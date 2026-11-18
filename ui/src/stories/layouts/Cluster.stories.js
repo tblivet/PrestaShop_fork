@@ -19,7 +19,7 @@ export default {
     docs: {
       description: {
         component: [
-          '**Twig usage**: `<twig:ui:Layout:Cluster justify="end">…items…</twig:ui:Layout:Cluster>`. Places items side by side, wrapping onto the next line when there is no room.',
+          '**Twig usage**: `<twig:ui:Layout:Cluster justify="end">…items…</twig:ui:Layout:Cluster>`. Places items side by side, wrapping onto the next line when there is no room. Renders its own BEM classes (`layout/_cluster.scss`): the block, then one modifier per prop away from its default (`ps-cluster--gap-lg`); its direct children lose their block margins, so a `p` or a heading needs no `mb-0`. With `stackBelow`, `justify`, `align` and `wrap` apply from that breakpoint.',
           '**Props**: `gap` (`none`, `xs`, `sm`, `md`, `lg`, `xl`: Bootstrap spacers 0 to 5, the same scale as every layout; default `sm`), `justify` (`start`, `end`, `between`, `center`; default `start`), `align` (`center`, `start`, `baseline`, `end`; default `center`), `wrap` (default `true`; `false` keeps one line), `stackBelow` (`none`, `sm`, `md`; default `none`: below that breakpoint the items stack full width, in reading order), `as` (`div`, `ul`, `ol`; default `div`). Other attributes (`id`, `class`, `data-ps-*`, `aria-*`) go on the cluster.',
           '**Compose clusters for groups**: a cluster has no slots. When a row splits into groups, each group is a cluster and an outer cluster places the groups: `justify="between"` pushes them to both ends, and its `gap` separates the groups while each inner `gap` spaces their items. A modal or form footer with Delete on the left and Cancel, Save on the right:',
           '```twig\n<twig:ui:Layout:Cluster justify="between">\n  <twig:ui:Layout:Cluster>\n    <button type="button" class="btn btn-outline-danger">Delete</button>\n  </twig:ui:Layout:Cluster>\n  <twig:ui:Layout:Cluster>\n    <button type="button" class="btn btn-outline-secondary">Cancel</button>\n    <button type="submit" class="btn btn-primary">Save</button>\n  </twig:ui:Layout:Cluster>\n</twig:ui:Layout:Cluster>\n```',
@@ -49,7 +49,7 @@ const cluster = ({ as = 'div', extraClass = '', ...props }, items) => {
     .map((node) => (list ? { html: `<li>${node.html}</li>`, twig: `<li>${node.twig}</li>` } : node));
 
   return {
-    html: `<${as} class="${clusterClasses(props)}${list ? ' list-unstyled mb-0' : ''}${extraClass ? ` ${extraClass}` : ''}">${nodes.map((node) => node.html).join('')}</${as}>`,
+    html: `<${as} class="${clusterClasses({ ...props, as })}${extraClass ? ` ${extraClass}` : ''}">${nodes.map((node) => node.html).join('')}</${as}>`,
     twig: twigCall('ui:Layout:Cluster', { ...props, as, class: extraClass }, DEFAULTS, nodes),
   };
 };
@@ -119,7 +119,7 @@ export const Wrapping = withTwig(() => {
 
 export const BaselineBadges = {
   args: { align: 'baseline', gap: 'xs' },
-  ...withTwig((args) => cluster(args, ['<h2 class="h5 mb-0">Order #42</h2>', badge('Paid'), badge('Shipped')])),
+  ...withTwig((args) => cluster(args, ['<h2 class="h5">Order #42</h2>', badge('Paid'), badge('Shipped')])),
 };
 
 export const AsList = {

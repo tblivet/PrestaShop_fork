@@ -20,7 +20,7 @@ class ClusterTest extends TestCase
             ['gap' => 'sm', 'justify' => 'start', 'align' => 'center', 'wrap' => true, 'stackBelow' => 'none', 'as' => 'div'],
             (new Cluster())->preMount([])
         );
-        $this->assertSame('ps-cluster d-flex gap-2 flex-wrap justify-content-start align-items-center', (new Cluster())->getClasses());
+        $this->assertSame('ps-cluster', (new Cluster())->getClasses());
     }
 
     public function testKeepsExtraAttributes(): void
@@ -34,7 +34,7 @@ class ClusterTest extends TestCase
         $cluster->wrap = false;
         $cluster->justify = 'between';
 
-        $this->assertSame('ps-cluster d-flex gap-2 flex-nowrap justify-content-between align-items-center', $cluster->getClasses());
+        $this->assertSame('ps-cluster ps-cluster--justify-between ps-cluster--nowrap', $cluster->getClasses());
     }
 
     public function testStacksBelowBreakpointInReadingOrder(): void
@@ -44,7 +44,7 @@ class ClusterTest extends TestCase
         $cluster->stackBelow = 'sm';
 
         $this->assertSame(
-            'ps-cluster d-flex gap-2 flex-column flex-sm-row flex-sm-wrap justify-content-sm-end align-items-sm-center',
+            'ps-cluster ps-cluster--justify-end ps-cluster--stack-below-sm',
             $cluster->getClasses()
         );
     }
@@ -54,7 +54,7 @@ class ClusterTest extends TestCase
         $cluster = new Cluster();
         $cluster->as = 'ol';
 
-        $this->assertStringEndsWith(' list-unstyled mb-0', $cluster->getClasses());
+        $this->assertStringEndsWith(' ps-cluster--list', $cluster->getClasses());
     }
 
     /**

@@ -4,10 +4,29 @@
  */
 // <twig:ui:Layout:Tiles>: equal columns for repeated items, one per line on phones, more as the width grows.
 // The items stay the direct children (a Twig content block cannot wrap each one), so it is a CSS grid, not a Bootstrap .row.
+// The tiles own the space between items, so the items lose their own block margins.
 $component-name: ps-tiles;
 
 .#{$component-name} {
+  display: grid;
   grid-template-columns: repeat(var(--ps-tiles-columns, 1), minmax(0, 1fr));
+  gap: map-get($spacers, map-get($ps-layout-gaps, md));
+
+  > * {
+    margin-block: 0;
+  }
+
+  @each $size, $spacer in $ps-layout-gaps {
+    &--gap-#{$size} {
+      gap: map-get($spacers, $spacer);
+    }
+  }
+
+  // Rendered as ul or ol: the items are its li
+  &--list {
+    padding-inline-start: 0;
+    list-style: none;
+  }
 
   // Small items: two per line on phones already
   &--6 {
