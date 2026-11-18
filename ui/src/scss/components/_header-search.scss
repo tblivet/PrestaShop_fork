@@ -10,9 +10,17 @@ $component-name: ps-header-search;
 .#{$component-name} {
   --#{$prefix}offcanvas-height: auto;
 
-  // The offcanvas pins the bottom edge too: freed, the panel is as tall as the field
+  // The offcanvas pins the bottom edge too: freed, the panel is as tall as the field; the field, then the close button
   inset-block-end: auto;
+  flex-direction: row;
+  gap: .75rem;
+  align-items: center;
   padding: .75rem;
+
+  &__form {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
 
   // The browser's clear button (WebKit, Blink): a close icon in the field's text color, so it shows on the dark
   // field as well as in the light panel
@@ -25,16 +33,26 @@ $component-name: ps-header-search;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 -960 960 960'%3E%3Cpath d='M249-193.43 193.43-249l231-231-231-231L249-766.57l231 231 231-231L766.57-711l-231 231 231 231L711-193.43l-231-231-231 231Z'/%3E%3C/svg%3E") center / contain no-repeat;
   }
 
-  // Its icon shows only where the label does not fit (see the md to xl range below)
+  // Its icon shows only where the label does not fit (below xl, see the end of this file)
   &__scope-icon {
     display: none;
+  }
+
+  // Joined to the field (below md, in the light panel): Bootstrap's button variables keep the field's border in every
+  // state (a .btn without variant drops it on hover) and give the light grey hover of the kit's secondary buttons
+  &__scope,
+  &__submit {
+    --#{$prefix}btn-border-color: var(--#{$prefix}border-color);
+    --#{$prefix}btn-hover-border-color: var(--#{$prefix}border-color);
+    --#{$prefix}btn-active-border-color: var(--#{$prefix}border-color);
+    --#{$prefix}btn-hover-bg: var(--#{$prefix}gray-300);
+    --#{$prefix}btn-active-bg: var(--#{$prefix}gray-400);
   }
 
   &__scope {
     display: inline-flex;
     gap: .25rem;
     align-items: center;
-    border-color: var(--#{$prefix}border-color);
   }
 
   // A square: as wide as a button is high (its line, padding and borders)
@@ -44,7 +62,6 @@ $component-name: ps-header-search;
     align-items: center;
     justify-content: center;
     padding-inline: 0;
-    border-color: var(--#{$prefix}border-color);
   }
 
   // Opens the panel; pushes itself and the actions to the end of the bar
@@ -88,37 +105,27 @@ $component-name: ps-header-search;
       }
     }
 
+    // On the dark bar, through the same Bootstrap button variables: lighter on hover, lighter again pressed or open
+    // (Bootstrap's .btn:active and .show)
     &__scope,
     &__submit {
-      color: rgba(var(--#{$prefix}white-rgb), .85);
-      background-color: var(--#{$prefix}header-search-bg);
-      border-color: var(--#{$prefix}primary-400);
-
-      &:hover {
-        color: var(--#{$prefix}white);
-        background-color: var(--#{$prefix}header-search-hover-bg);
-        border-color: var(--#{$prefix}primary-400);
-      }
-
-      // Pressed or open, like Bootstrap's .btn:active and .show
-      &:active,
-      &[aria-expanded="true"] {
-        color: var(--#{$prefix}white);
-        background-color: var(--#{$prefix}header-search-active-bg);
-        border-color: var(--#{$prefix}primary-400);
-      }
-
-      &:focus-visible {
-        border-color: var(--#{$prefix}primary-400);
-        box-shadow: $ps-header-focus-ring;
-      }
+      --#{$prefix}btn-color: rgba(var(--#{$prefix}white-rgb), .85);
+      --#{$prefix}btn-bg: var(--#{$prefix}header-search-bg);
+      --#{$prefix}btn-border-color: var(--#{$prefix}primary-400);
+      --#{$prefix}btn-hover-color: var(--#{$prefix}white);
+      --#{$prefix}btn-hover-bg: var(--#{$prefix}header-search-hover-bg);
+      --#{$prefix}btn-hover-border-color: var(--#{$prefix}primary-400);
+      --#{$prefix}btn-active-color: var(--#{$prefix}white);
+      --#{$prefix}btn-active-bg: var(--#{$prefix}header-search-active-bg);
+      --#{$prefix}btn-active-border-color: var(--#{$prefix}primary-400);
+      --#{$prefix}btn-focus-box-shadow: #{$ps-header-focus-ring};
     }
   }
 
-  // Between md and xl the bar is short of room: the search type shows its icon instead of its label, which stays its name
-  // for screen readers. Written as a range: below md the search is a full-width panel, from xl the bar has room, and
-  // both show the label alone.
-  @include media-breakpoint-between(md, xl) {
+  // Below xl the field is short of room (the bar between md and xl, the phone panel below md): the search type shows its
+  // icon instead of its label, which stays its name for screen readers. Written desktop down: undoing visually-hidden from
+  // xl up would reset all its properties.
+  @include media-breakpoint-down(xl) {
     &__scope-icon {
       display: inline-block;
     }

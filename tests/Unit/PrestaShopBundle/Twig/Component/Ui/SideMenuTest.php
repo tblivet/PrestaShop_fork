@@ -24,6 +24,8 @@ class SideMenuTest extends TestCase
         $this->assertEquals(
             [
                 'label' => null,
+                'shopUrl' => null,
+                'version' => null,
                 'sections' => [[
                     'title' => null,
                     'items' => [['label' => 'Dashboard', 'href' => '/dashboard', 'icon' => 'home', 'current' => false, 'badge' => null, 'children' => []]],

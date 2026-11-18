@@ -2,7 +2,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Top bar of the back office (<twig:ui:Header>): menu button, logo, version, and its blocks: start, search, actions
+// Top bar of the back office (<twig:ui:Header>): menu button, logo, and its blocks: search, actions
 $component-name: ps-header;
 
 .#{$component-name} {
@@ -50,19 +50,6 @@ $component-name: ps-header;
     display: contents;
   }
 
-  // What follows the logo (quick access)
-  &__start {
-    display: flex;
-    flex-shrink: 0;
-    gap: .25rem;
-    align-items: center;
-  }
-
-  // A <twig:ui:Badge>, from md up
-  &__version {
-    display: none;
-  }
-
   &__actions {
     display: flex;
     gap: .25rem;
@@ -85,10 +72,6 @@ $component-name: ps-header;
 
     &__menu-toggle {
       display: none;
-    }
-
-    &__version {
-      display: inline-flex;
     }
   }
 }

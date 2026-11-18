@@ -3,6 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import selectors from '../selectors';
+import { setButtonBusy } from './submit-once';
 
 // The header's quick access (Component/Layout/Ui/quick_access.html.twig and quick_access_modals.html.twig): adds this
 // page with a name, or removes it after a confirmation, then rebuilds the shortcuts in place, so nothing typed on the
@@ -19,6 +20,8 @@ const linkItem = (shortcut, newTabLabel) => {
   link.className = 'dropdown-item ps-dropdown-menu__item';
   link.href = shortcut.link;
   link.dataset.psRef = 'quick-access-link';
+  // Its name alone, for the remove dialog: the label also holds the hidden new-tab hint
+  link.dataset.psDataName = shortcut.name;
   if (shortcut.active) {
     link.setAttribute('aria-current', 'true');
   }
@@ -118,9 +121,10 @@ export default function initQuickAccess(Modal) {
       const dialog = document.querySelector(selectors.quickAccessRemove);
       const message = dialog.querySelector(selectors.quickAccessRemoveMessage);
       const current = root().querySelector(`${selectors.quickAccessLink}[aria-current="true"]`);
-      const name = current?.textContent.trim() ?? root().dataset.psDataPageName ?? '';
+      const name = current?.dataset.psDataName ?? root().dataset.psDataPageName ?? '';
 
       message.textContent = (message.dataset.psDataMessage ?? '').replace('%name%', name);
+      dialog.querySelector(selectors.quickAccessRemoveError).hidden = true;
       Modal.getOrCreateInstance(dialog).show();
 
       return;
@@ -128,10 +132,12 @@ export default function initQuickAccess(Modal) {
 
     const confirm = target?.closest(selectors.confirmRemoveQuickAccess);
 
-    if (confirm) {
+    if (confirm && confirm.getAttribute('aria-busy') !== 'true') {
       const dialog = document.querySelector(selectors.quickAccessRemove);
+      const error = dialog.querySelector(selectors.quickAccessRemoveError);
 
-      confirm.disabled = true;
+      error.hidden = true;
+      setButtonBusy(confirm, true);
       send(root().dataset.psDataRemoveUrl, { method: 'remove', id_quick_access: root().dataset.psDataId })
         .then((shortcuts) => {
           renderShortcuts(root(), shortcuts);
@@ -139,10 +145,12 @@ export default function initQuickAccess(Modal) {
           announce('psDataRemoved');
         })
         .catch((reason) => {
-          dialog.querySelector(selectors.quickAccessRemoveMessage).textContent = reason.message;
+          // A danger alert (role="alert"): shown, then filled, so screen readers announce the message
+          error.hidden = false;
+          error.querySelector(selectors.quickAccessRemoveErrorMessage).textContent = reason.message;
         })
         .finally(() => {
-          confirm.disabled = false;
+          setButtonBusy(confirm, false);
         });
     }
   });
@@ -160,8 +168,13 @@ export default function initQuickAccess(Modal) {
     const error = form.querySelector(selectors.quickAccessError);
     const submit = document.querySelector(`[form="${form.id}"][type="submit"]`);
 
+    if (submit?.getAttribute('aria-busy') === 'true') {
+      return;
+    }
+
+    error.hidden = true;
     if (submit) {
-      submit.disabled = true;
+      setButtonBusy(submit, true);
     }
     send(root().dataset.psDataAddUrl, {
       method: 'add',
@@ -176,12 +189,12 @@ export default function initQuickAccess(Modal) {
         announce('psDataAdded');
       })
       .catch((reason) => {
-        error.querySelector(selectors.quickAccessErrorMessage).textContent = reason.message;
         error.hidden = false;
+        error.querySelector(selectors.quickAccessErrorMessage).textContent = reason.message;
       })
       .finally(() => {
         if (submit) {
-          submit.disabled = false;
+          setButtonBusy(submit, false);
         }
       });
   });

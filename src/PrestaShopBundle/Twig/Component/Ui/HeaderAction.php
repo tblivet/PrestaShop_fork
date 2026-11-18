@@ -42,7 +42,7 @@ final class HeaderAction
     /** Which edge of the button the menu lines up with: end for the actions on the right, start next to the logo */
     public string $align = 'end';
 
-    /** Links only: the icon alone at every width, the label in a tooltip (and still the name for screen readers) */
+    /** The icon alone at every width, the label still its name for screen readers; a link shows it in a tooltip */
     public bool $iconOnly = false;
 
     /** A state to notice (debug mode, maintenance mode): an amber chip */
@@ -72,8 +72,8 @@ final class HeaderAction
         if ((null === $props['href']) === (null === $props['items'])) {
             throw new InvalidOptionsException('A header action is a link (href) or opens a menu (items): give one of them.');
         }
-        if (null !== $props['items'] && ($props['external'] || null !== $props['description'] || $props['iconOnly'])) {
-            throw new InvalidOptionsException('A header action that opens a menu takes no external, description or iconOnly: its button opens the menu, it has no tooltip.');
+        if (null !== $props['items'] && ($props['external'] || null !== $props['description'])) {
+            throw new InvalidOptionsException('A header action that opens a menu takes no external or description: its button opens the menu, it has no tooltip.');
         }
 
         return $props + $data;

@@ -14,7 +14,7 @@
 
       <button type="button" class="btn ps-header-search__scope" data-bs-toggle="dropdown" aria-expanded="false">
         <span class="visually-hidden">{{ 'Search in'|trans({}, 'Admin.Navigation.Header') }} </span>
-        {#- The chosen type's icon: shown only between md and xl, in place of the label, which stays for screen readers -#}
+        {#- The chosen type's icon: shown below xl in place of the label, which stays for screen readers -#}
         {%- if current.icon -%}
           <twig:ui:Icon :name="current.icon" size="lg" class="ps-header-search__scope-icon" data-ps-ref="header-search-scope-icon"/>
         {%- endif -%}
@@ -29,6 +29,10 @@
       </button>
     </div>
   </form>
+
+  {#- Below md the panel covers the bar: it closes here too, as well as with Esc; named by its id, as offcanvas-md is not
+   # the .offcanvas Bootstrap looks for -#}
+  <button type="button" class="btn-close d-md-none" data-bs-dismiss="offcanvas" data-bs-target="#ps-header-search" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>
 </div>
 
 {#- Below md: opens the panel -#}

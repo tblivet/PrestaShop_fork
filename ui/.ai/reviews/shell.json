@@ -1,0 +1,61 @@
+{
+    "page": "shell",
+    "url": "http://localhost:8001/admin-dev/configure/advanced/performance/",
+    "date": "2026-11-18",
+    "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/ui-review-shell/index.html",
+    "states": {
+        "total": 40,
+        "captured": 30,
+        "emulated": 7,
+        "missing": [
+            "long-translations-fr",
+            "limited-employee",
+            "employee-long-name"
+        ]
+    },
+    "findings": {
+        "blocker": 0,
+        "major": 5,
+        "minor": 10,
+        "suggestion": 2
+    },
+    "open": [
+        {
+            "severity": "suggestion",
+            "title": "Notifications with a single kind show redundant All and Orders filters",
+            "where": "notifications_center.html.twig:9-23"
+        },
+        {
+            "severity": "suggestion",
+            "title": "_header-action.scss styles a second block (.ps-header-action-tooltip)",
+            "where": "_header-action.scss:95-107"
+        }
+    ],
+    "outOfScope": [
+        "QuickAccessController: treat removing an already-gone shortcut as success and return the current list (or a merchant-worded 'already removed' message), so a stale tab never fails.",
+        "QuickAccessController: answer a duplicate add with the current shortcuts list instead of an error, so the menu flips to 'Remove this page' by itself.",
+        "Trim the legacy '- List' suffix from the controller page title server-side (currentPageTitle) so the quick access name defaults to 'Performance'."
+    ],
+    "fixed": [
+        "Remove dialog quotes the hidden new-tab hint as part of the shortcut name",
+        "Quick access remove error is plain text, not announced, and focus is lost",
+        "Disabling the focused submit button drops keyboard focus to <body> (Add and Remove)",
+        "Notifications list puts role=presentation <li> headings in a <ul> (axe 'list', serious)",
+        "A '99+' count covers the whole bell icon",
+        "Icon-only header menus (Shop state, Quick access) show no visible name on hover or focus",
+        "No busy indication while Add / Remove is pending",
+        "Spacing and list utilities left in shell templates (Bootstrap first, #38)",
+        "Notification filters are clipped mid-word with no sign that the row scrolls"
+    ],
+    "note": "2026-11-18, after the review: fixed the four quick access and notifications majors and the tooltip, bell count, busy state and utilities minors. Not kept by the user: module entries overflowing on phones (the AskAI module already breaks the bar, out of the kit), menus touching the screen edge and the dropdown items focus outline (judged fine). Deferred to a later full focus pass: focus rings in forced-colors mode. Then: the clipped notification filters got the new ps-scroll-fade; the quick access name and duplicate add are left as they are (core QuickAccess component and controller, out of scope).",
+    "notKept": [
+        "Module entries in the header overflow the bar on phones and push the employee menu off-screen",
+        "Header menus touch the screen edge on phones: the kit's 1rem gutter is not applied",
+        "Dropdown items show the browser's blue focus outline instead of the kit focus ring",
+        "Duplicate add error does not tell the merchant the page is already saved",
+        "Add dialog pre-fills the name with the legacy title suffix 'Performance - List'"
+    ],
+    "deferred": [
+        "Focus rings are box-shadow only with outline:0, so they disappear in forced-colors mode"
+    ]
+}

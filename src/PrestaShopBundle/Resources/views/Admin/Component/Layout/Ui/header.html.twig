@@ -20,11 +20,24 @@
 {%- set maintenanceDescription = 'Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.'|trans({}, 'Admin.Navigation.Notification')
   ~ (ps.frontOfficeAccessibleForAdmins|default(false) ? ' ' ~ 'Signed-in employees can still see it.'|trans({}, 'Admin.Navigation.Notification') : '') -%}
 
-<twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset('prestashop.svg', 'ui_kit') }}" version="{{ ps.version }}">
-  <twig:block name="start">
-    {{ component('QuickAccess') }}
-  </twig:block>
+{#- The shop state: the modes that are on, each a link to where it is turned off and what it means -#}
+{%- set shopStateItems = [] -%}
 
+{%- if ps.debugMode|default(false) -%}
+  {%- set shopStateItems = shopStateItems|merge([
+    {label: 'Debug mode'|trans({}, 'Admin.Navigation.Header'), href: url('admin_performance'), icon: 'bug_report'},
+    {type: 'text', label: 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification')},
+  ]) -%}
+{%- endif -%}
+
+{%- if ps.isMaintenanceEnabled|default(false) -%}
+  {%- set shopStateItems = shopStateItems|merge(shopStateItems is empty ? [] : [{type: 'divider'}])|merge([
+    {label: 'Maintenance mode'|trans({}, 'Admin.Navigation.Header'), href: url('admin_maintenance'), icon: 'build'},
+    {type: 'text', label: maintenanceDescription},
+  ]) -%}
+{%- endif -%}
+
+<twig:ui:Header homeUrl="{{ ps.defaultTabLink }}" logo="{{ asset('prestashop.svg', 'ui_kit') }}">
   <twig:block name="search">
     <twig:ui:HeaderSearch action="{{ legacy_path('AdminSearch') }}" query="{{ searchQuery }}" :type="searchType" :types="searchTypes"/>
   </twig:block>
@@ -36,15 +49,12 @@
       {{- renderhook('displayBackOfficeTop') -}}
     </div>
 
-    {%- if ps.debugMode|default(false) -%}
-      <twig:ui:HeaderAction icon="bug_report" warning iconOnly label="{{ 'Debug mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_performance') }}" description="{{ 'All PHP errors and messages are shown. Turn debug mode off when you no longer need it.'|trans({}, 'Admin.Navigation.Notification') }}"/>
+    {#- Icon only, so the bar keeps its room at every width: the shop state first, amber, while a mode is on -#}
+    {%- if shopStateItems is not empty -%}
+      <twig:ui:HeaderAction icon="warning" warning iconOnly :label="'Shop state'|trans({}, 'Admin.Navigation.Header')" :items="shopStateItems"/>
     {%- endif -%}
 
-    {%- if ps.isMaintenanceEnabled|default(false) -%}
-      <twig:ui:HeaderAction icon="build" warning iconOnly label="{{ 'Maintenance mode'|trans({}, 'Admin.Navigation.Header') }}" href="{{ url('admin_maintenance') }}" description="{{ maintenanceDescription }}"/>
-    {%- endif -%}
-
-    <twig:ui:HeaderAction icon="storefront" label="{{ 'View my shop'|trans({}, 'Admin.Navigation.Header') }}" href="{{ ps.baseUrl }}" external iconOnly/>
+    {{- component('QuickAccess') -}}
 
     {{- component('NotificationsCenter') -}}
 

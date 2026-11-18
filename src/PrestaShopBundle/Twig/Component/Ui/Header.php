@@ -14,12 +14,10 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
  * Top bar of the back office, mirrors ui/src/stories/components/Header.stories.js:
- * <twig:ui:Header homeUrl="…" logo="…" version="9.3.0">
- *   <twig:block name="start">quick access</twig:block>
+ * <twig:ui:Header homeUrl="…" logo="…">
  *   <twig:block name="search"><twig:ui:HeaderSearch …/></twig:block>
  *   <twig:block name="actions"><twig:ui:HeaderAction …/></twig:block>
  * </twig:ui:Header>
- * The version, the quick access (start) and the search are always shown: every back office page has them.
  * Below md, a button opens the side menu (menuId).
  */
 #[AsTwigComponent('ui:Header', template: '@PrestaShop/Admin/Component/Ui/header.html.twig')]
@@ -30,9 +28,6 @@ final class Header
     /** URL of the logo image, a dark logo the header shows light */
     public string $logo;
 
-    /** The PrestaShop version, a badge after the logo from md up */
-    public string $version;
-
     /** Id of the <twig:ui:SideMenu> the menu button opens below md */
     public string $menuId = 'ps-side-menu';
 
@@ -42,11 +37,10 @@ final class Header
         $resolver = new OptionsResolver();
         $resolver
             ->setIgnoreUndefined()
-            ->setRequired(['homeUrl', 'logo', 'version'])
+            ->setRequired(['homeUrl', 'logo'])
             ->setDefaults(['menuId' => 'ps-side-menu'])
             ->setAllowedTypes('homeUrl', 'string')
             ->setAllowedTypes('logo', 'string')
-            ->setAllowedTypes('version', 'string')
             ->setAllowedTypes('menuId', 'string')
         ;
 

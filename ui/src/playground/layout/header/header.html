@@ -1,4 +1,4 @@
-<!-- <twig:ui:Header homeUrl="#" logo="/prestashop.svg" version="9.3.0" menuId="bo-sidebar" :search="…"> -->
+<!-- <twig:ui:Header homeUrl="#" logo="/prestashop.svg" menuId="bo-sidebar">: the search block, then the actions (Component/Layout/Ui/header.html.twig); here with debug and maintenance modes on -->
 <header class="ps-header d-print-none">
   <button
     type="button"
@@ -14,35 +14,6 @@
     <!-- ui:Icon brand:p-monogram label="PrestaShop" size="xl" class="ps-header__monogram" -->
     <img class="ps-header__logo" src="/prestashop.svg" alt="PrestaShop" width="130" height="14" />
   </a>
-  <span class="badge ps-badge ps-badge--oceanblue ps-header__version">9.3.0</span>
-  <!-- <twig:block name="start">: the quick access (Component/Layout/Ui/quick_access.html.twig) -->
-  <div class="ps-header__start">
-    <div class="dropdown">
-      <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">
-        <!-- ui:Icon bookmarks size="xl" class="ps-header-action__icon" -->
-        <span class="ps-header-action__label">Quick access</span>
-        <!-- ui:Icon keyboard_arrow_down class="ps-header-action__arrow" -->
-      </button>
-      <ul class="dropdown-menu ps-dropdown-menu">
-        <li><a class="dropdown-item ps-dropdown-menu__item" href="#"><span class="ps-dropdown-menu__label">Orders</span></a></li>
-        <li><a class="dropdown-item ps-dropdown-menu__item" href="#"><span class="ps-dropdown-menu__label">New product</span></a></li>
-        <li><hr class="dropdown-divider" /></li>
-        <li>
-          <button type="button" class="dropdown-item ps-dropdown-menu__item">
-            <!-- ui:Icon bookmark_add size="lg" class="ps-dropdown-menu__icon" -->
-            <span class="ps-dropdown-menu__label">Add this page to quick access</span>
-          </button>
-        </li>
-        <li>
-          <a class="dropdown-item ps-dropdown-menu__item" href="#">
-            <!-- ui:Icon settings size="lg" class="ps-dropdown-menu__icon" -->
-            <span class="ps-dropdown-menu__label">Manage quick access</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </div>
-
   <div id="ps-header-search" class="ps-header-search offcanvas-md offcanvas-top" tabindex="-1">
     <form class="ps-header-search__form" method="post" action="#" role="search" data-ps-ref="header-search">
       <input type="hidden" name="bo_search_type" value="0" data-ps-ref="header-search-type" />
@@ -87,6 +58,7 @@
         </button>
       </div>
     </form>
+    <button type="button" class="btn-close d-md-none" data-bs-dismiss="offcanvas" data-bs-target="#ps-header-search" aria-label="Close"></button>
   </div>
   <button
     type="button"
@@ -100,11 +72,66 @@
   </button>
 
   <div id="header_infos" class="ps-header__actions">
-    <!-- <twig:ui:HeaderAction icon="storefront" label="View my shop" href="#" external/> -->
-    <a class="ps-header-action ps-header-action--icon-only" href="#" target="_blank" rel="noopener noreferrer" data-bs-toggle="tooltip" data-bs-title="View my shop">
-      <!-- ui:Icon storefront size="xl" class="ps-header-action__icon" -->
-      <span class="ps-header-action__label">View my shop<span class="visually-hidden"> (opens in a new tab)</span></span>
-    </a>
+    <!-- The shop state, while a mode is on: <twig:ui:HeaderAction icon="warning" warning iconOnly :items="…"/> -->
+    <div class="dropdown" data-ps-action="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="Shop state">
+      <button type="button" class="ps-header-action ps-header-action--warning ps-header-action--icon-only" data-bs-toggle="dropdown" aria-expanded="false">
+        <!-- ui:Icon warning size="xl" class="ps-header-action__icon" -->
+        <span class="ps-header-action__label">Shop state</span>
+      </button>
+      <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
+        <li>
+          <a class="dropdown-item ps-dropdown-menu__item" href="#">
+            <!-- ui:Icon bug_report size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Debug mode</span>
+          </a>
+        </li>
+        <li><span class="dropdown-item-text">All PHP errors and messages are shown. Turn debug mode off when you no longer need it.</span></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <a class="dropdown-item ps-dropdown-menu__item" href="#">
+            <!-- ui:Icon build size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Maintenance mode</span>
+          </a>
+        </li>
+        <li><span class="dropdown-item-text">Your shop is closed to visitors and customers. Turn maintenance mode off when you are ready.</span></li>
+      </ul>
+    </div>
+    <!-- {{ component('QuickAccess') }}: <twig:ui:HeaderAction icon="bookmarks" iconOnly :items="…"/> -->
+    <div class="dropdown" data-ps-action="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="Quick access">
+      <button type="button" class="ps-header-action ps-header-action--icon-only" data-bs-toggle="dropdown" aria-expanded="false">
+        <!-- ui:Icon bookmarks size="xl" class="ps-header-action__icon" -->
+        <span class="ps-header-action__label">Quick access</span>
+      </button>
+      <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item ps-dropdown-menu__item" href="#"><span class="ps-dropdown-menu__label">Orders</span></a></li>
+        <li><a class="dropdown-item ps-dropdown-menu__item" href="#"><span class="ps-dropdown-menu__label">New product</span></a></li>
+        <li><a class="dropdown-item ps-dropdown-menu__item" href="#"><span class="ps-dropdown-menu__label">Customers waiting for a reply</span></a></li>
+        <li><hr class="dropdown-divider" /></li>
+        <li>
+          <button type="button" class="dropdown-item ps-dropdown-menu__item">
+            <!-- ui:Icon bookmark_add size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Add this page to quick access</span>
+          </button>
+        </li>
+        <li>
+          <a class="dropdown-item ps-dropdown-menu__item" href="#">
+            <!-- ui:Icon settings size="lg" class="ps-dropdown-menu__icon" -->
+            <span class="ps-dropdown-menu__label">Manage quick access</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- {{ component('NotificationsCenter') }}: the bell and its count only here -->
+    <div class="dropdown ps-notifications">
+      <button type="button" class="ps-header-action ps-header-action--icon-only ps-notifications__toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <!-- ui:Icon notifications size="xl" class="ps-header-action__icon" -->
+        <span class="ps-header-action__label">Notifications</span>
+        <span class="badge ps-badge ps-badge--danger ps-badge--counter ps-notifications__total">3</span>
+      </button>
+      <ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">
+        <li><span class="dropdown-item-text">The notifications panel (not mocked here).</span></li>
+      </ul>
+    </div>
     <!-- {{ component('EmployeeDropdown') }}: Component/Layout/Ui/employee_dropdown.html.twig -->
     <div class="dropdown ps-employee-dropdown" id="header-employee-container">
       <button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false">

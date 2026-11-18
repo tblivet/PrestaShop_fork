@@ -12,6 +12,8 @@ import { twigCall } from './twig-snippet';
 // HeaderAction.php defaults; label and icon are required, and an href or items
 export const HEADER_ACTION_DEFAULTS = { href: null, external: false, items: null, description: null, align: 'end', iconOnly: false, warning: false };
 
+const escape = (text) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
 export default function headerAction({ label, icon, href = null, external = false, items = null, description = null, align = 'end', iconOnly = false, warning = false, ...attributes }, icons = {}) {
   const picture = uiIcon(icons[icon], { size: 'xl', class: 'ps-header-action__icon' });
   const hidden = external ? '<span class="visually-hidden"> (opens in a new tab)</span>' : '';
@@ -25,7 +27,6 @@ export default function headerAction({ label, icon, href = null, external = fals
     const classes = [own, attributes.class].filter(Boolean).join(' ');
     const titled = iconOnly && description;
     const tooltip = titled ? `<strong class="ps-header-action-tooltip__title">${label}</strong>${description}` : (iconOnly ? label : description);
-    const escape = (text) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const tooltipAttributes = tooltip
       ? `${titled ? ' data-bs-html="true"' : ''} data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="${escape(tooltip)}"`
       : '';
@@ -33,8 +34,11 @@ export default function headerAction({ label, icon, href = null, external = fals
     html = `<a class="${classes}" href="${href}"${link}${extra}>${content}</a>`;
   } else {
     const classes = ['dropdown', attributes.class].filter(Boolean).join(' ');
-    const arrow = uiIcon(keyboardArrowDown, { class: 'ps-header-action__arrow' });
-    html = `<div class="${classes}"${extra}><button type="button" class="${own}" data-bs-toggle="dropdown" aria-expanded="false">${content}${arrow}</button>${dropdownMenu({ items, align }, icons)}</div>`;
+    // Icon only: the square has no room for the arrow
+    const arrow = iconOnly ? '' : uiIcon(keyboardArrowDown, { class: 'ps-header-action__arrow' });
+    // Icon only: its label in a tooltip on the box (one Bootstrap component per element), never while the menu is open
+    const tooltip = iconOnly ? ` data-ps-action="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="${escape(label)}"` : '';
+    html = `<div class="${classes}"${extra}${tooltip}><button type="button" class="${own}" data-bs-toggle="dropdown" aria-expanded="false">${content}${arrow}</button>${dropdownMenu({ items, align }, icons)}</div>`;
   }
 
   return {

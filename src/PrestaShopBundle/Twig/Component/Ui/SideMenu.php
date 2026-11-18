@@ -21,7 +21,8 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 /**
  * Main navigation of the back office, mirrors ui/src/stories/components/SideMenu.stories.js:
  * <twig:ui:SideMenu :sections="[{title: 'Sell', items: [{label: 'Orders', icon: 'shopping_basket', children: […]}]}]"/>
- * A drawer below md (Bootstrap offcanvas-md, opened by the header), a column from md up.
+ * A drawer below md (Bootstrap offcanvas-md, opened by the header), a column from md up. Pinned under the menu, which
+ * scrolls under it: View my shop (shopUrl) and the PrestaShop version.
  */
 #[AsTwigComponent('ui:SideMenu', template: '@PrestaShop/Admin/Component/Ui/side_menu.html.twig')]
 final class SideMenu
@@ -46,6 +47,12 @@ final class SideMenu
     /** Accessible name of the navigation, "Main menu" by default */
     public ?string $label = null;
 
+    /** The shop's front office: View my shop, pinned under the menu, opens it in a new tab */
+    public ?string $shopUrl = null;
+
+    /** The PrestaShop version, a badge pinned under the menu */
+    public ?string $version = null;
+
     public function __construct(
         #[Autowire(service: '.ux_icons.icon_registry')]
         private readonly IconRegistryInterface $icons,
@@ -62,8 +69,10 @@ final class SideMenu
         $resolver = new OptionsResolver();
         $resolver
             ->setIgnoreUndefined()
-            ->setDefault('label', null)
+            ->setDefaults(['label' => null, 'shopUrl' => null, 'version' => null])
             ->setAllowedTypes('label', ['null', 'string'])
+            ->setAllowedTypes('shopUrl', ['null', 'string'])
+            ->setAllowedTypes('version', ['null', 'string'])
             ->setDefault('sections', function (OptionsResolver $section): void {
                 $section
                     ->setPrototype(true)

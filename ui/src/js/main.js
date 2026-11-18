@@ -10,6 +10,7 @@ import initFormValidation from './components/form-validation';
 import initHeaderSearch from './components/header-search';
 import initNotifications from './components/notifications';
 import initQuickAccess from './components/quick-access';
+import initScrollFade from './components/scroll-fade';
 import focusOnLoad from './components/load-focus';
 import initSubmitOnce from './components/submit-once';
 import initTooltips from './components/tooltips';
@@ -28,5 +29,7 @@ document.addEventListener('DOMContentLoaded', initNotifications);
 initSubmitOnce();
 initAlertDismissFocus();
 initTooltips(bootstrap.Tooltip);
+// The script loads in <head>: the boxes are not there yet
+document.addEventListener('DOMContentLoaded', initScrollFade);
 // The script loads in <head>: wait for the page
 document.addEventListener('DOMContentLoaded', focusOnLoad);

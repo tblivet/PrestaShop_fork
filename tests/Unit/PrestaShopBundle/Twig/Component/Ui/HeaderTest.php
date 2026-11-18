@@ -19,8 +19,8 @@ class HeaderTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['homeUrl' => '/home', 'logo' => '/logo.svg', 'version' => '9.3.0', 'menuId' => 'ps-side-menu'],
-            (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg', 'version' => '9.3.0'])
+            ['homeUrl' => '/home', 'logo' => '/logo.svg', 'menuId' => 'ps-side-menu'],
+            (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg'])
         );
     }
 
@@ -28,14 +28,7 @@ class HeaderTest extends TestCase
     {
         $this->expectException(MissingOptionsException::class);
 
-        (new Header())->preMount(['homeUrl' => '/home', 'version' => '9.3.0']);
-    }
-
-    public function testRequiresTheVersion(): void
-    {
-        $this->expectException(MissingOptionsException::class);
-
-        (new Header())->preMount(['homeUrl' => '/home', 'logo' => '/logo.svg']);
+        (new Header())->preMount(['homeUrl' => '/home']);
     }
 
     #[DataProvider('provideInvalidProps')]
@@ -43,11 +36,11 @@ class HeaderTest extends TestCase
     {
         $this->expectException($exception);
 
-        (new Header())->preMount($data + ['homeUrl' => '/home', 'logo' => '/logo.svg', 'version' => '9.3.0']);
+        (new Header())->preMount($data + ['homeUrl' => '/home', 'logo' => '/logo.svg']);
     }
 
     public static function provideInvalidProps(): iterable
     {
-        yield 'non string version' => [['version' => 9], InvalidOptionsException::class];
+        yield 'non string menuId' => [['menuId' => 9], InvalidOptionsException::class];
     }
 }

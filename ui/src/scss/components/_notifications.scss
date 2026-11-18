@@ -11,11 +11,16 @@ $component-name: ps-notifications;
     position: relative;
   }
 
-  // The count sits on the bell's top end corner
+  // The count sits on the bell's top end corner, smaller than the counters of the filters so the bell stays visible
   &__total {
+    --#{$prefix}badge-font-size: .625rem;
+    --#{$prefix}badge-padding-x: .2rem;
+
     position: absolute;
-    inset-block-start: .125rem;
-    inset-inline-end: .125rem;
+    inset-block-start: .25rem;
+    inset-inline-end: .25rem;
+    min-width: 1rem;
+    height: 1rem;
   }
 
   &__panel {
@@ -28,7 +33,6 @@ $component-name: ps-notifications;
     display: flex;
     gap: .25rem;
     padding: .5rem;
-    overflow-x: auto;
     border-block-end: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
   }
 
@@ -70,7 +74,12 @@ $component-name: ps-notifications;
   &__list {
     max-height: 22rem;
     padding: .5rem;
-    overflow-y: auto;
+  }
+
+  &__items {
+    padding: 0;
+    margin: 0;
+    list-style: none;
   }
 
   // A kind's group under All, marked like the side menu sections
@@ -78,6 +87,7 @@ $component-name: ps-notifications;
     @include ps-heading-mark();
 
     padding: .5rem .5rem .25rem;
+    margin: 0;
     font-size: .75rem;
     font-weight: var(--#{$prefix}font-weight-semibold);
     color: var(--#{$prefix}secondary-color);

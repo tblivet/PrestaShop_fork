@@ -19,21 +19,54 @@ $component-name: ps-side-menu;
   --#{$prefix}side-menu-link-current-bg: var(--#{$prefix}oceanblue-bg-subtle);
   --#{$prefix}side-menu-sublink-inset: 2.5rem;
 
+  // The menu, which scrolls, then the pinned footer
+  display: flex;
+  flex-direction: column;
   width: var(--#{$prefix}side-menu-width);
   height: 100%;
 
-  // offcanvas-md makes the root transparent from md up, so the body paints the menu
+  // offcanvas-md makes the root transparent from md up, so the body (and the footer) paint the menu
   &__body {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     gap: var(--#{$prefix}side-menu-section-gap);
-    height: 100%;
+    min-height: 0;
     padding: 1rem .75rem;
-    overflow-y: auto;
+    // Scrolls and fades at an end that hides links (ps-scroll-fade--y in the markup)
+    --#{$prefix}scroll-fade-size: 2rem;
+
     // Scrolling the menu never scrolls the page behind it
     overscroll-behavior: contain;
     background-color: var(--#{$prefix}side-menu-bg);
     border-inline-end: var(--#{$prefix}border-width) solid var(--#{$prefix}side-menu-border-color);
+  }
+
+  // View my shop and the version, one row under the menu
+  &__footer {
+    display: flex;
+    flex-shrink: 0;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    padding: .5rem .75rem 1rem;
+    background-color: var(--#{$prefix}side-menu-bg);
+    border-inline-end: var(--#{$prefix}border-width) solid var(--#{$prefix}side-menu-border-color);
+  }
+
+  // Its link takes the room the version leaves
+  &__footer &__link {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  // Says the link opens another tab, at the end of the row
+  &__external {
+    margin-inline-start: auto;
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  &__version {
+    flex-shrink: 0;
   }
 
   &__heading {
@@ -102,7 +135,8 @@ $component-name: ps-side-menu;
   }
 
   &__icon,
-  &__chevron {
+  &__chevron,
+  &__external {
     flex-shrink: 0;
     // Centred on the first line of the label
     margin-block: calc((1lh - var(--ps-icon-size)) / 2);

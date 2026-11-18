@@ -26,13 +26,12 @@ class HeaderComponentTest extends KernelTestCase
 
     public function testRendersTheBarWithItsActions(): void
     {
-        $html = $this->render('<twig:ui:Header homeUrl="/home" logo="/logo.svg" version="9.3.0" menuId="main-menu"><twig:block name="actions"><twig:ui:HeaderAction icon="storefront" label="View my store" href="/" external/></twig:block></twig:ui:Header>');
+        $html = $this->render('<twig:ui:Header homeUrl="/home" logo="/logo.svg" menuId="main-menu"><twig:block name="actions"><twig:ui:HeaderAction icon="storefront" label="View my store" href="/" external/></twig:block></twig:ui:Header>');
 
         $this->assertStringStartsWith('<header class="ps-header d-print-none">', trim($html));
         $this->assertStringContainsString('data-bs-target="#main-menu" aria-controls="main-menu" aria-label="Open the menu"', $html);
-        $this->assertStringContainsString('<span class="badge ps-badge ps-badge--oceanblue ps-header__version">9.3.0</span>', $html);
+        $this->assertStringNotContainsString('ps-badge', $html);
         $this->assertStringNotContainsString('ps-header-search', $html);
-        $this->assertStringContainsString('<div class="ps-header__start"></div>', $html);
         $this->assertMatchesRegularExpression('#<a class="ps-header__brand" href="/home"><svg [^>]*class="ps-icon ps-icon--xl ps-header__monogram" role="img" aria-label="PrestaShop">.*</svg>\s*<img class="ps-header__logo" src="/logo.svg" alt="PrestaShop"#s', $html);
         $this->assertMatchesRegularExpression('#<div id="header_infos" class="ps-header__actions"><a class="ps-header-action" href="/" target="_blank" rel="noopener noreferrer"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"#', $html);
     }
@@ -66,24 +65,16 @@ class HeaderComponentTest extends KernelTestCase
         $this->assertStringContainsString('&amp;lt;b&amp;gt;Mode&amp;lt;/b&amp;gt;&lt;/strong&gt;&amp;lt;script&amp;gt;', $html);
     }
 
-    public function testRendersTheStartBlockAfterTheLogo(): void
-    {
-        $html = $this->render("<twig:ui:Header homeUrl=\"/home\" logo=\"/logo.svg\" version=\"9.3.0\"><twig:block name=\"start\"><twig:ui:HeaderAction icon=\"bookmarks\" label=\"Quick access\" align=\"start\" :items=\"[{label: 'Orders', href: '/orders'}]\"/></twig:block></twig:ui:Header>");
-
-        $this->assertMatchesRegularExpression('#ps-header__version">9.3.0</span>\s*<div class="ps-header__start"><div class="dropdown">\s*<button type="button" class="ps-header-action"#', $html);
-        $this->assertStringContainsString('<ul class="dropdown-menu ps-dropdown-menu">', $html);
-    }
-
     public function testRendersTheSearchBlockBeforeTheActions(): void
     {
-        $html = $this->render('<twig:ui:Header homeUrl="/home" logo="/logo.svg" version="9.3.0"><twig:block name="search"><twig:ui:HeaderSearch action="/search" :types="[{value: 0, label: \'Everywhere\', placeholder: \'What?\'}]"/></twig:block><twig:block name="actions"><twig:ui:HeaderAction icon="storefront" label="View my store" href="/"/></twig:block></twig:ui:Header>');
+        $html = $this->render('<twig:ui:Header homeUrl="/home" logo="/logo.svg"><twig:block name="search"><twig:ui:HeaderSearch action="/search" :types="[{value: 0, label: \'Everywhere\', placeholder: \'What?\'}]"/></twig:block><twig:block name="actions"><twig:ui:HeaderAction icon="storefront" label="View my store" href="/"/></twig:block></twig:ui:Header>');
 
-        $this->assertMatchesRegularExpression('#<div class="ps-header__start"></div>\s*<div id="ps-header-search" class="ps-header-search offcanvas-md offcanvas-top" tabindex="-1">.*</div>\s*<button type="button" class="ps-header-search__toggle"[^>]*>.*</button>\s*<div id="header_infos" class="ps-header__actions"><a class="ps-header-action"#s', $html);
+        $this->assertMatchesRegularExpression('#</a>\s*<div id="ps-header-search" class="ps-header-search offcanvas-md offcanvas-top" tabindex="-1">.*</div>\s*<button type="button" class="ps-header-search__toggle"[^>]*>.*</button>\s*<div id="header_infos" class="ps-header__actions"><a class="ps-header-action"#s', $html);
     }
 
     public function testShowsNoContentOutsideTheBlocks(): void
     {
-        $this->assertStringNotContainsString('Loose', $this->render('<twig:ui:Header homeUrl="/home" logo="/logo.svg" version="9.3.0"><p>Loose</p></twig:ui:Header>'));
+        $this->assertStringNotContainsString('Loose', $this->render('<twig:ui:Header homeUrl="/home" logo="/logo.svg"><p>Loose</p></twig:ui:Header>'));
     }
 
     public function testRendersTheSearchWithTheChosenType(): void
@@ -112,6 +103,16 @@ class HeaderComponentTest extends KernelTestCase
 
         $this->assertMatchesRegularExpression('#<button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"[^>]*>.*</svg>\s*<span class="ps-header-action__label">Quick access</span>#s', $html);
         $this->assertStringContainsString('<ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">', $html);
+    }
+
+    public function testRendersAnIconOnlyMenuWithoutArrowWithItsLabelInATooltip(): void
+    {
+        $html = $this->render("<twig:ui:HeaderAction icon=\"bookmarks\" label=\"Quick access\" iconOnly :items=\"[{label: 'Orders', href: '/orders'}]\"/>");
+
+        $this->assertMatchesRegularExpression('#<div class="dropdown" data-ps-action="tooltip" data-bs-placement="bottom" data-bs-custom-class="ps-header-action-tooltip" data-bs-title="Quick access">\s*<button type="button" class="ps-header-action ps-header-action--icon-only" data-bs-toggle="dropdown" aria-expanded="false">#', $html);
+        $this->assertStringContainsString('<span class="ps-header-action__label">Quick access</span>', $html);
+        $this->assertStringNotContainsString('ps-header-action__arrow', $html);
+        $this->assertStringNotContainsString('data-bs-toggle="tooltip"', $html);
     }
 
     public function testRendersALinkWithItsDescription(): void

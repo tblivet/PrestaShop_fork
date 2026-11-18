@@ -15,7 +15,7 @@
 {%- endmacro -%}
 
 <nav{{ attributes.defaults({id: menuId, class: 'ps-side-menu offcanvas-md offcanvas-start', tabindex: '-1', 'aria-label': label ?? 'Main menu'|trans({}, 'Admin.Navigation.Menu')}) }}>
-  <div class="ps-side-menu__body">
+  <div class="ps-side-menu__body ps-scroll-fade ps-scroll-fade--y" data-ps-action="scroll-fade">
     {%- for section in sections -%}
       {%- set sectionIndex = loop.index0 -%}
 
@@ -65,4 +65,24 @@
 
     {%- block content %}{% endblock -%}
   </div>
+
+  {#- Pinned under the menu, which scrolls under it -#}
+  {%- if shopUrl or version -%}
+    <div class="ps-side-menu__footer">
+      {%- if shopUrl -%}
+        <a class="ps-side-menu__link" href="{{ shopUrl }}" target="_blank" rel="noopener noreferrer">
+          <twig:ui:Icon name="storefront" size="lg" class="ps-side-menu__icon"/>
+          <span class="ps-side-menu__label">
+            {{- 'View my shop'|trans({}, 'Admin.Navigation.Header') -}}
+            <span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>
+          </span>
+          <twig:ui:Icon name="open_in_new" size="lg" class="ps-side-menu__external"/>
+        </a>
+      {%- endif -%}
+
+      {%- if version -%}
+        <twig:ui:Badge variant="oceanblue" class="ps-side-menu__version"><span class="visually-hidden">PrestaShop </span>{{ version }}</twig:ui:Badge>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 </nav>

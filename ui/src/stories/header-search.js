@@ -52,7 +52,8 @@ export default function headerSearch({ action, query = '', type = 0, types, ...a
       + '<div class="input-group">'
       + `<input type="search" name="bo_query" value="${query}" class="form-control ps-header-search__input" placeholder="${current.placeholder}" aria-label="Search" data-ps-ref="header-search-input">`
       + `${scope}<button type="submit" class="btn ps-header-search__submit" aria-label="Search">${uiIcon(search, { size: 'lg' })}</button>`
-      + '</div></form></div>'
+      + '</div></form>'
+      + '<button type="button" class="btn-close d-md-none" data-bs-dismiss="offcanvas" data-bs-target="#ps-header-search" aria-label="Close"></button></div>'
       + '<button type="button" class="ps-header-search__toggle" data-bs-toggle="offcanvas" data-bs-target="#ps-header-search" aria-controls="ps-header-search" aria-label="Search">'
       + `${uiIcon(search, { size: 'xl' })}</button>`,
     twig: twigCall('ui:HeaderSearch', { action, query, type, types, ...attributes }, HEADER_SEARCH_DEFAULTS),

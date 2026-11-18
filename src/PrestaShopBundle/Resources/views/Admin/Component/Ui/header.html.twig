@@ -13,13 +13,6 @@
     <img class="ps-header__logo" src="{{ logo }}" alt="PrestaShop" width="130" height="14">
   </a>
 
-  <twig:ui:Badge variant="oceanblue" class="ps-header__version">{{ version }}</twig:ui:Badge>
-
-  {#- The quick access -#}
-  <div class="ps-header__start">
-    {%- block start %}{% endblock -%}
-  </div>
-
   {#- A <twig:ui:HeaderSearch> -#}
   {%- block search %}{% endblock -%}
 

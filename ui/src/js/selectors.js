@@ -41,8 +41,14 @@ export default {
   quickAccessErrorMessage: '[data-ps-ref="quick-access-error-message"]',
   quickAccessRemove: '[data-ps-ref="quick-access-remove"]',
   quickAccessRemoveMessage: '[data-ps-ref="quick-access-remove-message"]',
+  quickAccessRemoveError: '[data-ps-ref="quick-access-remove-error"]',
+  quickAccessRemoveErrorMessage: '[data-ps-ref="quick-access-remove-error-message"]',
   quickAccessStatus: '[data-ps-ref="quick-access-status"]',
   // Bootstrap's own attributes: its plugins read their options from data-bs-*
-  tooltip: '[data-bs-toggle="tooltip"]',
+  // data-ps-action="tooltip": the box of a dropdown (Bootstrap allows one component per element, so not on its toggle)
+  tooltip: '[data-bs-toggle="tooltip"], [data-ps-action~="tooltip"]',
+  dropdownTooltip: '[data-ps-action~="tooltip"]',
+  scrollFade: '[data-ps-action~="scroll-fade"]',
+  openDropdownToggle: '[data-bs-toggle="dropdown"][aria-expanded="true"]',
   dropdownToggle: '[data-bs-toggle="dropdown"]',
 };

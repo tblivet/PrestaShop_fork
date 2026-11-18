@@ -7,6 +7,7 @@ import * as bootstrap from 'bootstrap';
 import initPasswordToggle from '../src/js/components/password-toggle';
 import initHeaderSearch from '../src/js/components/header-search';
 import initQuickAccess from '../src/js/components/quick-access';
+import initScrollFade from '../src/js/components/scroll-fade';
 import initTooltips from '../src/js/components/tooltips';
 import { addons } from '@storybook/preview-api';
 import { format } from 'prettier/standalone';
@@ -18,6 +19,7 @@ initPasswordToggle();
 initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
 initTooltips(bootstrap.Tooltip);
+initScrollFade();
 
 /** @type {import('@storybook/html').Preview} */
 const preview = {

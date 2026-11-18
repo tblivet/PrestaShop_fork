@@ -2,7 +2,7 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
-{#- Quick access of the kit header (after the logo): the employee's shortcuts, then add or remove this page and manage.
+{#- Quick access of the kit header (an icon at the end of the bar): the employee's shortcuts, then add or remove this page and manage.
  # The dialogs it opens are in quick_access_modals.html.twig, at the end of the page; quick-access.js runs them. -#}
 {%- set active = this.activeQuickAccess -%}
 
@@ -11,7 +11,7 @@
   href: quickAccess.link,
   active: quickAccess.active == true,
   external: quickAccess.new_window == 1,
-  attr: {'data-ps-ref': 'quick-access-link'},
+  attr: {'data-ps-ref': 'quick-access-link', 'data-ps-data-name': quickAccess.name},
 }) -%}
 
 {%- set items = links is empty ? [] : links|merge([{type: 'divider'}]) -%}
@@ -27,7 +27,7 @@
   icon="bookmarks"
   label="{{ 'Quick access'|trans({}, 'Admin.Navigation.Header') }}"
   :items="items"
-  align="start"
+  iconOnly
   data-ps-ref="quick-access"
   data-ps-data-add-url="{{ this.ajaxAddUrl }}"
   data-ps-data-remove-url="{{ this.ajaxDeleteUrl }}"

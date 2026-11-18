@@ -32,6 +32,11 @@ class HeaderActionTest extends TestCase
         $this->assertSame('account', $props['id']);
     }
 
+    public function testAcceptsAnIconOnlyMenu(): void
+    {
+        $this->assertTrue((new HeaderAction())->preMount(['label' => 'Quick access', 'icon' => 'bookmarks', 'items' => [], 'iconOnly' => true])['iconOnly']);
+    }
+
     public function testRequiresALabel(): void
     {
         $this->expectException(MissingOptionsException::class);
@@ -61,7 +66,6 @@ class HeaderActionTest extends TestCase
         yield 'href and items' => [['label' => 'Store', 'icon' => 'storefront', 'href' => '/', 'items' => []]];
         yield 'external menu' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'external' => true]];
         yield 'menu with a description' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'description' => 'More']];
-        yield 'icon-only menu' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'iconOnly' => true]];
         yield 'non boolean warning' => [['label' => 'Debug', 'icon' => 'bug_report', 'href' => '/', 'warning' => 'yes']];
         yield 'unknown alignment' => [['label' => 'Account', 'icon' => 'person', 'items' => [], 'align' => 'left']];
     }

@@ -34,11 +34,21 @@
 
   <a{{ attributes.defaults(defaults) }}>{{ content }}</a>
 {%- else -%}
-  {#- A button: it opens the menu, it does not go anywhere -#}
-  <div{{ attributes.defaults({class: 'dropdown'}) }}>
+  {#- A button: it opens the menu, it does not go anywhere. Icon only, its label shows in a tooltip, never while the menu is
+   # open (tooltips.js); the tooltip is on the box, as Bootstrap allows one component per element -#}
+  {%- set defaults = {class: 'dropdown'} -%}
+
+  {%- if iconOnly -%}
+    {%- set defaults = defaults|merge({'data-ps-action': 'tooltip', 'data-bs-placement': 'bottom', 'data-bs-custom-class': 'ps-header-action-tooltip', 'data-bs-title': label}) -%}
+  {%- endif -%}
+
+  <div{{ attributes.defaults(defaults) }}>
     <button type="button" class="{{ classes }}" data-bs-toggle="dropdown" aria-expanded="false">
       {{- content -}}
-      <twig:ui:Icon name="keyboard_arrow_down" class="ps-header-action__arrow"/>
+      {#- Icon only: the square has no room for the arrow -#}
+      {%- if not iconOnly -%}
+        <twig:ui:Icon name="keyboard_arrow_down" class="ps-header-action__arrow"/>
+      {%- endif -%}
     </button>
 
     <twig:ui:DropdownMenu :items="items" :align="align"/>

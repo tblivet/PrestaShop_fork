@@ -1,6 +1,6 @@
-<!-- <twig:ui:SideMenu id="bo-sidebar" :sections="…"> -->
+<!-- <twig:ui:SideMenu id="bo-sidebar" :sections="…" shopUrl="#" version="9.3.0"> -->
 <nav id="bo-sidebar" class="ps-side-menu offcanvas-md offcanvas-start" tabindex="-1" aria-label="Main menu">
-  <div class="ps-side-menu__body">
+  <div class="ps-side-menu__body ps-scroll-fade ps-scroll-fade--y" data-ps-action="scroll-fade">
     <div class="ps-side-menu__section">
       <ul class="ps-side-menu__list">
         <li class="ps-side-menu__item">
@@ -121,5 +121,14 @@
         </li>
       </ul>
     </div>
+  </div>
+  <!-- shopUrl and version: pinned under the menu, which scrolls under it -->
+  <div class="ps-side-menu__footer">
+    <a class="ps-side-menu__link" href="#" target="_blank" rel="noopener noreferrer">
+      <!-- ui:Icon storefront size="lg" class="ps-side-menu__icon" -->
+      <span class="ps-side-menu__label">View my shop<span class="visually-hidden"> (opens in a new tab)</span></span>
+      <!-- ui:Icon open_in_new size="lg" class="ps-side-menu__external" -->
+    </a>
+    <span class="badge ps-badge ps-badge--oceanblue ps-side-menu__version"><span class="visually-hidden">PrestaShop </span>9.3.0</span>
   </div>
 </nav>

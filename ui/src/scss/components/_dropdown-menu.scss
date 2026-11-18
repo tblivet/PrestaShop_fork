@@ -41,6 +41,12 @@ $component-name: ps-dropdown-menu;
     overflow-wrap: anywhere;
   }
 
+  // A text item (Bootstrap's dropdown-item-text) explains the item above it: smaller and quieter than the items
+  .dropdown-item-text {
+    font-size: .75rem;
+    color: var(--#{$prefix}secondary-color);
+  }
+
   // Any markup instead of items (a form, text): Bootstrap's own padding variables give it room, wide enough for a field
   &--content {
     --#{$prefix}dropdown-padding-x: #{$spacer};

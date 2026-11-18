@@ -1,0 +1,73 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// A box that scrolls (ps-scroll-fade--x sideways, --y up and down): an edge fades out where more content is hidden
+// and fades back in once scrolled to that end, so nothing stays covered. scroll-fade.js says which ends hide content
+// (data-ps-state "more-before", "more-after"). A mask, not a coloured layer: it works on any background.
+$component-name: ps-scroll-fade;
+
+// Registered so the fade sizes animate
+@property --#{$prefix}scroll-fade-before {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --#{$prefix}scroll-fade-after {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.#{$component-name} {
+  --#{$prefix}scroll-fade-size: 1.5rem;
+  --#{$prefix}scroll-fade-before: 0;
+  --#{$prefix}scroll-fade-after: 0;
+
+  // Only the mask's alpha counts. Three layers: the fade inside the borders, added to the border ring (the border box
+  // minus the padding box), so a border of the box never fades with its content
+  mask-image:
+    linear-gradient(
+      var(--#{$prefix}scroll-fade-direction),
+      transparent,
+      #000 var(--#{$prefix}scroll-fade-before),
+      #000 calc(100% - var(--#{$prefix}scroll-fade-after)),
+      transparent
+    ),
+    linear-gradient(#000, #000),
+    linear-gradient(#000, #000);
+  mask-clip: padding-box, padding-box, border-box;
+  mask-composite: add, exclude;
+  transition:
+    --#{$prefix}scroll-fade-before .2s ease-out,
+    --#{$prefix}scroll-fade-after .2s ease-out;
+
+  &--x {
+    --#{$prefix}scroll-fade-direction: to right;
+
+    overflow-x: auto;
+
+    &:dir(rtl) {
+      --#{$prefix}scroll-fade-direction: to left;
+    }
+  }
+
+  &--y {
+    --#{$prefix}scroll-fade-direction: to bottom;
+
+    overflow-y: auto;
+  }
+
+  &[data-ps-state~="more-before"] {
+    --#{$prefix}scroll-fade-before: var(--#{$prefix}scroll-fade-size);
+  }
+
+  &[data-ps-state~="more-after"] {
+    --#{$prefix}scroll-fade-after: var(--#{$prefix}scroll-fade-size);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}

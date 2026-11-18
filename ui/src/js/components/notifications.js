@@ -89,36 +89,43 @@ const show = (root, data) => {
   const type = selectedType(root);
   const list = root.querySelector(selectors.notificationsList);
   const kinds = Object.keys(data).filter((kind) => LINES[kind] && (type === '' || kind === type));
-  const items = [];
+  const groups = [];
 
+  // A list per kind; under All, each is named by its heading
   kinds.forEach((kind) => {
     const { results } = data[kind];
 
     if (results.length === 0) {
       return;
     }
+
+    const items = node('ul', 'ps-notifications__items');
+
+    items.append(...results.map((notification) => line(root, kind, notification)));
+
     if (type === '') {
       const filter = root.querySelector(`${selectors.filterNotifications}[data-ps-data-type="${kind}"]`);
-      const heading = node('li', 'ps-notifications__heading', filter?.dataset.psDataLabel ?? '');
+      const heading = node('p', 'ps-notifications__heading', filter?.dataset.psDataLabel ?? '');
 
-      heading.setAttribute('role', 'presentation');
-      items.push(heading);
+      heading.id = `ps-notifications-heading-${kind}`;
+      items.setAttribute('aria-labelledby', heading.id);
+      groups.push(heading);
     }
-    items.push(...results.map((notification) => line(root, kind, notification)));
+    groups.push(items);
   });
 
-  list.replaceChildren(...items);
-  list.hidden = items.length === 0;
+  list.replaceChildren(...groups);
+  list.hidden = groups.length === 0;
 
   // The generic empty state: the selected filter's sentence, and the kind's tip when there is one
   const empty = root.querySelector(selectors.notificationsEmpty);
-  empty.hidden = items.length > 0;
+  empty.hidden = groups.length > 0;
   empty.querySelector(selectors.notificationsEmptyTitle).textContent = selectedFilter(root)?.dataset.psDataEmpty ?? '';
 
   // The panel takes the focus itself only when it holds no link to Tab to
   const panel = root.querySelector(selectors.notificationsPanel);
   panel.setAttribute('aria-labelledby', selectedFilter(root)?.id ?? '');
-  if (items.length === 0) {
+  if (groups.length === 0) {
     panel.setAttribute('tabindex', '0');
   } else {
     panel.removeAttribute('tabindex');
