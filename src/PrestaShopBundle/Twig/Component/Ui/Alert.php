@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Ui;
 
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
@@ -19,7 +20,11 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 #[AsTwigComponent('ui:Alert', template: '@PrestaShop/Admin/Component/Ui/alert.html.twig')]
 final class Alert
 {
-    public const TYPES = ['danger', 'dark', 'info', 'light', 'primary', 'secondary', 'success', 'warning'];
+    /** The types $ps-alert-colors draws (_variables.scss) */
+    public const TYPES = ['danger', 'info', 'primary', 'secondary', 'success', 'warning'];
+
+    /** The icon a status type shows when none is given, so the type never rests on its color alone */
+    public const STATUS_ICONS = ['danger' => 'cancel', 'info' => 'info', 'success' => 'check_circle', 'warning' => 'warning'];
 
     public string $type = 'info';
 
@@ -28,7 +33,7 @@ final class Alert
     /** No border around the alert, only its tinted background */
     public bool $borderless = false;
 
-    /** <twig:ui:Icon> name, e.g. "info", shown filled */
+    /** <twig:ui:Icon> name, shown filled; default: the status icon of danger, info, success and warning, none for the others */
     public ?string $icon = null;
 
     /**
@@ -50,6 +55,7 @@ final class Alert
             ->setAllowedTypes('dismissible', 'bool')
             ->setAllowedTypes('borderless', 'bool')
             ->setAllowedTypes('icon', ['null', 'string'])
+            ->setNormalizer('icon', fn (Options $options, ?string $icon): ?string => $icon ?? self::STATUS_ICONS[$options['type']] ?? null)
         ;
 
         return $resolver->resolve($data) + $data;

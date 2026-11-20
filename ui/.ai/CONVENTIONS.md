@@ -114,14 +114,14 @@ The Bootstrap 4 theme may break on the feature branch (`ui/.ai/DECISIONS.md`): a
 
 Every kit page renders in the one page template (title, breadcrumb, actions, tabs, content). A page fills its slots and never builds its own header or toolbar. Hooks (`renderhook`, `displayAdmin…`) keep their place in the page; one moves only when the new layout makes its old place meaningless, with a `CHANGELOG-UI.md` entry.
 
-## Accessibility (WCAG 2.2 AA)
+## Accessibility (RGAA, WCAG 2.1 AA, and the WCAG 2.2 additions)
 
-Check these in every template and story before committing:
+The reference is the RGAA in force (`DECISIONS.md` #39): reviews cite its criterion and the WCAG one. Check these in every template and story before committing:
 
 - **Native first**: `<button>` for actions, `<a href>` for navigation, real `<label for>` on every field. ARIA only fills a gap HTML cannot.
 - **Icons**: always `<twig:ui:Icon>`, never an icon font or a hand-written `<svg>`. It is hidden from screen readers unless given a `label`: give one only when the icon is the only thing saying what it means. An icon-only control gets an `aria-label` (translated), and the icon inside stays hidden. An icon whose state changes (a toggle, a requirement met) is one icon per state, picked by the ARIA state or `data-ps-state` in CSS, not a script rewriting it.
 - **Never color alone**: a state also changes shape or text (`radio_button_unchecked` → `check_circle`, not grey → green only). Text contrast ≥ 4.5:1, large text and UI parts ≥ 3:1.
-- **Dynamic messages**: updates appear in a live region that exists before the update — `role="status"` (polite) for progress and hints, `role="alert"` only for blocking errors. Debounce what changes while typing.
+- **Dynamic messages**: updates appear in a live region that exists before the update — `role="status"` (polite) for progress and hints, `role="alert"` only for blocking errors. Debounce what changes while typing. A message with no place of its own on screen (the result of an action, a busy button) goes through the page's `<twig:ui:Announcer>`, placed by the kit layouts: `announce(message)` from `ui/src/js/components/announcer.js`, or the `ps:announce` event from outside the kit bundle. Never a region created at the moment it should speak, nor a second one for the same purpose.
 - **Help and errors**: link them to their field with `aria-describedby`; set `aria-invalid="true"` on a field in error.
 - **Hidden text for screen readers**: `visually-hidden` (kit) or `sr-only` (Bootstrap 4). Never hide visible information with `aria-hidden`.
 - **Keyboard**: everything reachable and usable with the keyboard, in a logical order, with a visible focus ring; no keyboard trap outside modals; `Escape` closes overlays.

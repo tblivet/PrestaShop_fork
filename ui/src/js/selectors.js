@@ -10,8 +10,19 @@ export default {
   submitOnce: '[data-ps-action~="submit-once"]',
   validate: '[data-ps-action~="validate"]',
   clientError: '[data-ps-target="client-error"]',
+  // The page's live region (<twig:ui:Announcer>, announcer.js)
+  announcer: '[data-ps-target="announcer"]',
   flashAlert: '[data-ps-ref="flash-alert"]',
+  // A form-level error (ui_kit_layout.html.twig, form_errors): an expired token, a constraint on the whole form
+  formError: '[data-ps-ref="form-error"]',
+  // A field the server or the client marked invalid: its ARIA state, which form-validation.js and the form theme set
+  invalidField: 'form [aria-invalid="true"]',
+  // What the keyboard can reach
+  focusable: 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
   submitSpinner: '[data-ps-ref="submit-spinner"]',
+  busyText: '[data-ps-ref="busy-text"]',
+  // A button waiting for the server (busy-button.js); a form being sent has data-ps-state="loading" too, not aria-disabled
+  busyButton: '[data-ps-state="loading"][aria-disabled="true"]',
   headerSearch: '[data-ps-ref="header-search"]',
   headerSearchInput: '[data-ps-ref="header-search-input"]',
   headerSearchScope: '[data-ps-ref="header-search-scope"]',
@@ -43,7 +54,6 @@ export default {
   quickAccessRemoveMessage: '[data-ps-ref="quick-access-remove-message"]',
   quickAccessRemoveError: '[data-ps-ref="quick-access-remove-error"]',
   quickAccessRemoveErrorMessage: '[data-ps-ref="quick-access-remove-error-message"]',
-  quickAccessStatus: '[data-ps-ref="quick-access-status"]',
   // Bootstrap's own attributes: its plugins read their options from data-bs-*
   // data-ps-action="tooltip": the box of a dropdown (Bootstrap allows one component per element, so not on its toggle)
   tooltip: '[data-bs-toggle="tooltip"], [data-ps-action~="tooltip"]',

@@ -37,7 +37,7 @@ const menu = ({ items = null, align = 'start', children = [], ...attributes }) =
 const FILTER_FIELDS = '<div><label class="form-label" for="story-menu-filter-ref">Reference</label><input type="text" class="form-control" id="story-menu-filter-ref" name="reference"></div>'
   + '<div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="story-menu-filter-stock" name="in_stock"><label class="form-check-label" for="story-menu-filter-stock">In stock only</label></div>';
 const FILTER_FORM = [{
-  html: `<form><div class="${stackClasses({})}">${FILTER_FIELDS}<button class="btn btn-primary" type="submit">Filter</button></div></form>`,
+  html: `<form><div class="${stackClasses({})}">${FILTER_FIELDS}<button class="btn btn-primary ps-button" type="submit" data-ps-data-busy-label="Loading...">Filter</button></div></form>`,
   twig: [
     '<form>',
     '  <twig:ui:Layout:Stack>',

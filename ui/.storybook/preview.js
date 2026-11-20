@@ -4,6 +4,9 @@
  */
 import '../src/scss/main.scss';
 import * as bootstrap from 'bootstrap';
+import initAlertDismissFocus from '../src/js/components/alert-dismiss-focus';
+import initAnnouncer from '../src/js/components/announcer';
+import initBusyButtons from '../src/js/components/busy-button';
 import initPasswordToggle from '../src/js/components/password-toggle';
 import initHeaderSearch from '../src/js/components/header-search';
 import initQuickAccess from '../src/js/components/quick-access';
@@ -12,9 +15,15 @@ import initTooltips from '../src/js/components/tooltips';
 import { addons } from '@storybook/preview-api';
 import { format } from 'prettier/standalone';
 import * as htmlPlugin from 'prettier/plugins/html';
+import announcer from '../src/stories/announcer';
 
 const SNIPPET_RENDERED = 'storybook/docs/snippet-rendered';
 
+// The page's live region, outside the story root so it stays across stories, as the kit layouts place it
+document.body.insertAdjacentHTML('beforeend', announcer().html);
+initAnnouncer();
+initAlertDismissFocus();
+initBusyButtons();
 initPasswordToggle();
 initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
@@ -26,18 +35,6 @@ const preview = {
   tags: ['autodocs'],
 
   globalTypes: {
-    colorMode: {
-      description: 'Bootstrap color mode',
-      toolbar: {
-        icon: 'contrast',
-        title: 'Color mode',
-        items: [
-          { value: 'light', title: 'Light', icon: 'sun' },
-          { value: 'dark', title: 'Dark', icon: 'moon' },
-        ],
-        dynamicTitle: true,
-      },
-    },
     // Only what the kit writes with logical properties flips (DECISIONS.md #4): ui.css is Bootstrap's left-to-right
     // build, so its physical utilities (ms-*, dropdown-menu-end…) do not
     direction: {
@@ -55,7 +52,6 @@ const preview = {
   },
 
   initialGlobals: {
-    colorMode: 'light',
     direction: 'ltr',
   },
 
@@ -72,11 +68,6 @@ const preview = {
         .querySelectorAll('[data-bs-toggle="popover"]')
         .forEach((node) => bootstrap.Popover.getInstance(node)?.dispose());
 
-      // Apply Bootstrap's color mode to the preview <html> element so all CSS
-      // custom property overrides (--bs-body-bg, --bs-border-color, etc.) take
-      // effect across the entire canvas, not just the component root.
-      const colorMode = context.globals.colorMode ?? 'light';
-      document.documentElement.setAttribute('data-bs-theme', colorMode);
       document.documentElement.setAttribute('dir', context.globals.direction ?? 'ltr');
 
       const result = story();

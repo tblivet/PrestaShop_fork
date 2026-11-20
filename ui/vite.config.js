@@ -14,7 +14,6 @@ export const shared = {
     // Fonts are served straight from their npm packages, in dev and in the build.
     alias: {
       '@fonts/ibm-plex-sans': resolve(root, 'node_modules/@fontsource/ibm-plex-sans/files'),
-      '@fonts/material-symbols': resolve(root, 'node_modules/material-symbols'),
     },
   },
   css: {

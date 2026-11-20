@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Twig\Component\Ui;
 
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Twig\Component\Ui\Button;
@@ -23,6 +24,7 @@ class ButtonTest extends TestCase
         'icon' => null,
         'iconPosition' => 'start',
         'loading' => false,
+        'busyLabel' => null,
         'disabled' => false,
     ];
 
@@ -36,6 +38,11 @@ class ButtonTest extends TestCase
         $data = ['variant' => 'primary', 'type' => 'submit', 'icon' => 'save', 'loading' => true, 'id' => 'save', 'data-ps-ref' => 'save'];
 
         $this->assertEquals($data + self::DEFAULTS, (new Button())->preMount($data));
+    }
+
+    public function testAcceptsABusyLabel(): void
+    {
+        $this->assertSame('Installing...', (new Button())->preMount(['loading' => true, 'busyLabel' => 'Installing...'])['busyLabel']);
     }
 
     public function testAcceptsALink(): void
@@ -61,5 +68,33 @@ class ButtonTest extends TestCase
         yield 'non boolean disabled' => [['disabled' => 1]];
         yield 'link with a type' => [['href' => '/admin', 'type' => 'button']];
         yield 'link loading' => [['href' => '/admin', 'loading' => true]];
+        yield 'link with a busy label' => [['href' => '/admin', 'busyLabel' => 'Opening...']];
+        yield 'empty busy label' => [['busyLabel' => ' ']];
+        yield 'non string busy label' => [['busyLabel' => 42]];
+        yield 'non string href' => [['href' => 42]];
+        yield 'non string icon' => [['icon' => ['add']]];
+    }
+
+    #[DataProvider('provideNamelessContent')]
+    public function testRefusesAButtonWithoutName(string $content): void
+    {
+        $this->expectException(LogicException::class);
+
+        (new Button())->checkLabel($content, false);
+    }
+
+    public static function provideNamelessContent(): iterable
+    {
+        yield 'empty' => [''];
+        yield 'spaces' => ["  \n "];
+        yield 'markup only' => ['<svg aria-hidden="true"></svg>'];
+    }
+
+    public function testAcceptsALabelOrAnAriaLabel(): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        (new Button())->checkLabel('Save', false);
+        (new Button())->checkLabel('', true);
     }
 }

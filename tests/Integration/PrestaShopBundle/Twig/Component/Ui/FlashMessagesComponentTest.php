@@ -49,8 +49,8 @@ class FlashMessagesComponentTest extends KernelTestCase
         $this->assertStringContainsString('class="ps-flash-messages" data-ps-ref="flash-messages"', $html);
         $this->assertSame(2, substr_count($html, 'data-ps-ref="flash-alert"'));
         $this->assertLessThan(strpos($html, 'alert-info'), strpos($html, 'alert-danger'));
-        $this->assertStringContainsString('<p class="mb-0">First error</p>', $html);
-        $this->assertStringContainsString('<p class="mb-0">Second error</p>', $html);
+        $this->assertStringContainsString('<p>First error</p>', $html);
+        $this->assertStringContainsString('<p>Second error</p>', $html);
         $this->assertStringContainsString('data-bs-dismiss="alert"', $html);
     }
 

@@ -13,9 +13,4 @@
       background-color: var(--#{$prefix}accordion-btn-hover-bg);
     }
   }
-
-  @at-root [data-bs-theme='dark'] & {
-    --#{$prefix}accordion-active-bg: #{$gray-800};
-    --#{$prefix}accordion-btn-hover-bg: #{$gray-800};
-  }
 }

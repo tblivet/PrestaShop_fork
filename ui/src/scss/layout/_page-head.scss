@@ -8,8 +8,6 @@
 $component-name: ps-page-head;
 
 .#{$component-name} {
-  --icon-wght: 300; // every icon in the head — title and actions — is slightly thin
-
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem 1rem;

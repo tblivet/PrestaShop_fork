@@ -51,24 +51,6 @@ $theme-colors-border-subtle: map.merge(
     'destructive': $destructive-border-subtle,
   )
 );
-$theme-colors-text-dark: map.merge(
-  $theme-colors-text-dark,
-  (
-    'destructive': $destructive-text-emphasis-dark,
-  )
-);
-$theme-colors-bg-subtle-dark: map.merge(
-  $theme-colors-bg-subtle-dark,
-  (
-    'destructive': $destructive-bg-subtle-dark,
-  )
-);
-$theme-colors-border-subtle-dark: map.merge(
-  $theme-colors-border-subtle-dark,
-  (
-    'destructive': $destructive-border-subtle-dark,
-  )
-);
 
 // ── Extend Bootstrap utility subtle maps with destructive ─────────────────────
 $utilities-bg-subtle: map.merge(

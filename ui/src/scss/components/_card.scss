@@ -5,41 +5,17 @@
 // Override Bootstrap card — https://getbootstrap.com/docs/5.3/components/card/
 
 $card-variants: (
-  'primary': (
-    $primary-50,
-    $primary-bg-subtle-dark,
-  ),
-  'green': (
-    $green-100,
-    shade-color($green, 72%),
-  ),
-  'purple': (
-    $purple-100,
-    shade-color($purple, 72%),
-  ),
-  'amber': (
-    $amber-100,
-    shade-color($amber, 72%),
-  ),
-  'oceanblue': (
-    $oceanblue-100,
-    shade-color($oceanblue, 72%),
-  ),
+  'primary': $primary-50,
+  'green': $green-100,
+  'purple': $purple-100,
+  'amber': $amber-100,
+  'oceanblue': $oceanblue-100,
 );
 
-@each $color, $values in $card-variants {
+@each $color, $value in $card-variants {
   .card-#{$color} {
     --#{$prefix}card-color: var(--#{$prefix}body-color);
-    --#{$prefix}card-bg: #{nth($values, 1)};
-    --#{$prefix}card-border-color: #{nth($values, 1)};
-  }
-}
-
-@include color-mode(dark) {
-  @each $color, $values in $card-variants {
-    .card-#{$color} {
-      --#{$prefix}card-bg: #{nth($values, 2)};
-      --#{$prefix}card-border-color: #{nth($values, 2)};
-    }
+    --#{$prefix}card-bg: #{$value};
+    --#{$prefix}card-border-color: #{$value};
   }
 }

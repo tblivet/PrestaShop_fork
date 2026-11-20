@@ -17,7 +17,7 @@ import { withDefaults } from '../story-defaults';
 const ICONS = { add, delete: deleteIcon, edit, more_vert: moreVert, refresh, 'brand:github': github };
 
 // IconButton.php defaults; icon and label are required
-const DEFAULTS = { tooltip: false, tooltipPlacement: 'top', variant: 'primary', size: 'md', href: null, type: 'button', loading: false, disabled: false };
+const DEFAULTS = { tooltip: false, tooltipPlacement: 'top', variant: 'primary', size: 'md', href: null, type: 'button', loading: false, busyLabel: null, disabled: false };
 
 const VARIANTS = ['primary', 'secondary', 'outline-primary', 'outline-secondary', 'destructive', 'outline-destructive', 'link'];
 const SIZES = ['sm', 'md', 'lg'];
@@ -26,12 +26,13 @@ const SIZES = ['sm', 'md', 'lg'];
 // other attributes (id, class, data-ps-*…) go on the button like in Twig
 const BS_PLACEMENTS = { start: 'left', end: 'right' };
 
-const iconButton = ({ icon, label, tooltip = false, tooltipPlacement = 'top', variant = 'primary', size = 'md', href = null, type = 'button', loading = false, disabled = false, ...attributes }) => {
-  const classes = ['btn', `btn-${variant}`, ...(size !== 'md' ? [`btn-${size}`] : []), 'ps-icon-button', ...(attributes.class ? [attributes.class] : [])];
+const iconButton = ({ icon, label, tooltip = false, tooltipPlacement = 'top', variant = 'primary', size = 'md', href = null, type = 'button', loading = false, busyLabel = null, disabled = false, ...attributes }) => {
+  const busyText = busyLabel || 'Loading...';
+  const classes = ['btn', `btn-${variant}`, ...(size !== 'md' ? [`btn-${size}`] : []), 'ps-button', 'ps-icon-button', ...(attributes.class ? [attributes.class] : [])];
   let attrs;
 
   if (href === null) {
-    attrs = { type, ...(disabled ? { disabled: '' } : {}), ...(loading ? { 'data-ps-state': 'loading', 'aria-busy': 'true', 'aria-disabled': 'true' } : {}) };
+    attrs = { type, 'data-ps-data-busy-label': busyText, ...(disabled ? { disabled: '' } : {}), ...(loading ? { 'data-ps-state': 'loading', 'aria-disabled': 'true' } : {}) };
   } else if (disabled) {
     classes.push('disabled');
     attrs = { role: 'link', 'aria-disabled': 'true' };
@@ -49,11 +50,13 @@ const iconButton = ({ icon, label, tooltip = false, tooltipPlacement = 'top', va
   const html = Object.entries(all).map(([name, value]) => (value === '' ? ` ${name}` : ` ${name}="${value}"`)).join('');
   const tag = href === null ? 'button' : 'a';
   const spinner = loading ? '<span class="spinner-border spinner-border-sm" aria-hidden="true" data-ps-ref="submit-spinner"></span>' : '';
+  // Rendered by <twig:ui:Button>: a status for screen readers while busy
+  const status = loading ? `<span class="visually-hidden" data-ps-ref="busy-text">${busyText}</span>` : '';
 
   return {
-    html: `<${tag} class="${classes.join(' ')}"${html}>${spinner}${uiIcon(ICONS[icon], { size: 'lg' })}</${tag}>`,
+    html: `<${tag} class="${classes.join(' ')}"${html}>${spinner}${uiIcon(ICONS[icon], { size: 'lg' })}${status}</${tag}>`,
     twig: twigCall('ui:IconButton', {
-      icon, label, tooltip, tooltipPlacement: tooltip ? tooltipPlacement : undefined, variant, size, href: href ?? undefined, type: href === null ? type : undefined, loading, disabled, ...attributes,
+      icon, label, tooltip, tooltipPlacement: tooltip ? tooltipPlacement : undefined, variant, size, href: href ?? undefined, type: href === null ? type : undefined, loading, busyLabel: busyLabel || undefined, disabled, ...attributes,
     }, DEFAULTS),
   };
 };
@@ -68,7 +71,7 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:IconButton icon="delete" label="{{ \'Delete\'|trans({}, \'Admin.Actions\') }}" variant="link" tooltip/>`. A `<twig:ui:Button>` that shows only its icon, square at every size.',
-          '**Props**: `icon` (required: a [Material Symbols](https://fonts.google.com/icons) name, or `brand:…`, see Components/Icon), `label` (required: what the button does, its only name for screen readers, read as its `aria-label`), `tooltip` (default `false`: shows the label on hover and focus), `tooltipPlacement` (`top`, `bottom`, `start`, `end`; default `top`; only with `tooltip`: `start` and `end` follow the reading direction; Bootstrap moves it to the other side when there is no room), and the props of `<twig:ui:Button>`: `variant` (`primary`, `secondary`, `outline-primary`, `outline-secondary`, `destructive`, `outline-destructive`, `link`; default `primary`), `size` (`sm`, `md`, `lg`; default `md`), `href` (default none; set: an `<a>`), `type` (`button`, `submit`, `reset`; default `button`; not with `href`), `loading` (default `false`; not with `href`), `disabled` (default `false`). Other attributes (`id`, `aria-controls`, `aria-expanded`, `data-ps-*`, a `class`) go on the button.',
+          '**Props**: `icon` (required: a [Material Symbols](https://fonts.google.com/icons) name, or `brand:…`, see Components/Icon), `label` (required: what the button does, its only name for screen readers, read as its `aria-label`), `tooltip` (default `false`: shows the label on hover and focus), `tooltipPlacement` (`top`, `bottom`, `start`, `end`; default `top`; only with `tooltip`: `start` and `end` follow the reading direction; Bootstrap moves it to the other side when there is no room), and the props of `<twig:ui:Button>`: `variant` (`primary`, `secondary`, `outline-primary`, `outline-secondary`, `destructive`, `outline-destructive`, `link`; default `primary`), `size` (`sm`, `md`, `lg`; default `md`), `href` (default none; set: an `<a>`), `type` (`button`, `submit`, `reset`; default `button`; not with `href`), `loading` (default `false`; not with `href`), `busyLabel` (default none: "Loading..."; what screen readers hear while busy, as on `<twig:ui:Button>`; not with `href`), `disabled` (default `false`). Other attributes (`id`, `aria-controls`, `aria-expanded`, `data-ps-*`, a `class`) go on the button.',
           '**Do**: an icon everybody reads the same way (edit, delete, refresh, more actions) in a row of many where text would not fit; a `label` that names the action ("Delete", not "Trash icon"); `tooltip` when sighted users may not know the icon. **Don\'t**: an icon button for the main action of a page (use `<twig:ui:Button>` with text), a label made of the icon\'s name, two icon buttons with the same label in one row without saying what each acts on ("Delete Summer sale").',
           '**States**: the variants, three sizes, with a tooltip, as a link, disabled and loading.',
         ].join('\n\n'),
@@ -85,12 +88,14 @@ export default {
     href: { control: 'text', description: 'Set: renders an <a>' },
     type: { control: 'select', options: ['button', 'submit', 'reset'], description: 'Button type (not with href)' },
     loading: { control: 'boolean', description: 'Busy: spinner over the icon (not with href)' },
+    busyLabel: { control: 'text', description: 'What screen readers hear while busy, default "Loading..." (not with href)', table: { type: { summary: 'string' } } },
     disabled: { control: 'boolean', description: 'Disabled; a link loses its href' },
   }, DEFAULTS),
   args: { icon: 'edit', label: 'Edit', ...DEFAULTS },
 };
 
-export const Default = withTwig(({ href, ...args }) => iconButton({ ...args, href: href || null }));
+// A link has no busy label, as in Button.php
+export const Default = withTwig(({ href, busyLabel, ...args }) => iconButton({ ...args, ...(href ? { href } : { busyLabel }) }));
 
 export const Variants = withTwig(() => framedNodes(
   VARIANTS.map((variant) => iconButton({ icon: variant.includes('destructive') ? 'delete' : 'edit', label: variant.includes('destructive') ? 'Delete' : 'Edit', variant })),

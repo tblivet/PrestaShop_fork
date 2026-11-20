@@ -30,7 +30,6 @@
     "@storybook/addon-essentials": "^8.6.18",
     "@storybook/addon-links": "^8.6.18",
     "@storybook/html-vite": "^8.6.18",
-    "material-symbols": "^0.44.4",
     "prettier": "^3.8.3",
     "sass": "^1.99.0",
     "storybook": "^8.6.18",

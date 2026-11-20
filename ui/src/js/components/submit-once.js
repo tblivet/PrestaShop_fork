@@ -3,27 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import selectors from '../selectors';
-
-// Laid over the label by the kit's busy button state (_buttons.scss), so the button keeps its size
-const SPINNER = '<span class="spinner-border spinner-border-sm" aria-hidden="true" data-ps-ref="submit-spinner"></span>';
-
-// A button waiting for the server: it shows a spinner and says it is busy, but stays focusable (disabling it would drop
-// the keyboard focus to <body>); callers ignore it while aria-busy is set
-export const setButtonBusy = (button, busy) => {
-  if (busy) {
-    button.setAttribute('data-ps-state', 'loading');
-    button.setAttribute('aria-disabled', 'true');
-    button.setAttribute('aria-busy', 'true');
-    button.insertAdjacentHTML('afterbegin', SPINNER);
-
-    return;
-  }
-
-  button.removeAttribute('data-ps-state');
-  button.removeAttribute('aria-disabled');
-  button.removeAttribute('aria-busy');
-  button.querySelector(selectors.submitSpinner)?.remove();
-};
+import { setButtonBusy } from './busy-button';
 
 const setBusy = (form, button, busy) => {
   if (busy) {
@@ -36,7 +16,7 @@ const setBusy = (form, button, busy) => {
   }
 
   form.removeAttribute('data-ps-state');
-  form.querySelectorAll('[aria-busy="true"]').forEach((busyButton) => setButtonBusy(busyButton, false));
+  form.querySelectorAll(selectors.busyButton).forEach((busyButton) => setButtonBusy(busyButton, false));
 };
 
 // <form data-ps-action="submit-once">: once a submit goes through (no page script blocked it), its button shows it is busy and

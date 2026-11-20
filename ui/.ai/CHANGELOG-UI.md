@@ -450,3 +450,83 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 - `<twig:ui:DropdownMenu>`: `items` is optional. Without it, the menu holds its content, any markup (a short form, text), in a `<div class="dropdown-menu ps-dropdown-menu ps-dropdown-menu--content">` with Bootstrap's dropdown padding variables set to `$spacer` and a 16rem minimum width; a trigger around a form takes `data-bs-auto-close="outside"`. New item type `text` (`dropdown-item-text`), a line of plain text. The "no form inside the menu" rule of its docs is now "no long form".
 - The menu and search toggles share the `ps-header-bar-button` mixin (`_mixins.scss`).
 - Story Twig code binds numbers (`:type="3"`, `:headingLevel="3"`) instead of passing them as text.
+
+## Button: busy state, label — 2026-11-20
+
+`Component/Ui/button.html.twig`, `Button.php`, `ui/src/js/components/busy-button.js` (new), `submit-once.js`, `quick-access.js`, `_buttons.scss`. From the `ui-component-review` of Button.
+
+**Markup**
+- Every `<button>` rendered by `<twig:ui:Button>` (so `IconButton`, `Dropdown` toggles and kit form buttons too) carries `data-ps-data-busy-label` (the translated "Loading..."), read by `busy-button.js`.
+- A busy button ends with `<span class="visually-hidden" role="status" data-ps-ref="busy-status">Loading...</span>`, as Bootstrap's loading buttons.
+- Every kit button gets the `ps-button` BEM block beside Bootstrap's classes (`btn btn-primary ps-button`; `IconButton`: `… ps-button ps-icon-button`). Beside an icon, the label is wrapped in `<span class="ps-button__label">` (also the `Dropdown` text trigger).
+- A busy button no longer has `aria-busy`: it made screen readers hold back the status inside the button. The busy state is `data-ps-state="loading"` with `aria-disabled="true"`.
+- `setButtonBusy` moved from `submit-once.js` to `busy-button.js`.
+
+**Behaviour**
+- A busy button ignores clicks, Enter and Space: before, only the pointer was blocked.
+- Screen readers hear "Loading..." when a button becomes busy.
+- `<twig:ui:Button>` without text and without `aria-label` throws: an icon alone is `<twig:ui:IconButton>`.
+- A label with no space to break at wraps instead of overflowing; a wrapped label stays against its icon.
+
+**Strings**
+- `Loading...` (`Admin.Global`), existing string.
+
+## No dark mode in the kit — 2026-11-20
+
+`ui/src/scss` (`_variables.scss`, `_maps.scss`, `main.scss`, `components/_buttons.scss`, `_alert.scss`, `_accordion.scss`, `_card.scss`, `forms/_form-select.scss`), `ui/.storybook/preview.js`. Applies `DECISIONS.md` #5.
+
+**Markup**
+- `ui.css` no longer reacts to `data-bs-theme="dark"`: `$enable-dark-mode: false`, the kit's dark rules and `_variables-dark.scss` are removed. Bootstrap's own `.navbar-dark` / `.navbar[data-bs-theme=dark]` component still works.
+
+**Behaviour**
+- Storybook has no Light/Dark switch anymore.
+
+## Announcer — 2026-11-20
+
+`Ui/announcer.html.twig` (`<twig:ui:Announcer>`), `ui/src/js/components/announcer.js`, `Layout/default_layout.html.twig`, `Layout/Ui/login_layout.html.twig`, `busy-button.js`, `quick-access.js`.
+
+**Markup**
+- New: one `<div class="visually-hidden" role="status" aria-atomic="true" data-ps-target="announcer">` at the end of `<body>` on kit pages (shell and sign-in pages), empty until a script writes in it.
+- Button rendered busy: the hidden "Loading..." text has no `role="status"` any more, and its hook is `data-ps-ref="busy-text"` (was `busy-status`). A button made busy by a script gets no status inside it.
+- Quick access: the hidden `data-ps-ref="quick-access-status"` region is removed; its two messages are `data-ps-data-added` / `data-ps-data-removed` on `data-ps-ref="quick-access"`.
+
+**Behaviour**
+- Scripts tell screen readers what changed with `announce(message)`, or `document.dispatchEvent(new CustomEvent('ps:announce', {detail: {message}}))` outside the kit bundle (new-theme pages, modules). The same message twice is said twice.
+- A button made busy by a script says "Loading..." through the announcer; adding or removing a quick access page says its result through it.
+
+## No icon font in the kit — 2026-11-20
+
+`_custom.scss`, `_fonts.scss`, `_variables.scss`, `components/_breadcrumb.scss`, `_buttons.scss`, `_pagination.scss`, `components/_dropdown.scss` (removed), `ui/package.json`.
+
+**Markup**
+- Removed: the `.icon`, `.icon-filled`, `.icon-sm`, `.icon-lg` and `.material-symbols-outlined` classes, the `--icon-fill` / `--icon-wght` / `--icon-grad` / `--icon-opsz` variables and the Material Symbols font itself (`@font-face`, npm `material-symbols`). Icons are `<twig:ui:Icon>` SVGs only (`DECISIONS.md` #35); a module still writing `<span class="icon">name</span>` on a kit page shows the icon's name as text.
+- Pagination arrows: `.ps-icon` instead of `.icon`.
+
+**Behaviour**
+- Breadcrumb divider: an SVG chevron (`$breadcrumb-divider`), pointing left in right-to-left pages; it was a font glyph.
+- A raw Bootstrap `.dropdown-toggle` shows Bootstrap's own caret again (it was a font glyph); `<twig:ui:Dropdown>` keeps its SVG arrow.
+
+## Button: busyLabel — 2026-11-20
+
+`Ui/button.html.twig`, `Button.php`, `IconButton.php`, `Ui/icon_button.html.twig`.
+
+**Markup**
+- New prop `busyLabel` on `<twig:ui:Button>` and `<twig:ui:IconButton>` (not with `href`): what screen readers hear while the button is busy, in `data-ps-data-busy-label` and, rendered `loading`, in the hidden `busy-text`. Default unchanged: "Loading..." (`Admin.Global`). Pages pass a translated string ("Installing...") instead of setting the attribute.
+
+## Alert: review fixes — 2026-11-20
+
+`Ui/alert.html.twig`, `Alert.php`, `components/_alert.scss`, `flash_messages.html.twig`, `ui_kit_layout.html.twig` (form_errors), `Login/Ui/required_actions.html.twig`, `load-focus.js`, `alert-dismiss-focus.js`, `selectors.js`.
+
+**Markup**
+- The message is always in `<div class="ps-alert__content">`, with or without an icon. Its last paragraph or list has no bottom margin: callers drop `mb-0` (flash messages, form-level errors, required actions).
+- `danger`, `warning`, `success` and `info` show their status icon when none is given (`cancel`, `warning`, `check_circle`, `info`); the icon of a status type is `role="img"` with the type as its name ("Error", "Warning", "Success", "Information"), no longer `aria-hidden`.
+- Types `light` and `dark` are removed (they were outside the kit's alert colors).
+- Form-level error alert: `data-ps-ref="form-error"`; load-focus.js finds it by this hook instead of `form [role="alert"]`.
+- The wrapping, link, `<code>` and focus rules apply to `.ps-alert` only, no longer to every `.alert` on the page.
+
+**Behaviour**
+- Screen readers hear the type before the message ("Error, The email address or password is incorrect.").
+- A focused alert (load-focus.js) has Bootstrap's focus ring and a transparent outline, so forced-colors mode shows where the focus is.
+
+**Strings** (`Admin.Global`)
+- New in the alert: "Error", "Information", "Success" ("Warning" already exists).

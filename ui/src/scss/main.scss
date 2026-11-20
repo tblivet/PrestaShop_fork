@@ -15,7 +15,6 @@
 
 // ── PHASE 2: Your variable overrides (must precede Bootstrap's !default) ─────
 @import 'variables';
-@import 'variables-dark';
 
 // ── PHASE 3: Bootstrap variables, maps, mixins ────────────────────────────────
 @import 'bootstrap/scss/variables';
@@ -72,7 +71,6 @@
 @import 'components/card';
 @import 'components/carousel';
 @import 'components/close';
-@import 'components/dropdown';
 @import 'components/dropdown-menu';
 @import 'components/employee-dropdown';
 @import 'components/flash-messages';

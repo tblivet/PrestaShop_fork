@@ -29,6 +29,7 @@ class IconButtonTest extends TestCase
                 'href' => null,
                 'type' => 'button',
                 'loading' => false,
+                'busyLabel' => null,
                 'disabled' => false,
             ],
             (new IconButton())->preMount(['icon' => 'delete', 'label' => 'Delete'])

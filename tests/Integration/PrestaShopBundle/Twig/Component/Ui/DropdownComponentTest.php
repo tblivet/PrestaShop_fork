@@ -28,7 +28,7 @@ class DropdownComponentTest extends KernelTestCase
     {
         $html = $this->render("<twig:ui:Dropdown label=\"Export\" :items=\"[{label: 'CSV', href: '/csv'}]\" align=\"end\"/>");
 
-        $this->assertMatchesRegularExpression('#^<div class="dropdown"><button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">Export<svg #', trim($html));
+        $this->assertMatchesRegularExpression('#^<div class="dropdown"><button class="btn btn-primary ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-toggle="dropdown" aria-expanded="false"><span class="ps-button__label">Export</span><svg #', trim($html));
         $this->assertStringContainsString('<ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end"><li><a class="dropdown-item ps-dropdown-menu__item" href="/csv"><span class="ps-dropdown-menu__label">CSV</span></a></li></ul>', $html);
     }
 
@@ -36,7 +36,7 @@ class DropdownComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:Dropdown icon="more_vert" label="More actions" :items="[]" direction="up"/>');
 
-        $this->assertMatchesRegularExpression('#^<div class="dropup"><button class="btn btn-primary ps-icon-button" type="button" aria-label="More actions" data-bs-toggle="dropdown" aria-expanded="false"><svg #', trim($html));
+        $this->assertMatchesRegularExpression('#^<div class="dropup"><button class="btn btn-primary ps-button ps-icon-button" type="button" data-ps-data-busy-label="Loading..." aria-label="More actions" data-bs-toggle="dropdown" aria-expanded="false"><svg #', trim($html));
     }
 
     public function testRendersEveryItemKind(): void

@@ -55,7 +55,7 @@
     border-color: transparent;
     border-radius: $border-radius-pill;
 
-    .icon {
+    .ps-icon {
       font-size: $font-size-base;
     }
   }
@@ -67,17 +67,17 @@
       border-color: var(--#{$prefix}pagination-active-border-color);
     }
 
-    &:has(.icon) .page-link {
+    &:has(.ps-icon) .page-link {
       border-color: var(--#{$prefix}pagination-border-color);
     }
 
-    &.disabled:has(.icon) .page-link {
+    &.disabled:has(.ps-icon) .page-link {
       border-color: var(--#{$prefix}pagination-disabled-border-color);
     }
 
     // Bootstrap's .page-item.disabled .page-link explicitly sets border-color — override it
     // for non-arrow items (numbers, ellipsis) so they stay borderless
-    &.disabled:not(:has(.icon)) .page-link {
+    &.disabled:not(:has(.ps-icon)) .page-link {
       border-color: transparent;
     }
   }

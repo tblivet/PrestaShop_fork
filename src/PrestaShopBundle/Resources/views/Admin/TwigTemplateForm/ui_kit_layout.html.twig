@@ -68,9 +68,9 @@
 {%- block form_errors -%}
   {%- if errors|length > 0 -%}
     {%- if form is rootform -%}
-      <twig:ui:Alert type="danger" icon="cancel" id="{{ id }}_error">
+      <twig:ui:Alert type="danger" id="{{ id }}_error" data-ps-ref="form-error">
         {%- for error in errors -%}
-          <p class="mb-0">{{ error.message }}</p>
+          <p>{{ error.message }}</p>
         {%- endfor -%}
       </twig:ui:Alert>
     {%- else -%}

@@ -37,7 +37,7 @@ Bootstrap 4 → 5 changes to apply on the way:
 | `badge-{color}` | `text-bg-{color}` |
 | `close` + `&times;` | `btn-close` with a translated `aria-label` |
 | `input-group-append` / `-prepend` | children directly in `input-group` |
-| Material Icons `material-icons` | Material Symbols `material-symbols-outlined` |
+| Material Icons `<i class="material-icons">name</i>` | `<twig:ui:Icon name="name"/>`, an inline SVG (no icon font, `DECISIONS.md` #35) |
 
 ## 4. Page JS
 

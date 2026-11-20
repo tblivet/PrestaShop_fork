@@ -28,14 +28,14 @@ class IconButtonComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:IconButton icon="delete" label="Delete"/>');
 
-        $this->assertMatchesRegularExpression('#^<button class="btn btn-primary ps-icon-button" type="button" aria-label="Delete"><svg [^>]*class="ps-icon ps-icon--lg" aria-hidden="true">.*</svg></button>$#s', trim($html));
+        $this->assertMatchesRegularExpression('#^<button class="btn btn-primary ps-button ps-icon-button" type="button" data-ps-data-busy-label="Loading..." aria-label="Delete"><svg [^>]*class="ps-icon ps-icon--lg" aria-hidden="true">.*</svg></button>$#s', trim($html));
     }
 
     public function testRendersLinkWithTooltipAndAttributes(): void
     {
         $html = $this->render('<twig:ui:IconButton icon="edit" label="Edit" variant="link" size="sm" href="/edit" tooltip class="link-secondary" data-ps-ref="edit"/>');
 
-        $this->assertStringStartsWith('<a class="btn btn-link btn-sm ps-icon-button link-secondary" href="/edit" aria-label="Edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-ps-ref="edit">', trim($html));
+        $this->assertStringStartsWith('<a class="btn btn-link btn-sm ps-button ps-icon-button link-secondary" href="/edit" aria-label="Edit" data-bs-toggle="tooltip" data-bs-title="Edit" data-ps-ref="edit">', trim($html));
     }
 
     public function testPlacesTooltipOnALogicalSide(): void
@@ -50,7 +50,15 @@ class IconButtonComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:IconButton icon="refresh" label="Refresh" loading/>');
 
-        $this->assertStringContainsString('data-ps-state="loading" aria-busy="true" aria-disabled="true" aria-label="Refresh"><span class="spinner-border spinner-border-sm" aria-hidden="true" data-ps-ref="submit-spinner"></span><svg ', $html);
+        $this->assertStringContainsString('data-ps-state="loading" aria-disabled="true" aria-label="Refresh"><span class="spinner-border spinner-border-sm" aria-hidden="true" data-ps-ref="submit-spinner"></span><svg ', $html);
+    }
+
+    public function testPassesItsBusyLabelToTheButton(): void
+    {
+        $html = $this->render('<twig:ui:IconButton icon="refresh" label="Sync" loading busyLabel="Syncing..."/>');
+
+        $this->assertStringContainsString('data-ps-data-busy-label="Syncing..."', $html);
+        $this->assertStringContainsString('<span class="visually-hidden" data-ps-ref="busy-text">Syncing...</span>', $html);
     }
 
     private function render(string $template): string

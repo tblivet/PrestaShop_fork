@@ -45,6 +45,8 @@ final class IconButton
 
     public bool $loading = false;
 
+    public ?string $busyLabel = null;
+
     public bool $disabled = false;
 
     /**

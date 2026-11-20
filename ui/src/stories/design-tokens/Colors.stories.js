@@ -179,8 +179,7 @@ export const SurfaceTokens = {
   name: 'Surface & Text Tokens',
   render: () => `
     <p class="text-body-secondary small mb-4">
-      Global surface and text CSS variables. Bootstrap switches these
-      automatically between light and dark mode via <code>[data-bs-theme]</code>.
+      Global surface and text CSS variables (the back office has no dark mode, DECISIONS.md #5).
       Always prefer these over hardcoded colors for background and text in custom
       components.
     </p>

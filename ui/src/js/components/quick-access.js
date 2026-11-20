@@ -3,7 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import selectors from '../selectors';
-import { setButtonBusy } from './submit-once';
+import { announce } from './announcer';
+import { setButtonBusy } from './busy-button';
 
 // The header's quick access (Component/Layout/Ui/quick_access.html.twig and quick_access_modals.html.twig): adds this
 // page with a name, or removes it after a confirmation, then rebuilds the shortcuts in place, so nothing typed on the
@@ -90,14 +91,6 @@ const send = async (url, fields) => {
   return data;
 };
 
-const announce = (key) => {
-  const status = document.querySelector(selectors.quickAccessStatus);
-
-  if (status) {
-    status.textContent = status.dataset[key] ?? '';
-  }
-};
-
 export default function initQuickAccess(Modal) {
   const root = () => document.querySelector(selectors.quickAccess);
 
@@ -132,7 +125,7 @@ export default function initQuickAccess(Modal) {
 
     const confirm = target?.closest(selectors.confirmRemoveQuickAccess);
 
-    if (confirm && confirm.getAttribute('aria-busy') !== 'true') {
+    if (confirm && !confirm.matches(selectors.busyButton)) {
       const dialog = document.querySelector(selectors.quickAccessRemove);
       const error = dialog.querySelector(selectors.quickAccessRemoveError);
 
@@ -142,7 +135,8 @@ export default function initQuickAccess(Modal) {
         .then((shortcuts) => {
           renderShortcuts(root(), shortcuts);
           Modal.getOrCreateInstance(dialog).hide();
-          announce('psDataRemoved');
+          // Says what happened once the dialog closes
+          announce(root().dataset.psDataRemoved ?? '');
         })
         .catch((reason) => {
           // A danger alert (role="alert"): shown, then filled, so screen readers announce the message
@@ -168,7 +162,7 @@ export default function initQuickAccess(Modal) {
     const error = form.querySelector(selectors.quickAccessError);
     const submit = document.querySelector(`[form="${form.id}"][type="submit"]`);
 
-    if (submit?.getAttribute('aria-busy') === 'true') {
+    if (submit?.matches(selectors.busyButton)) {
       return;
     }
 
@@ -186,7 +180,7 @@ export default function initQuickAccess(Modal) {
       .then((shortcuts) => {
         renderShortcuts(root(), shortcuts);
         Modal.getOrCreateInstance(dialog).hide();
-        announce('psDataAdded');
+        announce(root().dataset.psDataAdded ?? '');
       })
       .catch((reason) => {
         error.hidden = false;

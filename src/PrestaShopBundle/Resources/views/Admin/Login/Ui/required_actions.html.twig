@@ -12,9 +12,9 @@
     <h1 class="ps-login__title">{{ 'Finish securing your shop'|trans({}, 'Admin.Login.Feature') }}</h1>
 
     <twig:ui:Layout:Stack>
-      <twig:ui:Alert type="warning" icon="warning">
+      <twig:ui:Alert type="warning">
         <p>{{ 'For security reasons, do the following before you sign in:'|trans({}, 'Admin.Login.Notification') }}</p>
-        <ul class="mb-0">
+        <ul>
           {% for requiredAction in requiredActions %}
             <li>{{ requiredAction|raw_purified }}</li>
           {% endfor %}

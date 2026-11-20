@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Ui;
 
+use LogicException;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -47,6 +48,9 @@ final class Button
 
     public bool $loading = false;
 
+    /** What screen readers hear while the button is busy, when "Loading..." says less than the action ("Installing...") */
+    public ?string $busyLabel = null;
+
     public bool $disabled = false;
 
     #[PreMount]
@@ -63,6 +67,7 @@ final class Button
                 'icon' => null,
                 'iconPosition' => 'start',
                 'loading' => false,
+                'busyLabel' => null,
                 'disabled' => false,
             ])
             ->setAllowedValues('variant', self::VARIANTS)
@@ -72,13 +77,15 @@ final class Button
             ->setAllowedTypes('icon', ['null', 'string'])
             ->setAllowedValues('iconPosition', self::ICON_POSITIONS)
             ->setAllowedTypes('loading', 'bool')
+            ->setAllowedTypes('busyLabel', ['null', 'string'])
+            ->setAllowedValues('busyLabel', fn (?string $label): bool => null === $label || '' !== trim($label))
             ->setAllowedTypes('disabled', 'bool')
             // A link navigates: it has no type, and the page it opens shows the progress
             ->setNormalizer('href', function (Options $options, ?string $href) use ($data): ?string {
                 if (null !== $href && array_key_exists('type', $data)) {
                     throw new InvalidOptionsException('A button with an href is a link: it takes no type.');
                 }
-                if (null !== $href && $options['loading']) {
+                if (null !== $href && ($options['loading'] || null !== $options['busyLabel'])) {
                     throw new InvalidOptionsException('A button with an href is a link: it has no loading state.');
                 }
 
@@ -87,5 +94,16 @@ final class Button
         ;
 
         return $resolver->resolve($data) + $data;
+    }
+
+    /**
+     * The label is the content block, which props cannot see: the template passes it here. Without text and without
+     * an aria-label (what <twig:ui:IconButton> gives), the button has no name.
+     */
+    public function checkLabel(string $content, bool $hasAriaLabel): void
+    {
+        if (!$hasAriaLabel && '' === trim(strip_tags($content))) {
+            throw new LogicException('<twig:ui:Button> needs a label, its content. For an icon alone, use <twig:ui:IconButton label="…">.');
+        }
     }
 }

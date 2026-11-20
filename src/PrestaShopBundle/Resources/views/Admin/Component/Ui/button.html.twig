@@ -2,24 +2,32 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
+{#- Bootstrap's button, and the kit's ps-button block for what is its own (the label beside an icon) -#}
 {%- set classes = ['btn', 'btn-' ~ variant] -%}
 {%- if size != 'md' -%}
   {%- set classes = classes|merge(['btn-' ~ size]) -%}
 {%- endif -%}
+{%- set classes = classes|merge(['ps-button']) -%}
 
 {%- set defaults = {class: classes|join(' ')} -%}
 
+{%- set label -%}{%- block content %}{% endblock -%}{%- endset -%}
+{%- set withIconAndLabel = icon and label|trim is not empty -%}
+{%- do this.checkLabel(label, attributes.all['aria-label'] is defined) -%}
+{%- set busyText = busyLabel ?? 'Loading...'|trans({}, 'Admin.Global') -%}
+
 {%- if href is null -%}
   {%- set tag = 'button' -%}
-  {%- set defaults = defaults|merge({type: type}) -%}
+  {#- What busy-button.js announces when a script makes the button busy -#}
+  {%- set defaults = defaults|merge({type: type, 'data-ps-data-busy-label': busyText}) -%}
 
   {%- if disabled -%}
     {%- set defaults = defaults|merge({disabled: true}) -%}
   {%- endif -%}
 
-  {#- Same state as a kit form being sent (submit-once.js), which removes it when the page comes back from the history -#}
+  {#- Same state as busy-button.js sets (a kit form being sent, a dialog saving); it ignores the clicks and keys of a busy button -#}
   {%- if loading -%}
-    {%- set defaults = defaults|merge({'data-ps-state': 'loading', 'aria-busy': 'true', 'aria-disabled': 'true'}) -%}
+    {%- set defaults = defaults|merge({'data-ps-state': 'loading', 'aria-disabled': 'true'}) -%}
   {%- endif -%}
 {%- else -%}
   {%- set tag = 'a' -%}
@@ -28,6 +36,7 @@
 {%- endif -%}
 
 <{{ tag }}{{ attributes.defaults(defaults) }}>
+  {#- As Bootstrap's loading buttons: the spinner is decoration, the hidden text joins the button's name for screen readers -#}
   {%- if loading -%}
     <span class="spinner-border spinner-border-sm" aria-hidden="true" data-ps-ref="submit-spinner"></span>
   {%- endif -%}
@@ -36,9 +45,18 @@
     <twig:ui:Icon :name="icon" size="lg"/>
   {%- endif -%}
 
-  {%- block content %}{% endblock -%}
+  {#- Beside an icon, the label is its own box, so a label that wraps stays against the icon -#}
+  {%- if withIconAndLabel -%}
+    <span class="ps-button__label">{{ label }}</span>
+  {%- else -%}
+    {{ label }}
+  {%- endif -%}
 
   {%- if icon and iconPosition == 'end' -%}
     <twig:ui:Icon :name="icon" size="lg"/>
+  {%- endif -%}
+
+  {%- if loading -%}
+    <span class="visually-hidden" data-ps-ref="busy-text">{{ busyText }}</span>
   {%- endif -%}
 </{{ tag }}>

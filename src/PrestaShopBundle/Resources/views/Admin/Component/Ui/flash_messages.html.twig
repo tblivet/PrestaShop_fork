@@ -15,7 +15,7 @@
     {% for alert in alerts %}
       <twig:ui:Alert :type="alert.type" :icon="alert.icon" :dismissible="dismissible" data-ps-ref="flash-alert">
         {% for message in alert.messages %}
-          <p class="mb-0">{{ message|raw_purified }}</p>
+          <p>{{ message|raw_purified }}</p>
         {% endfor %}
       </twig:ui:Alert>
     {% endfor %}

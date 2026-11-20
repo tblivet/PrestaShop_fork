@@ -3,7 +3,7 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
 {%- set props = {variant: variant, size: size, icon: icon, loading: loading, disabled: disabled, 'aria-label': label} -%}
-{%- set props = props|merge(href is null ? {type: type} : {href: href}) -%}
+{%- set props = props|merge(href is null ? {type: type, busyLabel: busyLabel} : {href: href}) -%}
 
 {#- The tooltip shows the name the button already has: tooltips.js keeps screen readers from reading it twice -#}
 {%- if tooltip -%}

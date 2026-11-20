@@ -40,8 +40,3 @@
     <twig:ui:Button variant="destructive" data-ps-action="confirm-remove-quick-access">{{ 'Remove'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
   </twig:block>
 </twig:ui:Modal>
-
-{#- Says what happened once a dialog closes -#}
-<div class="visually-hidden" role="status" data-ps-ref="quick-access-status"
-  data-ps-data-added="{{ 'This page is now in your quick access.'|trans({}, 'Admin.Navigation.Header') }}"
-  data-ps-data-removed="{{ 'This page is no longer in your quick access.'|trans({}, 'Admin.Navigation.Header') }}"></div>

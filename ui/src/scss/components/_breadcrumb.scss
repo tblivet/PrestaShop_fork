@@ -6,7 +6,8 @@
 
 // ── Breadcrumb ────────────────────────────────────────────────────────────────
 
-// Bootstrap has no variable for the divider's font-family.
+// The divider is an SVG chevron ($breadcrumb-divider), centred on the text; it points the other way in right-to-left
+// pages, which Bootstrap's left-to-right build does not do
 .breadcrumb {
   &-item {
     & + & {
@@ -15,13 +16,10 @@
 
       &::before {
         float: none;
-        font-family: 'Material Symbols Outlined', sans-serif;
-        font-size: 1rem;
         line-height: 1;
-        content: $breadcrumb-divider;
 
         @at-root [dir='rtl'] & {
-          content: $breadcrumb-divider-flipped;
+          content: var(--#{$prefix}breadcrumb-divider, escape-svg($breadcrumb-divider-flipped));
         }
       }
     }

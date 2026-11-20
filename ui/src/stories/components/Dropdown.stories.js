@@ -42,12 +42,12 @@ const EXPORTS = [
 
 // The markup of dropdown.html.twig: a <twig:ui:Button> (or <twig:ui:IconButton> with icon) and a <twig:ui:DropdownMenu>
 const dropdown = ({ label, items, icon = null, variant = 'primary', size = 'md', align = 'start', direction = 'down', disabled = false, ...attributes }) => {
-  const classes = ['btn', `btn-${variant}`, ...(size !== 'md' ? [`btn-${size}`] : []), ...(icon ? ['ps-icon-button'] : [])].join(' ');
-  const toggle = `type="button"${disabled ? ' disabled' : ''}${icon ? ` aria-label="${label}"` : ''} data-bs-toggle="dropdown" aria-expanded="false"`;
+  const classes = ['btn', `btn-${variant}`, ...(size !== 'md' ? [`btn-${size}`] : []), 'ps-button', ...(icon ? ['ps-icon-button'] : [])].join(' ');
+  const toggle = `type="button" data-ps-data-busy-label="Loading..."${disabled ? ' disabled' : ''}${icon ? ` aria-label="${label}"` : ''} data-bs-toggle="dropdown" aria-expanded="false"`;
   const arrow = uiIcon(direction === 'up' ? keyboardArrowUp : keyboardArrowDown, { size: 'lg' });
   const trigger = icon
     ? `<button class="${classes}" ${toggle}>${uiIcon(TRIGGER_ICONS[icon], { size: 'lg' })}</button>`
-    : `<button class="${classes}" ${toggle}>${label}${arrow}</button>`;
+    : `<button class="${classes}" ${toggle}><span class="ps-button__label">${label}</span>${arrow}</button>`;
   const wrapperClasses = [direction === 'up' ? 'dropup' : 'dropdown', attributes.class].filter(Boolean).join(' ');
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
 

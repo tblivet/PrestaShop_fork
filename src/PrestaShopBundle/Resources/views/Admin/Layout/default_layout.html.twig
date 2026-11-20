@@ -164,6 +164,8 @@
 
 {% if ui_kit %}</main></div>
   {{ include('@PrestaShop/Admin/Component/Layout/Ui/quick_access_modals.html.twig') }}
+  {# What scripts tell screen readers (announcer.js), in the page from the start so it is announced #}
+  <twig:ui:Announcer/>
 {% else %}
   <div class="mobile-layer"></div>
 {% endif %}

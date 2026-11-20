@@ -16,14 +16,21 @@ class AlertTest extends TestCase
 {
     public function testDefaults(): void
     {
-        $this->assertSame(['type' => 'info', 'dismissible' => false, 'borderless' => false, 'icon' => null], (new Alert())->preMount([]));
+        $this->assertSame(['type' => 'info', 'dismissible' => false, 'borderless' => false, 'icon' => 'info'], (new Alert())->preMount([]));
+    }
+
+    public function testGivesAStatusTypeItsIcon(): void
+    {
+        $this->assertSame('cancel', (new Alert())->preMount(['type' => 'danger'])['icon']);
+        $this->assertSame('lock', (new Alert())->preMount(['type' => 'danger', 'icon' => 'lock'])['icon']);
+        $this->assertNull((new Alert())->preMount(['type' => 'secondary'])['icon']);
     }
 
     public function testKeepsExtraAttributes(): void
     {
         $this->assertSame(
-            ['type' => 'danger', 'dismissible' => true, 'borderless' => false, 'icon' => 'cancel', 'class' => 'mb-0'],
-            (new Alert())->preMount(['type' => 'danger', 'dismissible' => true, 'borderless' => false, 'icon' => 'cancel', 'class' => 'mb-0'])
+            ['type' => 'danger', 'dismissible' => true, 'borderless' => false, 'icon' => 'cancel', 'data-ps-ref' => 'flash-alert'],
+            (new Alert())->preMount(['type' => 'danger', 'dismissible' => true, 'borderless' => false, 'icon' => 'cancel', 'data-ps-ref' => 'flash-alert'])
         );
     }
 
@@ -38,6 +45,20 @@ class AlertTest extends TestCase
         $this->expectException(InvalidOptionsException::class);
 
         (new Alert())->preMount(['type' => 'error']);
+    }
+
+    public function testRejectsTheTypesOutsideTheKitColors(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        (new Alert())->preMount(['type' => 'light']);
+    }
+
+    public function testRejectsNonStringIcon(): void
+    {
+        $this->expectException(InvalidOptionsException::class);
+
+        (new Alert())->preMount(['icon' => 42]);
     }
 
     public function testRejectsNonBooleanDismissible(): void

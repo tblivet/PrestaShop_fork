@@ -3,6 +3,10 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // https://getbootstrap.com/docs/5.3/components/pagination/
+import chevronLeft from '../../../icons/material-symbols/chevron-left.svg?raw';
+import chevronRight from '../../../icons/material-symbols/chevron-right.svg?raw';
+import uiIcon from '../ui-icon';
+
 export default {
   title: 'Components/Pagination',
 };
@@ -10,7 +14,7 @@ export default {
 const prev = (disabled = false) => `
   <li class="page-item${disabled ? ' disabled' : ''}">
     <a class="page-link" href="#" aria-label="Previous"${disabled ? ' aria-disabled="true" tabindex="-1"' : ''}>
-      <span class="icon" aria-hidden="true">chevron_left</span>
+      ${uiIcon(chevronLeft, { flipRtl: true })}
       <span class="visually-hidden">Previous</span>
     </a>
   </li>`;
@@ -18,7 +22,7 @@ const prev = (disabled = false) => `
 const next = (disabled = false) => `
   <li class="page-item${disabled ? ' disabled' : ''}">
     <a class="page-link" href="#" aria-label="Next"${disabled ? ' aria-disabled="true" tabindex="-1"' : ''}>
-      <span class="icon" aria-hidden="true">chevron_right</span>
+      ${uiIcon(chevronRight, { flipRtl: true })}
       <span class="visually-hidden">Next</span>
     </a>
   </li>`;

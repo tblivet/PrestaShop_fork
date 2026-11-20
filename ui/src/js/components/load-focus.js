@@ -11,7 +11,7 @@ const isShown = (element) => element.getClientRects().length > 0;
 // the first field marked aria-invalid in a form, otherwise the first flash message of any type, or a form-level error.
 // A message takes focus without joining the tab order.
 export default function focusOnLoad() {
-  const field = Array.from(document.querySelectorAll('form [aria-invalid="true"]')).find(isShown);
+  const field = Array.from(document.querySelectorAll(selectors.invalidField)).find(isShown);
 
   if (field) {
     field.focus();
@@ -19,7 +19,7 @@ export default function focusOnLoad() {
     return;
   }
 
-  const message = Array.from(document.querySelectorAll(`${selectors.flashAlert}, form [role="alert"]`)).find(isShown);
+  const message = Array.from(document.querySelectorAll(`${selectors.flashAlert}, ${selectors.formError}`)).find(isShown);
 
   if (message) {
     message.setAttribute('tabindex', '-1');

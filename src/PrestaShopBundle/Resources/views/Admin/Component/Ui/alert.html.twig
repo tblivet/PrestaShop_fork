@@ -16,14 +16,20 @@
   {% set classes = classes|merge(['ps-alert--icon']) %}
 {% endif %}
 
+{# The icon of a status type says it to screen readers too, read first in the live region #}
+{% set statusLabels = {
+  danger: 'Error'|trans({}, 'Admin.Global'),
+  info: 'Information'|trans({}, 'Admin.Global'),
+  success: 'Success'|trans({}, 'Admin.Global'),
+  warning: 'Warning'|trans({}, 'Admin.Global'),
+} %}
+
 {# Only a danger alert interrupts screen readers; the others are announced politely #}
 <div{{ attributes.defaults({class: classes|join(' '), role: type == 'danger' ? 'alert' : 'status'}) }}>
   {% if icon %}
-    <twig:ui:Icon :name="icon" filled size="lg" class="ps-alert__icon"/>
-    <div class="ps-alert__content">{% block content %}{% endblock %}</div>
-  {% else %}
-    {{ block('content') }}
+    <twig:ui:Icon :name="icon" filled size="lg" class="ps-alert__icon" :label="statusLabels[type] ?? null"/>
   {% endif %}
+  <div class="ps-alert__content">{% block content %}{% endblock %}</div>
 
   {% if dismissible %}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>

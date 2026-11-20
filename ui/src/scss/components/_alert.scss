@@ -4,7 +4,22 @@
  */
 // Override Bootstrap alert — https://getbootstrap.com/docs/5.3/components/alerts/
 
-.alert {
+// The type's colors ($ps-alert-colors in _variables.scss) through Bootstrap's own alert variables; the text and its
+// links stay in the body color, the type shows in the tint, the border and the icon
+@each $state, $colors in $ps-alert-colors {
+  .alert-#{$state} {
+    --#{$prefix}alert-color: var(--#{$prefix}body-color);
+    --#{$prefix}alert-bg: #{map-get($colors, bg)};
+    --#{$prefix}alert-border-color: #{map-get($colors, border)};
+    --#{$prefix}alert-link-color: var(--#{$prefix}body-color);
+    --ps-alert-icon-color: #{map-get($colors, icon)};
+  }
+}
+
+// <twig:ui:Alert> (Admin/Component/Ui/alert.html.twig): every kit alert carries the block beside Bootstrap's classes
+$component-name: ps-alert;
+
+.#{$component-name} {
   // No single short word alone on the last line (where supported)
   text-wrap: pretty;
   // A long word (path, URL, token) breaks rather than overflowing the box
@@ -22,35 +37,12 @@
     color: inherit;
   }
 
-  // Focused by the kit when the page loads (load-focus.js): the kit ring, not the browser outline
+  // Focused by the kit when the page loads (load-focus.js): Bootstrap's focus ring; the transparent outline is what
+  // forced-colors mode draws, since it does not draw shadows
   &[tabindex="-1"]:focus {
-    outline: 0;
-    box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
+    outline: $focus-ring-width solid transparent;
+    box-shadow: $focus-ring-box-shadow;
   }
-}
-
-// The type's colors ($ps-alert-colors in _variables.scss) through Bootstrap's own alert variables; the text and its
-// links stay in the body color, the type shows in the tint, the border and the icon
-@each $state, $colors in $ps-alert-colors {
-  .alert-#{$state} {
-    --#{$prefix}alert-color: var(--#{$prefix}body-color);
-    --#{$prefix}alert-bg: #{map-get($colors, bg)};
-    --#{$prefix}alert-border-color: #{map-get($colors, border)};
-    --#{$prefix}alert-link-color: var(--#{$prefix}body-color);
-    --ps-alert-icon-color: #{map-get($colors, icon)};
-
-    @at-root [data-bs-theme='dark'] & {
-      --#{$prefix}alert-bg: var(--#{$prefix}#{$state}-bg-subtle);
-      --#{$prefix}alert-border-color: var(--#{$prefix}#{$state}-border-subtle);
-      --ps-alert-icon-color: var(--#{$prefix}#{$state}-text-emphasis);
-    }
-  }
-}
-
-// <twig:ui:Alert> (Admin/Component/Ui/alert.html.twig)
-$component-name: ps-alert;
-
-.#{$component-name} {
   // The icon beside the text. Not the .d-flex utility: its !important display beats Bootstrap's [hidden], and a hidden
   // alert (an error slot a script fills) must stay hidden
   &--icon {
@@ -67,6 +59,11 @@ $component-name: ps-alert;
   // Beside the icon the text is a flex item, which does not shrink below its longest word without this
   &__content {
     min-width: 0;
+
+    // The message's paragraphs and lists keep their space between them, not after the last one
+    > :last-child {
+      margin-block-end: 0;
+    }
   }
 
   // Centred on the first line of text, so it stays there when the text wraps

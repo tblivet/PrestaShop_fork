@@ -7,6 +7,9 @@
 // ── Prefix PrestaShop Kit ─────────────────────────────────────────────────────
 $prefix: psk-;
 
+// No dark mode in the back office (DECISIONS.md #5): Bootstrap writes no [data-bs-theme='dark'] variables
+$enable-dark-mode: false;
+
 // ── Gray scale ────────────────────────────────────────────────────────────────
 $gray-900: #101010;
 $gray-800: #1d1d1b;
@@ -303,7 +306,7 @@ $secondaries: (
   'secondary-900': $secondary-900,
 );
 
-// ── Subtle tokens (light mode) ────────────────────────────────────────────────
+// ── Subtle tokens ────────────────────────────────────────────────────────────
 
 // bg-subtle
 $primary-bg-subtle: $primary-100;
@@ -392,10 +395,9 @@ $btn-close-hover-opacity: 1;
 // ── Alert ─────────────────────────────────────────────────────────────────────
 // A component has no outer margin (CONVENTIONS.md): the layout around an alert spaces it
 $alert-margin-bottom: 0;
-// Light mode alert colors per type: a light tint, a border and an icon in the type's color, the text in the body color.
+// Alert colors per type: a light tint, a border and an icon in the type's color, the text in the body color.
 // Warning is orange; its icon is a shade darker than its border: the 500 orange is 2.4:1 on its tint, under the 3:1
 // a graphic needs.
-// Dark mode keeps Bootstrap's -bg-subtle backgrounds.
 $ps-alert-colors: (
   'primary': (bg: $primary-50, border: $primary, icon: $primary),
   'secondary': (bg: $secondary-50, border: $gray-600, icon: $gray-600),
@@ -410,8 +412,9 @@ $breadcrumb-font-size: 0.75rem;
 $breadcrumb-item-padding-x: 0.25rem;
 $breadcrumb-divider-color: var(--#{$prefix}secondary);
 $breadcrumb-active-color: var(--#{$prefix}secondary);
-$breadcrumb-divider: '\e5cc';
-$breadcrumb-divider-flipped: '\e5cb';
+// The chevron_right / chevron_left of ui/icons/material-symbols, 1rem, as Bootstrap's docs embed an SVG divider
+$breadcrumb-divider: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 -960 960 960' fill='#{$secondary}'><path d='m516.43-481-198-198L375-735.57 629.57-481 375-226.43 318.43-283l198-198Z'/></svg>");
+$breadcrumb-divider-flipped: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 -960 960 960' fill='#{$secondary}'><path d='M561-226.43 306.43-481 561-735.57 617.57-679l-198 198 198 198L561-226.43Z'/></svg>");
 
 // ── Forms ─────────────────────────────────────────────────────────────────────
 $form-label-font-weight: 500;
@@ -451,9 +454,6 @@ $dropdown-item-padding-x: .75rem;
 // ── Progress ──────────────────────────────────────────────────────────────────
 $progress-height: 0.875rem;
 $progress-font-size: 0.75rem;
-
-// ── Material Symbols ─────────────────────────────────────────────────────────
-$ms-font-family: 'Material Symbols Outlined';
 
 // ── Back-office layout ────────────────────────────────────────────────────────
 // Fixed header height — the mobile drawer and its backdrop are offset by it

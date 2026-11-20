@@ -202,3 +202,9 @@ Why:
 - utilities are `!important`, so a theme, a module or a page cannot override them;
 - the kit's utilities compile to physical properties (`ms-auto` is `margin-left`), against #4.
 Left aside: utilities for page layouts (a page would mix two systems), and keeping utilities inside layouts (the DOM stays heavy and they still cannot be overridden). Stack, Cluster, Tiles and the utilities left in templates are migrated in a separate change.
+
+## 39. Accessibility is audited against the RGAA; WCAG 2.2 additions are kept ahead — 2026-11-20
+
+The kit's accessibility reference is the RGAA in force (4.1.2, built on WCAG 2.1 AA; a version 5 on WCAG 2.2 is announced). Reviews cite the RGAA criterion and its WCAG equivalent (`RGAA 7.1 / WCAG 4.1.2`); axe runs with the WCAG 2.1 A/AA rules, the RGAA base, and once more with the 2.2 rules reported apart. WCAG 2.2 criteria the RGAA does not cover yet (target size, focus not obscured…) stay kit rules in `CONVENTIONS.md` but a review reports them at most as minor.
+Why: PrestaShop is audited in France against the RGAA, and its criteria map one to one to WCAG, so a finding reads for both audiences. Keeping the 2.2 additions means no catch-up when RGAA 5 lands.
+Left aside: WCAG 2.2 AA as the blocking reference (stricter than what the shop is audited against), RGAA only (would drop rules the kit already follows).

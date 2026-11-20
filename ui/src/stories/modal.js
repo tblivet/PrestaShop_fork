@@ -17,7 +17,7 @@ export const modalButton = ({ label, variant = 'secondary', ...attributes }) => 
   const extra = Object.entries(attributes).map(([name, value]) => ` ${name}="${value}"`).join('');
 
   return {
-    html: `<button class="btn btn-${variant}" type="button"${extra}>${label}</button>`,
+    html: `<button class="btn btn-${variant} ps-button" type="button" data-ps-data-busy-label="Loading..."${extra}>${label}</button>`,
     twig: `<twig:ui:Button${variant === 'primary' ? '' : ` variant="${variant}"`}${extra}>${label}</twig:ui:Button>`,
   };
 };
