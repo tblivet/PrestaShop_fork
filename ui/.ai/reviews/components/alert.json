@@ -1,0 +1,28 @@
+{
+  "component": "Alert",
+  "date": "2026-11-20",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/component-review-alert-2/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 15,
+    "captured": 15,
+    "skipped": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 0,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "A primary or secondary alert given an icon is not covered by any test: the unlabelled icon branch is never rendered",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/alert.html.twig:30"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "component": "Button",
+  "date": "2026-11-20",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/component-review-button-3/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 29,
+    "captured": 29,
+    "skipped": [
+      "docs"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 0,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "Busy status is a live region created inside the button at the moment it should speak, against the kit's live-region rule",
+      "where": "ui/src/js/components/busy-button.js:20-28; src/PrestaShopBundle/Resources/views/Admin/Component/Ui/button.html.twig:59-61"
+    }
+  ]
+}

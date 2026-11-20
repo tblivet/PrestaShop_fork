@@ -47,7 +47,7 @@ await new Promise((r) => { const s = document.createElement('script'); s.src = '
 (await axe.run(document, {runOnly: ['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']})).violations.map((v) => ({id: v.id, impact: v.impact, nodes: v.nodes.map((n) => n.target.join(' '))}));
 ```
 
-axe covers about a third of WCAG: also check by hand what it cannot — live region announcements, color-only state, meaningful labels and alt text, reduced motion.
+axe covers about a third of the criteria: also check by hand what it cannot — live region announcements, color-only state, meaningful labels and alt text, reduced motion. Cite the RGAA criterion and its WCAG one (`DECISIONS.md` #39); a `wcag22aa` result the RGAA in force does not cover is at most minor.
 
 ## 5. Read the source
 

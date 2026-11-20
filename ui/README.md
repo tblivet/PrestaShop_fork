@@ -65,8 +65,42 @@ All live in `ui/.ai/` and are linked for Claude Code (`.claude/skills`, `.claude
 | `ui-review` | skill | Quick review of a screen while working |
 | `ui-seed` | skill | Put the local shop in a data scenario and undo it |
 | `ui-wording` | skill | Reword a screen to the tone of voice and record the strings |
-| `ui-screen-review` | workflow | Full review of a page: every state captured, three reviewer lenses on the front end only, a skeptic, an HTML report (about 30 min). A page already reviewed gets a follow-up (earlier findings re-checked, only new blockers and majors added); `fresh: true` starts over |
+| `ui-screen-review` | workflow | Full review of a page: every state captured, five reviewer lenses on the front end only (visual, UX writing, RGAA, code, Bootstrap 5.3), a skeptic, an HTML report (about 30 min). A page already reviewed gets a follow-up (earlier findings re-checked, only new blockers and majors added); `fresh: true` starts over |
+| `ui-component-review` | workflow | Full review of one or more `<twig:ui:*>` components, see below |
 | `ui-inventory` | workflow | Refresh the pattern inventory and the component backlog |
+
+### Subagents
+
+Each step of the two review workflows is a kit subagent, defined in `ui/.ai/agents/` (linked in `.claude/agents`). Each carries its own rules and tools, so the reviewers cannot change files and only the capture agents drive Chrome. They can also be asked for alone ("ask ui-a11y-auditor to check the header").
+
+| Agent | Does | Tools | In |
+|-------|------|-------|----|
+| `ui-state-hunter` | Lists every state of a page or every case of a component (branches, flashes, config, props, long text, missing optional props) and how to reach it | read | both, first step |
+| `ui-browser-capturer` | Screenshots every state or case at 375/768/1280, axe, keyboard pass, console; restores any shop change | Chrome | both |
+| `ui-storybook-qa` | Tests Storybook itself: every story renders, every control changes the render, docs page, "Show code", console | Chrome | component |
+| `ui-code-reviewer` | PHP, Twig, SCSS, JS against `CONVENTIONS.md` | read | both |
+| `ui-bootstrap-expert` | What Bootstrap 5.3 already provides, from the official 5.3 docs and the installed sources (#38) | read, web | both |
+| `ui-storybook-keeper` | Story, docs, defaults, Twig in "Show code" and tests up to date, from the code | read | component |
+| `ui-visual-designer` | The screenshots: spacing, alignment, typography, responsive, long text, kit consistency | read | both |
+| `ui-a11y-auditor` | RGAA audit, each finding with its RGAA and WCAG criteria; WCAG 2.2 additions non-blocking (#39) | read, web | both |
+| `ui-ux-writer` | Labels, messages and announced text against the tone of voice and the back office terms | read | page |
+| `ui-skeptic` | Tries to refute every finding, applies `DECISIONS.md`, fixes severities | read | both, last step |
+
+### Reviewing a component
+
+The `ui-component-review` workflow reviews components one by one, in isolation, the way `ui-screen-review` reviews a page. Start Storybook first (`npm run storybook` in `ui/`), then ask Claude Code, for example: "run the ui-component-review workflow on Button and SideMenu, reviewsDir ui/.ai/reviews".
+
+| Step | What it checks |
+|------|----------------|
+| Check | Storybook answers, `story-parity.mjs`, the component's unit, render and `StoryMarkupTest` tests |
+| Inventory | Its files, props (type, default, allowed values), stories, and the cases to look at: every story plus edge cases set through URL args (long text, optional props left out, extreme values) |
+| Review, code | `ui-code-reviewer` (conventions) and `ui-bootstrap-expert` (Bootstrap 5.3) |
+| Review, story | `ui-storybook-keeper` (story, docs and tests from the code) and `ui-storybook-qa` (Storybook live: stories, controls, docs, "Show code") |
+| Review, render | `ui-browser-capturer` screenshots every case at 375, 768 and 1280 px with axe and a keyboard pass, then `ui-visual-designer` and `ui-a11y-auditor` (RGAA) look at them |
+| Challenge | `ui-skeptic` drops what the evidence does not support |
+| Report | An HTML report with the screenshots, and `.ai/reviews/components/<name>.json` with `reviewsDir` |
+
+Args: `components` (names after `ui:`, e.g. `Button`, `Layout:Stack`), `outDir` (absolute), and optionally `reviewsDir`, `storybookUrl` (default `http://127.0.0.1:6006`), `widths`, `fresh`. A component already reviewed gets a follow-up: earlier findings re-checked, only new blockers and majors added; `fresh: true` starts over. A component is done when no blocker or major is left.
 
 Scripts:
 
@@ -88,6 +122,7 @@ Scripts:
 | [`.ai/PROGRESS.md`](.ai/PROGRESS.md) | Pages on the kit, component adoption, open findings | `progress.mjs`, never by hand |
 | [`.ai/CHANGELOG-UI.md`](.ai/CHANGELOG-UI.md) | Markup, hooks, behaviour and strings that changed for modules, tests and translators | Every rework |
 | `.ai/reviews/<page>.json` | Last screen review of a page | `ui-screen-review` with `reviewsDir` |
+| `.ai/reviews/components/<name>.json` | Last review of a component | `ui-component-review` with `reviewsDir` |
 
 The BO UI tracker is the board for the whole migration; each rework updates its step.
 

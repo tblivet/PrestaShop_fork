@@ -1,0 +1,1 @@
+../../ui/.ai/agents/ui-browser-capturer.md

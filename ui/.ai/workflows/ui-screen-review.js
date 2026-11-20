@@ -5,13 +5,14 @@ export const meta = {
   phases: [
     { title: 'Plan', detail: 'list every state of each page from its code and Storybook story, and how to reach it' },
     { title: 'Capture', detail: 'one page at a time in Chrome: set up, screenshot per state and width, restore, axe, keyboard pass' },
-    { title: 'Review', detail: 'visual, UX/content and a11y/conventions lenses per page' },
+    { title: 'Review', detail: 'visual, UX writing, RGAA, code and Bootstrap 5.3 lenses per page' },
     { title: 'Challenge', detail: 'a skeptic drops findings the evidence does not support' },
     { title: 'Report', detail: 'HTML report: state coverage, screenshots and proposals' },
   ],
 }
 
 // Defined by ui/.ai/CONVENTIONS.md and ui/.ai/skills/ui-review/SKILL.md; agents read them, the script only orchestrates.
+// Each step is a kit subagent (ui/.ai/agents/*.md) that carries its own rules.
 // The point is to show the states a developer rarely sees (rare flashes, throttles, expired links, config-gated warnings),
 // so the plan lists every branch and the capture reaches it by setup or emulation rather than skipping it.
 
@@ -137,7 +138,7 @@ const FINDINGS_SCHEMA = {
           title: { type: 'string' },
           severity: { type: 'string', enum: SEVERITIES },
           where: { type: 'string', description: 'state + width, or file:line' },
-          evidence: { type: 'string', description: 'screenshot path(s) or file:line that show it' },
+          evidence: { type: 'string', description: 'always at least one: the screenshot path(s) for anything visible, the file:line for anything in code, the output lines for a command or axe result' },
           problem: { type: 'string', description: 'what is wrong and who it hurts (or the WCAG criterion)' },
           proposal: { type: 'string', description: 'the concrete improvement, in kit terms (component, utility, token, BEM class)' },
         },
@@ -176,17 +177,40 @@ const VERDICTS_SCHEMA = {
 const LENSES = [
   {
     key: 'visual',
+    agentType: 'ui-visual-designer',
     brief: 'Visual design and kit consistency. Compare with the Storybook story / playground mockup, which is the reference: spacing rhythm, alignment, typography scale, color tokens, component choice (one style per action), icon use, density, responsive behaviour at each width, overflow or clipping, long translations.',
   },
   {
     key: 'ux',
+    agentType: 'ui-ux-writer',
     brief: 'UX and content, with extra attention to the rare states (throttles, expired links, config-gated warnings, required actions, success after a flow): is it obvious what to do, what went wrong and what to do next; error placement and timing; empty, loading and success feedback; destructive actions; field order and defaults; wording against the PrestaShop tone of voice (plain, active, the user\'s words, one verb per action, no blame).',
   },
   {
     key: 'a11y',
-    brief: 'Accessibility and kit conventions. Use the axe results and keyboard notes, then check by hand what axe cannot: color-only state, focus order and visibility, live announcements, labels and aria-describedby, touch targets, reduced motion. Then read the templates, SCSS and JS behind the page against ui/.ai/CONVENTIONS.md (BEM + utilities + data-ps-*, runtime state, logical properties, translatable strings).',
+    agentType: 'ui-a11y-auditor',
+    brief: 'Accessibility against the RGAA (ui/.ai/DECISIONS.md #39). Use the axe results and keyboard notes, then check by hand what axe cannot: color-only state, focus order and visibility, live announcements, labels and aria-describedby, touch targets, reduced motion.',
+  },
+  {
+    key: 'code',
+    agentType: 'ui-code-reviewer',
+    brief: 'The templates, kit components, SCSS and JS behind the page against ui/.ai/CONVENTIONS.md: BEM, no layout or spacing utilities in markup, data-ps-* hooks, runtime state, logical properties, translatable strings. Use the screenshots only to locate what a visible problem comes from.',
+  },
+  {
+    key: 'bootstrap',
+    agentType: 'ui-bootstrap-expert',
+    brief: 'Bootstrap 5.3 first: custom CSS, markup or JS behind the page that a Bootstrap 5.3 component, variable, mixin or behaviour already provides, checked against the official 5.3 docs.',
   },
 ]
+
+const REPORT_STYLE = `How the report reads (it is for a developer who did not follow the review and must know in one minute what to fix):
+- Top: one plain verdict sentence per item ("Button: 2 problems to fix before it is done, 9 small ones"), then a short "What to do first" list of the blocking findings, each a link to its card.
+- Then one card per finding, blocking ones first, then "Non-blocking: fix if cheap". Each card: a coloured severity badge (Must fix for blocker and major, Small for minor, Idea for suggestion), the title, where it is (file:line or case + width), what is wrong and who it hurts in one or two sentences, the proposed fix, and ALWAYS its evidence inline, never only a path:
+  - a screenshot (in evidence, or a capture of the same case and width): the image itself, 360px wide, click to open full size;
+  - a file:line: read the file and show the lines around it (3 before, 3 after) in a <pre> with line numbers, the cited lines highlighted;
+  - a command or axe output: the relevant lines in a <pre>.
+  A finding whose evidence cannot be shown says so plainly.
+- Then the rest, folded in <details> so it does not get in the way: what was checked (tests, parity, cases or states), the gallery of every capture grouped by case or state with one thumbnail per width, and anything not checked with the reason.
+- Look: a clean, calm page; system font, 16px text, generous spacing, max-width 72rem centred, a sticky top bar with the counts per severity that filter the cards when clicked; colours only to mean something (red must fix, amber small, grey idea); no rounded corners; readable in light and dark (prefers-color-scheme). Inline CSS and a few lines of inline JS for the filters only, nothing external.`
 
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
@@ -247,7 +271,7 @@ Do not leave a state out because it is hard to reach. Pick how to reach it:
 - emulate: when it cannot be produced for real locally (e.g. a submitting/loading state the server answers too fast for: block the request after the page's own handlers ran), say exactly how to force it in the DOM.
 
 Merge states that look identical. Read only; do not open the browser and do not change anything.`,
-    { label: `plan:${page.name}`, phase: 'Plan', schema: PLAN_SCHEMA },
+    { label: `plan:${page.name}`, phase: 'Plan', schema: PLAN_SCHEMA, agentType: 'ui-state-hunter' },
   ),
 
   (plan, page) => {
@@ -284,10 +308,10 @@ Keyboard and mouse events only reach the page when its tab is the active, focuse
 
 Chrome may autofill saved credentials: before any interaction, clear every email/password field and type the values the state needs (obviously wrong ones, nobody@example.com / wrong-password, unless the state needs the disposable employee). During the keyboard pass, read document.activeElement before each key and never press Enter or Space on a submit button.
 
-Also: run axe-core on the most complete state and on each state that shows an alert or error (inject https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js, run with runOnly ['wcag2a','wcag2aa','wcag21aa','wcag22aa']), do one keyboard-only pass (Tab through to the end and back: order, visible focus, Enter/Space, Escape, traps), and read console errors.
+Also: run axe-core on the most complete state and on each state that shows an alert or error (inject https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js, run it with the RGAA rule sets of your instructions), do one keyboard-only pass (Tab through to the end and back: order, visible focus, Enter/Space, Escape, traps), and read console errors.
 
 Return only what you actually captured and observed.`,
-      { label: `capture:${page.name}`, phase: 'Capture', schema: CAPTURE_SCHEMA },
+      { label: `capture:${page.name}`, phase: 'Capture', schema: CAPTURE_SCHEMA, agentType: 'ui-browser-capturer' },
     )).then((capture) => {
       const leftovers = capture ? capture.restored.filter((r) => !r.verified) : []
       if (leftovers.length) log(`${page.name}: NOT RESTORED, check by hand: ${leftovers.map((r) => r.change).join('; ')}`)
@@ -316,8 +340,8 @@ Open the screenshots with the Read tool (it shows images) and compare states and
 ${SEVERITY_GUIDE}
 
 ${SCOPE}
-${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL and dark mode are out of scope (#4, #5), button focus rings are the button color at 50% on purpose (#29).`,
-      { label: `review:${lens.key}:${page.name}`, phase: 'Review', schema: FINDINGS_SCHEMA },
+${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL is out of scope (#4). Dark mode is not built (DECISIONS.md #5): never review how something looks in dark mode, but dark mode code in the kit (\`[data-bs-theme='dark']\` rules, \`_variables-dark.scss\`, dark-only variables, a Storybook dark switch) is dead weight that contradicts #5: report it as minor, with its removal as the fix (Bootstrap's own switch is \`$enable-dark-mode: false\`). Also, button focus rings are the button color at 50% on purpose (#29).`,
+      { label: `review:${lens.key}:${page.name}`, phase: 'Review', schema: FINDINGS_SCHEMA, agentType: lens.agentType },
     ).then((r) => (r ? { findings: r.findings.map((f) => ({ ...f, lens: lens.key })), outOfScope: r.outOfScope || [] } : { findings: [], outOfScope: [] }))))
       .then((byLens) => ({
         page, plan, capture, dir,
@@ -331,13 +355,13 @@ ${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it
     return agent(
       `${pageBrief(page)}
 
-You are a skeptical design lead. For each finding below, open its evidence (screenshots with the Read tool, files at the given lines) and try to refute it: not visible in the evidence, an artefact of emulation rather than of the page, contradicted by the Storybook reference (which wins), a duplicate of another finding (same problem seen through another lens or state: keep the clearest one, merged with the others' evidence, and drop the rest), a matter of taste with no user impact, out of scope (RTL, dark mode, a choice recorded in ui/.ai/DECISIONS.md, or a fix that needs a controller, form type, route, security or business-flow change rather than a front-end one), or a proposal that breaks ui/.ai/CONVENTIONS.md. Keep it only if it survives; correct its severity if it is over- or under-rated against this scale. When unsure, drop it.
+You are a skeptical design lead. For each finding below, open its evidence (screenshots with the Read tool, files at the given lines) and try to refute it: not visible in the evidence, an artefact of emulation rather than of the page, contradicted by the Storybook reference (which wins), a duplicate of another finding (same problem seen through another lens or state: keep the clearest one, merged with the others' evidence, and drop the rest), a matter of taste with no user impact, out of scope (RTL, how something looks in dark mode, a choice recorded in ui/.ai/DECISIONS.md, or a fix; a finding asking to remove dark mode code stays that needs a controller, form type, route, security or business-flow change rather than a front-end one), or a proposal that breaks ui/.ai/CONVENTIONS.md. Keep it only if it survives; correct its severity if it is over- or under-rated against this scale. When unsure, drop it.
 ${SEVERITY_GUIDE}
 ${followUp(page) ? `This is a follow-up review: also drop a new finding (not one of the earlier open findings, not a regression) that is below major.\n${followUp(page)}` : ''}
 
 Findings:
 ${reviewed.findings.map((f, i) => `[${i}] (${f.lens}, ${f.severity}) ${f.title} — ${f.where} — evidence: ${f.evidence} — ${f.problem} — proposal: ${f.proposal}`).join('\n')}`,
-      { label: `challenge:${page.name}`, phase: 'Challenge', schema: VERDICTS_SCHEMA },
+      { label: `challenge:${page.name}`, phase: 'Challenge', schema: VERDICTS_SCHEMA, agentType: 'ui-skeptic' },
     ).then((v) => {
       const verdicts = new Map((v ? v.verdicts : []).map((x) => [x.index, x]))
       const kept = reviewed.findings
@@ -388,17 +412,13 @@ ${JSON.stringify(reportData, null, 1)}
 
 Only blocker and major findings block a page (${JSON.stringify(BLOCKING)}); minor and suggestion are non-blocking: fix them if cheap, leave them otherwise.
 
-Layout: a summary table (page, verdict, states captured / emulated / missing, findings per severity). The verdict is "Done" when the page has no blocking finding, "To fix: n blocking" otherwise. Then per page:
-1. State coverage: every state with its status (captured, emulated, missing), why it matters, its source file:line, and for missing ones the reason and how to reach it by hand. Put rare states first-class, not in a footnote: they are why the report exists.
-2. Gallery grouped by state, one thumbnail per width (img src relative to ${outDir}, click to open full size), an "emulated" badge where it applies.
-3. Findings ranked by severity, each with lens, where, problem, proposal, and its evidence thumbnails, and a badge: "Must fix" on blocker and major, "Non-blocking" on minor, "Nit" on suggestion. Blocking findings first; the non-blocking ones under their own heading "Non-blocking: fix if cheap".
-4. Shop changes made for setup and whether each was restored; highlight any not restored.
-5. Out of scope: the page's outOfScope ideas (back end or business flow), clearly not findings. Each reviewer wrote its own: merge the lines that say the same thing (same change, same place) into one, then keep at most 3, those that matter most to the user.
-Inline CSS only, no external scripts.${reviewsDir ? `
+Per page, the folded part also holds: the state coverage (every state with its status captured, emulated or missing, why it matters, its source file:line, and for missing ones the reason and how to reach it by hand; rare states first-class, they are why the report exists), the shop changes made for setup and whether each was restored (highlight any not restored, outside the fold), and "Out of scope": the page's outOfScope ideas (back end or business flow), clearly not findings. Each reviewer wrote its own: merge the lines that say the same thing into one, then keep at most 3, those that matter most to the user.
+${REPORT_STYLE}${reviewsDir ? `
 
 Then, for each page, write ${reviewsDir}/<page slug>.json (mkdir -p first, overwrite), 2-space indented JSON: {"page": name, "url", "date": ${JSON.stringify(args.date || '')} or today's date (YYYY-MM-DD) if empty, "report": the HTML path, "states": {"total", "captured", "emulated", "missing": [ids]}, "findings": {"blocker": n, "major": n, "minor": n, "suggestion": n}, "open": [{"severity", "title", "where"}] for every finding, "outOfScope": the same merged list of at most 3 lines as in the report, "note": the note of the existing file if it has one}. Page slugs: ${JSON.stringify(reportData.map((r) => ({ name: r.page.name, slug: slug(r.page.name) })))}.` : ''}
+Then open the report in the user's browser with Bash: open "${outDir}/index.html".
 Return only the absolute path of the HTML file.`,
-  { label: 'report', phase: 'Report', effort: 'low' },
+  { label: 'report', phase: 'Report' },
 )
 
 return {
