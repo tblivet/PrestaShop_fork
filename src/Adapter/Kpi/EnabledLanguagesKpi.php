@@ -8,14 +8,17 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class EnabledLanguagesKpi is an implementation for enabled languages KPI.
  */
-final class EnabledLanguagesKpi implements KpiInterface
+final class EnabledLanguagesKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -54,10 +57,7 @@ final class EnabledLanguagesKpi implements KpiInterface
         $this->sourceLink = $sourceLink;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $enabledLanguages = $this->configuration->get('ENABLED_LANGUAGES');
 
@@ -76,6 +76,6 @@ final class EnabledLanguagesKpi implements KpiInterface
         $kpi->source = $this->sourceLink;
         $kpi->refresh = $this->configuration->get('ENABLED_LANGUAGES_EXPIRE') < time();
 
-        return $kpi->generate();
+        return $kpi;
     }
 }

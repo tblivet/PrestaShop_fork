@@ -8,14 +8,17 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class MainCountryKpi is an implementation for main countries KPI.
  */
-final class MainCountryKpi implements KpiInterface
+final class MainCountryKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -46,10 +49,7 @@ final class MainCountryKpi implements KpiInterface
         $this->sourceLink = $sourceLink;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $mainCountry = $this->configuration->get('MAIN_COUNTRY');
 
@@ -68,6 +68,6 @@ final class MainCountryKpi implements KpiInterface
         $kpi->source = $this->sourceLink;
         $kpi->refresh = $this->configuration->get('MAIN_COUNTRY_EXPIRE') < time();
 
-        return $kpi->generate();
+        return $kpi;
     }
 }

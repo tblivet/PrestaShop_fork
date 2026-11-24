@@ -8,14 +8,17 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Renders average age of all customers.
  */
-final class AverageCustomerAgeKpi implements KpiInterface
+final class AverageCustomerAgeKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -41,10 +44,7 @@ final class AverageCustomerAgeKpi implements KpiInterface
         $this->sourceUrl = $sourceUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-age';
@@ -61,6 +61,6 @@ final class AverageCustomerAgeKpi implements KpiInterface
         $helper->source = $this->sourceUrl;
         $helper->refresh = $this->kpiConfiguration->get('AVG_CUSTOMER_AGE_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

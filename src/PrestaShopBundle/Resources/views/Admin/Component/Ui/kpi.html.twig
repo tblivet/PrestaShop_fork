@@ -1,0 +1,34 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set tag = href ? 'a' : 'div' -%}
+{%- set root = {class: 'card ps-kpi ps-kpi--' ~ color, 'data-ps-ref': 'kpi'}
+  |merge(href ? {href: href} : {})
+  |merge(href and tooltip ? {'data-bs-toggle': 'tooltip', 'data-bs-title': tooltip} : {})
+  |merge(refreshUrl ? {'data-ps-data-refresh-url': refreshUrl} : {}) -%}
+
+<{{ tag }}{{ attributes.defaults(root) }}>
+  <div class="card-body ps-kpi__body">
+    {%- if icon -%}
+      <span class="ps-kpi__icon"><twig:ui:Icon :name="icon" size="lg"/></span>
+    {%- endif -%}
+    <div class="ps-kpi__text">
+      <p class="ps-kpi__title">
+        {{- title -}}
+        {%- if tooltip and not href -%}
+          <twig:ui:IconButton icon="info" :label="tooltip" variant="link" size="sm" tooltip class="ps-kpi__info" data-ps-ref="kpi-info"/>
+        {%- endif -%}
+      </p>
+      {#- A value to refresh shows a placeholder until kpi.js sets it (a cached one may be out of date); none, a long dash -#}
+      {%- if refreshUrl -%}
+        <p class="ps-kpi__value placeholder-glow" data-ps-ref="kpi-value" aria-busy="true"><span class="placeholder ps-kpi__placeholder" aria-hidden="true"></span></p>
+      {%- else -%}
+        <p class="ps-kpi__value" data-ps-ref="kpi-value">{{ value ?? '—' }}</p>
+      {%- endif -%}
+      {%- if subtitle -%}
+        <p class="ps-kpi__subtitle">{{ subtitle }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</{{ tag }}>

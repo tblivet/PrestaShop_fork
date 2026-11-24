@@ -9,14 +9,17 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
-final class ConversionRateKpi implements KpiInterface
+final class ConversionRateKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly ConfigurationInterface $configuration,
@@ -24,10 +27,7 @@ final class ConversionRateKpi implements KpiInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-conversion-rate';
@@ -51,6 +51,6 @@ final class ConversionRateKpi implements KpiInterface
         ]);
         $helper->refresh = $this->configuration->get('CONVERSION_RATE_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

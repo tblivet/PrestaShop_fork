@@ -573,3 +573,22 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Strings** (`Admin.Navigation.Header`)
 - New: "Skip to main content".
+
+## KPI — 2026-11-24
+
+`<twig:ui:Kpi>`, `Common/Kpi/Ui/kpi_row.html.twig`, `CommonController::renderKpiRowAction`, `src/Core/Kpi/KpiData.php`, `KpiDataInterface`, `src/Adapter/Kpi/HelperKpiTrait.php` (the 15 core KPIs), `kpi.js`.
+
+**Markup** (kit pages only: Orders, Carts, a cart, Categories, Customers, Translations)
+- The row is `div.ps-kpi-row[role="region"][tabindex="0"]` (no `.card-kpis`, `.kpi-row`, `.kpi-refresh`, `.refresh-kpis`); each core KPI is `.card.ps-kpi.ps-kpi--{colour}[data-ps-ref="kpi"]`, an `a` when linked, with its id kept (`#box-conversion-rate`…): no `.kpi-container`, `.box-stats`, `.kpi-content`, `.title`, `.value`, `.subtitle`, no inline `<script>` nor `refresh_box_*()` functions. The value is `[data-ps-ref="kpi-value"]`.
+- A module's KPI in the row keeps its HTML, in a tile.
+
+**Behaviour**
+- The colour is the KPI's place in the row (no more `color1`…`color4`).
+- An out-of-date value is fetched on load (`data-ps-data-refresh-url`, same AdminStats endpoint); no refresh button. Until it comes the value is a Bootstrap placeholder (`.placeholder-glow`, `aria-busy`), not the cached value; if none comes, a long dash.
+- On a phone the KPIs scroll sideways (the next one shows, the hidden edge fades); from md up a grid of two, three or four a line.
+
+**Strings** (`Admin.Global`)
+- New: "Key figures" (the name of the KPI row).
+
+**PHP**
+- New `KpiDataInterface::getKpiData(): KpiData`, implemented by the core KPIs; `KpiInterface::render()` is unchanged. A module's KPI can implement it to be rendered by the kit.

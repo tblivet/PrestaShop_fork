@@ -474,6 +474,13 @@ $ps-content-max-width: 75rem;
 $ps-content-padding: 1.5rem;
 // The room the page title keeps beside the actions; narrower, the actions go under it
 $ps-page-head-title-min-width: 10rem;
+// <twig:ui:Kpi>: the line on top that gives its colour, the tinted square of its icon
+$ps-kpi-line-width: .1875rem;
+$ps-kpi-icon-size: 2.5rem;
+$ps-kpi-placeholder-width: 5rem;
+// The KPI row on a phone: a card takes most of the width, the next one shows; room for a card's focus ring
+$ps-kpi-row-phone-width: 80%;
+$ps-kpi-row-focus-room: .25rem;
 // Room around the page head's sub-pages for a link's focus ring, inside their scrolling box
 $ps-page-head-focus-room: .25rem;
 // Gaps of the layouts (<twig:ui:Layout:*>, Gap.php): a size to a Bootstrap spacer index ($spacers is defined later)

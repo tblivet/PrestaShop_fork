@@ -1,0 +1,126 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// <twig:ui:Kpi> (Admin/Component/Ui/kpi.html.twig): a key figure in a card. Its colour tells it from the others of its
+// row: a line on the card's top edge and the tint of its icon. The line steps have the same weight on white (about
+// 2.2:1): the 600 of the pale colours, the 300 of green, darker at its base.
+$component-name: ps-kpi;
+
+$ps-kpi-colors: (
+  oceanblue: ("line": $oceanblue-600, "tint": $oceanblue-100, "ink": $oceanblue-800),
+  purple: ("line": $purple-600, "tint": $purple-100, "ink": $purple-800),
+  amber: ("line": $amber-600, "tint": $amber-100, "ink": $amber-800),
+  green: ("line": $green-300, "tint": $green-100, "ink": $green-800),
+);
+
+.#{$component-name} {
+  height: 100%;
+  color: var(--#{$prefix}body-color);
+  text-decoration: none;
+  border-block-start: $ps-kpi-line-width solid var(--#{$prefix}kpi-line);
+
+  &__body {
+    display: flex;
+    gap: map-get($spacers, 3);
+    align-items: flex-start;
+  }
+
+  &__icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: $ps-kpi-icon-size;
+    height: $ps-kpi-icon-size;
+    color: var(--#{$prefix}kpi-ink);
+    background-color: var(--#{$prefix}kpi-tint);
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacers, 1);
+    min-width: 0;
+
+    > p {
+      margin-block-end: 0;
+    }
+  }
+
+  &__title {
+    display: flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
+    font-size: $font-size-sm;
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  // Beside the title, no taller than it
+  &__info {
+    padding: 0;
+  }
+
+  &__value {
+    font-size: $h4-font-size;
+    font-weight: $font-weight-semibold;
+    line-height: $headings-line-height;
+    overflow-wrap: anywhere;
+  }
+
+  // While the value loads: a figure's width; still when motion is reduced (Bootstrap's glow is not)
+  &__placeholder {
+    width: $ps-kpi-placeholder-width;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &__subtitle {
+    font-size: $small-font-size;
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  // A linked figure: its title underlines on hover, as a link's text
+  @at-root a#{&}:hover .#{$component-name}__title {
+    text-decoration: underline;
+  }
+
+  @each $name, $steps in $ps-kpi-colors {
+    &--#{$name} {
+      --#{$prefix}kpi-line: #{map-get($steps, "line")};
+      --#{$prefix}kpi-tint: #{map-get($steps, "tint")};
+      --#{$prefix}kpi-ink: #{map-get($steps, "ink")};
+    }
+  }
+}
+
+// The row of a page's KPIs (Common/Kpi/Ui/kpi_row.html.twig): on a phone they scroll sideways, each most of the width so
+// the next one shows (ps-scroll-fade fades the edge that hides more); from md up a grid, two a line, three or four
+// from lg or xl. The room around them, taken back by the margins, keeps a linked card's focus ring inside the box
+.#{$component-name}-row {
+  display: grid;
+  grid-auto-columns: $ps-kpi-row-phone-width;
+  grid-auto-flow: column;
+  gap: map-get($spacers, 3);
+  padding: $ps-kpi-row-focus-room;
+  margin: calc(-1 * #{$ps-kpi-row-focus-room});
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+  }
+
+  @include media-breakpoint-up(lg) {
+    &--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @include media-breakpoint-up(xl) {
+    &--4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+}

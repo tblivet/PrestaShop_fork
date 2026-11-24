@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,8 +17,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  */
-final class DisabledCategoriesKpi implements KpiInterface
+final class DisabledCategoriesKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -48,10 +51,7 @@ final class DisabledCategoriesKpi implements KpiInterface
         $this->sourceUrl = $sourceUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-disabled-categories';
@@ -66,6 +66,6 @@ final class DisabledCategoriesKpi implements KpiInterface
         $helper->source = $this->sourceUrl;
         $helper->refresh = $this->kpiConfiguration->get('DISABLED_CATEGORIES_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

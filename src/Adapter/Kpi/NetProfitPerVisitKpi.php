@@ -9,14 +9,17 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
-final class NetProfitPerVisitKpi implements KpiInterface
+final class NetProfitPerVisitKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly ConfigurationInterface $configuration,
@@ -24,10 +27,7 @@ final class NetProfitPerVisitKpi implements KpiInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-net-profit-visit';
@@ -47,6 +47,6 @@ final class NetProfitPerVisitKpi implements KpiInterface
         ]);
         $helper->refresh = $this->configuration->get('NETPROFIT_VISIT_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

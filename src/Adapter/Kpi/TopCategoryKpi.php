@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,8 +17,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  */
-final class TopCategoryKpi implements KpiInterface
+final class TopCategoryKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -56,10 +59,7 @@ final class TopCategoryKpi implements KpiInterface
         $this->employeeIdLang = $employeeIdLang;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-top-category';
@@ -84,6 +84,6 @@ final class TopCategoryKpi implements KpiInterface
         $helper->source = $this->sourceUrl;
         $helper->refresh = $topCategoryExpire < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

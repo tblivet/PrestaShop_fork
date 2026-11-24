@@ -11,6 +11,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -18,8 +19,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
-final class AbandonedCartKpi implements KpiInterface
+final class AbandonedCartKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     public function __construct(
         private readonly LegacyContext $contextAdapter,
         private readonly TranslatorInterface $translator,
@@ -29,10 +32,7 @@ final class AbandonedCartKpi implements KpiInterface
     ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $dateFormat = $this->languageContext->getDateFormat();
 
@@ -61,6 +61,6 @@ final class AbandonedCartKpi implements KpiInterface
         ]);
         $helper->refresh = $this->configuration->get('ABANDONED_CARTS_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

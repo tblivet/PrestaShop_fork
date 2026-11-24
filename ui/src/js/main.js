@@ -10,6 +10,7 @@ import initBusyButtons from './components/busy-button';
 import initPasswordToggle from './components/password-toggle';
 import initFormValidation from './components/form-validation';
 import initHeaderSearch from './components/header-search';
+import initKpis from './components/kpi';
 import initNotifications from './components/notifications';
 import initQuickAccess from './components/quick-access';
 import initScrollFade from './components/scroll-fade';
@@ -37,5 +38,6 @@ initTooltips(bootstrap.Tooltip);
 // The script loads in <head>: the boxes are not there yet
 document.addEventListener('DOMContentLoaded', initScrollFade);
 document.addEventListener('DOMContentLoaded', () => initShowcaseModals(bootstrap.Modal));
+document.addEventListener('DOMContentLoaded', () => initKpis(bootstrap.Tooltip));
 // The script loads in <head>: wait for the page
 document.addEventListener('DOMContentLoaded', focusOnLoad);

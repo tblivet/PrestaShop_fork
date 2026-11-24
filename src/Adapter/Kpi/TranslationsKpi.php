@@ -8,14 +8,17 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TranslationsKpi is an implementation for translations KPI.
  */
-final class TranslationsKpi implements KpiInterface
+final class TranslationsKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -46,10 +49,7 @@ final class TranslationsKpi implements KpiInterface
         $this->sourceLink = $sourceLink;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $frontOfficeTranslations = $this->configuration->get('FRONTOFFICE_TRANSLATIONS');
 
@@ -67,6 +67,6 @@ final class TranslationsKpi implements KpiInterface
         $kpi->source = $this->sourceLink;
         $kpi->refresh = $this->configuration->get('FRONTOFFICE_TRANSLATIONS_EXPIRE') < time();
 
-        return $kpi->generate();
+        return $kpi;
     }
 }

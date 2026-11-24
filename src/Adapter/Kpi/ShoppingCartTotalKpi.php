@@ -10,14 +10,17 @@ use Cart;
 use Context;
 use Currency;
 use HelperKpi;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 
 /**
  * {@inheritdoc}
  */
-final class ShoppingCartTotalKpi implements KpiInterface
+final class ShoppingCartTotalKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var Locale
      */
@@ -36,10 +39,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
         $this->locale = $locale;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $translator = Context::getContext()->getTranslator();
         $cart = new Cart($this->options['cart_id']);
@@ -56,7 +56,7 @@ final class ShoppingCartTotalKpi implements KpiInterface
         );
         $helper->source = Context::getContext()->link->getAdminLink('AdminStats') . '&ajax=1&action=getKpi&kpi=shopping_cart_total&cartId=' . $cart->id;
 
-        return $helper->generate();
+        return $helper;
     }
 
     /**

@@ -1787,6 +1787,8 @@ Read-only label/value pairs as <dl>, horizontal or stacked, with fallback for em
 
 Row of KPI tiles (icon, label, value, trend/sub text) with optional refresh and loading/error state; also the hand-written totals/summary strips of order create, order view and customer view.
 
+Started 2026-11-24 (DECISIONS.md #42): the KPI cards are `<twig:ui:Kpi>` in `.ps-kpi-row` (no KpiRow component; it scrolls sideways on a phone), rendered from the core KPIs' data (`KpiDataInterface`) on Orders, Carts, a cart, Categories, Customers and Translations. Not built yet: the summary strips (order create, order view, customer view), the legacy Customer Service row.
+
 - Role: component, kind: data, complexity: M, pages: 8
 - Sections: listing tops, order totals, customer orders
 - Builds on: Common/Kpi/kpi_row.html.twig + legacy KPI helper (raw HTML)

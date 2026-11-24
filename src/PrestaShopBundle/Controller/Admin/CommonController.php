@@ -19,12 +19,16 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionF
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryProvider;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionProvider;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowPresenter;
 use PrestaShopBundle\Entity\Repository\AdminFilterRepository;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
+use PrestaShopBundle\Twig\Component\Ui\Kpi;
 use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -298,7 +302,22 @@ class CommonController extends PrestaShopAdminController
     public function renderKpiRowAction(
         KpiRowInterface $kpiRow,
         KpiRowPresenter $kpiRowPresenter,
+        #[Autowire(env: 'bool:PS_UI_KIT')]
+        bool $uiKit = false,
     ): Response {
+        // The kit renders a core KPI from its data (<twig:ui:Kpi>), a module's from its HTML
+        if ($uiKit) {
+            $kpis = array_values($kpiRow->getKpis());
+
+            return $this->render('@PrestaShop/Admin/Common/Kpi/Ui/kpi_row.html.twig', [
+                'kpis' => array_map(
+                    fn (KpiInterface $kpi, int $place): array => $kpi instanceof KpiDataInterface ? ['props' => Kpi::propsFromKpiData($kpi->getKpiData(), $place)] : ['html' => $kpi->render()],
+                    $kpis,
+                    array_keys($kpis)
+                ),
+            ]);
+        }
+
         return $this->render('@PrestaShop/Admin/Common/Kpi/kpi_row.html.twig', [
             'kpiRow' => $kpiRowPresenter->present($kpiRow),
         ]);

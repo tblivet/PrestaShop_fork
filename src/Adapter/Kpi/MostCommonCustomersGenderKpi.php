@@ -8,14 +8,17 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Renders percent of most common customers gender.
  */
-final class MostCommonCustomersGenderKpi implements KpiInterface
+final class MostCommonCustomersGenderKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -46,10 +49,7 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
         $this->sourceUrl = $sourceUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-gender';
@@ -65,6 +65,6 @@ final class MostCommonCustomersGenderKpi implements KpiInterface
         $helper->source = $this->sourceUrl;
         $helper->refresh = $this->kpiConfiguration->get('CUSTOMER_MAIN_GENDER_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

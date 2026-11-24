@@ -12,6 +12,9 @@ export default {
   clientError: '[data-ps-target="client-error"]',
   // <twig:ui:ShowcaseModal>, opened when the page loads
   showcaseModal: '[data-ps-ref="showcase-modal"]',
+  kpiToRefresh: '[data-ps-ref="kpi"][data-ps-data-refresh-url]',
+  kpiValue: '[data-ps-ref="kpi-value"]',
+  kpiInfo: '[data-ps-ref="kpi-info"]',
   // The page's live region (<twig:ui:Announcer>, announcer.js)
   announcer: '[data-ps-target="announcer"]',
   flashAlert: '[data-ps-ref="flash-alert"]',

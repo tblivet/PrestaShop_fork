@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,8 +17,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  */
-final class EmptyCategoriesKpi implements KpiInterface
+final class EmptyCategoriesKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -56,10 +59,7 @@ final class EmptyCategoriesKpi implements KpiInterface
         $this->hrefUrl = $hrefUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-empty-categories';
@@ -75,6 +75,6 @@ final class EmptyCategoriesKpi implements KpiInterface
         $helper->source = $this->sourceUrl;
         $helper->refresh = $this->configuration->get('EMPTY_CATEGORIES_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

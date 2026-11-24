@@ -8,6 +8,7 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 
 use HelperKpi;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,8 +17,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  */
-final class AverageProductsInCategoryKpi implements KpiInterface
+final class AverageProductsInCategoryKpi implements KpiInterface, KpiDataInterface
 {
+    use HelperKpiTrait;
+
     /**
      * @var TranslatorInterface
      */
@@ -48,10 +51,7 @@ final class AverageProductsInCategoryKpi implements KpiInterface
         $this->sourceUrl = $sourceUrl;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function render()
+    private function createHelper(): HelperKpi
     {
         $helper = new HelperKpi();
         $helper->id = 'box-products-per-category';
@@ -67,6 +67,6 @@ final class AverageProductsInCategoryKpi implements KpiInterface
         $helper->source = $this->sourceUrl;
         $helper->refresh = $this->kpiConfiguration->get('PRODUCTS_PER_CATEGORY_EXPIRE') < time();
 
-        return $helper->generate();
+        return $helper;
     }
 }

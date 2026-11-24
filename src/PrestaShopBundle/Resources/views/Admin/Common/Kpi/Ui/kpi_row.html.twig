@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# A page's key figures (CommonController::renderKpiRowAction): one <twig:ui:Kpi> each, up to four a line; on a phone
+   they scroll sideways, the edge that hides more fading (_kpi.scss). A module's KPI without data keeps its own HTML.
+   Focusable and named: the keyboard scrolls it on a phone #}
+{% set columns = kpis|length >= 4 ? 4 : (kpis|length == 3 ? 3 : 2) %}
+<div class="ps-kpi-row ps-kpi-row--{{ columns }} ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="{{ 'Key figures'|trans({}, 'Admin.Global') }}" tabindex="0">
+  {% for kpi in kpis %}
+    {% if kpi.props is defined %}
+      <twig:ui:Kpi {{ ...kpi.props }}/>
+    {% else %}
+      <div>{{ kpi.html|raw }}</div>
+    {% endif %}
+  {% endfor %}
+</div>
