@@ -556,3 +556,20 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Strings** (`Admin.Global`, `Admin.Actions`)
 - New: "Got it" (`Admin.Actions`).
+
+## Flash messages, skip link, page spacing — 2026-11-24
+
+`Admin/layout.html.twig` (`session_alert`, `sidebar_right`), `Layout/default_layout.html.twig`, `layout/_layout.scss`.
+
+**Markup** (kit pages only)
+- Session messages are `<twig:ui:FlashMessages/>` (`div.ps-flash-messages[data-ps-ref="flash-messages"]`, one `.ps-alert` per type): no `.alert-text`, no `button.close[data-dismiss]`. A page that overrides `session_alert` or `content_header` keeps its own.
+- New first element of the body: `a.ps-layout__skip-link[href="#main-content"]`; the content area is `main#main-content[tabindex="-1"]`.
+- The page content (`.content-div`) is `.ps-layout__page`: its blocks are spaced by the layout (1.5rem). An empty box there (`#content-message-box` until a script fills it) is hidden, so it takes no gap.
+- No `nav#right-sidebar` (the old theme's help sidebar) on kit pages: Help opens the documentation.
+
+**Behaviour**
+- The alerts close with their button (Bootstrap 5), each type with its icon.
+- The first Tab shows "Skip to main content" over the header; it moves the focus to the page, the next Tab reaches the page head.
+
+**Strings** (`Admin.Navigation.Header`)
+- New: "Skip to main content".

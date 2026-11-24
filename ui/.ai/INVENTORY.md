@@ -1023,7 +1023,7 @@ Done 2026-11-13 without the collapsed mode: `sections` (titles, items, submenus)
 
 ### 20. `<twig:ui:Layout:Page>`
 
-Started 2026-11-20 (DECISIONS.md #40): the page head is `<twig:ui:PageHead>` (title, icon, sub-pages, actions, help; no breadcrumb), rendered by the layout from the Toolbar data, and the content is centred or full width (`layoutFluid`, full width with a grid). Not built yet: the light (iframe) layout, the side region, a skip link.
+Started 2026-11-20 (DECISIONS.md #40): the page head is `<twig:ui:PageHead>` (title, icon, sub-pages, actions, help; no breadcrumb), rendered by the layout from the Toolbar data, and the content is centred or full width (`layoutFluid`, full width with a grid). The skip link and the flash messages (`<twig:ui:FlashMessages>`) are in since 2026-11-24. Not built yet: the light (iframe) layout, the side region.
 
 The one page template: places the header, side menu and the fixed slots title, breadcrumb, actions, tabs, flash alerts and content; light (iframe) variant without chrome; replaces layoutHeaderToolbarBtn/layoutTitle/help_link set both in Twig and in controllers.
 

@@ -23,8 +23,12 @@
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.base_url is defined %}data-base-url="{{ ps.jsRouterMetadata.base_url }}"{% endif %}
     {% if ps.jsRouterMetadata is defined and ps.jsRouterMetadata.token is defined %}data-token="{{ ps.jsRouterMetadata.token }}"{% endif %}
   >
-{# The kit places header, menu and content in one grid: the header on top, the menu beside the content #}
-{% if ui_kit %}<div class="ps-layout">{% endif %}
+{# The kit places header, menu and content in one grid: the header on top, the menu beside the content. The first Tab
+   stop skips the header and the menu to the page #}
+{% if ui_kit %}
+  <a class="btn btn-primary visually-hidden-focusable ps-layout__skip-link" href="#main-content">{{ 'Skip to main content'|trans({}, 'Admin.Navigation.Header') }}</a>
+  <div class="ps-layout">
+{% endif %}
 {# Layout header #}
 {% block layout_header %}
   {% if ui_kit %}
@@ -125,7 +129,7 @@
 {% if ui_kit %}
   {# Centred, or the full width: a page with a grid takes it unless it sets layoutFluid (_layout.scss) #}
   {% set containerModifier = layoutFluid is defined ? (layoutFluid ? ' ps-layout__container--fluid' : ' ps-layout__container--contained') : '' %}
-  <main class="ps-layout__content"><div class="ps-layout__container{{ containerModifier }}">
+  <main id="main-content" class="ps-layout__content" tabindex="-1"><div class="ps-layout__container{{ containerModifier }}">
 {% endif %}
 
 {# Page header toolbar #}
@@ -145,7 +149,7 @@
 
 <div id="main-div">
   <div
-    class="content-div{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if ps.displayedWithTabs %} with-tabs{% endif %}">
+    class="content-div{% if showContentHeader is same as(false) %} -notoolbar{% endif %}{% if ps.displayedWithTabs %} with-tabs{% endif %}{% if ui_kit %} ps-layout__page{% endif %}">
     {% if ps.installDirExists %}
       <div class="alert alert-warning">
         {{ 'For security reasons, you must also delete the /install folder.'|trans({}, 'Admin.Login.Notification') }}

@@ -27,6 +27,10 @@
 {% endblock %}
 
 {% block session_alert %}
+  {# The kit's alerts: dismissible, an icon per type, read once (FlashMessages.php) #}
+  {% if ui_kit %}
+    <twig:ui:FlashMessages/>
+  {% else %}
   {% macro alert(type, flashbagContent) %}
     <div class="alert alert-{{ type }} d-print-none" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -64,9 +68,12 @@
   {% if app.session.flashbag.peek('info')|length() > 0 %}
     {{ layout.alert('info', app.session.flashbag.get('info')) }}
   {% endif %}
+  {% endif %}
 {% endblock %}
 
 {% block sidebar_right %}
+  {# The help sidebar of the old theme: the kit's Help opens the documentation itself #}
+  {% if not ui_kit %}
   <nav
     id="right-sidebar"
     role="navigation"
@@ -77,4 +84,5 @@
       style="margin-top: 10em;" alt="{{ 'Loading...'|trans({}, 'Admin.Global') }}"
     />
   </nav>
+  {% endif %}
 {% endblock %}

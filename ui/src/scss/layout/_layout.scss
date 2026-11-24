@@ -17,6 +17,19 @@ $component-name: ps-layout;
     grid-area: header;
   }
 
+  // The first Tab stop of a page (visually-hidden-focusable): shown over the header while focused
+  &__skip-link:focus {
+    position: fixed;
+    inset-block-start: map-get($spacers, 2);
+    inset-inline-start: map-get($spacers, 2);
+    z-index: $zindex-fixed + 1;
+  }
+
+  // Reached by the skip link: the focus moves to it without a ring, the page head's title comes next
+  &__content:focus {
+    outline: 0;
+  }
+
   &__sidebar {
     grid-area: sidebar;
     min-height: 0;
@@ -62,6 +75,18 @@ $component-name: ps-layout;
     // A page without the page head (or the multistore header before it) gets the room on top the band would hold
     > :first-child:not(.ps-page-head) {
       margin-block-start: $ps-content-padding;
+    }
+
+    // The page's own blocks (KPIs, grid, forms) are spaced as the page head is from them
+    .#{$component-name}__page {
+      display: flex;
+      flex-direction: column;
+      gap: $spacer * 1.5;
+
+      // A box scripts fill later (#content-message-box) takes no gap while empty
+      > :empty {
+        display: none;
+      }
     }
 
     // The full width: a page with a grid takes it (its wide table needs it), any page can ask for it (layoutFluid) or
