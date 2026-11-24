@@ -4,6 +4,19 @@
  #}
 
 {% trans_default_domain 'Admin.Shopparameters.Feature' %}
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not showcaseCardIsClosed %}
+    <twig:ui:ShowcaseModal name="{{ metaShowcaseCardName }}" title="{{ 'Improve your SEO'|trans }}" image="{{ asset('themes/new-theme/public/helper-card/seo@3x.svg') }}" learnMore="{{ helperDocLink }}">
+      <p>{{ 'Edit information about your pages to gain visibility and therefore reach more visitors. We advise you to start with the index page, it stands for your homepage.'|trans }}</p>
+      <twig:block name="actions">
+        {% if indexPageId and isGridDisplayed %}
+          <twig:ui:Button variant="secondary" icon="edit" href="{{ path('admin_metas_edit', {metaId: indexPageId}) }}">{{ 'Configure index page'|trans }}</twig:ui:Button>
+        {% endif %}
+      </twig:block>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 
 {% block meta_showcase_card %}
   {% if not showcaseCardIsClosed %}
@@ -23,3 +36,4 @@
   </div>
   {% endif %}
 {% endblock %}
+{% endif %}

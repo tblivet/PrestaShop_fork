@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // Twig: <twig:ui:Header> (src/PrestaShopBundle/Twig/Component/Ui/Header.php) renders this markup, keep both in sync.
-// The search panel and the side menu drawer use Bootstrap offcanvas-md, the search type menu Bootstrap dropdown.
+// The search panel uses Bootstrap offcanvas-md, the side menu drawer offcanvas-lg, the search type menu Bootstrap dropdown.
 import bookmarkAdd from '../../../icons/material-symbols/bookmark-add.svg?raw';
 import bookmarks from '../../../icons/material-symbols/bookmarks.svg?raw';
 import bugReport from '../../../icons/material-symbols/bug-report.svg?raw';

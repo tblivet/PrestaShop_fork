@@ -14,7 +14,7 @@
   {%- endif -%}
 {%- endmacro -%}
 
-<nav{{ attributes.defaults({id: menuId, class: 'ps-side-menu offcanvas-md offcanvas-start', tabindex: '-1', 'aria-label': label ?? 'Main menu'|trans({}, 'Admin.Navigation.Menu')}) }}>
+<nav{{ attributes.defaults({id: menuId, class: 'ps-side-menu offcanvas-lg offcanvas-start', tabindex: '-1', 'aria-label': label ?? 'Main menu'|trans({}, 'Admin.Navigation.Menu')}) }}>
   <div class="ps-side-menu__body ps-scroll-fade ps-scroll-fade--y" data-ps-action="scroll-fade">
     {%- for section in sections -%}
       {%- set sectionIndex = loop.index0 -%}

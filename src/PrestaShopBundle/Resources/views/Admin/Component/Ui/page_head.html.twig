@@ -1,0 +1,73 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set newTab = '(opens in a new tab)'|trans({}, 'Admin.Global') -%}
+{%- set helpLabel = 'Help'|trans({}, 'Admin.Global') -%}
+
+{#- The "More actions" menu, on a phone: every action, the main one first, then Help; an id stays on the button, unique -#}
+{%- set menuItems = actions|map(action => {
+  label: action.label,
+  icon: action.icon,
+  href: action.href,
+  external: action.external,
+  disabled: action.disabled,
+  attr: action.attr|filter((value, name) => name != 'id'),
+}) -%}
+{%- if help -%}
+  {#- A divider only parts Help from actions above it -#}
+  {%- set menuItems = menuItems|merge((menuItems is empty ? [] : [{type: 'divider'}])|merge([{label: helpLabel, icon: 'help', href: help, external: true}])) -%}
+{%- endif -%}
+
+<header{{ attributes.defaults({class: 'ps-page-head' ~ (pages is not empty ? ' ps-page-head--with-pages')}) }}>
+  <h1 class="ps-page-head__title">
+    {%- if icon -%}
+      <twig:ui:Icon :name="icon" class="ps-page-head__icon"/>
+    {%- endif -%}
+    {{- title -}}
+  </h1>
+
+  {#- Before the actions in the markup, so the keyboard reaches them first; many of them scroll sideways -#}
+  {%- if pages is not empty -%}
+    <nav class="ps-page-head__pages ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" aria-label="{{ pagesLabel }}">
+      <ul class="nav nav-underline">
+        {%- for page in pages -%}
+          <li class="nav-item">
+            <a class="nav-link{{ page.current ? ' active' }}" href="{{ page.href }}"{% if page.current %} aria-current="page"{% endif %}>{{ page.label }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  {%- endif -%}
+
+  {%- if menuItems is not empty -%}
+    <div class="ps-page-head__actions">
+      {%- for action in actions -%}
+        {%- set link = action.href is not null ? {href: action.href} : {} -%}
+        {%- set external = action.external ? {target: '_blank', rel: 'noopener noreferrer'} : {} -%}
+        <span class="{{ loop.first ? 'ps-page-head__main-action' : 'ps-page-head__extra' }}">
+          <twig:ui:Button
+            variant="{{ loop.first ? 'primary' : 'secondary' }}"
+            size="sm"
+            :icon="action.icon"
+            :disabled="action.disabled"
+            {{ ...link }}
+            {{ ...external }}
+            {{ ...action.attr }}
+          >
+            {{- action.label -}}
+            {%- if action.external %}<span class="visually-hidden"> {{ newTab }}</span>{% endif -%}
+          </twig:ui:Button>
+        </span>
+      {%- endfor -%}
+
+      {%- if help -%}
+        <span class="ps-page-head__extra">
+          <twig:ui:IconButton icon="help" :label="helpLabel" variant="secondary" size="sm" tooltip tooltipPlacement="bottom" :href="help" target="_blank" rel="noopener noreferrer"/>
+        </span>
+      {%- endif -%}
+
+      <twig:ui:Dropdown icon="more_vert" label="{{ 'More actions'|trans({}, 'Admin.Global') }}" variant="secondary" size="sm" align="end" :items="menuItems" class="ps-page-head__more"/>
+    </div>
+  {%- endif -%}
+</header>

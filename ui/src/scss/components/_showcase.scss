@@ -1,0 +1,32 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// The introduction of a page (what attributes are, how categories work), in the body of its modal: the illustration
+// centred on top, the text and its link under it
+$component-name: ps-showcase;
+
+.#{$component-name} {
+  display: flex;
+  flex-direction: column;
+  gap: $spacer;
+  align-items: center;
+
+  &__image {
+    width: 100%;
+    height: auto;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: $spacer * .5;
+    align-items: flex-start;
+    align-self: stretch;
+
+    > p {
+      margin-block-end: 0;
+    }
+  }
+}

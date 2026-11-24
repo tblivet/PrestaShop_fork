@@ -1,0 +1,123 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// <twig:ui:PageHead> (Admin/Component/Ui/page_head.html.twig), the top of every kit page: its title (and an optional
+// icon) and its actions on one row, the links to its sibling sub-pages on the bottom edge of a white band. The links
+// come before the actions in the markup, so the keyboard reaches them first; order places them under the row. When the
+// title and the actions do not fit side by side, the actions go under the title instead of squeezing it.
+//
+// The band covers the content area's width wherever the page's container is: its background and its bottom line are
+// a border image pushed out to both sides (it paints, but takes no room); the content area's edges clip it.
+$component-name: ps-page-head;
+
+.#{$component-name} {
+  display: flex;
+  flex-wrap: wrap;
+  gap: map-get($spacers, 2) map-get($spacers, 3);
+  align-items: center;
+  justify-content: space-between;
+  // The same room above and under the title; with sub-pages, they close the band instead. The layout leaves the top of
+  // its content area to it (_layout.scss), so the band starts at the top
+  padding-block: $ps-content-padding;
+  // The band and its bottom line, painted out to both sides (border-image-outset takes no room)
+  border-image:
+    linear-gradient(
+      to top,
+      var(--#{$prefix}border-color) var(--#{$prefix}border-width),
+      var(--#{$prefix}body-bg) var(--#{$prefix}border-width)
+    )
+    fill 0 / 0 / 0 100vmax;
+
+  // At least the room of a short title: narrower, the actions wrap under it. As tall as a small button, so a head
+  // without actions is as tall as one with them and its title sits at the same place
+  &__title {
+    display: flex;
+    flex: 1 1 $ps-page-head-title-min-width;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    min-width: min(100%, #{$ps-page-head-title-min-width});
+    min-height: calc(#{$btn-font-size-sm * $btn-line-height + $btn-padding-y-sm * 2} + 2 * #{$btn-border-width});
+    margin-block-end: 0;
+    font-size: $h5-font-size;
+    font-weight: $font-weight-semibold;
+    // Only a word longer than the line breaks
+    overflow-wrap: break-word;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  // The sub-pages: a line of their own on the band's bottom edge. Many of them scroll sideways (ps-scroll-fade
+  // fades the edge that hides more). The room around them, taken back by the margins, keeps a link's focus ring inside
+  // the scrolling box, which would cut it
+  &__pages {
+    flex-basis: 100%;
+    order: 1;
+    min-width: 0;
+    padding: $ps-page-head-focus-room $ps-page-head-focus-room 0;
+    margin: calc(-1 * #{$ps-page-head-focus-room}) calc(-1 * #{$ps-page-head-focus-room}) 0;
+
+    .nav {
+      --#{$prefix}nav-link-font-size: #{$font-size-sm};
+
+      flex-wrap: nowrap;
+    }
+
+    .nav-link {
+      position: relative;
+      white-space: nowrap;
+
+      // Around the label, clear of the underline, as a button's ring stands off its edge
+      &:focus-visible {
+        box-shadow: none;
+
+        &::after {
+          position: absolute;
+          inset: .125rem calc(-1 * #{$ps-page-head-focus-room});
+          pointer-events: none;
+          content: "";
+          box-shadow: inset 0 0 0 $focus-ring-width $focus-ring-color;
+        }
+      }
+    }
+  }
+
+  // The sub-pages sit on the band's bottom edge
+  &--with-pages {
+    padding-block-end: 0;
+  }
+
+  @media print {
+    display: none;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  // Mobile first: on a phone every action, the main one first, is in the "More actions" menu, so the title keeps its
+  // row and the sub-pages stay right under it; from md up they are buttons and the menu goes
+  &__main-action,
+  &__extra {
+    display: none;
+  }
+
+  @include media-breakpoint-up(md) {
+    &__main-action,
+    &__extra {
+      display: inline;
+    }
+
+    &__more {
+      display: none;
+    }
+  }
+}

@@ -23,7 +23,7 @@ Build through `make` (it runs in Docker): the host's `node_modules` are Linux bu
 
 1. **Inventory**: the `ui-inventory` workflow lists the patterns of every Symfony page and writes the ranked backlog, [`.ai/INVENTORY.md`](.ai/INVENTORY.md).
 2. **Form theme**: every form field type (Symfony's and PrestaShop's: switch, translatable fields, choice tree, money…) gets a Bootstrap 5 block in `ui_kit_layout.html.twig` that calls a kit component, so forms follow the kit on every page (`INVENTORY.md`, "Form theme").
-3. **Shell, layouts and big components**: the page template (the top layout, with fixed slots: title, breadcrumb, actions, tabs, content), the layouts that place components (stack, row of actions, columns, form section) and the new grid, each designed in Storybook first. Components and layouts stay separate: a component never says where it sits, a layout never changes the components it places.
+3. **Shell, layouts and big components**: the page template (the top layout: the page head with its title, icon, sub-pages, actions and help, then the content), the layouts that place components (stack, row of actions, columns, form section) and the new grid, each designed in Storybook first. Components and layouts stay separate: a component never says where it sits, a layout never changes the components it places.
 4. **Components**: the backlog, top first. Every element the back office uses goes through a `<twig:ui:*>` component, Bootstrap ones included (button, badge, modal…); a back office pattern becomes one once it appears on a second page. Components are flexible enough that pages never fall back to raw markup.
 5. **Pages**: most used first (Orders, Products, Customers), assembled from the components.
 

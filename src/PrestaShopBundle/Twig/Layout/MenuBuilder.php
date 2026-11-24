@@ -206,6 +206,34 @@ class MenuBuilder
         return $this->context->getLanguage()->getId();
     }
 
+    /**
+     * Whether the page is the one the tab links to (its list or its settings, saved or not), not one under it (add,
+     * edit, view)
+     */
+    public function isTabPage(Tab $tab): bool
+    {
+        $request = $this->requestStack->getMainRequest();
+        if (null === $request) {
+            return true;
+        }
+
+        $tabPath = rtrim((string) parse_url($this->getLinkFromTab($tab), PHP_URL_PATH), '/');
+        if ($tabPath !== rtrim($request->getBaseUrl() . $request->getPathInfo(), '/')) {
+            return false;
+        }
+
+        // A legacy page has one URL for all: its action tells its add or edit page; a settings page saved (update) is the
+        // same page shown again
+        $action = (string) $this->getLegacyAction();
+        foreach (['add', 'new', 'edit', 'view', 'details'] as $pageUnderTheTab) {
+            if (str_starts_with($action, $pageUnderTheTab)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private function getActionLink(): ?MenuLink
     {
         $action = $this->getLegacyAction();

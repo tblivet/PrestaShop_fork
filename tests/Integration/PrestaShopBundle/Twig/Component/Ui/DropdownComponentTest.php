@@ -65,6 +65,14 @@ class DropdownComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('<script>', $html);
     }
 
+    public function testAnItemsClassJoinsTheKitOnes(): void
+    {
+        $html = $this->render("<twig:ui:DropdownMenu :items=\"[{label: 'Add new product', href: '/new', attr: {class: 'new-product-button', 'data-modal-title': 'Add new product'}}]\"/>");
+
+        $this->assertStringContainsString('<a class="dropdown-item ps-dropdown-menu__item new-product-button" href="/new" data-modal-title="Add new product">', $html);
+        $this->assertSame(1, substr_count($html, 'class="dropdown-item'));
+    }
+
     private function render(string $template): string
     {
         return $this->twig->createTemplate($template)->render();

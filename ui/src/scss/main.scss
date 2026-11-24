@@ -85,12 +85,14 @@
 @import 'components/navbar';
 @import 'components/notifications';
 @import 'components/offcanvas';
+@import 'components/page-head';
 @import 'components/pagination';
 @import 'components/password';
 @import 'components/password-field';
 @import 'components/placeholders';
 @import 'components/progress';
 @import 'components/scroll-fade';
+@import 'components/showcase';
 @import 'components/spinners';
 @import 'components/tables';
 @import 'components/toasts';
@@ -117,5 +119,4 @@
 @import 'layout/tiles';
 @import 'layout/page';
 @import 'layout/layout';
-@import 'layout/page-head';
 @import 'pages/login';

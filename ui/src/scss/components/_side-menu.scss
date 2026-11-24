@@ -2,7 +2,7 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Main navigation (<twig:ui:SideMenu>): a Bootstrap offcanvas-md drawer below md, a column from md up
+// Main navigation (<twig:ui:SideMenu>): a Bootstrap offcanvas-lg drawer below lg, a column from lg up
 $component-name: ps-side-menu;
 
 .#{$component-name} {
@@ -25,7 +25,7 @@ $component-name: ps-side-menu;
   width: var(--#{$prefix}side-menu-width);
   height: 100%;
 
-  // offcanvas-md makes the root transparent from md up, so the body (and the footer) paint the menu
+  // offcanvas-lg makes the root transparent from lg up, so the body (and the footer) paint the menu
   &__body {
     display: flex;
     flex: 1 1 auto;

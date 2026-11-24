@@ -7,7 +7,8 @@
     {% set displayName = grid.view_options.display_name %}
 {% endif %}
 
-<div class="card js-grid-panel" id="{{ grid.id }}_grid_panel">
+{# ps-grid-panel: the kit gives a page with a grid the full width (_layout.scss) #}
+<div class="card js-grid-panel ps-grid-panel" id="{{ grid.id }}_grid_panel">
   {% block grid_panel_header %}
     {% if displayName is not same as(false) or grid.actions.grid|length > 0 %}
     <div class="card-header js-grid-header">

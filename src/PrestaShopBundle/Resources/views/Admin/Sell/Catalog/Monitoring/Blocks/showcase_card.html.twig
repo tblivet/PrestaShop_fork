@@ -3,6 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not isShowcaseCardClosed %}
+    <twig:ui:ShowcaseModal name="{{ showcaseCardName }}" title="{{ 'Focus on your catalog'|trans({}, 'Admin.Catalog.Feature') }}" image="{{ asset('themes/new-theme/public/helper-card/monitoring@3x.svg') }}" learnMore="{{ documentation_link('monitoring') }}">
+      <p>{{ 'Empty categories, disabled products, items that lack image or price... check the monitoring section to optimize your products management and make sure you forgot nothing.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 {% if not isShowcaseCardClosed %}
   <div id="monitoringShowcaseCard" class="helper-card card">
     <div class="helper-card__left helper-card__monitoring shape-one">
@@ -25,4 +33,5 @@
       close
     </i>
   </div>
+{% endif %}
 {% endif %}

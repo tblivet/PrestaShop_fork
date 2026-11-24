@@ -44,7 +44,8 @@ const twigAttributes = (props, defaults) => Object.entries(props)
       return ` :${name}="${twigLiteral(value)}"`;
     }
 
-    return ` ${name}="${value}"`;
+    // A value with a double quote goes in single quotes, which Twig component attributes also take
+    return String(value).includes('"') ? ` ${name}='${value}'` : ` ${name}="${value}"`;
   })
   .join('');
 

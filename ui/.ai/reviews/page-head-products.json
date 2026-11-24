@@ -1,0 +1,79 @@
+{
+  "page": "page-head-products",
+  "url": "http://localhost:8001/admin-dev/sell/catalog/products/",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/screen-review-page-head/index.html",
+  "states": {
+    "total": 20,
+    "captured": 14,
+    "emulated": 3,
+    "missing": [
+      "long-translation-fr",
+      "read-only-employee",
+      "no-access-employee"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 6,
+    "minor": 4,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "'Add new product' in the phone menu loses its new-product-button class and opens the full create page instead of the modal",
+      "where": "375 More actions menu; dropdown_menu.html.twig:23-31, page_head.html.twig:15"
+    },
+    {
+      "severity": "major",
+      "title": "The old multistore bar renders unstyled above the page head, although the changelog says it is not on kit pages",
+      "where": "Ui/toolbar.html.twig:10; all shops / one shop / group, 1280 and 375"
+    },
+    {
+      "severity": "major",
+      "title": "Help opens the bare right-sidebar fragment in a new tab instead of the documentation",
+      "where": "Help button and menu item, 1280 and 375; Ui/toolbar.html.twig:18"
+    },
+    {
+      "severity": "major",
+      "title": "The Help tooltip cannot be dismissed with Escape",
+      "where": "1280, Help focused; tooltips.js"
+    },
+    {
+      "severity": "major",
+      "title": "Create-product modal uses Bootstrap 4 dismiss markup: the × does not close it",
+      "where": "add-product-modal-open, 1280 and 768; new-theme/js/components/modal/modal.ts:109-113, iframe-modal.ts:120, 131"
+    },
+    {
+      "severity": "major",
+      "title": "Flash messages use the Bootstrap 4 alert close button, not <twig:ui:FlashMessages>",
+      "where": "Admin/layout.html.twig:29-66; flash-under-page-head 1280 and 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Help icon button does not announce that it opens a new tab",
+      "where": "page_head.html.twig Help IconButton, md and up"
+    },
+    {
+      "severity": "minor",
+      "title": "A long unbroken title runs under the actions, and a long action label squeezes the title instead of wrapping under it",
+      "where": "1280 and 768, emulated; _page-head.scss &__title, &__actions"
+    },
+    {
+      "severity": "minor",
+      "title": "The ps-layout partial styles other blocks (ps-side-menu, offcanvas backdrop, ps-page-head)",
+      "where": "ui/src/scss/layout/_layout.scss:26-37, 63"
+    },
+    {
+      "severity": "minor",
+      "title": "PageHead state stories ignore their controls",
+      "where": "ui/src/stories/components/PageHead.stories.js:55-100"
+    }
+  ],
+  "outOfScope": [
+    "The grid status toggle sends two POSTs per click (label + synthetic input click) and its success message calls the undefined $.growl, so nothing confirms the change and the radio can drift from the DB.",
+    "ProductController passes generateSidebarLink('AdminProducts') as help_link; kit pages need the documentation URL itself.",
+    "Run the skipped states (French, read-only and no-access employee) by hand to check long wording and the access-denied message."
+  ]
+}

@@ -367,6 +367,10 @@ $border-color: $gray-400;
 $focus-ring-color: rgba($primary, 0.5);
 $input-focus-border-color: var(--#{$prefix}border-color);
 
+// ── Navs ──────────────────────────────────────────────────────────────────────
+// The page head's sub-pages (nav-underline): more room between them than Bootstrap's 1rem, a step of $spacers (4)
+$nav-underline-gap: 1.5rem;
+
 // ── Switch ────────────────────────────────────────────────────────────────────
 // Larger than Bootstrap's (2.5em × 1.25em, height in forms/_form-check.scss), a white knob. Off: a dark grey track;
 // on: a green one
@@ -466,6 +470,12 @@ $ps-header-focus-ring: 0 0 0 .125rem var(--#{$prefix}primary), 0 0 0 calc(.125re
 // Fixed, centered design canvas for page content — pages are designed against
 // this width instead of fluid full-width, which is faster to design and build
 $ps-content-max-width: 75rem;
+// The padding of the content area, which the page head's band covers to reach the header
+$ps-content-padding: 1.5rem;
+// The room the page title keeps beside the actions; narrower, the actions go under it
+$ps-page-head-title-min-width: 10rem;
+// Room around the page head's sub-pages for a link's focus ring, inside their scrolling box
+$ps-page-head-focus-room: .25rem;
 // Gaps of the layouts (<twig:ui:Layout:*>, Gap.php): a size to a Bootstrap spacer index ($spacers is defined later)
 $ps-layout-gaps: (none: 0, xs: 1, sm: 2, md: 3, lg: 4, xl: 5);
 

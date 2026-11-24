@@ -21,9 +21,9 @@ $component-name: ps-layout;
     grid-area: sidebar;
     min-height: 0;
 
-    // Below md the sidebar is an offcanvas drawer: panel and backdrop start
+    // Below lg the sidebar is an offcanvas drawer: panel and backdrop start
     // under the header, so the header stays visible and interactive
-    @include media-breakpoint-down(md) {
+    @include media-breakpoint-down(lg) {
       .ps-side-menu {
         inset-block-start: $ps-header-height;
         height: auto;
@@ -40,7 +40,8 @@ $component-name: ps-layout;
   &__content {
     grid-area: content;
     min-width: 0;
-    padding: 1.5rem;
+    // No room on top: the page head's band starts there and holds it (components/_page-head.scss)
+    padding: 0 $ps-content-padding $ps-content-padding;
     overflow-y: auto;
     background-color: var(--#{$prefix}primary-50);
   }
@@ -51,13 +52,22 @@ $component-name: ps-layout;
   &__container {
     display: flex;
     flex-direction: column;
+    // Between the page head and the page
+    gap: $spacer * 1.5;
     width: 100%;
     max-width: $ps-content-max-width;
     min-height: 100%;
     margin-inline: auto;
 
-    // Opt-out for wide pages (large tables, kanban…)
-    &--fluid {
+    // A page without the page head (or the multistore header before it) gets the room on top the band would hold
+    > :first-child:not(.ps-page-head) {
+      margin-block-start: $ps-content-padding;
+    }
+
+    // The full width: a page with a grid takes it (its wide table needs it), any page can ask for it (layoutFluid) or
+    // keep the centred width (--contained)
+    &--fluid,
+    &:not(.#{$component-name}__container--contained):has(.ps-grid-panel) {
       max-width: none;
     }
   }

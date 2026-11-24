@@ -3,6 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not isShowcaseCardClosed %}
+    <twig:ui:ShowcaseModal name="{{ showcaseCardName }}" title="{{ 'Manage your team'|trans({}, 'Admin.Advparameters.Feature') }}" image="{{ asset('themes/new-theme/public/helper-card/team@3x.svg') }}" learnMore="{{ helperCardDocumentationLink }}">
+      <p>{{ 'Create roles for your employees with specific rights. SuperAdmin can access the entire store while other people can only be dedicated to the catalog or orders pages.'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 {% if not isShowcaseCardClosed %}
   <div id="employeesShowcaseCard" class="showcase-card card">
     <div class="helper-card__left helper-card__team shape-one">
@@ -22,4 +30,5 @@
       close
     </i>
   </div>
+{% endif %}
 {% endif %}

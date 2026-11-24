@@ -1,0 +1,21 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# The page head of every kit page, from the Toolbar component's data: the title (layoutTitle, or the menu entry; with
+   sub-pages, the name of their group, so it does not change from one to the other) and its icon (layoutIcon), the
+   sibling sub-pages of the menu, the toolbar buttons (layoutHeaderToolbarBtn, then the modules' from
+   actionGetAdminToolbarButtons) and Help. displayDashboardToolbarTopMenu is not rendered: its HTML could not go in the
+   phone menu. No breadcrumb: the side menu says where the page is (DECISIONS.md #40) #}
+{{ component('MultistoreHeader') }}
+
+<twig:ui:PageHead
+  :title="this.kitTitle"
+  :icon="this.kitIcon"
+  :pages="this.kitPages"
+  :pagesLabel="this.kitPagesLabel"
+  :actions="this.kitActions"
+  :help="this.kitHelp"
+/>
+
+{{ renderhook('displayDashboardTop') }}

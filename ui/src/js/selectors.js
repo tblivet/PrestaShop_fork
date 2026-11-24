@@ -10,6 +10,8 @@ export default {
   submitOnce: '[data-ps-action~="submit-once"]',
   validate: '[data-ps-action~="validate"]',
   clientError: '[data-ps-target="client-error"]',
+  // <twig:ui:ShowcaseModal>, opened when the page loads
+  showcaseModal: '[data-ps-ref="showcase-modal"]',
   // The page's live region (<twig:ui:Announcer>, announcer.js)
   announcer: '[data-ps-target="announcer"]',
   flashAlert: '[data-ps-ref="flash-alert"]',

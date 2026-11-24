@@ -1,0 +1,150 @@
+{
+  "component": "PageHead",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-page-head/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 20,
+    "captured": 20,
+    "skipped": [
+      "default-phone-menu"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 4,
+    "minor": 20,
+    "suggestion": 1
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "Module actions (content block) vanish under md: hidden and never copied into the More actions menu",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/page_head.html.twig:67-69 + ui/src/scss/components/_page-head.scss:107-110"
+    },
+    {
+      "severity": "major",
+      "title": "The component root takes a negative margin from the layout's padding",
+      "where": "ui/src/scss/components/_page-head.scss:22-23"
+    },
+    {
+      "severity": "major",
+      "title": "The content block branch has no test",
+      "where": "tests/Integration/PrestaShopBundle/Twig/Component/Ui/PageHeadComponentTest.php (whole file); page_head.html.twig:7,46,67-69"
+    },
+    {
+      "severity": "major",
+      "title": "A long unbreakable title does not wrap and runs under the actions",
+      "where": "ui/src/scss/components/_page-head.scss:42-51 (.ps-page-head__title); Default story with title=Supercalifragilistic…_Without_Any_Space, at 375, 768 and 1280"
+    },
+    {
+      "severity": "minor",
+      "title": "Off-scale spacer multiples instead of $spacers values",
+      "where": "ui/src/scss/components/_page-head.scss:18,37,44,90,94,100; ui/src/scss/components/_scroll-fade.scss:24"
+    },
+    {
+      "severity": "minor",
+      "title": "Bootstrap nav classes restyled from the BEM partial instead of through its variables",
+      "where": "ui/src/scss/components/_page-head.scss:65-76,88-95"
+    },
+    {
+      "severity": "minor",
+      "title": "ps-page-head__heading is a one-child wrapper with dead flex styles",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/page_head.html.twig:24-31; ui/src/scss/components/_page-head.scss:34-40"
+    },
+    {
+      "severity": "minor",
+      "title": "Story redefines PageHead defaults already exported by page-head.js",
+      "where": "ui/src/stories/components/PageHead.stories.js:10-11"
+    },
+    {
+      "severity": "minor",
+      "title": "The More actions menu re-builds <twig:ui:Dropdown> by hand",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/page_head.html.twig:77-82"
+    },
+    {
+      "severity": "minor",
+      "title": "Scroll fade writes its own transition and reduced-motion rule instead of Bootstrap's transition() mixin and the kit tokens",
+      "where": "ui/src/scss/components/_scroll-fade.scss:24,42-44,70-72"
+    },
+    {
+      "severity": "minor",
+      "title": "Unit test does not reject every invalid prop type",
+      "where": "tests/Unit/PrestaShopBundle/Twig/Component/Ui/PageHeadTest.php:47-58"
+    },
+    {
+      "severity": "minor",
+      "title": "The actions control crashes the story for any icon outside the 14 the story imports",
+      "where": "ui/src/stories/page-head.js:28-30 (PAGE_HEAD_ICONS) and :56 (actionButton → uiIcon(PAGE_HEAD_ICONS[icon])); components-pagehead--default, actions control (RAW)"
+    },
+    {
+      "severity": "minor",
+      "title": "The Twig in Show code is not escaped: a title with a double quote gives invalid Twig",
+      "where": "ui/src/stories/twig-snippet.js:47 (twigAttributes: ` ${name}=\"${value}\"`); components-pagehead--docs, Default story with the title control set to 'Say \"hi\" to Features'"
+    },
+    {
+      "severity": "minor",
+      "title": "The docs description's inline Twig example makes the whole Docs page scroll sideways",
+      "where": "ui/src/stories/components/PageHead.stories.js:33 (the 'Twig usage' paragraph, inline code `<twig:ui:PageHead title=… :actions=\"[…]\" help=\"…\"/>`); components-pagehead--docs at a 1412px docs width"
+    },
+    {
+      "severity": "minor",
+      "title": "The HTML in Show code includes the story frame the component does not render",
+      "where": "ui/src/stories/components/PageHead.stories.js:25-26 (frame/framed); the Show code of Default, Three Actions, Disabled Action and Title Only"
+    },
+    {
+      "severity": "minor",
+      "title": "The focused last sub-page stays under the fade and past the nav edge",
+      "where": "ui/src/scss/components/_page-head.scss:60-77 (.ps-page-head__pages) with _scroll-fade.scss; Many sub-pages story at 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Focused items in the More actions menu use the browser's blue rounded outline",
+      "where": "ui/src/scss/components/_dropdown-menu.scss:13-23 (.ps-dropdown-menu__item); Default story, phone menu at 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Wrapped actions are right-aligned in one case and left-aligned in another",
+      "where": "ui/src/scss/components/_page-head.scss:15-20 and 97-103 (.ps-page-head justify-content:space-between, .ps-page-head__actions justify-content:flex-end); Default with long labels vs all long combined, at 768"
+    },
+    {
+      "severity": "minor",
+      "title": "The title icon and the More button centre on a multi-line title instead of its first line",
+      "where": "ui/src/scss/components/_page-head.scss:19 and 42-45 (align-items:center on .ps-page-head and .ps-page-head__title); Default with a long title at 375 and 768"
+    },
+    {
+      "severity": "minor",
+      "title": "A head without actions is 7px shorter and its title sits 4px higher",
+      "where": "ui/src/scss/components/_page-head.scss:34-40 (.ps-page-head__heading); Title only story vs With icon, at all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "The sub-page focus ring is drawn tight around the label and over the underline",
+      "where": "ui/src/scss/components/_page-head.scss:69-76 and 88-95 (.ps-page-head__pages .nav-link); Sub-pages story at 1280"
+    },
+    {
+      "severity": "minor",
+      "title": "Several sub-pages can be marked aria-current=page at once",
+      "where": "src/PrestaShopBundle/Twig/Component/Ui/PageHead.php:68,82-98; page_head.html.twig:39"
+    },
+    {
+      "severity": "minor",
+      "title": "The reason a disabled action is unavailable is only in a title on an unfocusable element",
+      "where": "ui/src/stories/components/PageHead.stories.js (DisabledAction story, attr.title); button.html.twig:35"
+    },
+    {
+      "severity": "minor",
+      "title": "Help does not say it opens a new tab from 768px up, while its phone copy does",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/page_head.html.twig:73 vs :20"
+    },
+    {
+      "severity": "suggestion",
+      "title": "The inset focus ring on sub-page links reads Sass values, not Bootstrap's focus-ring CSS variables",
+      "where": "ui/src/scss/components/_page-head.scss:72-75"
+    }
+  ]
+}

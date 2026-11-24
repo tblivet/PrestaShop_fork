@@ -20,9 +20,10 @@
         {%- elseif 'text' == item.type -%}
           <span class="dropdown-item-text">{{ item.label }}</span>
         {%- else -%}
-          {%- set classes = 'dropdown-item ps-dropdown-menu__item' ~ (item.disabled and 'link' == item.type ? ' disabled') -%}
+          {#- An item's own class joins the kit's: a second class attribute would be ignored -#}
+          {%- set classes = 'dropdown-item ps-dropdown-menu__item' ~ (item.disabled and 'link' == item.type ? ' disabled') ~ (item.attr.class is defined ? ' ' ~ item.attr.class) -%}
           {%- set state = (item.active ? ' aria-current="true"') ~ (item.disabled and 'link' == item.type ? ' aria-disabled="true"') -%}
-          {%- set extra -%}{% for name, value in item.attr %} {{ name }}="{{ value }}"{% endfor %}{%- endset -%}
+          {%- set extra -%}{% for name, value in item.attr|filter((value, name) => name != 'class') %} {{ name }}="{{ value }}"{% endfor %}{%- endset -%}
 
           {%- if 'link' == item.type -%}
             {#- A disabled link loses its href, like <twig:ui:Button> -#}

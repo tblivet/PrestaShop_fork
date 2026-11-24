@@ -1,0 +1,82 @@
+{
+  "page": "page-head-general",
+  "url": "http://localhost:8001/admin-dev/configure/shop/preferences/preferences",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/screen-review-page-head/index.html",
+  "states": {
+    "total": 19,
+    "captured": 10,
+    "emulated": 8,
+    "missing": [
+      "access-denied"
+    ]
+  },
+  "findings": {
+    "blocker": 1,
+    "major": 5,
+    "minor": 5,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "blocker",
+      "title": "Multistore bar above the page head: shop picker aria-hidden but shown and focusable, toggle named 'expand_more'",
+      "where": "multistore states, 1280 and 375; multistore_header.html.twig:26-28, 40; Ui/toolbar.html.twig:10"
+    },
+    {
+      "severity": "major",
+      "title": "Title jumps from 'General' to 'Preferences' when a save fails",
+      "where": "POST re-render, 1280 and 375; Toolbar.php getKitTitle"
+    },
+    {
+      "severity": "major",
+      "title": "Help opens an unstyled sidebar fragment, not the documentation",
+      "where": "Help button and menu item, all widths; Ui/toolbar.html.twig:18"
+    },
+    {
+      "severity": "major",
+      "title": "No skip link to the page head / main content",
+      "where": "every kit page; default_layout.html.twig:27-31, 128"
+    },
+    {
+      "severity": "major",
+      "title": "Help tooltip cannot be dismissed with Escape",
+      "where": "keyboard-focus-and-help-tooltip, 1280; tooltips.js"
+    },
+    {
+      "severity": "major",
+      "title": "Flash alerts use Bootstrap 4's .close / data-dismiss: the close control shows 'close' and does not dismiss",
+      "where": "success-flash and post-error-flash, 1280 and 375; Admin/layout.html.twig:30-49"
+    },
+    {
+      "severity": "minor",
+      "title": "Sub-page focus ring sits on the glyphs and cuts into the first and last letters",
+      "where": "keyboard focus, 1280; _page-head.scss + $ps-page-head-focus-room"
+    },
+    {
+      "severity": "minor",
+      "title": "A long unbroken title is cut at the right edge on a phone",
+      "where": "long-title, 375; _page-head.scss &__title"
+    },
+    {
+      "severity": "minor",
+      "title": "Help icon button does not announce that it opens a new tab",
+      "where": "page_head.html.twig Help IconButton, md and up"
+    },
+    {
+      "severity": "minor",
+      "title": "ps-layout partial styles the side menu block and Bootstrap's offcanvas backdrop",
+      "where": "ui/src/scss/layout/_layout.scss:26-37"
+    },
+    {
+      "severity": "minor",
+      "title": "ps-layout__container picks its first child and grid pages by other blocks' classes",
+      "where": "_layout.scss:63 and :70"
+    }
+  ],
+  "outOfScope": [
+    "The POST save route's _legacy_link 'AdminPreferences:update' makes isTabPage() false; mapping update/save routes to their tab fixes the title jump at its source for every options page.",
+    "A missing display_suppliers value gives a global 'Invalid configuration' flash; validate it as a field error.",
+    "AdminSecurity on indexAction has no redirectRoute, so access denied redirects to the literal 'admin_domain'; several French field labels stay English (missing translations)."
+  ]
+}

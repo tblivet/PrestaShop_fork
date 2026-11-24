@@ -1,0 +1,92 @@
+{
+  "page": "page-head-new-attribute",
+  "url": "http://localhost:8001/admin-dev/sell/catalog/attribute-groups/new",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/screen-review-page-head/index.html",
+  "states": {
+    "total": 17,
+    "captured": 9,
+    "emulated": 7,
+    "missing": [
+      "create-access-denied"
+    ]
+  },
+  "findings": {
+    "blocker": 1,
+    "major": 7,
+    "minor": 5,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "blocker",
+      "title": "Field language selector (EN) cannot be opened by keyboard or mouse",
+      "where": "TwigTemplateForm/prestashop_ui_kit_base.html.twig:911-916; server-validation-errors at 1280 and 375"
+    },
+    {
+      "severity": "major",
+      "title": "Translatable field wrappers have tabindex=\"1\" and come first in the Tab order",
+      "where": "prestashop_ui_kit_base.html.twig:394, 874, 899; every width"
+    },
+    {
+      "severity": "major",
+      "title": "No skip link to the main content",
+      "where": "every state; default_layout.html.twig:128"
+    },
+    {
+      "severity": "major",
+      "title": "Module actions vanish under md: hidden and never copied into the More actions menu",
+      "where": "page_head.html.twig + _page-head.scss; module-action-hook at 375"
+    },
+    {
+      "severity": "major",
+      "title": "A long unbreakable title does not wrap and runs out of the head",
+      "where": "_page-head.scss &__title; long-title at 375"
+    },
+    {
+      "severity": "major",
+      "title": "Multistore header renders unstyled above the kit page head",
+      "where": "Ui/toolbar.html.twig:10 -> multistore_header.html.twig; 1280 and 375"
+    },
+    {
+      "severity": "major",
+      "title": "Flash error alert uses Bootstrap 4 markup: literal close text, inert button, untranslated label",
+      "where": "Admin/layout.html.twig:29-49; flash-error-alert at 1280 and 375"
+    },
+    {
+      "severity": "major",
+      "title": "Kit page form still uses the Bootstrap 4 form theme: 'error_outline' printed as text, no aria-invalid",
+      "where": "AttributeGroup/Blocks/form.html.twig:6; server-validation-errors at 1280 and 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Required-field errors show the code's field keys 'name' and 'public_name'",
+      "where": "AttributeGroupType.php:49-51, 68-70"
+    },
+    {
+      "severity": "minor",
+      "title": "Flash error 'The \"Public name\" field is invalid.' does not say what is wrong",
+      "where": "AttributeGroupController.php:326-340"
+    },
+    {
+      "severity": "minor",
+      "title": "aria-current=\"page\" marks Attributes while the page is the add form",
+      "where": "page_head.html.twig nav link; Toolbar::getKitPages"
+    },
+    {
+      "severity": "minor",
+      "title": "Focused sub-page link is left under the scroll fade",
+      "where": "_scroll-fade.scss &--x; subpages-overflow-scroll-fade at 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Sub-page focus ring is drawn on the text and the active underline",
+      "where": "_page-head.scss nav-link :focus-visible; 1280"
+    }
+  ],
+  "outOfScope": [
+    "AttributeGroupType: add Length(max 64) on Public name (128 on Name) so the limit is a field error, not a generic handler flash; split INVALID_NAME / INVALID_PUBLIC_NAME by cause.",
+    "On the first load after a language switch, form labels stay in the previous language (translator or cache in the form type).",
+    "Required-field messages use raw form keys; DefaultLanguage should get the field label."
+  ]
+}

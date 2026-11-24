@@ -21,7 +21,7 @@ $component-name: ps-scroll-fade;
 }
 
 .#{$component-name} {
-  --#{$prefix}scroll-fade-size: 1.5rem;
+  --#{$prefix}scroll-fade-size: #{map-get($spacers, 4)};
   --#{$prefix}scroll-fade-before: 0;
   --#{$prefix}scroll-fade-after: 0;
 
@@ -39,14 +39,17 @@ $component-name: ps-scroll-fade;
     linear-gradient(#000, #000);
   mask-clip: padding-box, padding-box, border-box;
   mask-composite: add, exclude;
-  transition:
-    --#{$prefix}scroll-fade-before .2s ease-out,
-    --#{$prefix}scroll-fade-after .2s ease-out;
+  @include transition(
+    --#{$prefix}scroll-fade-before var(--#{$prefix}transition-duration) var(--#{$prefix}transition-easing),
+    --#{$prefix}scroll-fade-after var(--#{$prefix}transition-duration) var(--#{$prefix}transition-easing)
+  );
 
+  // An item scrolled to by the keyboard comes into view clear of the fade
   &--x {
     --#{$prefix}scroll-fade-direction: to right;
 
     overflow-x: auto;
+    scroll-padding-inline: var(--#{$prefix}scroll-fade-size);
 
     &:dir(rtl) {
       --#{$prefix}scroll-fade-direction: to left;
@@ -57,6 +60,7 @@ $component-name: ps-scroll-fade;
     --#{$prefix}scroll-fade-direction: to bottom;
 
     overflow-y: auto;
+    scroll-padding-block: var(--#{$prefix}scroll-fade-size);
   }
 
   &[data-ps-state~="more-before"] {
@@ -65,9 +69,5 @@ $component-name: ps-scroll-fade;
 
   &[data-ps-state~="more-after"] {
     --#{$prefix}scroll-fade-after: var(--#{$prefix}scroll-fade-size);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
   }
 }

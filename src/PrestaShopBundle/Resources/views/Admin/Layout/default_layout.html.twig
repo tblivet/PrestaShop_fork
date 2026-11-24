@@ -122,7 +122,11 @@
   {{ component('NavBar') }}
   {% endif %}
 {% endblock %}
-{% if ui_kit %}<main class="ps-layout__content">{% endif %}
+{% if ui_kit %}
+  {# Centred, or the full width: a page with a grid takes it unless it sets layoutFluid (_layout.scss) #}
+  {% set containerModifier = layoutFluid is defined ? (layoutFluid ? ' ps-layout__container--fluid' : ' ps-layout__container--contained') : '' %}
+  <main class="ps-layout__content"><div class="ps-layout__container{{ containerModifier }}">
+{% endif %}
 
 {# Page header toolbar #}
 {% if showContentHeader %}
@@ -133,6 +137,7 @@
     enableSidebar: enableSidebar|default(false),
     layoutHeaderToolbarBtn: layoutHeaderToolbarBtn|default([]),
     breadcrumbLinks: breadcrumbLinks|default([]),
+    layoutIcon: layoutIcon|default(''),
   } %}
     {% block pageTitle %}{{ block(outerBlocks.pageTitle) ?: parent() }}{% endblock %}
   {% endcomponent %}
@@ -162,7 +167,7 @@
   </div>
 </div>
 
-{% if ui_kit %}</main></div>
+{% if ui_kit %}</div></main></div>
   {{ include('@PrestaShop/Admin/Component/Layout/Ui/quick_access_modals.html.twig') }}
   {# What scripts tell screen readers (announcer.js), in the page from the start so it is announced #}
   <twig:ui:Announcer/>

@@ -3,6 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not isShowcaseCardClosed %}
+    <twig:ui:ShowcaseModal name="{{ showcaseCardName }}" title="{{ 'Set features'|trans({}, 'Admin.Catalog.Feature') }}" image="{{ asset('themes/new-theme/public/helper-card/features@3x.svg') }}" learnMore="{{ documentation_link('feature') }}">
+      <p>{{ 'Features are your product\'s intrinsic characteristics. If you sell tee-shirts, their cotton composition is considered a feature because it remains the same, unlike colors or sizes.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 {% if not isShowcaseCardClosed %}
   <div id="featuresShowcaseCard" class="helper-card card">
     <div class="helper-card__left helper-card__feature shape-one">
@@ -25,4 +33,5 @@
       close
     </i>
   </div>
+{% endif %}
 {% endif %}

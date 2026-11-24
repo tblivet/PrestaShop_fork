@@ -1,0 +1,64 @@
+{
+  "page": "page-head-theme",
+  "url": "http://localhost:8001/admin-dev/improve/design/themes/",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/screen-review-page-head/index.html",
+  "states": {
+    "total": 18,
+    "captured": 9,
+    "emulated": 6,
+    "missing": [
+      "actions-denied-flash",
+      "page-denied",
+      "french-back-office"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 3,
+    "minor": 4,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "The multistore header above the page head is unstyled",
+      "where": "multistore states, 1280/768/375; Ui/toolbar.html.twig:10"
+    },
+    {
+      "severity": "major",
+      "title": "No skip link to the main content before the header and the side menu",
+      "where": "default_layout.html.twig:22-34, 128; every width"
+    },
+    {
+      "severity": "major",
+      "title": "Flash messages under the page head use the old BS4 alert: the close button shows 'close' and does nothing",
+      "where": "Admin/layout.html.twig:29-67; export success and logo error flashes"
+    },
+    {
+      "severity": "minor",
+      "title": "Keyboard focus on a hidden sub-page link does not scroll it into view",
+      "where": "sub-pages-phone-scroll-fade, 375 (ps_themecusto on); scroll-fade.js"
+    },
+    {
+      "severity": "minor",
+      "title": "A title with a long unbroken word is cut mid-letter instead of wrapping",
+      "where": "long-title (unbroken), all widths; _page-head.scss &__title"
+    },
+    {
+      "severity": "minor",
+      "title": "Wrapped actions land at the start of their row, and on a phone More actions drops under the title",
+      "where": "long-title 1280 and 375 vs long-action-labels 992; _page-head.scss &__actions"
+    },
+    {
+      "severity": "minor",
+      "title": "The Help icon button opens a new tab without saying so; the menu and action versions do",
+      "where": "page_head.html.twig Help IconButton, md and up"
+    }
+  ],
+  "outOfScope": [
+    "'Add new theme' and 'Export current theme' are static toolbar buttons shown to employees without create/view rights; filter them by permission in ThemeController or Toolbar.",
+    "Export could stream the zip as a download instead of writing it to the themes folder and flashing the server path.",
+    "Toolbar::getKitActions still adds BS4 data-toggle/data-target beside data-bs-*; drop them once no module script reads them."
+  ]
+}

@@ -30,7 +30,7 @@ class SideMenuComponentTest extends KernelTestCase
     {
         $html = $this->render('<twig:ui:SideMenu :sections="' . self::SECTIONS . '"/>');
 
-        $this->assertStringStartsWith('<nav id="ps-side-menu" class="ps-side-menu offcanvas-md offcanvas-start" tabindex="-1" aria-label="Main menu">', trim($html));
+        $this->assertStringStartsWith('<nav id="ps-side-menu" class="ps-side-menu offcanvas-lg offcanvas-start" tabindex="-1" aria-label="Main menu">', trim($html));
         $this->assertStringContainsString('<h2 class="ps-side-menu__heading">Sell</h2>', $html);
         $this->assertSame(1, substr_count($html, '<h2'));
     }

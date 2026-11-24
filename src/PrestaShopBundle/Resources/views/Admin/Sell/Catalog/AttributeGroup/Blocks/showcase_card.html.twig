@@ -3,6 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not isShowcaseCardClosed %}
+    <twig:ui:ShowcaseModal name="{{ showcaseCardName }}" title="{{ 'Create attributes'|trans({}, 'Admin.Catalog.Feature') }}" image="{{ asset('themes/new-theme/public/helper-card/attributes@3x.svg') }}" learnMore="{{ documentation_link('attribute') }}">
+      <p>{{ 'Color, dimension, size, disk space... think about attributes as properties that change from one product to another. As a consequence, attributes allow you to build product combinations.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 {% if not isShowcaseCardClosed %}
   <div id="attributesShowcaseCard" class="helper-card card">
     <div class="helper-card__left helper-card__attribute shape-one">
@@ -25,4 +33,5 @@
       close
     </i>
   </div>
+{% endif %}
 {% endif %}

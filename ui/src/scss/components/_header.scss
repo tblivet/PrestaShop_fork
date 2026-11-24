@@ -56,20 +56,19 @@ $component-name: ps-header;
     align-items: center;
   }
 
-  @include media-breakpoint-up(sm) {
+  @include media-breakpoint-up(md) {
+    gap: .75rem;
+    padding-inline: 1rem;
+  }
+
+  // From lg the side menu is always open: the full logo, no menu button; below, the monogram and the hamburger that
+  // opens the drawer (side_menu.html.twig, offcanvas-lg)
+  @include media-breakpoint-up(lg) {
     &__logo {
       display: block;
     }
 
-    &__monogram {
-      display: none;
-    }
-  }
-
-  @include media-breakpoint-up(md) {
-    gap: .75rem;
-    padding-inline: 1rem;
-
+    &__monogram,
     &__menu-toggle {
       display: none;
     }

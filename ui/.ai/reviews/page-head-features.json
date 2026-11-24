@@ -1,0 +1,83 @@
+{
+  "page": "page-head-features",
+  "url": "http://localhost:8001/admin-dev/sell/catalog/features/",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/screen-review-page-head/index.html",
+  "states": {
+    "total": 21,
+    "captured": 14,
+    "emulated": 5,
+    "missing": [
+      "read-only-employee",
+      "french"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 6,
+    "minor": 5,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "Flash messages still use the legacy alert: the close button shows 'close' and does nothing",
+      "where": "Features page after save/delete, 1280/768/375; Admin/layout.html.twig:29-66"
+    },
+    {
+      "severity": "major",
+      "title": "Multistore header above the page head renders unstyled",
+      "where": "Ui/toolbar.html.twig:10; all multistore contexts, 1440 and 375"
+    },
+    {
+      "severity": "major",
+      "title": "Module actions are unreachable on a phone",
+      "where": "375, More actions menu; page_head.html.twig + _page-head.scss"
+    },
+    {
+      "severity": "major",
+      "title": "Help opens a bare, unstyled sidebar fragment in a new tab",
+      "where": "Help at 1440 and in the 375 menu; Ui/toolbar.html.twig:18"
+    },
+    {
+      "severity": "major",
+      "title": "A long unbroken title overflows over the action buttons",
+      "where": "Title of one long word, 1440/768/375/320; _page-head.scss &__title"
+    },
+    {
+      "severity": "major",
+      "title": "Empty group name crashes the page (500) instead of falling back",
+      "where": "Toolbar.php getKitPages / getKitPagesLabel"
+    },
+    {
+      "severity": "minor",
+      "title": "Active sub-page cut off on load and when focused, under the scroll fade",
+      "where": "Long sub-page labels, 375 and 320; scroll-fade.js"
+    },
+    {
+      "severity": "minor",
+      "title": "Title icon is centred on the middle line of a wrapped title",
+      "where": "Long group title, 1024/768/375; _page-head.scss align-items: center"
+    },
+    {
+      "severity": "minor",
+      "title": "More actions menu items get the browser's blue outline instead of the kit ring",
+      "where": "Phone menu by keyboard, 375; _dropdown-menu.scss"
+    },
+    {
+      "severity": "minor",
+      "title": "Desktop Help icon button does not announce that it opens a new tab",
+      "where": "page_head.html.twig (Help IconButton)"
+    },
+    {
+      "severity": "minor",
+      "title": "Sub-page focus ring replaces Bootstrap's nav-link ring and is drawn over the label",
+      "where": "_page-head.scss nav-link :focus-visible; 1280"
+    }
+  ],
+  "outOfScope": [
+    "FeatureController::deleteAction adds 'Successful deletion' after a caught error (no return in the catch), so a stale delete shows danger and success together.",
+    "The Add buttons show to employees without the create right and lead to access denied; filter actions by permission.",
+    "The admin_common_sidebar route serves a fragment with no title, lang or styles; link help_link to the documentation URL directly."
+  ]
+}

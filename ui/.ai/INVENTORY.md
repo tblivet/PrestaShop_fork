@@ -95,7 +95,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | 44 | - [ ] | [`<twig:ui:Avatar>`](#44-twiguiavatar) | content | 6 | 4 | S | `<twig:ui:Icon>` | no |
 | 45 | - [ ] | [`<twig:ui:MultistoreField>`](#45-twiguimultistorefield) | form | 25 | 2 | S | `<twig:ui:FormRow> + ui_kit_layout form theme`, `<twig:ui:Check>`, `<twig:ui:Alert> (extend)`, `<twig:ui:Dropdown>` | no |
 | 46 | - [ ] | [`data-ps-toggle (conditional field group behaviour)`](#46-data-ps-toggle-conditional-field-group-behaviour) | form | 20 | 2 | S | `<twig:ui:FormRow> + ui_kit_layout form theme` | no |
-| 47 | - [ ] | [`<twig:ui:ShowcaseCard>`](#47-twiguishowcasecard) | content | 9 | 1 | S | `<twig:ui:IconButton>`, `<twig:ui:Link>`, `<twig:ui:Card>` | no |
+| 47 | - [x] | [`<twig:ui:ShowcaseCard>`](#47-twiguishowcasecard) | content | 9 | 1 | S | `<twig:ui:IconButton>`, `<twig:ui:Link>`, `<twig:ui:Card>` | no |
 | 48 | - [ ] | [`<twig:ui:CollectionEditor>`](#48-twiguicollectioneditor) | form | 6 | 1 | M | `<twig:ui:FormRow> + ui_kit_layout form theme`, `<twig:ui:IconButton>`, `<twig:ui:EmptyState>`, `<twig:ui:Button>` | no |
 | 49 | - [ ] | [`<twig:ui:PasswordField>`](#49-twiguipasswordfield) | form | 5 | 3 | S | `<twig:ui:FormRow> + ui_kit_layout form theme`, `<twig:ui:IconButton>`, `<twig:ui:Progress>` | no |
 | 50 | - [ ] | [`<twig:ui:Stepper>`](#50-twiguistepper) | form | 3 | 2 | L | `<twig:ui:Card>`, `<twig:ui:Button>`, `<twig:ui:Modal>`, `<twig:ui:Progress>` | yes |
@@ -1022,6 +1022,8 @@ Done 2026-11-13 without the collapsed mode: `sections` (titles, items, submenus)
 - Component/LegacyLayout/nav_bar.html.twig
 
 ### 20. `<twig:ui:Layout:Page>`
+
+Started 2026-11-20 (DECISIONS.md #40): the page head is `<twig:ui:PageHead>` (title, icon, sub-pages, actions, help; no breadcrumb), rendered by the layout from the Toolbar data, and the content is centred or full width (`layoutFluid`, full width with a grid). Not built yet: the light (iframe) layout, the side region, a skip link.
 
 The one page template: places the header, side menu and the fixed slots title, breadcrumb, actions, tabs, flash alerts and content; light (iframe) variant without chrome; replaces layoutHeaderToolbarBtn/layoutTitle/help_link set both in Twig and in controllers.
 
@@ -2300,6 +2302,8 @@ Declarative show/hide/enable of rows or sub-sections from another field's value,
 </details>
 
 ### 47. `<twig:ui:ShowcaseCard>`
+
+Done 2026-11-20 as `<twig:ui:ShowcaseModal>` (DECISIONS.md #41): a static modal that opens when the page loads until someone closes it; the 9 showcase partials render it on kit pages.
 
 Dismissible onboarding card: illustration (alt=''), title with heading level, text, Learn more and optional CTA, close button that persists dismissal.
 

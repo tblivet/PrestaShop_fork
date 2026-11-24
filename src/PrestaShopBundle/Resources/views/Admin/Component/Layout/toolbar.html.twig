@@ -2,6 +2,10 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
+{# The kit renders its own page head; the markup below stays for the old theme (PS_UI_KIT=0) #}
+{% if ui_kit %}
+  {{ include('@PrestaShop/Admin/Component/Layout/Ui/toolbar.html.twig') }}
+{% else %}
 <div class="header-toolbar d-print-none">
   {{ component('MultistoreHeader') }}
   <div class="container-fluid">
@@ -206,3 +210,4 @@
   {% endif %}
   {{ renderhook('displayDashboardTop') }}
 </div>
+{% endif %}

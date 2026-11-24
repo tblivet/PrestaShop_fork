@@ -4,6 +4,14 @@
  #}
 
 {% trans_default_domain 'Admin.Shipping.Feature' %}
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not isShowcaseCardClosed %}
+    <twig:ui:ShowcaseModal name="{{ showcaseCardName }}" title="{{ 'Manage your carriers'|trans }}" image="{{ asset('themes/new-theme/public/helper-card/carrier@3x.svg') }}" learnMore="{{ documentation_link('carrier') }}">
+      <p>{{ 'Create carriers to let your customers choose their best shipping option in terms of delivery dates or fees. Start with editing/deleting the default "My carrier", and add as many options as you need.'|trans }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 
 {% if not isShowcaseCardClosed %}
   <div id="carriersShowcaseCard" class="helper-card card">
@@ -27,4 +35,5 @@
       close
     </i>
   </div>
+{% endif %}
 {% endif %}

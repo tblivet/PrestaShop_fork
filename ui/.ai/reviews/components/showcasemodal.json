@@ -1,0 +1,73 @@
+{
+  "component": "ShowcaseModal",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-page-head/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 10,
+    "captured": 10,
+    "skipped": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 4,
+    "minor": 5,
+    "suggestion": 1
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "Kit SEO page loses its 'Configure index page' action, and the removal is not recorded",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/meta_showcase_card.html.twig:8-13"
+    },
+    {
+      "severity": "major",
+      "title": "Docs page: every story preview is an empty 80px box",
+      "where": "/docs/components-showcasemodal--docs, primary preview + Default + Without Learn More"
+    },
+    {
+      "severity": "major",
+      "title": "An unbreakable title pushes the close button out of the dialog",
+      "where": "ui/src/scss/components/_modal.scss:11-14 and :44-46 (ps-modal__title, .btn-close); story components-showcasemodal--default, case long-title-no-spaces, 375/768/1280"
+    },
+    {
+      "severity": "major",
+      "title": "An unbreakable word in the text is cut off and the modal body scrolls sideways",
+      "where": "ui/src/scss/components/_showcase.scss:21-31 (.ps-showcase__text); case long-text-no-spaces, 375/768/1280"
+    },
+    {
+      "severity": "minor",
+      "title": "Close request has no error handling",
+      "where": "ui/src/js/components/showcase-modal.js:11-17"
+    },
+    {
+      "severity": "minor",
+      "title": "`name` control is free text, but the component only accepts the nine ShowcaseCard::SUPPORTED_NAMES keys",
+      "where": "ui/src/stories/components/ShowcaseModal.stories.js:41"
+    },
+    {
+      "severity": "minor",
+      "title": "No test passes extra attributes, so `attributes.defaults(...)` is untested",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/showcase_modal.html.twig:13; tests/Integration/PrestaShopBundle/Twig/Component/Ui/ShowcaseModalComponentTest.php"
+    },
+    {
+      "severity": "minor",
+      "title": "The WithoutLearnMore story ignores all its controls",
+      "where": "ui/src/stories/components/ShowcaseModal.stories.js:63-66, story components-showcasemodal--without-learn-more"
+    },
+    {
+      "severity": "minor",
+      "title": "The props table does not mark name, title and image as required, and shows no default for learnMore",
+      "where": "/docs/components-showcasemodal--docs, args table"
+    },
+    {
+      "severity": "suggestion",
+      "title": "The id unit test uses a name the component would refuse",
+      "where": "tests/Unit/PrestaShopBundle/Twig/Component/Ui/ShowcaseModalTest.php:29-31"
+    }
+  ]
+}

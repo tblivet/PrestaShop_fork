@@ -3,6 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not showcaseCardIsClosed %}
+    <twig:ui:ShowcaseModal name="{{ cmsPageShowcaseCardName }}" title="{{ 'Create meaningful content'|trans({}, 'Admin.Design.Help') }}" image="{{ asset('themes/new-theme/public/helper-card/content@3x.svg') }}" learnMore="{{ helperDocLink }}">
+      <p>{{ 'Because it is not just selling products but also creating a universe, build pages to tell stories and catch your visitors’ interest, to turn them into loyal customers.'|trans({}, 'Admin.Design.Help') }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 {% block cms_pages_showcase_card %}
   {% if not showcaseCardIsClosed %}
     <div id="cms-pages-showcase-card" class="showcase-card card">
@@ -18,3 +26,4 @@
     </div>
   {% endif %}
 {% endblock %}
+{% endif %}

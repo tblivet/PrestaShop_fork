@@ -24,9 +24,9 @@ const item = (entry, icons) => {
   }
 
   const link = type === 'link';
-  const classes = ['dropdown-item', 'ps-dropdown-menu__item', entry.disabled && link && 'disabled'].filter(Boolean).join(' ');
+  const classes = ['dropdown-item', 'ps-dropdown-menu__item', entry.disabled && link && 'disabled', entry.attr?.class].filter(Boolean).join(' ');
   const state = `${entry.active ? ' aria-current="true"' : ''}${entry.disabled && link ? ' aria-disabled="true"' : ''}`;
-  const extra = Object.entries(entry.attr ?? {}).map(([name, value]) => ` ${name}="${value}"`).join('');
+  const extra = Object.entries(entry.attr ?? {}).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
   const icon = entry.icon ? uiIcon(icons[entry.icon], { size: 'lg', class: 'ps-dropdown-menu__icon' }) : '';
   const hidden = entry.external ? '<span class="visually-hidden"> (opens in a new tab)</span>' : '';
   const content = `${icon}<span class="ps-dropdown-menu__label">${entry.label}${hidden}</span>`;

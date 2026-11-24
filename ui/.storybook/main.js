@@ -15,7 +15,8 @@ const config = {
   },
   // Static files in public/ are served at / in both dev and built Storybook.
   // src/playground/assets/ is served at /playground/ — for playground-only images (not part of dist).
-  staticDirs: ['../public', { from: '../src/playground/assets', to: '/playground' }],
+  // The showcase illustrations from the back office (ShowcaseModal stories)
+  staticDirs: ['../public', { from: '../src/playground/assets', to: '/playground' }, { from: '../../admin-dev/themes/new-theme/public/helper-card', to: '/helper-card' }],
   core: {
     disableTelemetry: true,
   },

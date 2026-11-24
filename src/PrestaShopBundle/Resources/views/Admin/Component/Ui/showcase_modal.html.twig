@@ -1,0 +1,32 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Rendered here, not inside the modal's tags: a block written there would be the modal's own -#}
+{%- set text -%}{%- block content %}{% endblock -%}{%- endset -%}
+{#- Block actions: a button to where to start, before "Got it" -#}
+{%- set actions -%}{%- block actions %}{% endblock -%}{%- endset -%}
+
+<twig:ui:Modal
+  :id="this.id"
+  :title="title"
+  :headingLevel="2"
+  static
+  {{ ...attributes.defaults({'data-ps-ref': 'showcase-modal', 'data-ps-data-name': name, 'data-ps-data-close-url': path('admin_close_showcase_card')}).all() }}
+>
+  <div class="ps-showcase">
+    <img class="ps-showcase__image" src="{{ image }}" alt="">
+    <div class="ps-showcase__text">
+      {{- text -}}
+
+      {%- if learnMore -%}
+        <twig:ui:Link :href="learnMore" external icon="open_in_new" iconPosition="end">{{ 'Learn more'|trans({}, 'Admin.Actions') }}</twig:ui:Link>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <twig:block name="footer">
+    {{- actions -}}
+    <twig:ui:Button data-bs-dismiss="modal">{{ 'Got it'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:Modal>

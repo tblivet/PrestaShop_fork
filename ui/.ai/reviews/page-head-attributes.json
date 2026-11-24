@@ -1,0 +1,93 @@
+{
+  "page": "page-head-attributes",
+  "url": "http://localhost:8001/admin-dev/sell/catalog/attribute-groups/",
+  "date": "2026-11-24",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/screen-review-page-head/index.html",
+  "states": {
+    "total": 21,
+    "captured": 12,
+    "emulated": 7,
+    "missing": [
+      "read-only-employee",
+      "access-denied"
+    ]
+  },
+  "findings": {
+    "blocker": 1,
+    "major": 6,
+    "minor": 6,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "blocker",
+      "title": "Grid row actions, bulk actions and the delete confirmation do not work under the kit's Bootstrap 5",
+      "where": "Common/Grid/Columns/Content/action.html.twig:66-67; Grid/Blocks/bulk_actions.html.twig:9; grid-delete-confirm at 1280"
+    },
+    {
+      "severity": "major",
+      "title": "Old grid and alerts show Material Icons ligature words instead of icons",
+      "where": "Grid under the page head, every width (also the flash alerts and the multistore header)"
+    },
+    {
+      "severity": "major",
+      "title": "No skip link to the main content",
+      "where": "every state; default_layout.html.twig:27-33, :128"
+    },
+    {
+      "severity": "major",
+      "title": "Module actions from displayDashboardToolbarTopMenu disappear below md",
+      "where": "page_head.html.twig (hook span) + _page-head.scss (__extra); module-hook-content at 375"
+    },
+    {
+      "severity": "major",
+      "title": "Flash messages use the old Bootstrap 4 macro: dismiss broken, ligature text visible, no focus after redirect",
+      "where": "Admin/layout.html.twig:31-33 (session_alert); flash-success at 1280 and 375"
+    },
+    {
+      "severity": "major",
+      "title": "Help tooltip cannot be dismissed with Escape",
+      "where": "ui/src/js/components/tooltips.js; Help IconButton"
+    },
+    {
+      "severity": "major",
+      "title": "Multistore header renders its old unstyled markup above the kit page head",
+      "where": "Layout/Ui/toolbar.html.twig:10; multistore-header at 1280, 768, 375"
+    },
+    {
+      "severity": "minor",
+      "title": "'Add new value' does not say which value, while the Features page says 'Add new feature value'",
+      "where": "Sell/Catalog/AttributeGroup/index.html.twig:14; all widths and the phone menu"
+    },
+    {
+      "severity": "minor",
+      "title": "Help icon button opens a new tab but its name does not say so",
+      "where": "page_head.html.twig (Help IconButton)"
+    },
+    {
+      "severity": "minor",
+      "title": "An unbroken word in the title overflows under the More button",
+      "where": "_page-head.scss &__title; long-unbroken-title at 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Install folder warning is raw alert markup with no role",
+      "where": "default_layout.html.twig:150-152; install-dir-warning"
+    },
+    {
+      "severity": "minor",
+      "title": "Sub-page focus ring is a hand-built inset shadow that covers the label",
+      "where": "_page-head.scss nav-link :focus-visible; 1280"
+    },
+    {
+      "severity": "minor",
+      "title": "Dropdown items and the showcase 'Learn more' link fall back to the browser's blue outline",
+      "where": "_dropdown-menu.scss:13-24; _icon-link.scss:27-32; phone-more-open 375, showcase 1280"
+    }
+  ],
+  "outOfScope": [
+    "Toolbar::getKitActions shows 'Add new attribute' / 'Add new value' to employees without the create right; filter by permission as buildNavigationTabs does for tabs.",
+    "The showcase close POST (admin_close_showcase_card) has no CSRF token and ignores failures, so a failed save brings the modal back.",
+    "DeleteActionTrait may need a per-grid title and message for the delete wording (src/Core API change)."
+  ]
+}

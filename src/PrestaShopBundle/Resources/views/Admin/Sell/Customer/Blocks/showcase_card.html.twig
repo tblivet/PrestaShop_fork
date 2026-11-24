@@ -3,6 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not isShowcaseCardClosed %}
+    <twig:ui:ShowcaseModal name="{{ showcaseCardName }}" title="{{ 'Administrate your customers'|trans({}, 'Admin.Orderscustomers.Feature') }}" image="{{ asset('themes/new-theme/public/helper-card/customer@3x.svg') }}" learnMore="{{ documentation_link('customer') }}">
+      <p>{{ 'Taking good care of your customers starts with making sure their profiles contain all the information needed to have their packages shipped without mishap.'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 {% if not isShowcaseCardClosed %}
   <div id="customersShowcaseCard" class="showcase-card card">
     <div class="helper-card__left helper-card__customer shape-one">
@@ -22,4 +30,5 @@
       close
     </i>
   </div>
+{% endif %}
 {% endif %}

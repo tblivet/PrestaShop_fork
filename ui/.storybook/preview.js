@@ -19,6 +19,9 @@ import announcer from '../src/stories/announcer';
 
 const SNIPPET_RENDERED = 'storybook/docs/snippet-rendered';
 
+// As main.js does in the back office: one Bootstrap the stories' play functions reach too
+window.bootstrap = bootstrap;
+
 // The page's live region, outside the story root so it stays across stories, as the kit layouts place it
 document.body.insertAdjacentHTML('beforeend', announcer().html);
 initAnnouncer();
@@ -71,7 +74,9 @@ const preview = {
       document.documentElement.setAttribute('dir', context.globals.direction ?? 'ltr');
 
       const result = story();
-      const html = typeof result === 'string' ? result : result.outerHTML;
+      // The source panel shows what the component renders, without the story's frame (twig-snippet.js "rendered")
+      const parity = typeof context.parameters.twigParity === 'function' ? context.parameters.twigParity(context.args) : null;
+      const html = parity?.html ?? (typeof result === 'string' ? result : result.outerHTML);
 
       // Format the rendered HTML and push it to the source panel; stories with a Twig call (parameters.twig, see
       // src/stories/twig-snippet.js) show it under the HTML, for the current args.

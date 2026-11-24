@@ -3,6 +3,14 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  #}
 
+{# The kit shows the introduction in a modal that opens by itself until someone closes it (ui:ShowcaseModal) #}
+{% if ui_kit %}
+  {% if not isShowcaseCardClosed %}
+    <twig:ui:ShowcaseModal name="{{ showcaseCardName }}" title="{{ 'Set categories'|trans({}, 'Admin.Catalog.Feature') }}" image="{{ asset('themes/new-theme/public/helper-card/category@3x.svg') }}" learnMore="{{ documentation_link('category') }}">
+      <p>{{ 'Categories are essential, as they enable you to group equivalent products. This helps customers find their way through the variety of your catalog.'|trans({}, 'Admin.Catalog.Feature') }}</p>
+    </twig:ui:ShowcaseModal>
+  {% endif %}
+{% else %}
 {% if not isShowcaseCardClosed %}
   <div id="categoriesShowcaseCard" class="helper-card card">
     <div class="helper-card__left helper-card__category shape-one">
@@ -25,4 +33,5 @@
       close
     </i>
   </div>
+{% endif %}
 {% endif %}

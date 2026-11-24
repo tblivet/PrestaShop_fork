@@ -530,3 +530,29 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Strings** (`Admin.Global`)
 - New in the alert: "Error", "Information", "Success" ("Warning" already exists).
+
+## Page head, showcase modal, mobile shell — 2026-11-20
+
+`Component/Layout/toolbar.html.twig` (kit branch `Layout/Ui/toolbar.html.twig`), `<twig:ui:PageHead>`, `<twig:ui:ShowcaseModal>`, `Toolbar.php`, `Layout/default_layout.html.twig`, `Common/Grid/grid_panel.html.twig`, the 9 showcase card partials, `side_menu.html.twig`, `showcase-modal.js`.
+
+**Markup** (kit pages only)
+- The page head is `<header class="ps-page-head">`: no `.header-toolbar`, `.title-row`, `.toolbar-icons`, `#head_tabs`, `.page-head-tabs`, `.btn-floating`, no breadcrumb (`nav[aria-label="Breadcrumb"]`, `actionAdminBreadcrumbModifier` has no visible effect on kit pages). The title is still the page's `h1`; on a sub-page it is the name of their group (the menu's parent entry, e.g. "Attributes & Features"), not `layoutTitle`: a test reading the `h1` of a sub-page gets the group. An add, edit or view page under it keeps its own title. The `<title>` is unchanged.
+- Toolbar buttons (`layoutHeaderToolbarBtn`) keep their id `page-header-desc-configuration-<key or imgclass>`; their non-`btn` classes, `data_attributes`, `modal_target` (now also `data-bs-toggle="modal"`), `js` (onclick) and `help` (a `title`) are kept. On a phone they are also items of the "More actions" menu (`.ps-page-head__more`), with the same attributes but the id, which stays unique on the button: a script binding a button by id does not reach its menu item.
+- The title is the `h1` itself (`h1.ps-page-head__title`), no wrapper; the "More actions" menu is a `<twig:ui:Dropdown>` (`div.dropdown.ps-page-head__more`).
+- Module buttons: on a kit page, `actionGetAdminToolbarButtons` is also dispatched on Symfony pages (its `controller` is `null` there: there is no legacy controller); its buttons are page actions like the others, in the "More actions" menu on a phone. A module that fails in it (expecting the controller) has its buttons left out. `displayDashboardToolbarTopMenu` (HTML) is not rendered on kit pages any more: its content could not go in the phone menu; no core module uses it.
+- The sub-pages (`#subtab-<class>` links) are `nav.ps-page-head__pages` links, the current one `aria-current="page"`; the notification counters they had are gone.
+- New: `layoutIcon` (a Material Symbols name) for the title's icon (when the page sets none, the icon of its menu entry from `Toolbar::KIT_TITLE_ICONS`, its group's on a sub-page; module pages have none), `layoutFluid` (true: full width, false: centred) for the page width; a page with a grid (`.ps-grid-panel`, added to `grid_panel.html.twig`) takes the full width.
+- The page content is in `.ps-layout__container` inside `main.ps-layout__content`.
+- `<twig:ui:DropdownMenu>`: an item's `attr.class` joins `dropdown-item ps-dropdown-menu__item` instead of making a second, ignored `class` attribute (the phone menu's "Add new product" kept no `new-product-button` and opened the full page instead of the modal).
+- To do when Products moves to the kit: its "Add new product" is bound by class (`.new-product-button`, `admin-dev/themes/new-theme/js/pages/product/product-map.ts`); it becomes `data-ps-action="new-product"`, the class kept a while for modules.
+- SEO & URLs: the card's "Configure index page" button is a secondary button in the modal's footer, before "Got it" (`<twig:ui:ShowcaseModal>` block `actions`).
+- Showcase cards: `<twig:ui:ShowcaseModal>` (`data-ps-ref="showcase-modal"`, id `ps-showcase-<name>`) instead of `#…ShowcaseCard .helper-card`.
+- Side menu: `offcanvas-lg` (was `offcanvas-md`); the header shows the monogram and the menu button under lg.
+
+**Behaviour**
+- Under 768px every page action and Help are in the "More actions" menu. Help opens in a new tab.
+- Under 992px the side menu is a drawer opened by the header's menu button.
+- A showcase modal opens when the page loads while its card is not closed; its close button, "Got it" or Escape record it closed for the shop, a click outside does not close it.
+
+**Strings** (`Admin.Global`, `Admin.Actions`)
+- New: "Got it" (`Admin.Actions`).

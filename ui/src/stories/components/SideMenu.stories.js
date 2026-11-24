@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // Twig: <twig:ui:SideMenu> (src/PrestaShopBundle/Twig/Component/Ui/SideMenu.php) renders this markup, keep both in sync.
-// Submenus use Bootstrap collapse, the drawer Bootstrap offcanvas-md.
+// Submenus use Bootstrap collapse, the drawer Bootstrap offcanvas-lg.
 import campaign from '../../../icons/material-symbols/campaign.svg?raw';
 import extension from '../../../icons/material-symbols/extension.svg?raw';
 import group from '../../../icons/material-symbols/group.svg?raw';
@@ -122,7 +122,7 @@ const sideMenu = ({ sections, label = null, shopUrl = null, version = null, ...a
     + `${section.title ? `<h2 class="ps-side-menu__heading">${section.title}</h2>` : ''}`
     + `<ul class="ps-side-menu__list">${section.items.map((entry, index) => item(entry, `${id}-submenu-${sectionIndex}-${index}`)).join('')}</ul>`
     + '</div>').join('');
-  const classes = ['ps-side-menu', 'offcanvas-md', 'offcanvas-start', ...(attributes.class ? [attributes.class] : [])].join(' ');
+  const classes = ['ps-side-menu', 'offcanvas-lg', 'offcanvas-start', ...(attributes.class ? [attributes.class] : [])].join(' ');
 
   return {
     html: `<nav id="${id}" class="${classes}" tabindex="-1" aria-label="${label ?? 'Main menu'}"${extra}><div class="ps-side-menu__body ps-scroll-fade ps-scroll-fade--y" data-ps-action="scroll-fade">${body}</div>${footer(shopUrl, version)}</nav>`,

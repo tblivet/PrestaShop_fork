@@ -47,8 +47,15 @@ const argTypesBlocks = (text) => objectBlocks(text, /argTypes:\s*(?:withDefaults
 // Scalar or empty-array literal, without quotes, so PHP 'sm' and 3 compare with JS 'sm' and '3'
 const LITERAL = String.raw`'[^']*'|"[^"]*"|true|false|null|-?\d+|\[\]`;
 const unquote = (literal) => literal.replace(/^['"]|['"]$/g, '');
-const storyDefaults = (text) => {
-  const block = objectBlocks(text, /const DEFAULTS\s*=\s*{/g)[0];
+// The story's DEFAULTS, or the *_DEFAULTS it imports from its markup helper (ui/src/stories/<helper>.js)
+const storyDefaults = (text, path) => {
+  let block = objectBlocks(text, /const DEFAULTS\s*=\s*{/g)[0];
+  const imported = text.match(/import [^;]*\b(\w+_DEFAULTS)\b[^;]*from '(\.[^']+)'/);
+
+  if (block === undefined && imported) {
+    const helper = readFileSync(join(repo, dirname(path), `${imported[2].replace(/\.js$/, '')}.js`), 'utf8');
+    block = objectBlocks(helper, new RegExp(String.raw`export const ${imported[1]}\s*=\s*{`, 'g'))[0];
+  }
 
   return block === undefined
     ? null
@@ -78,11 +85,11 @@ for (const path of files('src/PrestaShopBundle/Twig/Component/Ui', '.php')) {
   }
 
   const docs = story.text.match(/\*\*Props\*\*[^\n]*/)?.[0] ?? '';
-  const defaults = storyDefaults(story.text);
+  const defaults = storyDefaults(story.text, story.path);
   const declared = Object.entries(phpDefaults).filter(([, value]) => value !== 'null');
 
   if (declared.length > 0 && defaults === null) {
-    gaps.push(`${name}: no "const DEFAULTS = {…}" in ${story.path} (PHP defaults: ${declared.map(([prop, value]) => `${prop}=${value}`).join(', ')})`);
+    gaps.push(`${name}: no "const DEFAULTS = {…}" (or imported *_DEFAULTS) in ${story.path} (PHP defaults: ${declared.map(([prop, value]) => `${prop}=${value}`).join(', ')})`);
   }
 
   for (const [prop, value] of declared) {
