@@ -282,6 +282,71 @@ final class Grid
     }
 
     /**
+     * The bulk actions as <twig:ui:DropdownMenu> items: a submit sends the filter form (the checked rows are in it) to its
+     * route, asking first with confirm_message; a button tells the page (grid-bulk.js, ps:grid-bulk-action); a modal
+     * form opens the page's modal, which gets the checked rows. Other types (ajax, a module's) are not on kit grids yet.
+     *
+     * @return list<array{type: string, label: string, icon: ?string, attr: array<string, string>}>
+     */
+    public function getBulkItems(): array
+    {
+        $items = [];
+        foreach ($this->grid['actions']['bulk'] as $action) {
+            $options = $action['options'];
+            $item = ['label' => (string) $action['name'], 'icon' => $this->icon($action['icon'] ?? null)];
+
+            switch ($action['type']) {
+                case 'submit':
+                    $items[] = $item + ['type' => 'submit', 'attr' => [
+                        'form' => $this->grid['id'] . '_filter_form',
+                        'formaction' => $this->router->generate($options['submit_route'], $options['route_params'] ?? []),
+                        'formmethod' => strtolower($options['submit_method'] ?? 'POST'),
+                    ] + $this->confirmAttributes($options)];
+                    break;
+                case 'button':
+                    $attributes = array_map('strval', array_filter($options['attributes'] ?? [], 'is_scalar'));
+                    $items[] = $item + ['type' => 'button', 'attr' => $attributes + [
+                        'class' => (string) ($options['class'] ?? ''),
+                        'data-ps-action' => 'grid-bulk-button',
+                        'data-ps-data-action-id' => (string) $action['id'],
+                    ]];
+                    break;
+                case 'modal_form_submit':
+                    $items[] = $item + ['type' => 'button', 'attr' => [
+                        'data-ps-action' => 'grid-bulk-modal',
+                        'data-bs-toggle' => 'modal',
+                        'data-bs-target' => '#' . $options['modal_id'],
+                    ]];
+                    break;
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * What the page's ConfirmDialog asks with (confirm-dialog.js), from an action's confirm_message and modal_options
+     *
+     * @return array<string, string>
+     */
+    private function confirmAttributes(array $options): array
+    {
+        if (empty($options['confirm_message'])) {
+            return [];
+        }
+        $modal = isset($options['modal_options']) && is_object($options['modal_options']) && method_exists($options['modal_options'], 'getOptions')
+            ? $options['modal_options']->getOptions()
+            : [];
+
+        return array_filter([
+            'data-ps-confirm' => (string) $options['confirm_message'],
+            'data-ps-data-confirm-title' => (string) ($modal['title'] ?? ''),
+            'data-ps-data-confirm-label' => (string) ($modal['confirm_button_label'] ?? ''),
+            'data-ps-data-confirm-variant' => str_contains((string) ($modal['confirm_button_class'] ?? ''), 'danger') ? 'danger' : '',
+        ], fn (string $value): bool => '' !== $value);
+    }
+
+    /**
      * The text that reads best on a record's colour (a status badge): dark or light, by their WCAG contrast with it
      */
     public function inkOn(string $color): string

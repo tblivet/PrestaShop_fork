@@ -1,0 +1,20 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- A row's check, in the filter form so a bulk action sends it ({id}_{column}[] as the old grids); named with the row's
+    header ("Select 1024"). None on a row that cannot be picked (disabled_field, disableBulkCheckbox) -#}
+{%- set disabled = (column.options.disabled_field is not empty and record[column.options.disabled_field]) or (record.disableBulkCheckbox ?? false) -%}
+{%- if not disabled -%}
+  {%- set value = record[column.options.bulk_field] -%}
+  <twig:ui:Check
+    :label="'Select'|trans({}, 'Admin.Actions')"
+    hideLabel
+    :name="grid.id ~ '_' ~ column.id ~ '[]'"
+    :value="value"
+    :id="grid.id ~ '_grid_select_' ~ value"
+    class="ps-grid__check"
+    data-ps-action="grid-select-row"
+    :aria-labelledby="grid.id ~ '_grid_select_label ' ~ rowHeaderId"
+  />
+{%- endif -%}

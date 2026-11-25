@@ -170,6 +170,23 @@ class GridTest extends TestCase
         yield 'not a colour' => ['transparent', 'dark'];
     }
 
+    public function testBulkActionsAsMenuItems(): void
+    {
+        $items = $this->grid(['actions' => ['grid' => [], 'bulk' => [
+            ['id' => 'delete', 'name' => 'Delete selected', 'type' => 'submit', 'icon' => 'delete', 'options' => ['submit_route' => 'admin_orders_delete', 'route_params' => [], 'submit_method' => 'POST', 'confirm_message' => 'Delete?', 'modal_options' => null]],
+            ['id' => 'open_tabs', 'name' => 'Open in new tabs', 'type' => 'button', 'icon' => null, 'options' => ['class' => 'open_tabs', 'attributes' => ['data-route' => 'admin_orders_view', 'data-ids' => ['x']]]],
+            ['id' => 'status', 'name' => 'Change status', 'type' => 'modal_form_submit', 'icon' => null, 'options' => ['submit_route' => 'admin_orders_status', 'modal_id' => 'statusModal']],
+            ['id' => 'ajax', 'name' => 'Enable', 'type' => 'ajax', 'icon' => null, 'options' => []],
+        ]]])->getBulkItems();
+
+        $this->assertCount(3, $items);
+        $this->assertSame('submit', $items[0]['type']);
+        $this->assertSame('Delete selected', $items[0]['label']);
+        $this->assertSame(['form' => 'order_filter_form', 'formaction' => '/orders?', 'formmethod' => 'post', 'data-ps-confirm' => 'Delete?'], $items[0]['attr']);
+        $this->assertSame(['data-route' => 'admin_orders_view', 'class' => 'open_tabs', 'data-ps-action' => 'grid-bulk-button', 'data-ps-data-action-id' => 'open_tabs'], $items[1]['attr']);
+        $this->assertSame('#statusModal', $items[2]['attr']['data-bs-target']);
+    }
+
     public function testHookParameters(): void
     {
         $params = $this->grid()->getHookParams();

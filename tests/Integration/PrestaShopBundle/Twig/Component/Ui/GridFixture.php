@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Twig\Component\Ui;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
@@ -59,7 +60,7 @@ final class GridFixture
             'form_prefix' => $fixture['form_prefix'],
             'columns' => $fixture['columns'],
             'column_filters' => $columnFilters,
-            'actions' => ['grid' => [], 'bulk' => []],
+            'actions' => ['grid' => [], 'bulk' => array_map(self::bulkAction(...), $fixture['bulk_actions'] ?? [])],
             'data' => ['records' => $fixture['records'], 'records_total' => $fixture['records_total'], 'query' => ''],
             'pagination' => $fixture['pagination'],
             'sorting' => $fixture['sorting'],
@@ -67,5 +68,18 @@ final class GridFixture
             'attributes' => ['is_empty_state' => $fixture['is_empty_state']],
             'view_options' => $fixture['view_options'],
         ];
+    }
+
+    /**
+     * A bulk action as BulkActionCollection::toArray() gives it: its modal options an object, the story's URL left out
+     */
+    private static function bulkAction(array $action): array
+    {
+        unset($action['url']);
+        if (is_array($action['options']['modal_options'] ?? null)) {
+            $action['options']['modal_options'] = new ModalOptions($action['options']['modal_options']);
+        }
+
+        return $action;
     }
 }

@@ -752,6 +752,24 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: selection and bulk actions — 2026-11-25
+
+Step 7 of the grid's build plan. `Grid::getBulkItems()`, `Grid/cell/bulk_action.html.twig`, `grid-selection.js`, `grid-bulk.js`; the fixture gets a selection column and three bulk actions.
+
+**Markup**
+- A `bulk_action` column: in its heading a `<twig:ui:Check hideLabel>` "Select all N rows on this page" (`#{id}_grid_bulk_action_select_all`, `data-ps-action="grid-select-all"`); in each row a `<twig:ui:Check>` named `{id}_{column}[]` (as the old grids, inside the filter form so a bulk action sends it), `#{id}_grid_select_{value}`, `data-ps-action="grid-select-row"`, named "Select 1024" by `aria-labelledby` (a hidden "Select" and the row's header). None on a row with `disabled_field` or `disableBulkCheckbox`.
+- The toolbar starts with `.ps-grid__bulk`: a `<twig:ui:Dropdown>` "Bulk actions", disabled, `data-ps-ref="grid-bulk-actions"`, and a status line `p.ps-grid__selection[role=status]` (`data-ps-ref="grid-selection-count"`) "No rows selected" / "N selected". Not rendered when there is no row.
+- Bulk actions as menu items: `submit` sends the filter form to its route (`form`, `formaction`, `formmethod`), with `confirm_message` and `modal_options` as `data-ps-confirm`, `-title`, `-label`, `-variant`; `button` keeps its class and attributes, `data-ps-action="grid-bulk-button"` and `data-ps-data-action-id`; `modal_form_submit` opens the page's modal (`data-bs-toggle="modal"`, `data-ps-action="grid-bulk-modal"`). `ajax` and modules' types are not on kit grids yet. The ids `#{id}_grid_bulk_action_{action}` are not kept.
+
+**Look**
+- A checked row: Bootstrap's table state tint in the light brand blue (`oceanblue-bg-subtle`) and a line on its start edge.
+
+**Behaviour**
+- `grid-selection.js`: select-all checks or clears the page's rows and shows "some" (indeterminate); the status line counts; the bulk menu is off until a row is checked; per grid, and again on load.
+- `grid-bulk.js`: a bulk button dispatches `ps:grid-bulk-action` on the grid (`{gridId, actionId, ids}`); a modal form gets one input per checked row from its `[data-prototype]` block (`data-bulk-inputs-id`), as the old grids.
+
+**Strings** (`Admin.Global`): new "Select all %count% rows on this page", "No rows selected", "%count% selected"; reused "Bulk actions", "Select" (`Admin.Actions`).
+
 ## `<twig:ui:Grid>`: the list, read only — 2026-11-25
 
 Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `grid.html.twig`, the cells in `Component/Ui/Grid/cell/`, `_grid.scss`, `grid-filters.js`, the Grid story, its helper `grid.js` and its fixture `ui/src/stories/fixtures/order-grid.json`. Selection, bulk and row actions, toggles, positions and the row preview come in the next steps; no page uses it yet.

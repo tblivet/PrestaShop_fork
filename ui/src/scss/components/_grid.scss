@@ -32,6 +32,21 @@ $component-name: ps-grid;
     justify-content: flex-end;
   }
 
+  // The bulk menu and what is checked, at the start; Search goes to the end
+  &__bulk {
+    display: flex;
+    flex-wrap: wrap;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    margin-inline-end: auto;
+  }
+
+  &__selection {
+    margin: 0;
+    font-size: $font-size-sm;
+    color: var(--#{$prefix}secondary-color);
+  }
+
   // Where the links land: focused after a reload (load-focus.js), so it shows Bootstrap's ring
   &__summary {
     margin: 0;
@@ -100,6 +115,21 @@ $component-name: ps-grid;
   &__filter {
     min-width: $ps-grid-filter-min-width;
     vertical-align: top;
+  }
+
+  // The check columns: as narrow as their box
+  &__heading--select {
+    width: 1%;
+  }
+
+  // A checked row: Bootstrap's state tint of a table row, in the light brand blue of what is chosen (the side menu's
+  // current entry), and a line on its start edge, so it is not told by colour only
+  &__row:has(.#{$component-name}__check:checked) {
+    --#{$prefix}table-bg-state: var(--#{$prefix}oceanblue-bg-subtle);
+
+    > :first-child {
+      box-shadow: inset $ps-grid-selected-line-width 0 0 var(--#{$prefix}primary), inset 0 0 0 9999px var(--#{$prefix}table-bg-state);
+    }
   }
 
   &__cell {

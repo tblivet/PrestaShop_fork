@@ -8,6 +8,9 @@
 import arrowDownward from '../../icons/material-symbols/arrow-downward.svg?raw';
 import arrowUpward from '../../icons/material-symbols/arrow-upward.svg?raw';
 import cancel from '../../icons/material-symbols/cancel.svg?raw';
+import deleteIcon from '../../icons/material-symbols/delete.svg?raw';
+import keyboardArrowDown from '../../icons/material-symbols/keyboard-arrow-down.svg?raw';
+import openInNew from '../../icons/material-symbols/open-in-new.svg?raw';
 import checkCircle from '../../icons/material-symbols/check-circle.svg?raw';
 import inbox from '../../icons/material-symbols/inbox.svg?raw';
 import keyboardArrowUp from '../../icons/material-symbols/keyboard-arrow-up.svg?raw';
@@ -15,6 +18,7 @@ import search from '../../icons/material-symbols/search.svg?raw';
 import searchOff from '../../icons/material-symbols/search-off.svg?raw';
 import unfoldMore from '../../icons/material-symbols/unfold-more.svg?raw';
 import badge from './badge';
+import check from './check';
 import dropdownMenu from './dropdown-menu';
 import emptyState from './empty-state';
 import pagination from './pagination';
@@ -99,12 +103,26 @@ const filterField = (grid, filter, column) => {
 };
 
 // Grid/cell/{type}.html.twig
-const cell = (column, record) => {
+const cell = (grid, column, record, rowHeaderId) => {
   const { options } = column;
 
   switch (column.type) {
     case 'identifier':
       return escape(record[options.identifier_field]);
+    case 'bulk_action': {
+      const value = record[options.bulk_field];
+
+      return check({
+        label: 'Select',
+        hideLabel: true,
+        name: `${grid.id}_${column.id}[]`,
+        value: String(value),
+        id: `${grid.id}_grid_select_${value}`,
+        class: 'ps-grid__check',
+        'data-ps-action': 'grid-select-row',
+        'aria-labelledby': `${grid.id}_grid_select_label ${rowHeaderId}`,
+      }).html;
+    }
     case 'data': {
       const text = String(record[options.field] ?? '');
       const max = options.max_displayed_characters ?? 0;
@@ -136,6 +154,39 @@ const cell = (column, record) => {
       return escape(record[options.field] ?? '');
   }
 };
+
+// Grid::getBulkItems(): the bulk actions as menu items (the fixture's url is what the router gives the route)
+const bulkItems = (fixture) => (fixture.bulk_actions ?? []).map((action) => {
+  const { options } = action;
+  const item = { label: action.name, icon: action.icon };
+
+  if (action.type === 'submit') {
+    const modal = options.modal_options ?? {};
+    const confirm = options.confirm_message ? Object.fromEntries(Object.entries({
+      'data-ps-confirm': options.confirm_message,
+      'data-ps-data-confirm-title': modal.title ?? '',
+      'data-ps-data-confirm-label': modal.confirm_button_label ?? '',
+      'data-ps-data-confirm-variant': (modal.confirm_button_class ?? '').includes('danger') ? 'danger' : '',
+    }).filter(([, value]) => value !== '')) : {};
+
+    return {
+      ...item,
+      type: 'submit',
+      attr: {
+        form: `${fixture.id}_filter_form`, formaction: action.url, formmethod: (options.submit_method ?? 'POST').toLowerCase(), ...confirm,
+      },
+    };
+  }
+  if (action.type === 'button') {
+    return {
+      ...item, type: 'button', attr: { ...options.attributes, class: options.class ?? '', 'data-ps-action': 'grid-bulk-button', 'data-ps-data-action-id': action.id },
+    };
+  }
+
+  return {
+    ...item, type: 'button', attr: { 'data-ps-action': 'grid-bulk-modal', 'data-bs-toggle': 'modal', 'data-bs-target': `#${options.modal_id}` },
+  };
+});
 
 // A <twig:ui:Button> of the grid: Search, Clear filters
 const button = ({
@@ -187,7 +238,13 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         label: 'Search', variant: 'outline-primary', type: 'submit', icon: search, attributes: { form: `${id}_filter_form` },
       })}${showReset ? button({ label: 'Clear filters', variant: 'link', attributes: reset }) : ''}</div>`
       : '';
-    const toolbar = searchCluster || block('toolbar') ? `<div class="ps-grid__toolbar">${block('toolbar')}${searchCluster}</div>` : '';
+    const items = state === 'list' ? bulkItems(fixture) : [];
+    const bulk = items.length
+      ? '<div class="ps-grid__bulk"><div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-outline-secondary ps-button" type="button" data-ps-data-busy-label="Loading..." disabled data-bs-toggle="dropdown" aria-expanded="false">'
+        + `<span class="ps-button__label">Bulk actions</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items }, { open_in_new: openInNew, delete: deleteIcon })}</div>`
+        + '<p class="ps-grid__selection" role="status" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p></div>'
+      : '';
+    const toolbar = searchCluster || bulk || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${searchCluster}</div>` : '';
     const [from, to] = [Math.min(offset + 1, total), Math.min(offset + limit, total)];
     const summary = `<p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' ? `${total} ${resultsWord}` : `${from}–${to} of ${total}`}</p>`;
 
@@ -196,6 +253,13 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       const align = ALIGNMENTS[column.options.alignment ?? ''];
       const sortable = column.options.sortable && state === 'list';
       const icon = { ascending: arrowUpward, descending: arrowDownward }[sort] ?? unfoldMore;
+      if (column.type === 'bulk_action') {
+        const all = state === 'list' ? check({
+          label: `Select all ${fixture.records.length} rows on this page`, hideLabel: true, id: `${id}_grid_bulk_action_select_all`, class: 'ps-grid__check', 'data-ps-action': 'grid-select-all',
+        }).html : '';
+
+        return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading ps-grid__heading--select">${all}</th>`;
+      }
       const content = sortable
         ? `<a class="ps-grid__sort" href="${escape(url(fixture, { orderBy: column.id, sortOrder: sort === 'ascending' ? 'desc' : 'asc' }))}">${escape(column.name)}${uiIcon(icon, { class: 'ps-grid__sort-icon' })}</a>`
         : escape(column.name);
@@ -221,14 +285,14 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         const tag = head ? 'th' : 'td';
         const align = ALIGNMENTS[column.options.alignment ?? ''];
 
-        return `<${tag}${head ? ` scope="row" id="${id}_grid_rowhead_${index + 1}"` : ''} class="ps-grid__cell ps-grid__cell--${column.type.replaceAll('_', '-')}${align ? ` ps-grid__cell--${align}` : ''}">${cell(column, record)}</${tag}>`;
+        return `<${tag}${head ? ` scope="row" id="${id}_grid_rowhead_${index + 1}"` : ''} class="ps-grid__cell ps-grid__cell--${column.type.replaceAll('_', '-')}${align ? ` ps-grid__cell--${align}` : ''}">${cell(fixture, column, record, `${id}_grid_rowhead_${index + 1}`)}</${tag}>`;
       }).join('')}</tr>`).join('');
     }
 
     body = `${toolbar}${summary}<form name="${id}" method="post" action="${fixture.action}#${id}_grid_results" id="${id}_filter_form" class="ps-grid__form" novalidate="novalidate" data-ps-action="validate">`
       + `<div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="${escape(fixture.name)} table">`
       + `<table id="${id}_grid_table" class="ps-grid__table table" aria-describedby="${id}_grid_results"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
-      + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div>${noMatch}</form>`;
+      + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`;
   }
 
   const paginated = state !== 'empty' && (total > 10 || offset > 0);

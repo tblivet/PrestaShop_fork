@@ -517,6 +517,8 @@ $ps-pagination-jump-input-width: 4rem;
 // <twig:ui:Grid>: a filter field wide enough to type in, an image cell's thumbnail
 $ps-grid-filter-min-width: 7rem;
 $ps-grid-image-size: 3rem;
+// The line on the start edge of a checked row
+$ps-grid-selected-line-width: .1875rem;
 // A grid's range filter (forms/_filter-range.scss): narrower than this, its two fields go one under the other
 $ps-filter-range-field-min-width: 6rem;
 // <twig:ui:EmptyState>: the message keeps a readable line length

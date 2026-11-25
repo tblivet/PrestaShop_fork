@@ -174,6 +174,46 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('ps-grid__header', $html);
     }
 
+    public function testEachRowHasACheckNamedWithItsHeader(): void
+    {
+        $html = $this->render();
+
+        $this->assertStringContainsString('<input class="form-check-input ps-check__input ps-grid__check" type="checkbox" id="order_grid_bulk_action_select_all" data-ps-action="grid-select-all">', $html);
+        $this->assertStringContainsString('<span class="visually-hidden">Select all 3 rows on this page</span>', $html);
+        $this->assertStringContainsString('<input class="form-check-input ps-check__input ps-grid__check" type="checkbox" id="order_grid_select_1024" name="order_orders_bulk[]" value="1024" data-ps-action="grid-select-row" aria-labelledby="order_grid_select_label order_grid_rowhead_1">', $html);
+        $this->assertStringContainsString('<span id="order_grid_select_label" hidden>Select</span>', $html);
+    }
+
+    public function testARowThatCannotBePickedHasNoCheck(): void
+    {
+        $records = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/order-grid.json'), true)['records'];
+        $records[1]['disableBulkCheckbox'] = true;
+
+        $html = $this->render(['records' => $records]);
+
+        $this->assertStringContainsString('id="order_grid_select_1024"', $html);
+        $this->assertStringNotContainsString('id="order_grid_select_1023"', $html);
+    }
+
+    public function testTheBulkMenuIsOffUntilARowIsChecked(): void
+    {
+        $html = $this->render();
+
+        $this->assertMatchesRegularExpression('#<div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-outline-secondary ps-button" type="button"[^>]* disabled data-bs-toggle="dropdown"#', $html);
+        $this->assertStringContainsString('<p class="ps-grid__selection" role="status" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p>', $html);
+        $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_filter_form" formaction="/sell/orders/" formmethod="post" data-ps-confirm="Delete the selected orders? This cannot be undone." data-ps-data-confirm-title="Delete orders?" data-ps-data-confirm-label="Delete" data-ps-data-confirm-variant="danger">', $html);
+        $this->assertStringContainsString('data-ps-action="grid-bulk-button" data-ps-data-action-id="open_tabs"', $html);
+        $this->assertStringContainsString('data-ps-action="grid-bulk-modal" data-bs-toggle="modal" data-bs-target="#changeOrdersStatusModal"', $html);
+    }
+
+    public function testNoBulkMenuWithoutRows(): void
+    {
+        $html = $this->render(['filter_data' => ['reference' => 'ZZZ'], 'records' => [], 'records_total' => 0, 'pagination' => ['offset' => 0, 'limit' => 50]]);
+
+        $this->assertStringNotContainsString('grid-bulk-actions', $html);
+        $this->assertStringNotContainsString('grid-select-all', $html);
+    }
+
     private function render(array $override = [], string $props = '', bool $boot = true): string
     {
         if ($boot) {

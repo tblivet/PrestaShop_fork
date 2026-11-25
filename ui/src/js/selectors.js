@@ -17,6 +17,13 @@ export default {
   paginationJump: '[data-ps-action~="pagination-jump"]',
   // A <twig:ui:Grid>: its Clear filters, and the results summary its links land on
   gridResetFilters: '[data-ps-action~="grid-reset-filters"]',
+  grid: '[data-ps-ref="grid"]',
+  gridSelectAll: '[data-ps-action~="grid-select-all"]',
+  gridSelectRow: '[data-ps-action~="grid-select-row"]',
+  gridSelectionCount: '[data-ps-ref="grid-selection-count"]',
+  gridBulkActions: '[data-ps-ref="grid-bulk-actions"]',
+  gridBulkButton: '[data-ps-action~="grid-bulk-button"]',
+  gridBulkModal: '[data-ps-action~="grid-bulk-modal"]',
   gridResults: '[data-ps-ref="grid-results"]',
   // A button or a link that asks first (confirm-dialog.js), and the page's one <twig:ui:ConfirmDialog>
   confirmTrigger: '[data-ps-confirm]',

@@ -8,6 +8,8 @@ import initAlertDismissFocus from '../src/js/components/alert-dismiss-focus';
 import initAnnouncer from '../src/js/components/announcer';
 import initBusyButtons from '../src/js/components/busy-button';
 import initConfirmDialog from '../src/js/components/confirm-dialog';
+import initGridBulk from '../src/js/components/grid-bulk';
+import initGridSelection from '../src/js/components/grid-selection';
 import initPasswordToggle from '../src/js/components/password-toggle';
 import initHeaderSearch from '../src/js/components/header-search';
 import initKpis from '../src/js/components/kpi';
@@ -37,6 +39,8 @@ initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
 initPaginationJump();
 initConfirmDialog(bootstrap.Modal, bootstrap.Dropdown);
+initGridBulk();
+initGridSelection();
 initTooltips(bootstrap.Tooltip);
 initScrollFade();
 

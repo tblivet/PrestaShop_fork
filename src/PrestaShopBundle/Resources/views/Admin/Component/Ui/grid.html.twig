@@ -15,6 +15,8 @@
 {%- set rowHeaderColumnId = this.rowHeaderColumnId -%}
 {%- set searchAndReset = this.searchAndReset -%}
 {%- set hasFilters = this.hasFilters -%}
+{%- set bulkItems = this.bulkItems -%}
+{%- set rowCount = grid.data.records|length -%}
 {%- set paginated = grid.data.records_total > 10 or grid.pagination.offset > 0 -%}
 {%- set showName = grid.view_options.display_name ?? true -%}
 {%- set alignments = {right: 'end', center: 'center'} -%}
@@ -66,8 +68,15 @@
         <twig:ui:EmptyState icon="inbox" :title="'No records found'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)"/>
       {%- endif -%}
     {%- else -%}
-      {%- if searchAndReset or toolbar|trim is not empty -%}
+      {%- if searchAndReset or bulkItems is not empty or toolbar|trim is not empty -%}
         <div class="ps-grid__toolbar">
+          {#- The bulk menu, off until a row is checked, and what is checked: grid-selection.js keeps both up to date -#}
+          {%- if bulkItems is not empty and 'list' == state -%}
+            <div class="ps-grid__bulk">
+              <twig:ui:Dropdown :label="'Bulk actions'|trans({}, 'Admin.Global')" :items="bulkItems" variant="outline-secondary" disabled data-ps-ref="grid-bulk-actions"/>
+              <p class="ps-grid__selection" role="status" data-ps-ref="grid-selection-count" data-ps-data-none="{{ 'No rows selected'|trans({}, 'Admin.Global') }}" data-ps-data-some="{{ '%count% selected'|trans({}, 'Admin.Global') }}">{{ 'No rows selected'|trans({}, 'Admin.Global') }}</p>
+            </div>
+          {%- endif -%}
           {{- toolbar -}}
           {%- if searchAndReset -%}
             <twig:ui:Layout:Cluster class="ps-grid__search">
@@ -101,8 +110,18 @@
               {%- for column in grid.columns -%}
                 {%- set sort = 'list' == state ? this.sortState(column.id) : null -%}
                 {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
-                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
-                  {%- if this.isSortable(column) -%}
+                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ 'bulk_action' == column.type ? ' ps-grid__heading--select' }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
+                  {%- if 'bulk_action' == column.type -%}
+                    {%- if 'list' == state -%}
+                      <twig:ui:Check
+                        :label="'Select all %count% rows on this page'|trans({'%count%': rowCount}, 'Admin.Global')"
+                        hideLabel
+                        :id="id ~ '_grid_bulk_action_select_all'"
+                        class="ps-grid__check"
+                        data-ps-action="grid-select-all"
+                      />
+                    {%- endif -%}
+                  {%- elseif this.isSortable(column) -%}
                     <a class="ps-grid__sort" href="{{ this.sortHref(column.id) }}">
                       {{- column.name -}}
                       <twig:ui:Icon :name="{ascending: 'arrow_upward', descending: 'arrow_downward'}[sort] ?? 'unfold_more'" class="ps-grid__sort-icon"/>
@@ -156,6 +175,8 @@
           </tbody>
         </table>
       </div>
+      {#- With a row's header, names its check: "Select 1024" -#}
+      <span id="{{ id }}_grid_select_label" hidden>{{ 'Select'|trans({}, 'Admin.Actions') }}</span>
       {#- Under the table, not in it: a row of a table that scrolls sideways would put it out of sight on a phone -#}
       {%- if 'no-match' == state -%}
         {%- set clearFiltersHere = clearFilters ? clearFilters|merge({variant: 'outline-secondary'}) : null -%}
