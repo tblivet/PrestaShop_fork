@@ -82,3 +82,10 @@ export const HiddenTitleCentredColumn = ordersStory({
 export const TogglesAndPositions = carriersStory({}, {}, 'Carriers, sorted by position: a switch per toggle column (posted at once, announced; flipped back when it fails), and each row moves by its handle or Move up and Move down (the page\'s positions sent, the page reloaded). Done goes back to the ID order.');
 
 export const PositionsNotSorted = carriersStory({ sorting: { order_by: 'id_carrier', order_way: 'asc' }, columns: carrierGrid.columns.filter((column) => column.type !== 'position_handle') }, {}, 'Carriers sorted by ID: no handles (the presenter adds them only when sorted by position), Rearrange sorts by position.');
+
+export const QuickFilter = ordersStory({
+  filters: [...orderGrid.filters, {
+    name: 'period_filter', type: 'filter_link', options: { default_value: 'all', filter_options: { all: 'All', active: 'Active', scheduled: 'Scheduled', expired: 'Expired' } },
+  }],
+  filter_data: { period_filter: 'active' },
+}, {}, 'A quick filter (Discounts\' period, `FilterLinkFilterType`): a group of choices that submit the filter form, the current one pressed with a check.');

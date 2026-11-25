@@ -333,6 +333,31 @@ final class Grid
     }
 
     /**
+     * The quick filters (FilterLinkFilterType, Discounts' period): each a group of choices, the current one pressed
+     *
+     * @return list<array{field: FormView, name: string, value: string, default: string, choices: array<string, string>}>
+     */
+    public function getQuickFilters(): array
+    {
+        $filters = [];
+        foreach ($this->grid['filter_form']->children as $child) {
+            if (in_array('filter_link', $child->vars['block_prefixes'] ?? [], true)) {
+                $default = (string) ($child->vars['default_value'] ?? '');
+                $value = (string) ($child->vars['value'] ?? '');
+                $filters[] = [
+                    'field' => $child,
+                    'name' => (string) $child->vars['full_name'],
+                    'value' => '' === $value ? $default : $value,
+                    'default' => $default,
+                    'choices' => array_map('strval', $child->vars['filter_options'] ?? []),
+                ];
+            }
+        }
+
+        return $filters;
+    }
+
+    /**
      * The position column the list is sorted by, if any: its rows can be moved (the presenter adds its handle column)
      */
     public function getOrderingColumnId(): ?string

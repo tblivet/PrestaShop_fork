@@ -752,6 +752,12 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: quick filters — 2026-11-25
+
+Part of step 14. `Grid::getQuickFilters()`; a QuickFilter story.
+
+**Markup**: a `FilterLinkFilterType` filter (Discounts' period) is a `div.ps-grid__quick-filters.btn-group[role=group]` in the toolbar, named by the filter, after Search: a hidden field with the current value, then one submit button per choice (`form="{id}_filter_form"`, its name and value, `aria-pressed`, the pressed one `active` with a check icon). The hidden field comes first so that the clicked button's value, sent after it, wins. The filter's own hidden field and the old `js-filter-link-field` links are not rendered.
+
 ## `<twig:ui:Grid>`: domain columns, unnamed actions, grids' own empty states — 2026-11-25
 
 Part of step 14 of the grid's build plan. Discounts, Logs, Search aliases and Currencies now render on the kit grid.

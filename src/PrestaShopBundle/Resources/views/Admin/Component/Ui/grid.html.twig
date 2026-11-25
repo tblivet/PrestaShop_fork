@@ -20,6 +20,7 @@
 {%- set gridItems = this.gridItems -%}
 {%- set reorder = this.reorder -%}
 {%- set reorderField = this.reorderField -%}
+{%- set quickFilters = this.quickFilters -%}
 {%- set rowCount = grid.data.records|length -%}
 {%- set paginated = grid.data.records_total > 10 or grid.pagination.offset > 0 -%}
 {%- set showName = grid.view_options.display_name ?? true -%}
@@ -89,7 +90,7 @@
         <twig:ui:EmptyState icon="inbox" :title="'No records found'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)"/>
       {%- endif -%}
     {%- else -%}
-      {%- if searchAndReset or bulkItems is not empty or reorder or toolbar|trim is not empty -%}
+      {%- if searchAndReset or bulkItems is not empty or reorder or quickFilters is not empty or toolbar|trim is not empty -%}
         <div class="ps-grid__toolbar">
           {#- The bulk menu, off until a row is checked, and what is checked: grid-selection.js keeps both up to date -#}
           {%- if bulkItems is not empty and 'list' == state -%}
@@ -114,6 +115,20 @@
               {%- endif -%}
             </twig:ui:Layout:Cluster>
           {%- endif -%}
+          {#- A quick filter's choices submit the filter form, the pressed one is the current value. Its hidden field comes
+              first: the form sends the fields in document order, so the clicked button's value, later, wins -#}
+          {%- for quick in quickFilters -%}
+            <div class="ps-grid__quick-filters btn-group" role="group" aria-label="{{ quick.field.vars.label ?: quick.field.vars.name|humanize }}">
+              <input type="hidden" form="{{ formId }}" name="{{ quick.name }}" value="{{ quick.value }}">
+              {%- for value, label in quick.choices -%}
+                {%- set pressed = value == quick.value -%}
+                <button type="submit" form="{{ formId }}" class="btn btn-outline-secondary{{ pressed ? ' active' }}" name="{{ quick.name }}" value="{{ value }}" aria-pressed="{{ pressed ? 'true' : 'false' }}">
+                  {%- if pressed %}<twig:ui:Icon name="check"/>{% endif -%}
+                  {{ label }}
+                </button>
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
         </div>
       {%- endif -%}
 
@@ -130,6 +145,7 @@
       {{- form_start(grid.filter_form, {action: grid.filter_form.vars.action ~ '#' ~ resultsId, attr: {id: formId, class: 'ps-grid__form'}}) -}}
       {%- if searchAndReset -%}{%- do searchAndReset.setRendered -%}{%- endif -%}
       {%- if reorderField -%}{%- do reorderField.setRendered -%}{%- endif -%}
+      {%- for quick in quickFilters -%}{%- do quick.field.setRendered -%}{%- endfor -%}
       <div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="{{ '%list% table'|trans({'%list%': grid.name}, 'Admin.Global') }}">
         <table id="{{ id }}_grid_table" class="ps-grid__table table" aria-describedby="{{ resultsId }}">
           <caption id="{{ captionId }}" class="visually-hidden">{{ grid.name }}</caption>

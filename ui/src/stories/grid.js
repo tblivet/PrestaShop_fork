@@ -457,7 +457,21 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     const reorder = state === 'list' && positionColumn && fixture.filters.some((filter) => filter.type === 'reorder')
       ? `<a class="btn btn-outline-secondary ps-button" href="${escape(url(fixture, { orderBy: ordering && other ? other.id : positionColumn.id, sortOrder: 'asc' }))}">${uiIcon(ordering ? checkIcon : swapVert, { size: 'lg' })}<span class="ps-button__label">${ordering ? 'Done' : 'Rearrange'}</span></a>`
       : '';
-    const toolbar = searchCluster || bulk || reorder || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${reorder}${searchCluster}</div>` : '';
+    // Grid::getQuickFilters(): its hidden field first, so the clicked choice wins
+    const quick = fixture.filters.filter((filter) => filter.type === 'filter_link').map((filter) => {
+      const name = `${id}[${filter.name}]`;
+      const current = String(fixture.filter_data[filter.name] ?? filter.options.default_value ?? '');
+      const label = filter.name.replace(/_/g, ' ').replace(/^./, (letter) => letter.toUpperCase());
+
+      return `<div class="ps-grid__quick-filters btn-group" role="group" aria-label="${label}"><input type="hidden" form="${id}_filter_form" name="${name}" value="${current}">`
+        + Object.entries(filter.options.filter_options).map(([value, text]) => {
+          const pressed = value === current;
+
+          return `<button type="submit" form="${id}_filter_form" class="btn btn-outline-secondary${pressed ? ' active' : ''}" name="${name}" value="${value}" aria-pressed="${pressed}">${pressed ? uiIcon(checkIcon) : ''}${escape(text)}</button>`;
+        }).join('')
+        + '</div>';
+    }).join('');
+    const toolbar = searchCluster || bulk || reorder || quick || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${reorder}${searchCluster}${quick}</div>` : '';
     const [from, to] = [Math.min(offset + 1, total), Math.min(offset + limit, total)];
     const summary = `<p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' ? `${total} ${resultsWord}` : `${from}–${to} of ${total}`}</p>`;
 

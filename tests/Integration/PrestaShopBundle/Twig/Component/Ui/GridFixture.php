@@ -15,6 +15,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PreviewColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Type\FilterLinkFilterType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
@@ -35,6 +36,7 @@ final class GridFixture
         'integer_min_max' => IntegerMinMaxFilterType::class,
         'number_min_max' => NumberMinMaxFilterType::class,
         'reorder' => ReorderPositionsButtonType::class,
+        'filter_link' => FilterLinkFilterType::class,
     ];
 
     /**
@@ -53,7 +55,9 @@ final class GridFixture
         $columnFilters = [];
         foreach ($fixture['filters'] as $filter) {
             $builder->add($filter['name'], self::TYPES[$filter['type']], ['required' => false] + ($filter['options'] ?? []));
-            $columnFilters[$filter['column']][] = $filter['name'];
+            if (isset($filter['column'])) {
+                $columnFilters[$filter['column']][] = $filter['name'];
+            }
         }
         if ([] !== $fixture['filters']) {
             $builder->add('actions', SearchAndResetType::class, ['attr' => ['data-url' => $fixture['reset_url'], 'data-redirect' => $fixture['redirect_url']]]);

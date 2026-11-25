@@ -45,6 +45,13 @@ $component-name: ps-grid;
   }
 
   // The bulk menu and what is checked, at the start; Search goes to the end
+  // The pressed quick filter shows a check as well as its state
+  &__quick-filters .btn {
+    display: inline-flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
+  }
+
   &__bulk {
     display: flex;
     flex-wrap: wrap;

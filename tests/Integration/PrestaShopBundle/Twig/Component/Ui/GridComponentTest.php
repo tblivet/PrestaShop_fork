@@ -121,6 +121,19 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('grid-position', $html);
     }
 
+    public function testAQuickFilterSubmitsItsChoiceAfterItsHiddenField(): void
+    {
+        $fixture = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/order-grid.json'), true, 512, JSON_THROW_ON_ERROR);
+        $fixture['filters'][] = ['name' => 'period_filter', 'type' => 'filter_link', 'options' => ['default_value' => 'all', 'filter_options' => ['all' => 'All', 'active' => 'Active', 'expired' => 'Expired']]];
+        $html = $this->render(['filters' => $fixture['filters'], 'filter_data' => ['period_filter' => 'active']]);
+
+        $this->assertMatchesRegularExpression('#<div class="ps-grid__quick-filters btn-group" role="group" aria-label="Period filter">\s*<input type="hidden" form="order_filter_form" name="order\[period_filter\]" value="active">#', $html);
+        $this->assertMatchesRegularExpression('#<button type="submit" form="order_filter_form" class="btn btn-outline-secondary" name="order\[period_filter\]" value="all" aria-pressed="false">\s*All\s*</button>#', $html);
+        $this->assertMatchesRegularExpression('#<button type="submit" form="order_filter_form" class="btn btn-outline-secondary active" name="order\[period_filter\]" value="active" aria-pressed="true"><svg[^>]*>.*?</svg>\s*Active\s*</button>#s', $html);
+        $this->assertSame(1, substr_count($html, 'name="order[period_filter]" value="active"') - substr_count($html, 'type="submit" form="order_filter_form" class="btn btn-outline-secondary active" name="order[period_filter]" value="active"'));
+        $this->assertStringNotContainsString('js-filter-link-field', $html);
+    }
+
     public function testAGridsOwnEmptyStateReplacesTheDefault(): void
     {
         $html = $this->render(['id' => 'supplier', 'is_empty_state' => true, 'records' => [], 'records_total' => 0, 'pagination' => ['offset' => 0, 'limit' => 50]]);
