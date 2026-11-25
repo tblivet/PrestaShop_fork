@@ -1,0 +1,72 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+// Orders: an order's preview in the grid's preview row (Sell/Order/Order/Ui/preview.html.twig): its details beside its
+// products when the grid is wide enough, under them otherwise (the grid's scrolling box is the container)
+$component-name: ps-order-preview;
+
+.#{$component-name} {
+  display: grid;
+  gap: map-get($spacers, 4);
+  padding-block: map-get($spacers, 2);
+
+  @container (min-width: #{map-get($grid-breakpoints, lg)}) {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+
+  &__details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: map-get($spacers, 3);
+    margin: 0;
+  }
+
+  &__detail {
+    dt {
+      display: flex;
+      gap: map-get($spacers, 2);
+      align-items: center;
+    }
+
+    dd {
+      margin-block-end: map-get($spacers, 2);
+    }
+  }
+
+  &__icon {
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  // Formatted addresses come with line breaks
+  &__address {
+    white-space: pre-line;
+  }
+
+  &__table {
+    margin: 0;
+  }
+
+  &__number {
+    text-align: end;
+  }
+
+  &__tax {
+    display: block;
+    font-size: $small-font-size;
+    font-weight: $font-weight-normal;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    justify-content: space-between;
+    margin-block-start: map-get($spacers, 2);
+  }
+
+  &__open {
+    margin-inline-start: auto;
+  }
+}

@@ -76,6 +76,7 @@ module.exports = {
 
     // Only loaded while PS_UI_KIT is on: drop the _ui suffix once the block above is gone.
     login_form_ui: './js/pages/login/login-page',
+    order_ui: './js/pages/order/order-list',
     main_ui: './js/theme-ui',
 
     // Pages and shared bundles, loaded in both modes
@@ -162,7 +163,7 @@ module.exports = {
     monitoring: './js/pages/monitoring',
     multistore_dropdown: './js/components/multistore-dropdown',
     multistore_header: './js/components/multistore-header',
-    order: './js/pages/order',
+    order: './js/pages/order', // -> order_ui
     order_create: './js/pages/order/create',
     order_delivery: './js/pages/order/delivery',
     order_message: './js/pages/order_message',

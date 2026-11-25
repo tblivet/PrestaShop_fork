@@ -5,6 +5,7 @@
 const uiKitFiles = [
   'js/components/change-password-handler.ts',
   'js/pages/login/**/*.ts',
+  'js/pages/order/order-list*.ts',
 ];
 const uiKitSelectorMessage = 'Bind to a data-ps-* hook from the selector map, not a class or an id (ui/.ai/CONVENTIONS.md).';
 

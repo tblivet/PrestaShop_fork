@@ -1,0 +1,37 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Orders on the kit (index.html.twig includes it with PS_UI_KIT on): the KPI row, the orders grid and the modal its
+    "Change order status" bulk action opens -#}
+{%- form_theme changeOrderStatusesForm '@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig' -%}
+
+{{ render(controller(
+  'PrestaShopBundle\\Controller\\Admin\\CommonController::renderKpiRowAction',
+  {kpiRow: orderKpi},
+)) }}
+
+<twig:ui:Grid :grid="orderGrid">
+  <twig:block name="empty">
+    <twig:ui:EmptyState icon="receipt_long" :title="'Manage your orders'|trans({}, 'Admin.Orderscustomers.Feature')" :headingLevel="3">
+      {{ 'Find all your orders on this page and access their main information in one click: check the cart total, the payment method, the shipping details, or if it comes from a new client. You can even update the status from the listing!'|trans({}, 'Admin.Orderscustomers.Feature') }}
+    </twig:ui:EmptyState>
+  </twig:block>
+</twig:ui:Grid>
+
+{#- The checked orders go with the form (grid-bulk.js), one order_ids input each from its prototype. Set here: inside the
+    modal, id is the modal's -#}
+{%- set statusFormId = 'change_orders_status_form' -%}
+<twig:ui:Modal id="changeOrdersStatusModal" :title="'Choose an order status'|trans({}, 'Admin.Orderscustomers.Feature')">
+  {{ form_start(changeOrderStatusesForm, {
+    action: path('admin_orders_change_orders_status'),
+    attr: {id: statusFormId, 'data-bulk-inputs-id': changeOrderStatusesForm.order_ids.vars.id},
+  }) }}
+    {{ form_row(changeOrderStatusesForm.new_order_status_id, {label: 'Status'|trans({}, 'Admin.Global')}) }}
+    <div hidden>{{ form_widget(changeOrderStatusesForm.order_ids) }}</div>
+  {{ form_end(changeOrderStatusesForm) }}
+  <twig:block name="footer">
+    <twig:ui:Button variant="link" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button type="submit" :form="statusFormId">{{ 'Update status'|trans({}, 'Admin.Orderscustomers.Feature') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:Modal>

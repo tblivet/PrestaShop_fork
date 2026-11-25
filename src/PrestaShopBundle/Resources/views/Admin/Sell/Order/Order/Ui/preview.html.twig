@@ -1,0 +1,102 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- An order's preview in the kit grid's preview row (preview.html.twig includes it with PS_UI_KIT on): shipping, email
+    and invoice details, then the products (past the limit behind "(N more)", order-list.ts) and Open details -#}
+{%- set products = orderPreview.productDetails -%}
+{%- set hasLocation = products|filter(product => product.location is not empty)|length > 0 -%}
+{%- set more = products|length - productsPreviewLimit -%}
+<div class="ps-order-preview" data-role="preview-row">
+  <dl class="ps-order-preview__details">
+    <div class="ps-order-preview__detail" data-role="shipping-details">
+      <dt><twig:ui:Icon name="local_shipping" class="ps-order-preview__icon"/>{{ 'Carrier'|trans({}, 'Admin.Global') }}</dt>
+      <dd>{{ orderPreview.virtual ? '-' : orderPreview.shippingDetails.carrierName }}</dd>
+      <dt>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}</dt>
+      <dd>
+        {%- if not orderPreview.virtual and orderPreview.shippingDetails.trackingNumber is not empty -%}
+          {%- if orderPreview.shippingDetails.trackingUrl -%}
+            <a href="{{ orderPreview.shippingDetails.trackingUrl }}" target="_blank" rel="noopener noreferrer nofollow">
+              {{- orderPreview.shippingDetails.trackingNumber -}}
+              <span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>
+            </a>
+          {%- else -%}
+            {{ orderPreview.shippingDetails.trackingNumber }}
+          {%- endif -%}
+        {%- else -%}
+          -
+        {%- endif -%}
+      </dd>
+      <dt>{{ 'Shipping details'|trans({}, 'Admin.Orderscustomers.Feature') }}</dt>
+      <dd class="ps-order-preview__address">{{ orderPreview.virtual ? '-' : orderPreview.shippingAddressFormatted }}</dd>
+    </div>
+    <div class="ps-order-preview__detail" data-role="email">
+      <dt><twig:ui:Icon name="mail" class="ps-order-preview__icon"/>{{ 'Email'|trans({}, 'Admin.Global') }}</dt>
+      <dd>{{ orderPreview.invoiceDetails.email }}</dd>
+    </div>
+    <div class="ps-order-preview__detail" data-role="invoice-details">
+      <dt><twig:ui:Icon name="receipt" class="ps-order-preview__icon"/>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}</dt>
+      <dd class="ps-order-preview__address">{{ orderPreview.invoiceAddressFormatted }}</dd>
+    </div>
+  </dl>
+
+  <div class="ps-order-preview__products">
+    <div class="table-responsive">
+      <table class="table table-sm ps-order-preview__table" data-role="product-table">
+        <caption class="visually-hidden">{{ 'Products'|trans({}, 'Admin.Global') }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ 'Products'|trans({}, 'Admin.Global') }} ({{ products|length }})</th>
+            <th scope="col">{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+            {%- if hasLocation -%}
+              <th scope="col">{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+            {%- endif -%}
+            {%- if not orderPreview.taxIncluded -%}
+              <th scope="col" class="ps-order-preview__number">{{ 'Tax'|trans({}, 'Admin.Global') }}</th>
+            {%- endif -%}
+            <th scope="col" class="ps-order-preview__number">{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+            <th scope="col" class="ps-order-preview__number">
+              {{- 'Total'|trans({}, 'Admin.Global') }}
+              <span class="ps-order-preview__tax">{{ orderPreview.taxIncluded ? 'Tax included'|trans({}, 'Admin.Global') : 'Tax excluded'|trans({}, 'Admin.Global') }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for product in products -%}
+            <tr{% if loop.index > productsPreviewLimit %} hidden data-ps-ref="order-preview-more"{% endif %}>
+              <td>
+                {%- if product.id -%}
+                  <a href="{{ path('admin_products_edit', {productId: product.id}) }}" target="_blank">
+                    {{- product.name -}}
+                    <span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>
+                  </a>
+                {%- else -%}
+                  {{ product.name }} ({{ 'Product deleted'|trans({}, 'Admin.Catalog.Feature') }})
+                {%- endif -%}
+              </td>
+              <td>{{ product.reference }}</td>
+              {%- if hasLocation -%}
+                <td>{{ product.location }}</td>
+              {%- endif -%}
+              {%- if not orderPreview.taxIncluded -%}
+                <td class="ps-order-preview__number">{{ product.totalTax }}</td>
+              {%- endif -%}
+              <td class="ps-order-preview__number">{{ product.quantity }}</td>
+              <td class="ps-order-preview__number">{{ product.totalPrice }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ps-order-preview__actions">
+      {%- if more > 0 -%}
+        <twig:ui:Button variant="link" icon="more_horiz" data-ps-action="order-preview-more">{{ '(%count% more)'|trans({'%count%': more}, 'Admin.Global') }}</twig:ui:Button>
+      {%- endif -%}
+      <twig:ui:Button size="sm" :href="path('admin_orders_view', {orderId: orderId})" icon="arrow_forward" iconPosition="end" class="ps-order-preview__open">
+        {{- 'Open details'|trans({}, 'Admin.Orderscustomers.Feature') -}}
+      </twig:ui:Button>
+    </div>
+  </div>
+</div>
+{{ renderhook('displayOrderPreview', {order_id: orderId}) }}

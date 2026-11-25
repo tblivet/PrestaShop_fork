@@ -4,6 +4,10 @@
  #}
 
 {% block order_preview %}
+  {# With PS_UI_KIT on, Ui/preview.html.twig renders the preview #}
+  {% if ui_kit %}
+    {{ include('@PrestaShop/Admin/Sell/Order/Order/Ui/preview.html.twig') }}
+  {% else %}
   <div class="row order-preview-content mt-2" data-role="preview-row">
     <div class="col-5">
       <div class="row">
@@ -162,4 +166,5 @@
     </div>
   </div>
   {{ renderhook('displayOrderPreview', {order_id: orderId}) }}
+  {% endif %}
 {% endblock %}

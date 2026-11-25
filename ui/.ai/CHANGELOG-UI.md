@@ -752,6 +752,24 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## Orders on the kit — 2026-11-25
+
+Step 10 of the grid's build plan. With PS_UI_KIT on, `Sell/Order/Order/index.html.twig` includes `Ui/index.html.twig` and `preview.html.twig` includes `Ui/preview.html.twig`; the old markup is unchanged with the kit off.
+
+**Markup**
+- The page: the KPI row (kit), `<twig:ui:Grid :grid="orderGrid">` with the Orders empty state in its `empty` block (`<twig:ui:EmptyState icon="receipt_long">` "Manage your orders" and its message, replacing `Blocks/EmptyState/order.html.twig`), and the change-status modal as a `<twig:ui:Modal id="changeOrdersStatusModal">` (id kept): its form `#change_orders_status_form` keeps `data-bulk-inputs-id` and the `order_ids` prototype, the field labelled "Status", Cancel and Update status in the footer (`form=`). The `orders_kpi` and `order_grid_row` blocks are not rendered on the kit: a module that overrides them does not show there.
+- The preview: `.ps-order-preview` (`data-role="preview-row"` kept, and `shipping-details`, `email`, `invoice-details`, `product-table`): a description list of carrier, tracking number (a new-tab link said so), shipping details, email and invoice details with kit icons, the addresses on their own lines; the products table with a hidden caption, the stock location column only when a product has one (server side), past the limit the rows `hidden` with "(N more)" (`data-ps-action="order-preview-more"`), and Open details as a kit button. `displayOrderPreview` is still rendered after it. The old `js-product-preview-more`, `js-preview-more-products-btn`, `js-cell-product-stock-location`, Material icons are not kept.
+- Scripts: `order_ui.bundle.js` (`js/pages/order/order-list.ts`) replaces `order.bundle.js` and `pagination.js`; `orders.css` is not loaded.
+
+**Look**
+- `ui/src/scss/pages/_orders.scss`: the preview's details beside its products when the grid is wide enough (a container query on the grid's scrolling box), under them otherwise. The grid's preview row keeps to the visible width of the scrolling table (`_grid.scss`).
+
+**Behaviour**
+- Open in new tabs: on `ps:grid-bulk-action` (`open_tabs`), each checked order's page in a tab from the button's `data-route` and `data-route-param-name`; the browser's own alert, as before, when tabs are blocked.
+- "(N more)" shows the other products and moves the focus to the first of them.
+
+**Not done**: `order_ui.bundle.js` could not be built here (no node in the PHP container): run `make admin-new-theme` once node is back. The Orders UI tests and page objects still use the old selectors.
+
 ## `<twig:ui:Grid>`: clickable rows, status choice, preview; Orders playground — 2026-11-25
 
 The end of step 8 (clickable rows, submit list actions) and step 9 of the grid's build plan. `Grid::rowLink()`, `choice()`, `previewUrl()`, `getPreviewColumnId()`; `Grid/cell/choice.html.twig`, `identifier.html.twig`; `grid-row-link.js`, `grid-preview.js`; the Orders fixture gets the real status choice, preview and clickable row; the Orders playground page shows the grid.
