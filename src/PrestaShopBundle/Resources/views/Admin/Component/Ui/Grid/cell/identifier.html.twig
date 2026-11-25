@@ -2,4 +2,26 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
-{{- record[column.options.identifier_field] -}}
+{#- With a preview (Orders), the value names the row in its own element, the toggle beside it opens the preview row
+    (grid-preview.js) -#}
+{%- set previewUrl = component.previewUrl(record, column) -%}
+{%- if previewUrl -%}
+  <span id="{{ rowHeaderId }}">{{ record[column.options.identifier_field] }}</span>
+  <twig:ui:IconButton
+    icon="keyboard_arrow_down"
+    :label="'Preview'|trans({}, 'Admin.Actions')"
+    variant="link"
+    size="sm"
+    class="ps-grid__preview-toggle"
+    aria-expanded="false"
+    :aria-controls="rowHeaderId|replace({'_grid_rowhead_': '_grid_preview_'})"
+    :aria-describedby="rowHeaderId"
+    data-ps-action="grid-preview"
+    :data-ps-data-url="previewUrl"
+    :data-ps-data-loading="'Loading...'|trans({}, 'Admin.Global')"
+    :data-ps-data-error="'The preview could not be loaded.'|trans({}, 'Admin.Notifications.Error')"
+    :data-ps-data-retry="'Try again'|trans({}, 'Admin.Actions')"
+  />
+{%- else -%}
+  {{- record[column.options.identifier_field] -}}
+{%- endif -%}

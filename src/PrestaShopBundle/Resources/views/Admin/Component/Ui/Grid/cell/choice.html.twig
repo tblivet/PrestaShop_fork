@@ -1,0 +1,25 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- The record's choice (Orders' status) in its colour, a menu to change it: each choice posts value through the grid's
+    action form. The column's name for screen readers: "Status: Payment accepted" -#}
+{%- set choice = component.choice(record, column) -%}
+{%- if choice -%}
+  {%- set colored = choice.color is not null -%}
+  <div class="dropdown">
+    <twig:ui:Button
+      variant="outline-secondary"
+      size="sm"
+      icon="keyboard_arrow_down"
+      iconPosition="end"
+      class="ps-grid__choice{{ colored ? ' ps-grid__choice--ink-' ~ component.inkOn(choice.color) }}"
+      {{ ...(colored ? {style: '--psk-grid-choice-color: ' ~ choice.color} : {}) }}
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      data-bs-popper-config='{"strategy":"fixed"}'
+      :aria-describedby="rowHeaderId"
+    ><span class="visually-hidden">{{ column.name }}: </span>{{ choice.label }}</twig:ui:Button>
+    <twig:ui:DropdownMenu :items="choice.items"/>
+  </div>
+{%- endif -%}

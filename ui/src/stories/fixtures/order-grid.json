@@ -23,7 +23,16 @@
       "type": "identifier",
       "options": {
         "identifier_field": "id_order",
-        "sortable": true
+        "sortable": true,
+        "preview": {
+          "icon_expand": "keyboard_arrow_down",
+          "icon_collapse": "keyboard_arrow_up",
+          "preview_data_route": "admin_orders_preview",
+          "preview_route_params": {
+            "orderId": "id_order"
+          },
+          "url": "/sell/orders/{id_order}/preview"
+        }
       }
     },
     {
@@ -44,7 +53,8 @@
         "field": "new",
         "true_name": "Yes",
         "false_name": "No",
-        "sortable": false
+        "sortable": false,
+        "clickable": true
       }
     },
     {
@@ -65,16 +75,30 @@
         "field": "total_paid_tax_incl",
         "is_paid_field": "paid",
         "sortable": true,
-        "alignment": "right"
+        "alignment": "right",
+        "clickable": true
       }
     },
     {
       "id": "osname",
       "name": "Status",
-      "type": "badge",
+      "type": "choice",
       "options": {
-        "field": "osname",
+        "field": "current_state",
+        "route": "admin_orders_list_update_status",
+        "url": "/sell/orders/list/{id_order}/status",
         "color_field": "color",
+        "record_route_params": {
+          "id_order": "orderId"
+        },
+        "choices": {
+          "Awaiting check payment": 1,
+          "Payment accepted": 2,
+          "Processing in progress": 3,
+          "Shipped": 4,
+          "Delivered": 5,
+          "Canceled": 6
+        },
         "sortable": true
       }
     },
@@ -85,7 +109,8 @@
       "options": {
         "format": "Y-m-d H:i",
         "sortable": true,
-        "empty_data": ""
+        "empty_data": "",
+        "clickable": true
       }
     },
     {
@@ -104,7 +129,8 @@
               "route": "admin_orders_view",
               "route_param_name": "orderId",
               "route_param_field": "id_order",
-              "use_inline_display": true
+              "use_inline_display": true,
+              "clickable_row": true
             }
           },
           {
@@ -184,7 +210,8 @@
       "paid": true,
       "osname": "Payment accepted",
       "color": "#3498D8",
-      "date_add": "2026-11-24 10:12:00"
+      "date_add": "2026-11-24 10:12:00",
+      "current_state": 2
     },
     {
       "id_order": 1023,
@@ -195,7 +222,8 @@
       "paid": false,
       "osname": "Awaiting check payment",
       "color": "#34209E",
-      "date_add": "2026-11-23 18:40:00"
+      "date_add": "2026-11-23 18:40:00",
+      "current_state": 1
     },
     {
       "id_order": 1022,
@@ -206,7 +234,8 @@
       "paid": true,
       "osname": "Delivered",
       "color": "#01B887",
-      "date_add": "2026-11-22 09:05:00"
+      "date_add": "2026-11-22 09:05:00",
+      "current_state": 5
     }
   ],
   "records_total": 1234,

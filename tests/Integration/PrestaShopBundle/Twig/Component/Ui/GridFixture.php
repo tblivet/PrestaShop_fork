@@ -8,10 +8,12 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Twig\Component\Ui;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PreviewColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
@@ -90,10 +92,29 @@ final class GridFixture
     }
 
     /**
-     * An action column's actions as the definition gives them: a RowActionCollection of row actions
+     * A column as the definition gives it: an action column's RowActionCollection, a choice column's provider, a preview
+     * column object; the story's URLs left out
      */
     private static function column(array $column): array
     {
+        if (is_array($column['options']['preview'] ?? null)) {
+            $column['options']['preview'] = (new PreviewColumn($column['id'] . '_preview'))->setOptions(array_diff_key($column['options']['preview'], ['url' => 0]));
+        }
+        if ('choice' === $column['type']) {
+            $column['options']['choice_provider'] = new class($column['options']['choices']) implements ConfigurableFormChoiceProviderInterface {
+                public function __construct(private readonly array $choices)
+                {
+                }
+
+                public function getChoices(array $options): array
+                {
+                    return $this->choices;
+                }
+            };
+            unset($column['options']['choices'], $column['options']['url']);
+
+            return $column;
+        }
         if ('action' !== $column['type']) {
             return $column;
         }

@@ -25,6 +25,11 @@ export default {
   gridBulkButton: '[data-ps-action~="grid-bulk-button"]',
   gridBulkModal: '[data-ps-action~="grid-bulk-modal"]',
   gridResults: '[data-ps-ref="grid-results"]',
+  gridRowLink: '[data-ps-action~="grid-row-link"]',
+  gridClickableCell: '.ps-grid__cell--clickable',
+  gridPreview: '[data-ps-action~="grid-preview"]',
+  gridPreviewContent: '[data-ps-target="grid-preview-content"]',
+  gridPreviewRetry: '[data-ps-action~="grid-preview-retry"]',
   // A button or a link that asks first (confirm-dialog.js), and the page's one <twig:ui:ConfirmDialog>
   confirmTrigger: '[data-ps-confirm]',
   confirmDialog: '[data-ps-ref="confirm-dialog"]',

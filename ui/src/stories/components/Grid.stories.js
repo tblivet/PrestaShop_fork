@@ -9,6 +9,7 @@ import alert from '../alert';
 import grid, { GRID_DEFAULTS } from '../grid';
 import { withTwig } from '../twig-snippet';
 import { withDefaults } from '../story-defaults';
+import keepInStorybook from '../grid-story-chrome';
 
 // A story that shows a fixed case: its controls would change nothing
 const fixed = (story) => ({ controls: { disable: true }, docs: { description: { story } } });
@@ -18,26 +19,6 @@ const ordersStory = (override = {}, props = {}, description = null, blocks = {})
   ...grid({ ...orderGrid, ...override }, { ...args, ...props }, blocks),
   fixture: { name: 'order-grid', ...(Object.keys(override).length ? { override } : {}) },
 }), description ? fixed(description) : {});
-
-// Story chrome: the links and the filter form stay in Storybook, the address showing where they would go
-const keepInStorybook = (render) => {
-  requestAnimationFrame(() => document.querySelectorAll('[data-ps-ref="grid"]').forEach((section) => {
-    section.addEventListener('click', (event) => {
-      const link = event.target instanceof Element ? event.target.closest('a[href^="?"]') : null;
-
-      if (link) {
-        event.preventDefault();
-        window.location.hash = link.getAttribute('href').split('#')[0];
-      }
-    });
-    section.addEventListener('submit', (event) => {
-      event.preventDefault();
-      window.location.hash = 'filtered';
-    });
-  }));
-
-  return render();
-};
 
 const EMPTY = { records: [], records_total: 0, pagination: { offset: 0, limit: 50 } };
 
@@ -51,9 +32,9 @@ export default {
         component: [
           '**Twig usage**: a list page renders the grid its controller presents (`GridPresenter::present()`), as it is: `<twig:ui:Grid :grid="orderGrid"/>`; inside a card of a view page: `<twig:ui:Grid :grid="customerOrdersGrid" embedded :headingLevel="3"/>`. Blocks: `before` (above the toolbar), `toolbar` (beside Search), `empty` (the page\'s EmptyState when there is nothing yet), `footer` (after the pages: Back to list). The design: `ui/.ai/designs/grid.md`.',
           '**Props**: `grid` (required: the presented grid), `embedded` (default `false`: in another card, no card and no visible header; its title is for screen readers only), `headingLevel` (2 to 6, default 2: the level of the grid\'s title, visible or not, after the page head\'s h1; its empty states\' titles are one level under). Other attributes (`data-ps-*`, `aria-*`) go on the `<section>`.',
-          '**Behaviour**: sorting, pages and rows per page are links on the current URL with the grid\'s prefix (`order[orderBy]`, `order[offset]`…), Search submits the filter form, Clear filters posts the reset; each lands on the results summary (`#order_grid_results`), focused after the reload. The list\'s actions (export, refresh, SQL query) are a menu in the header; a row\'s actions are icon buttons (those with `use_inline_display`, then the first other one) and a More actions menu, a submit one sending the hidden action form (`_method` for DELETE) after its confirmation. In these stories the links and the form only change the address.',
+          '**Behaviour**: sorting, pages and rows per page are links on the current URL with the grid\'s prefix (`order[orderBy]`, `order[offset]`…), Search submits the filter form, Clear filters posts the reset; each lands on the results summary (`#order_grid_results`), focused after the reload. The list\'s actions (export, refresh, SQL query) are a menu in the header; a row\'s actions are icon buttons (those with `use_inline_display`, then the first other one) and a More actions menu, a submit one sending the hidden action form (`_method` for DELETE) after its confirmation. A row with a `clickable_row` link follows it from its clickable cells (the mouse; the keyboard has the link). Orders: the status is a menu posting `value`; the ID\'s toggle opens the order\'s preview under its row (here, order 1023\'s fails, with Try again). In these stories the links and the form only change the address.',
           '**Do**: the presented grid as the controller gives it; the page\'s own empty state in `empty`. **Don\'t**: a grid built by hand, per-page behaviour options, a grid in a grid.',
-          '**States**: a list (sorted, filters, pages, row and list actions), filtered, no match, nothing yet, one page, embedded, every block, a hidden title and centred column.',
+          '**States**: a list (sorted, filters, pages, row and list actions, status choice, preview, clickable rows), filtered, no match, nothing yet, one page, embedded, every block, a hidden title and centred column.',
         ].join('\n\n'),
       },
     },

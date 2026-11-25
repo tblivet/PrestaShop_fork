@@ -15,6 +15,7 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRegistryInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -59,6 +60,7 @@ final class Grid
         private readonly UrlGeneratorInterface $router,
         #[Autowire(service: '.ux_icons.icon_registry')]
         private readonly IconRegistryInterface $icons,
+        private readonly CsrfTokenManagerInterface $csrfTokens,
     ) {
     }
 
@@ -327,7 +329,7 @@ final class Grid
     /**
      * The grid actions as <twig:ui:DropdownMenu> items, for the header's menu: a link goes to its route; Refresh list is
      * the current page again; Show SQL query opens the grid's query modal, Export to SQL Manager sends its form; another
-     * simple action is a button for the page (data-ps-action="grid-action"). Submit actions are not on kit grids yet.
+     * simple action is a button for the page (data-ps-action="grid-action"); a submit sends the grid's action form.
      *
      * @return list<array<string, mixed>>
      */
@@ -339,6 +341,15 @@ final class Grid
 
             if ('link' === $action['type']) {
                 $items[] = $item + ['type' => 'link', 'href' => $this->router->generate($action['options']['route'], $action['options']['route_params'] ?? [])];
+            } elseif ('submit' === $action['type']) {
+                // Sends the action form with the token the old grids put in the filter form's
+                $items[] = $item + ['type' => 'submit', 'attr' => [
+                    'form' => $this->grid['id'] . '_grid_action_form',
+                    'formaction' => $this->router->generate($action['options']['submit_route'], $action['options']['route_params'] ?? []),
+                    'formmethod' => 'GET' === strtoupper($action['options']['submit_method'] ?? 'POST') ? 'get' : 'post',
+                    'name' => $this->grid['id'] . '[_token]',
+                    'value' => $this->csrfTokens->getToken((string) $action['id'])->getValue(),
+                ] + $this->confirmAttributes($action['options'])];
             } elseif ('simple' === $action['type']) {
                 $items[] = $item + match ($action['id']) {
                     'common_refresh_list' => ['type' => 'link', 'href' => $this->url([])],
@@ -381,11 +392,7 @@ final class Grid
             $options = $action->getOptions();
             $icon = $this->icon($action->getIcon());
             $label = (string) $action->getName();
-            $parameters = [$options['route_param_name'] => $record[$options['route_param_field']] ?? null];
-            foreach ($options['extra_route_params'] ?? [] as $name => $field) {
-                $parameters[$name] = $record[$field] ?? $field;
-            }
-            $url = $this->router->generate($options['route'], $parameters);
+            $url = $this->actionUrl($options, $record);
             $confirm = $this->confirmAttributes([
                 'confirm_message' => 'dynamic' === ($options['confirm_message_type'] ?? null) && !empty($record[$options['dynamic_message_field'] ?? ''])
                     ? $record[$options['dynamic_message_field']]
@@ -418,6 +425,101 @@ final class Grid
         }
 
         return ['buttons' => $buttons, 'menu' => $menu];
+    }
+
+    /**
+     * Where a row goes when clicked: its first link action with clickable_row, unless it asks first (grid-row-link.js)
+     */
+    public function rowLink(array $record): ?string
+    {
+        foreach ($this->grid['columns'] as $column) {
+            foreach ('action' === $column['type'] ? $column['options']['actions'] ?? [] : [] as $action) {
+                $options = $action->getOptions();
+                if ('link' === $action->getType() && ($options['clickable_row'] ?? false) && $action->isApplicable($record)) {
+                    return empty($options['confirm_message']) ? $this->actionUrl($options, $record) : null;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * A choice cell's menu (Orders' status): the record's choice and its colour, and every choice as a submit item that
+     * posts value to the column's route through the grid's action form, the current one active. Null without choices.
+     *
+     * @return array{label: string, color: ?string, items: list<array<string, mixed>>}|null
+     */
+    public function choice(array $record, array $column): ?array
+    {
+        $options = $column['options'];
+        $choices = $options['choice_provider']->getChoices($record);
+        if (empty($choices)) {
+            return null;
+        }
+        $parameters = [];
+        foreach ($options['record_route_params'] ?? [] as $field => $name) {
+            $parameters[$name] = $record[$field] ?? null;
+        }
+        $url = $this->router->generate($options['route'], $parameters);
+        $current = $record[$options['field']] ?? null;
+        $label = '';
+        $items = [];
+        foreach ($choices as $name => $value) {
+            $active = (string) $value === (string) $current;
+            $label = $active ? (string) $name : $label;
+            $items[] = ['type' => 'submit', 'label' => (string) $name, 'active' => $active, 'attr' => [
+                'form' => $this->grid['id'] . '_grid_action_form',
+                'formaction' => $url,
+                'name' => 'value',
+                'value' => (string) $value,
+            ]];
+        }
+        $color = empty($options['color_field']) ? null : ($record[$options['color_field']] ?? null);
+
+        return ['label' => $label, 'color' => null === $color ? null : (string) $color, 'items' => $items];
+    }
+
+    /**
+     * Where a row's preview comes from (a column's preview option, Orders' identifier), or null
+     */
+    public function previewUrl(array $record, array $column): ?string
+    {
+        $preview = $column['options']['preview'] ?? null;
+        $options = is_object($preview) && method_exists($preview, 'getOptions') ? $preview->getOptions() : (is_array($preview) ? $preview : null);
+        if (empty($options['preview_data_route'])) {
+            return null;
+        }
+        $parameters = [];
+        foreach ($options['preview_route_params'] ?? [] as $name => $field) {
+            $parameters[$name] = $record[$field] ?? null;
+        }
+
+        return $this->router->generate($options['preview_data_route'], $parameters);
+    }
+
+    /**
+     * The column whose cells hold the preview toggle, if any: its rows get a preview row
+     */
+    public function getPreviewColumnId(): ?string
+    {
+        foreach ($this->grid['columns'] as $column) {
+            if (null !== ($column['options']['preview'] ?? null)) {
+                return $column['id'];
+            }
+        }
+
+        return null;
+    }
+
+    private function actionUrl(array $options, array $record): string
+    {
+        $parameters = [$options['route_param_name'] => $record[$options['route_param_field']] ?? null];
+        foreach ($options['extra_route_params'] ?? [] as $name => $field) {
+            $parameters[$name] = $record[$field] ?? $field;
+        }
+
+        return $this->router->generate($options['route'], $parameters);
     }
 
     /**

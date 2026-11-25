@@ -13,6 +13,7 @@
 {%- set resultsId = id ~ '_grid_results' -%}
 {%- set formId = id ~ '_filter_form' -%}
 {%- set rowHeaderColumnId = this.rowHeaderColumnId -%}
+{%- set previewColumnId = this.previewColumnId -%}
 {%- set searchAndReset = this.searchAndReset -%}
 {%- set hasFilters = this.hasFilters -%}
 {%- set bulkItems = this.bulkItems -%}
@@ -164,12 +165,15 @@
             {%- if 'list' == state -%}
               {%- for record in grid.data.records -%}
                 {%- set rowHeaderId = id ~ '_grid_rowhead_' ~ loop.index -%}
-                <tr class="ps-grid__row">
+                {#- A click on a clickable cell follows the row's link (grid-row-link.js); the keyboard has the link itself -#}
+                {%- set rowLink = this.rowLink(record) -%}
+                <tr class="ps-grid__row"{% if rowLink %} data-ps-action="grid-row-link" data-ps-data-href="{{ rowLink }}"{% endif %}>
                   {%- for column in grid.columns -%}
                     {%- set isRowHeader = column.id == rowHeaderColumnId -%}
                     {%- set tag = isRowHeader ? 'th' : 'td' -%}
                     {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
-                    <{{ tag }}{% if isRowHeader %} scope="row" id="{{ rowHeaderId }}"{% endif %} class="ps-grid__cell ps-grid__cell--{{ column.type|replace({'_': '-'}) }}{{ align ? ' ps-grid__cell--' ~ align }}">
+                    {#- With the preview toggle in it, the row's name is its value only: the cell names it -#}
+                    <{{ tag }}{% if isRowHeader %} scope="row"{% if column.id != previewColumnId %} id="{{ rowHeaderId }}"{% endif %}{% endif %} class="ps-grid__cell ps-grid__cell--{{ column.type|replace({'_': '-'}) }}{{ align ? ' ps-grid__cell--' ~ align }}{{ rowLink and (column.options.clickable ?? false) ? ' ps-grid__cell--clickable' }}">
                       {{- include([
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.id ~ '_' ~ column.type ~ '.html.twig',
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.type ~ '.html.twig',
@@ -179,6 +183,12 @@
                     </{{ tag }}>
                   {%- endfor -%}
                 </tr>
+                {%- if previewColumnId -%}
+                  {#- Filled on the first open (grid-preview.js) -#}
+                  <tr id="{{ id }}_grid_preview_{{ loop.index }}" class="ps-grid__preview" hidden data-ps-ref="grid-preview">
+                    <td colspan="{{ grid.columns|length }}"><div class="ps-grid__preview-content" data-ps-target="grid-preview-content"></div></td>
+                  </tr>
+                {%- endif -%}
               {%- endfor -%}
             {%- endif -%}
           </tbody>

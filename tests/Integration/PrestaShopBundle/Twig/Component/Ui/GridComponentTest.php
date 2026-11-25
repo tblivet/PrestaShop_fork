@@ -64,8 +64,40 @@ class GridComponentTest extends KernelTestCase
     {
         $html = $this->render();
 
-        $this->assertStringContainsString('<th scope="row" id="order_grid_rowhead_1" class="ps-grid__cell ps-grid__cell--identifier">1024</th>', $html);
+        $this->assertStringContainsString('<th scope="row" class="ps-grid__cell ps-grid__cell--identifier"><span id="order_grid_rowhead_1">1024</span>', $html);
         $this->assertSame(3, substr_count($html, 'scope="row"'));
+
+        $html = $this->render(['columns' => $this->columns(fn (array $column): array => 'id_order' === $column['id'] ? ['options' => ['preview' => null] + $column['options']] + $column : $column)]);
+        $this->assertStringContainsString('<th scope="row" id="order_grid_rowhead_1" class="ps-grid__cell ps-grid__cell--identifier">1024</th>', $html);
+        $this->assertStringNotContainsString('ps-grid__preview', $html);
+    }
+
+    public function testARowsPreviewIsToggledIntoTheRowUnderIt(): void
+    {
+        $html = $this->render();
+
+        $this->assertMatchesRegularExpression('#<button class="btn btn-link btn-sm ps-button ps-icon-button ps-grid__preview-toggle" type="button" data-ps-data-busy-label="Loading..." aria-label="Preview" aria-expanded="false" aria-controls="order_grid_preview_1" aria-describedby="order_grid_rowhead_1" data-ps-action="grid-preview" data-ps-data-url="/sell/orders/1024/preview[^"]*" data-ps-data-loading="Loading..." data-ps-data-error="The preview could not be loaded." data-ps-data-retry="Try again">#', $html);
+        $this->assertStringContainsString('<tr id="order_grid_preview_1" class="ps-grid__preview" hidden data-ps-ref="grid-preview">', $html);
+        $this->assertStringContainsString('<td colspan="9"><div class="ps-grid__preview-content" data-ps-target="grid-preview-content"></div></td>', $html);
+    }
+
+    public function testAStatusChoicePostsItsValueThroughTheActionForm(): void
+    {
+        $html = $this->render();
+
+        $this->assertStringContainsString('<button class="btn btn-outline-secondary btn-sm ps-button ps-grid__choice ps-grid__choice--ink-dark" type="button" data-ps-data-busy-label="Loading..." style="--psk-grid-choice-color: #3498D8" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="order_grid_rowhead_1"><span class="ps-button__label"><span class="visually-hidden">Status: </span>Payment accepted</span>', $html);
+        $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" aria-current="true" form="order_grid_action_form" formaction="/sell/orders/list/1024/status" name="value" value="2">', $html);
+        $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_grid_action_form" formaction="/sell/orders/list/1024/status" name="value" value="5">', $html);
+        $this->assertStringContainsString('ps-grid__choice--ink-light" type="button" data-ps-data-busy-label="Loading..." style="--psk-grid-choice-color: #34209E"', $html);
+    }
+
+    public function testARowWithAClickableLinkFollowsItFromItsClickableCells(): void
+    {
+        $html = $this->render();
+
+        $this->assertStringContainsString('<tr class="ps-grid__row" data-ps-action="grid-row-link" data-ps-data-href="/sell/orders/1024/view">', $html);
+        $this->assertStringContainsString('class="ps-grid__cell ps-grid__cell--boolean ps-grid__cell--clickable"', $html);
+        $this->assertStringContainsString('class="ps-grid__cell ps-grid__cell--data"', $html);
     }
 
     public function testNoMatchKeepsTheHeadingsWithoutSortLinks(): void
@@ -142,7 +174,7 @@ class GridComponentTest extends KernelTestCase
 
     public function testARecordsColourBadgeReadsDarkOrLightText(): void
     {
-        $html = $this->render();
+        $html = $this->render(['columns' => $this->columns(fn (array $column): array => 'osname' === $column['id'] ? ['type' => 'badge', 'options' => ['field' => 'osname', 'color_field' => 'color']] + $column : $column)]);
 
         $this->assertStringContainsString('<span class="badge ps-badge ps-badge--light ps-grid__badge ps-grid__badge--ink-dark" style="--psk-grid-badge-color: #3498D8">Payment accepted</span>', $html);
         $this->assertStringContainsString('ps-grid__badge--ink-light" style="--psk-grid-badge-color: #34209E"', $html);
@@ -268,6 +300,16 @@ class GridComponentTest extends KernelTestCase
 
         $this->assertStringNotContainsString('grid-bulk-actions', $html);
         $this->assertStringNotContainsString('grid-select-all', $html);
+    }
+
+    /**
+     * The fixture's columns, changed
+     */
+    private function columns(callable $change): array
+    {
+        $fixture = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/order-grid.json'), true, 512, JSON_THROW_ON_ERROR);
+
+        return array_map($change, $fixture['columns']);
     }
 
     private function render(array $override = [], string $props = '', bool $boot = true): string

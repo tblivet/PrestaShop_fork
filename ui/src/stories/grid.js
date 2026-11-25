@@ -119,13 +119,13 @@ const filterField = (grid, filter, column) => {
 
 // A <twig:ui:IconButton>: a link with href, else a button
 const iconButton = ({
-  icon, label, size = null, tooltip = false, attributes = {},
+  icon, label, size = null, tooltip = false, class: own = '', attributes = {},
 }) => {
   const { href, type = 'button', ...rest } = attributes;
-  const classes = `btn btn-link${size ? ` btn-${size}` : ''} ps-button ps-icon-button`;
+  const classes = `btn btn-link${size ? ` btn-${size}` : ''} ps-button ps-icon-button${own ? ` ${own}` : ''}`;
   const tip = tooltip ? ` data-bs-toggle="tooltip" data-bs-title="${escape(label)}"` : '';
   const extra = Object.entries(rest).map(([name, value]) => ` ${name}="${value}"`).join('');
-  const svg = uiIcon(icon === 'more_vert' ? moreVert : ICONS[icon], { size: 'lg' });
+  const svg = uiIcon({ more_vert: moreVert, keyboard_arrow_down: keyboardArrowDown }[icon] ?? ICONS[icon], { size: 'lg' });
 
   return href
     ? `<a class="${classes}" href="${href}" aria-label="${escape(label)}"${tip}${extra}>${svg}</a>`
@@ -187,6 +187,14 @@ const rowActions = (grid, record, column) => {
   return { buttons, menu };
 };
 
+// Grid::rowLink(): the first link action with clickable_row, unless it asks first
+const rowLink = (fixture, record) => {
+  const action = fixture.columns.filter((column) => column.type === 'action').flatMap((column) => column.options.actions)
+    .find((candidate) => candidate.type === 'link' && candidate.options.clickable_row);
+
+  return action && !action.options.confirm_message ? action.url.replace(/\{(\w+)\}/g, (match, field) => record[field]) : null;
+};
+
 // Grid::getGridItems(): the list's actions, as menu items
 const gridItems = (fixture) => (fixture.grid_actions ?? []).map((action) => {
   const item = { label: action.name, icon: kitIcon(action.icon) };
@@ -210,8 +218,46 @@ const cell = (grid, column, record, rowHeaderId) => {
   const { options } = column;
 
   switch (column.type) {
-    case 'identifier':
-      return escape(record[options.identifier_field]);
+    case 'identifier': {
+      const value = escape(record[options.identifier_field]);
+      if (!options.preview) {
+        return value;
+      }
+      const url = options.preview.url.replace(/\{(\w+)\}/g, (match, field) => record[field]);
+
+      return `<span id="${rowHeaderId}">${value}</span>${iconButton({
+        icon: 'keyboard_arrow_down',
+        label: 'Preview',
+        size: 'sm',
+        class: 'ps-grid__preview-toggle',
+        attributes: {
+          'aria-expanded': 'false',
+          'aria-controls': rowHeaderId.replace('_grid_rowhead_', '_grid_preview_'),
+          'aria-describedby': rowHeaderId,
+          'data-ps-action': 'grid-preview',
+          'data-ps-data-url': url,
+          'data-ps-data-loading': 'Loading...',
+          'data-ps-data-error': 'The preview could not be loaded.',
+          'data-ps-data-retry': 'Try again',
+        },
+      })}`;
+    }
+    case 'choice': {
+      const current = record[options.field];
+      const entries = Object.entries(options.choices ?? {});
+      if (!entries.length) {
+        return '';
+      }
+      const formaction = options.url.replace(/\{(\w+)\}/g, (match, field) => record[field]);
+      const label = entries.find(([, value]) => String(value) === String(current))?.[0] ?? '';
+      const color = options.color_field ? record[options.color_field] : null;
+      const items = entries.map(([name, value]) => ({
+        type: 'submit', label: name, active: String(value) === String(current), attr: { form: `${grid.id}_grid_action_form`, formaction, name: 'value', value: String(value) },
+      }));
+
+      return `<div class="dropdown"><button class="btn btn-outline-secondary btn-sm ps-button ps-grid__choice${color ? ` ps-grid__choice--ink-${inkOn(color)}` : ''}" type="button" data-ps-data-busy-label="Loading..."${color ? ` style="--psk-grid-choice-color: ${color}"` : ''} data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="${rowHeaderId}">`
+        + `<span class="ps-button__label"><span class="visually-hidden">${escape(column.name)}: </span>${escape(label)}</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items })}</div>`;
+    }
     case 'bulk_action': {
       const value = record[options.bulk_field];
 
@@ -399,13 +445,23 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         title: 'No results match these filters', icon: 'search_off', size: 'sm', headingLevel: subLevel, actions, class: 'ps-grid__no-match',
       }, { search_off: searchOff }).html;
     } else {
-      rows = fixture.records.map((record, index) => `<tr class="ps-grid__row">${fixture.columns.map((column) => {
-        const head = column.id === rowHeader;
-        const tag = head ? 'th' : 'td';
-        const align = ALIGNMENTS[column.options.alignment ?? ''];
+      const previewColumn = fixture.columns.find((column) => column.options.preview)?.id;
+      rows = fixture.records.map((record, index) => {
+        const link = rowLink(fixture, record);
+        const cells = fixture.columns.map((column) => {
+          const head = column.id === rowHeader;
+          const tag = head ? 'th' : 'td';
+          const align = ALIGNMENTS[column.options.alignment ?? ''];
+          const clickable = link && column.options.clickable ? ' ps-grid__cell--clickable' : '';
 
-        return `<${tag}${head ? ` scope="row" id="${id}_grid_rowhead_${index + 1}"` : ''} class="ps-grid__cell ps-grid__cell--${column.type.replaceAll('_', '-')}${align ? ` ps-grid__cell--${align}` : ''}">${cell(fixture, column, record, `${id}_grid_rowhead_${index + 1}`)}</${tag}>`;
-      }).join('')}</tr>`).join('');
+          return `<${tag}${head ? ` scope="row"${column.id !== previewColumn ? ` id="${id}_grid_rowhead_${index + 1}"` : ''}` : ''} class="ps-grid__cell ps-grid__cell--${column.type.replaceAll('_', '-')}${align ? ` ps-grid__cell--${align}` : ''}${clickable}">${cell(fixture, column, record, `${id}_grid_rowhead_${index + 1}`)}</${tag}>`;
+        }).join('');
+        const preview = previewColumn
+          ? `<tr id="${id}_grid_preview_${index + 1}" class="ps-grid__preview" hidden data-ps-ref="grid-preview"><td colspan="${fixture.columns.length}"><div class="ps-grid__preview-content" data-ps-target="grid-preview-content"></div></td></tr>`
+          : '';
+
+        return `<tr class="ps-grid__row"${link ? ` data-ps-action="grid-row-link" data-ps-data-href="${link}"` : ''}>${cells}</tr>${preview}`;
+      }).join('');
     }
 
     body = `${toolbar}${summary}<form name="${id}" method="post" action="${fixture.action}#${id}_grid_results" id="${id}_filter_form" class="ps-grid__form" novalidate="novalidate" data-ps-action="validate">`

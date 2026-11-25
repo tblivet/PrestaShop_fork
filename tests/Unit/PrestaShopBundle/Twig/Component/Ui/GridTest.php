@@ -10,11 +10,13 @@ namespace Tests\Unit\PrestaShopBundle\Twig\Component\Ui;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PreviewColumn;
 use PrestaShopBundle\Twig\Component\Ui\Grid;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +24,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
@@ -201,11 +205,13 @@ class GridTest extends TestCase
             ['id' => 'common_show_query', 'name' => 'Show SQL query', 'type' => 'simple', 'icon' => 'code', 'options' => []],
             ['id' => 'common_export_sql_manager', 'name' => 'Export to SQL Manager', 'type' => 'simple', 'icon' => 'storage', 'options' => []],
             ['id' => 'import', 'name' => 'Import', 'type' => 'simple', 'icon' => null, 'options' => []],
-            ['id' => 'enable', 'name' => 'Enable', 'type' => 'submit', 'icon' => null, 'options' => []],
+            ['id' => 'erase', 'name' => 'Erase all', 'type' => 'submit', 'icon' => null, 'options' => ['submit_route' => 'admin_emails_delete_all', 'submit_method' => 'POST', 'confirm_message' => 'Erase all?']],
+            ['id' => 'ajax', 'name' => 'Ajax', 'type' => 'ajax', 'icon' => null, 'options' => []],
         ]]]);
         $items = $grid->getGridItems();
 
-        $this->assertCount(5, $items);
+        $this->assertCount(6, $items);
+        $this->assertSame(['form' => 'order_grid_action_form', 'formaction' => '/orders?', 'formmethod' => 'post', 'name' => 'order[_token]', 'value' => 'token-of-erase', 'data-ps-confirm' => 'Erase all?'], $items[5]['attr']);
         $this->assertSame(['label' => 'Export', 'icon' => null, 'type' => 'link', 'href' => '/orders?a=1'], $items[0]);
         $this->assertSame('/orders?#order_grid_results', $items[1]['href']);
         $this->assertSame(['data-bs-toggle' => 'modal', 'data-bs-target' => '#order_grid_common_show_query_modal'], $items[2]['attr']);
@@ -246,6 +252,49 @@ class GridTest extends TestCase
             ->add((new SubmitRowAction('delete'))->setName('Delete')->setIcon('delete')->setOptions(['route' => 'admin_orders_delete', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'accessibility_checker' => $checker]));
 
         $this->assertSame(['buttons' => [], 'menu' => []], $this->grid()->rowActions(['id_order' => 7], ['options' => ['actions' => $actions]]));
+    }
+
+    public function testAClickableRowFollowsItsFirstClickableLinkUnlessItAsksFirst(): void
+    {
+        $columns = fn (array $options): array => [['id' => 'actions', 'type' => 'action', 'options' => ['actions' => (new RowActionCollection())
+            ->add((new LinkRowAction('edit'))->setName('Edit')->setIcon('edit')->setOptions(['route' => 'admin_orders_edit', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order']))
+            ->add((new LinkRowAction('view'))->setName('View')->setIcon('zoom_in')->setOptions(['route' => 'admin_orders_view', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'clickable_row' => true] + $options)),
+        ]]];
+
+        $this->assertSame('/orders?orderId=7', $this->grid(['columns' => $columns([])])->rowLink(['id_order' => 7]));
+        $this->assertNull($this->grid(['columns' => $columns(['confirm_message' => 'Sure?'])])->rowLink(['id_order' => 7]));
+        $this->assertNull($this->grid()->rowLink(['id_order' => 7]));
+    }
+
+    public function testAChoiceCellsMenuPostsEachValueTheCurrentOneActive(): void
+    {
+        $provider = $this->createMock(ConfigurableFormChoiceProviderInterface::class);
+        $provider->method('getChoices')->willReturn(['Awaiting payment' => 1, 'Paid' => 2]);
+        $column = ['id' => 'osname', 'name' => 'Status', 'type' => 'choice', 'options' => [
+            'field' => 'current_state', 'route' => 'admin_orders_list_update_status', 'color_field' => 'color', 'choice_provider' => $provider, 'record_route_params' => ['id_order' => 'orderId'],
+        ]];
+        $choice = $this->grid()->choice(['id_order' => 7, 'current_state' => '2', 'color' => '#01B887'], $column);
+
+        $this->assertSame('Paid', $choice['label']);
+        $this->assertSame('#01B887', $choice['color']);
+        $this->assertSame(['type' => 'submit', 'label' => 'Paid', 'active' => true, 'attr' => ['form' => 'order_grid_action_form', 'formaction' => '/orders?orderId=7', 'name' => 'value', 'value' => '2']], $choice['items'][1]);
+        $this->assertFalse($choice['items'][0]['active']);
+
+        $none = $this->createMock(ConfigurableFormChoiceProviderInterface::class);
+        $none->method('getChoices')->willReturn([]);
+        $this->assertNull($this->grid()->choice(['id_order' => 7, 'current_state' => 2], ['options' => ['choice_provider' => $none] + $column['options']] + $column));
+    }
+
+    public function testAPreviewComesFromItsColumnsRoute(): void
+    {
+        $preview = (new PreviewColumn('preview'))->setOptions(['icon_expand' => 'a', 'icon_collapse' => 'b', 'preview_data_route' => 'admin_orders_preview', 'preview_route_params' => ['orderId' => 'id_order']]);
+        $columns = [['id' => 'id_order', 'type' => 'identifier', 'options' => ['identifier_field' => 'id_order', 'preview' => $preview]]];
+        $grid = $this->grid(['columns' => $columns]);
+
+        $this->assertSame('/orders?orderId=7', $grid->previewUrl(['id_order' => 7], $columns[0]));
+        $this->assertSame('id_order', $grid->getPreviewColumnId());
+        $this->assertNull($this->grid()->getPreviewColumnId());
+        $this->assertNull($this->grid()->previewUrl(['id_order' => 7], ['options' => []]));
     }
 
     public function testHookParameters(): void
@@ -315,6 +364,9 @@ class GridTest extends TestCase
             return new Icon('<path/>');
         });
 
-        return new Grid($requestStack, $router, $icons);
+        $tokens = $this->createMock(CsrfTokenManagerInterface::class);
+        $tokens->method('getToken')->willReturnCallback(fn (string $id): CsrfToken => new CsrfToken($id, 'token-of-' . $id));
+
+        return new Grid($requestStack, $router, $icons, $tokens);
     }
 }

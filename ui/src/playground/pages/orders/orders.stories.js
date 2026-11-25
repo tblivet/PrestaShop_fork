@@ -2,17 +2,24 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Orders > Orders on the kit: the page head, the KPI row (<twig:ui:Kpi> in .ps-kpi-row), the grid. The KPIs
-// as CommonController::renderKpiRowAction renders the core ones.
+// Orders > Orders on the kit: the page head, the KPI row (<twig:ui:Kpi> in .ps-kpi-row), the grid (<twig:ui:Grid>
+// of the Orders fixture: status choice, preview, bulk and row actions). The KPIs as CommonController::renderKpiRowAction
+// renders the core ones.
 import { playgroundMeta } from '../../playground.meta.js';
 import { boLayout } from '../../layout/bo-layout.js';
 import pageHead from '../../../stories/page-head';
 import kpi from '../../../stories/kpi';
+import grid from '../../../stories/grid';
+import keepInStorybook from '../../../stories/grid-story-chrome';
+import orderGrid from '../../../stories/fixtures/order-grid.json';
+import emptyState from '../../../stories/empty-state';
+import receiptLong from '../../../../icons/material-symbols/receipt-long.svg?raw';
 
 export default {
   title: 'Playground/Pages/Orders',
   tags: ['!autodocs'],
   ...playgroundMeta,
+  decorators: [keepInStorybook],
 };
 
 const KPIS = [
@@ -30,7 +37,20 @@ const head = pageHead({
 
 const kpis = `<div class="ps-kpi-row ps-kpi-row--4 ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="Key figures">${KPIS.map((item) => kpi(item).html).join('')}</div>`;
 
-// Story chrome: what the grid will be
-const grid = '<div class="card ps-grid-panel flex-grow-1"><div class="card-body text-body-secondary"><p>Orders grid goes here.</p></div></div>';
+const list = grid(orderGrid).html;
 
-export const Default = { render: () => boLayout(head + kpis + grid, { fluid: true }) };
+export const Default = { render: () => boLayout(head + kpis + list, { fluid: true }) };
+
+export const NoOrderYet = {
+  render: () => boLayout(head + kpis + grid({
+    ...orderGrid, records: [], records_total: 0, is_empty_state: true, pagination: { offset: 0, limit: 50 },
+  }, {}, {
+    // The page's own empty state (Blocks/EmptyState/order.html.twig today)
+    empty: emptyState({
+      title: 'Manage your orders',
+      icon: 'receipt_long',
+      headingLevel: 3,
+      message: 'Find all your orders on this page and access their main information in one click: check the cart total, the payment method, the shipping details, or if it comes from a new client. You can even update the status from the listing!',
+    }, { receipt_long: receiptLong }),
+  }).html, { fluid: true }),
+};

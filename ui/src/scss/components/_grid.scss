@@ -184,6 +184,49 @@ $component-name: ps-grid;
     }
   }
 
+  // A choice (Orders' status) in the record's colour, as its badge; an outline button otherwise
+  // On one line: the button label's balanced wrapping (_buttons.scss) would break a long status
+  &__choice {
+    .ps-button__label {
+      text-wrap: nowrap;
+    }
+
+    &--ink-dark,
+    &--ink-light {
+      --#{$prefix}btn-bg: var(--#{$prefix}grid-choice-color);
+      --#{$prefix}btn-border-color: var(--#{$prefix}grid-choice-color);
+      --#{$prefix}btn-hover-bg: var(--#{$prefix}grid-choice-color);
+      --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-color);
+      --#{$prefix}btn-active-bg: var(--#{$prefix}grid-choice-color);
+      --#{$prefix}btn-active-border-color: var(--#{$prefix}btn-color);
+    }
+
+    &--ink-dark {
+      --#{$prefix}btn-color: #{$gray-800};
+      --#{$prefix}btn-hover-color: #{$gray-800};
+      --#{$prefix}btn-active-color: #{$gray-800};
+    }
+
+    &--ink-light {
+      --#{$prefix}btn-color: #{$white};
+      --#{$prefix}btn-hover-color: #{$white};
+      --#{$prefix}btn-active-color: #{$white};
+    }
+  }
+
+  // The preview toggle points down, up once open
+  &__preview-toggle[aria-expanded="true"] .ps-icon {
+    transform: rotate(180deg);
+  }
+
+  &__preview > td {
+    background-color: var(--#{$prefix}tertiary-bg);
+  }
+
+  &__preview-error {
+    margin: 0;
+  }
+
   &__color {
     display: inline-flex;
     gap: map-get($spacers, 2);
@@ -216,6 +259,11 @@ $component-name: ps-grid;
   &__links {
     display: inline-flex;
     gap: map-get($spacers, 1);
+  }
+
+  // A row with a link: its clickable cells follow it (grid-row-link.js)
+  &__cell--clickable {
+    cursor: pointer;
   }
 
   // As narrow as its buttons

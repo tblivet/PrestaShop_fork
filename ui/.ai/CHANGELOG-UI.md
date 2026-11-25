@@ -752,6 +752,26 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: clickable rows, status choice, preview; Orders playground — 2026-11-25
+
+The end of step 8 (clickable rows, submit list actions) and step 9 of the grid's build plan. `Grid::rowLink()`, `choice()`, `previewUrl()`, `getPreviewColumnId()`; `Grid/cell/choice.html.twig`, `identifier.html.twig`; `grid-row-link.js`, `grid-preview.js`; the Orders fixture gets the real status choice, preview and clickable row; the Orders playground page shows the grid.
+
+**Markup**
+- A row whose first link action has `clickable_row` (Orders' View): `data-ps-action="grid-row-link"` and `data-ps-data-href`; its `clickable` columns' cells get `ps-grid__cell--clickable`. Not when the action asks first. The old `td.clickable`, `cursor-pointer` and `data-clickable-row` are not kept.
+- A `submit` list action (Email logs' Erase all): a submit item sending the grid's action form to `submit_route` with the old token as the button's name and value (`{id}[_token]`), asking first with its `confirm_message`. The old `js-grid-action-submit-btn`, `data-url`, `data-method`, `data-csrf` are not kept.
+- A `choice` cell (Orders' status): a `<twig:ui:Button size="sm">` in the record's colour (text dark or light by contrast, as the badge), "Status: Payment accepted" for screen readers, described by the row's header; a menu with every status as a submit item posting `value` to the column's route through the action form, the current one `aria-current`. The old `js-choice-options`, `js-dropdown-item`, `data-url`, `coloured` are not kept.
+- An identifier with a `preview` (Orders): the value in `span#{id}_grid_rowhead_N` (the row's name, the `th` keeps no id), then a "Preview" `<twig:ui:IconButton>` with `aria-expanded`, `aria-controls="{id}_grid_preview_N"`, `data-ps-action="grid-preview"`, `data-ps-data-url`; each row is followed by `tr#{id}_grid_preview_N.ps-grid__preview[hidden]` spanning the columns. The old `preview-toggle`, `js-expand`/`js-collapse`, `data-preview-data-url`, `preview-row` are not kept.
+
+**Look**
+- Clickable cells show the pointer. The status button stays on one line. The preview row on the tertiary background; the toggle's arrow turns up when open.
+
+**Behaviour**
+- `grid-row-link.js`: a click on a clickable cell follows the row's link (Ctrl/Cmd, Shift or the middle button: a new tab); not on a control, nor when text is selected. The keyboard uses the action's link.
+- `grid-preview.js`: the toggle shows or hides the preview row; the first open fetches it (JSON `{preview}`), the row busy with a spinner meanwhile; on failure a danger alert with Try again; once loaded, `ps:grid-preview-loaded` on the grid (`{gridId, row, previewRow}`). Several previews can be open.
+- A choice posts and reloads, as before.
+
+**Strings**: new "The preview could not be loaded." (`Admin.Notifications.Error`); reused "Preview", "Try again" (`Admin.Actions`), "Loading..." (`Admin.Global`).
+
 ## `<twig:ui:Grid>`: row and list actions — 2026-11-25
 
 Step 8 of the grid's build plan. `Grid::getGridItems()`, `hasQueryModal()`, `rowActions()`, `Grid/cell/action.html.twig`; the fixture gets an actions column (view, invoice, delete), the list's actions and its query.

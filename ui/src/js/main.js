@@ -12,6 +12,8 @@ import initPasswordToggle from './components/password-toggle';
 import initFormValidation from './components/form-validation';
 import initGridBulk from './components/grid-bulk';
 import initGridFilters from './components/grid-filters';
+import initGridPreview from './components/grid-preview';
+import initGridRowLink from './components/grid-row-link';
 import initGridSelection from './components/grid-selection';
 import initHeaderSearch from './components/header-search';
 import initKpis from './components/kpi';
@@ -38,6 +40,8 @@ initPaginationJump();
 initConfirmDialog(bootstrap.Modal, bootstrap.Dropdown);
 initGridFilters();
 initGridBulk();
+initGridPreview();
+initGridRowLink();
 document.addEventListener('DOMContentLoaded', initGridSelection);
 // The bell is rendered after this script (in <head>)
 document.addEventListener('DOMContentLoaded', initNotifications);
