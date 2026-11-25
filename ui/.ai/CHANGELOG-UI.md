@@ -740,3 +740,14 @@ Step 4 of the grid's build plan: a menu item that sends a form, for a grid's sta
 **Storybook**
 - A modal opened on a docs page goes to `<body>` while open and back once closed (`.storybook/preview.js`): the docs box around each story clipped it.
 - The Modal and ShowcaseModal stories show their dialog open in place without Bootstrap's `show` (and `fade`): a `.modal.show` with no instance made Bootstrap fail to open another modal on the same page.
+
+## Kit form theme: range filters and dates — 2026-11-25
+
+Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form theme) and `forms/_filter-range.scss`.
+
+**Markup**
+- `date_range_widget`, `integer_min_max_filter_widget`, `number_min_max_filter_widget`: `<fieldset class="ps-filter-range">` with a visually hidden `<legend>` (the filter's label, the column), then each field in `.ps-filter-range__field` with its own visually hidden label ("Start date", "End date"; "Min", "Max" from their placeholder). No Bootstrap 4 `input-group`, `col-md-*` or Material icon; the field names are the same as in the other themes, so a filter posts the same values.
+- `date_picker_widget`: the browser's `<input type="date">` when the format is `YYYY-MM-DD` (what it sends), a text field otherwise; the old datepicker's `.input-group.datepicker` and its icon are not rendered on kit pages.
+
+**Look**
+- The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.

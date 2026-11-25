@@ -1,0 +1,23 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// A range of two fields from the kit form theme (ui_kit_layout.html.twig, block ps_filter_range): a grid's date or
+// min/max filter. The two fields share the line, each as wide as the other; the fieldset draws nothing.
+$component-name: ps-filter-range;
+
+.#{$component-name} {
+  display: flex;
+  flex-wrap: wrap;
+  gap: map-get($spacers, 1);
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+
+  &__field {
+    flex: 1 1 0;
+    min-width: $ps-filter-range-field-min-width;
+  }
+}

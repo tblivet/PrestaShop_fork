@@ -514,6 +514,8 @@ $ps-pagination-item-size: 2.25rem;
 $ps-pagination-item-padding-x: .375rem;
 $ps-pagination-full-min-width: 24rem;
 $ps-pagination-jump-input-width: 4rem;
+// A grid's range filter (forms/_filter-range.scss): narrower than this, its two fields go one under the other
+$ps-filter-range-field-min-width: 6rem;
 // <twig:ui:EmptyState>: the message keeps a readable line length
 $ps-empty-state-message-width: 36rem;
 // <twig:ui:Check> with its label hidden: the click target around the box (WCAG 2.5.8)

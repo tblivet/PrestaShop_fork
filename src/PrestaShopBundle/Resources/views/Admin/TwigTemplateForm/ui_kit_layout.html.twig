@@ -112,3 +112,48 @@
   {%- set type = type|default('reset') -%}
   {{- block('button_widget') -}}
 {%- endblock reset_widget -%}
+
+{# A date: the browser's date field when the format is the one it sends (YYYY-MM-DD), text otherwise #}
+{%- block date_picker_widget -%}
+  {%- set type = date_format == 'YYYY-MM-DD' ? 'date' : 'text' -%}
+  {{- block('form_widget_simple') -}}
+{%- endblock date_picker_widget -%}
+
+{# A range of two fields (a grid's filter of a column): a fieldset named by the column, each field by its own label, both
+ # for screen readers only as the column header already shows them. The field names stay those of every theme #}
+{%- block ps_filter_range -%}
+  {%- set legend = label is same as(false) ? null : (label is empty ? name|humanize : (translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain))) -%}
+  <fieldset class="ps-filter-range" id="{{ id }}">
+    {%- if legend -%}
+      <legend class="visually-hidden">{{ legend }}</legend>
+    {%- endif -%}
+    {%- for field in fields -%}
+      <div class="ps-filter-range__field">
+        {{- form_label(field.child, field.label, {label_attr: {class: 'visually-hidden'}}) -}}
+        {{- form_widget(field.child) -}}
+      </div>
+    {%- endfor -%}
+    {%- if extra is defined and extra -%}
+      {{- form_row(extra) -}}
+    {%- endif -%}
+  </fieldset>
+{%- endblock ps_filter_range -%}
+
+{%- block date_range_widget -%}
+  {%- set fields = [{child: form.from, label: null}, {child: form.to, label: null}] -%}
+  {%- set extra = form.unlimited ?? null -%}
+  {{- block('ps_filter_range') -}}
+{%- endblock date_range_widget -%}
+
+{# Min and max are labelled by their placeholder ("Min", "Max") #}
+{%- block integer_min_max_filter_widget -%}
+  {%- set fields = [
+    {child: form.min_field, label: form.min_field.vars.attr.placeholder ?? 'Min'|trans({}, 'Admin.Global')},
+    {child: form.max_field, label: form.max_field.vars.attr.placeholder ?? 'Max'|trans({}, 'Admin.Global')},
+  ] -%}
+  {{- block('ps_filter_range') -}}
+{%- endblock integer_min_max_filter_widget -%}
+
+{%- block number_min_max_filter_widget -%}
+  {{- block('integer_min_max_filter_widget') -}}
+{%- endblock number_min_max_filter_widget -%}
