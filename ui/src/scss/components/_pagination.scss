@@ -2,83 +2,72 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Override Bootstrap pagination — https://getbootstrap.com/docs/5.3/components/pagination/
 
-// --pagination-item-size / --pagination-item-px are our own tokens used by
-// .page-link so that .pagination-lg / .pagination-sm can scale the circles
-// without breaking Bootstrap's native size mixin.
-.pagination {
-  --pagination-item-size: 36px;
-  --pagination-item-px: 6px;
+// <twig:ui:Pagination> (Admin/Component/Ui/pagination.html.twig): Bootstrap's pagination, set by its Sass variables
+// (_variables.scss, "Pagination"). Round items of one size, the arrows outlined, the current page outlined in the brand.
+// The nav is a container: narrower than $ps-pagination-full-min-width (a phone, a narrow card) only Previous, the
+// current page as "Page 3 of 25" and Next show; wider, every page shown, the current one as its number, its position
+// for screen readers only.
+$component-name: ps-pagination;
 
-  --#{$prefix}pagination-font-size: 0.75rem;
-  --#{$prefix}pagination-bg: transparent;
-  --#{$prefix}pagination-border-width: 1px;
-  --#{$prefix}pagination-border-color: #{$gray-400};
-  --#{$prefix}pagination-margin-start: 0;
-  --#{$prefix}pagination-padding-y: 0;
-  --#{$prefix}pagination-color: #{$primary-500};
-  --#{$prefix}pagination-hover-color: #{$primary-500};
-  --#{$prefix}pagination-hover-bg: #{$gray-200};
-  --#{$prefix}pagination-hover-border-color: #{$gray-400};
-  --#{$prefix}pagination-focus-color: #{$primary-500};
-  --#{$prefix}pagination-focus-bg: #{$gray-200};
-  --#{$prefix}pagination-active-color: #{$primary-500};
-  --#{$prefix}pagination-active-bg: var(--#{$prefix}body-bg);
-  --#{$prefix}pagination-active-border-color: #{$primary-800};
-  --#{$prefix}pagination-disabled-color: #{$gray-400};
-  --#{$prefix}pagination-disabled-bg: transparent;
-  --#{$prefix}pagination-disabled-border-color: #{$gray-300};
+.#{$component-name} {
+  container: #{$component-name} / inline-size;
 
-  gap: $spacer * 0.25;
-
-  &-lg {
-    --pagination-item-size: 44px;
-    --pagination-item-px: 8px;
-  }
-  &-sm {
-    --pagination-item-size: 28px;
-    --pagination-item-px: 4px;
+  .pagination {
+    gap: map-get($spacers, 1);
+    margin-block-end: 0;
   }
 
-  .page-link {
+  &__link {
     display: inline-flex;
-    gap: $spacer * 0.25;
+    gap: map-get($spacers, 1);
     align-items: center;
     justify-content: center;
-    min-width: var(--pagination-item-size);
-    height: var(--pagination-item-size);
-    padding: 0 var(--pagination-item-px);
-    margin-inline-start: 0;
+    min-width: $ps-pagination-item-size;
+    height: $ps-pagination-item-size;
+    padding-inline: $ps-pagination-item-padding-x;
     font-weight: $font-weight-bold;
     line-height: 1;
     border-color: transparent;
     border-radius: $border-radius-pill;
-
-    .ps-icon {
-      font-size: $font-size-base;
-    }
   }
 
-  .page-item {
-    &.active .page-link {
-      width: var(--pagination-item-size);
-      padding: 0;
-      border-color: var(--#{$prefix}pagination-active-border-color);
+  &__item--step &__link {
+    font-size: $font-size-base;
+    border-color: var(--#{$prefix}pagination-border-color);
+  }
+
+  &__item--current &__link {
+    padding-inline: map-get($spacers, 3);
+    border-color: var(--#{$prefix}pagination-active-border-color);
+  }
+
+  // Bootstrap gives a disabled item a border: the gap has none
+  &__item--gap &__link {
+    border-color: transparent;
+  }
+
+  &__item--far,
+  &__number {
+    display: none;
+  }
+
+  @container #{$component-name} (min-width: #{$ps-pagination-full-min-width}) {
+    &__item--far {
+      display: block;
     }
 
-    &:has(.ps-icon) .page-link {
-      border-color: var(--#{$prefix}pagination-border-color);
+    &__number {
+      display: inline;
     }
 
-    &.disabled:has(.ps-icon) .page-link {
-      border-color: var(--#{$prefix}pagination-disabled-border-color);
+    &__position {
+      @include visually-hidden();
     }
 
-    // Bootstrap's .page-item.disabled .page-link explicitly sets border-color — override it
-    // for non-arrow items (numbers, ellipsis) so they stay borderless
-    &.disabled:not(:has(.ps-icon)) .page-link {
-      border-color: transparent;
+    // A circle, a pill for a long number (1000)
+    &__item--current &__link {
+      padding-inline: $ps-pagination-item-padding-x;
     }
   }
 }

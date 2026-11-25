@@ -11,7 +11,7 @@
   .form-check-input {
     height: 1.25em;
     margin-block-start: calc((#{$line-height-base} * 1em - 1.25em) / 2);
-    background-color: $ps-form-switch-off-bg;
+    --#{$prefix}form-check-bg: #{$ps-form-switch-off-bg};
     border-color: $ps-form-switch-off-border-color;
     // $enable-rounded: false zeroes out border-radius globally; restore it for switches only
     border-radius: $form-switch-border-radius;

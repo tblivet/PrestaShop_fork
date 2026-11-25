@@ -4,35 +4,17 @@
  */
 // https://getbootstrap.com/docs/5.3/forms/checks-radios/
 
+// Bootstrap's raw markup, kept as a reference for what no kit component renders yet (radios, inline checks, toggle
+// buttons). A checkbox or a switch in a template is <twig:ui:Check> (Forms/Check).
 export default {
   title: 'Forms/ChecksRadios',
-};
-
-export const Checkboxes = {
-  render: () => `
-    <div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-        <label class="form-check-label" for="flexCheckDefault">Default checkbox</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
-        <label class="form-check-label" for="flexCheckChecked">Checked checkbox</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckIndeterminate">
-        <label class="form-check-label" for="flexCheckIndeterminate">Indeterminate checkbox</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled" disabled>
-        <label class="form-check-label" for="flexCheckDisabled">Disabled checkbox</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled>
-        <label class="form-check-label" for="flexCheckCheckedDisabled">Disabled checked checkbox</label>
-      </div>
-    </div>
-  `,
+  parameters: {
+    docs: {
+      description: {
+        component: '**In a template, a checkbox or a switch is `<twig:ui:Check>`** (Forms/Check): it names the box, also when its label is hidden, and keeps a 24px click target. This page is Bootstrap\'s raw markup for what no kit component renders yet: radios, inline checks, toggle buttons. Every check has a label.',
+      },
+    },
+  },
 };
 
 export const Radios = {
@@ -53,29 +35,6 @@ export const Radios = {
       <div class="form-check">
         <input class="form-check-input" type="radio" name="flexRadioDisabled" id="flexRadioCheckedDisabled" checked disabled>
         <label class="form-check-label" for="flexRadioCheckedDisabled">Disabled checked radio</label>
-      </div>
-    </div>
-  `,
-};
-
-export const Switches = {
-  render: () => `
-    <div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-        <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-        <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
-        <label class="form-check-label" for="flexSwitchCheckDisabled">Disabled switch checkbox input</label>
-      </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckCheckedDisabled" checked disabled>
-        <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Disabled checked switch checkbox input</label>
       </div>
     </div>
   `,
@@ -114,19 +73,6 @@ export const Inline = {
           <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3" disabled>
           <label class="form-check-label" for="inlineRadio3">3 (disabled)</label>
         </div>
-      </div>
-    </div>
-  `,
-};
-
-export const WithoutLabels = {
-  render: () => `
-    <div>
-      <div>
-        <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="...">
-      </div>
-      <div>
-        <input class="form-check-input" type="radio" name="radioNoLabel" id="radioNoLabel1" value="" aria-label="...">
       </div>
     </div>
   `,

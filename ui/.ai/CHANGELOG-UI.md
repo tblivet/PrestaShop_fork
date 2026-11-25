@@ -664,3 +664,36 @@ From the `ui-screen-review` of the KPI row (Orders, Cart #1, Categories). `kpi.h
 
 **Look**
 - The footer is a centred block under a top border (`--psk-side-menu-border-color`): View my shop, then the version in small muted text with its number in a badge; .25rem between them, .5rem above and below. The label has 174px instead of 99px: View my shop fits one line in en, fr, de, es, it, nl, pl, pt, ru (it wrapped in all but en and es).
+
+## `<twig:ui:Check>`: checkbox and switch — 2026-11-25
+
+Step 1 of the grid's build plan (`ui/.ai/designs/grid.md`, DECISIONS #43). New `Check.php`, `check.html.twig`, `_check.scss`, the Forms/Check story and its helper `ui/src/stories/check.js`. Forms/ChecksRadios keeps Bootstrap's markup only for radios, inline checks and toggle buttons, with a note to use `<twig:ui:Check>`; its checkbox, switch and no-label examples are gone.
+
+**Markup**
+- `<div class="form-check ps-check[ form-switch][ ps-check--label-hidden]"><input class="form-check-input ps-check__input" type="checkbox" id="…"[ role="switch"]…><label class="form-check-label ps-check__label" for="…">…</label></div>`. The label is required; with `hideLabel` it is wrapped in `.visually-hidden` and becomes a 24px click target around the box (`$ps-check-target-size`). Other attributes go on the `<input>`. A missing `id` is generated (`ps-check-N`).
+
+**Look**
+- `.ps-check` has no bottom margin (Bootstrap's `.form-check` has one): a component never places itself.
+- The switch's off track is set through Bootstrap's `--psk-form-check-bg` instead of `background-color` (`forms/_form-check.scss`). `components/check` is imported after the forms partials so a hidden-label switch drops the labelled switch's top margin.
+
+**Storybook**
+- The docs pages no longer show the first story twice (at the top, then in the list): `Stories` with `includePrimary: false` in `.storybook/preview.js`, so an id in it does not clash.
+
+## `<twig:ui:EmptyState>` and `<twig:ui:Pagination>` — 2026-11-25
+
+Step 2 of the grid's build plan (`ui/.ai/designs/grid.md`). New `EmptyState.php`, `Pagination.php`, their templates, `_empty-state.scss`, the `ps-pagination` block in `_pagination.scss`, their stories and helpers (`empty-state.js`, `pagination.js`).
+
+**Markup**
+- `<div class="ps-empty-state[ ps-empty-state--sm]">`: an optional decorative icon, the title as a heading (`headingLevel`, default 2), the content block as `.ps-empty-state__message`, the `actions` block in a centred `<twig:ui:Layout:Cluster>`.
+- `<nav class="ps-pagination" aria-label="…"><ul class="pagination">`: the caller's links (page number => URL); the first, the last, the current page and its neighbours, a gap (`aria-hidden`) where pages are left out; Previous and Next (`rel="prev"`, `rel="next"`) only where they lead somewhere, never disabled; the current page `aria-current="page"` with its number for the eye and "Page 3 of 25" for screen readers; nothing for a single page.
+- Components/Pagination was Bootstrap's raw markup; it is now the component's story.
+
+- Each `<li>` is `.ps-pagination__item` (`--step` for Previous and Next, `--current`, `--gap`, `--far` for what a narrow nav hides), each link `.ps-pagination__link`. Pagination.php checks the links: the first page, the current one and its neighbours.
+
+**Look**
+- `_pagination.scss` sets Bootstrap's Sass variables (`$pagination-*` in `_variables.scss`) instead of redeclaring its CSS variables, and styles its BEM elements instead of `:has(.ps-icon)`; the `.pagination-sm` and `.pagination-lg` overrides and the unprefixed `--pagination-item-size` / `--pagination-item-px` are gone (`$ps-pagination-item-size`, `$ps-pagination-item-padding-x`). No -1px overlap between items (`$pagination-margin-start: 0`).
+- The nav is a container: narrower than 24rem (`$ps-pagination-full-min-width`) it shows Previous, "Page 3 of 25", Next; wider, every page shown, the current one a circle that grows into a pill for a long number.
+- The focus ring is the buttons' (DECISIONS #29): a 2px gap in the page colour, then the brand at 50%. The gap ("…") is `$gray-600`, the muted text colour.
+
+**Strings** (`Admin.Global`)
+- New: "Page %current% of %total%". Reused: "Previous", "Next".

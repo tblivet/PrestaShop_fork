@@ -28,7 +28,7 @@ Follow "Component API" in `ui/.ai/CONVENTIONS.md`. For each part, decide: reuse 
 
 ## 2. Story first
 
-`ui/src/stories/components/{Name}.stories.js`, the reference the page will be checked against. Its docs page holds:
+`ui/src/stories/components/{Name}.stories.js` (a form control, as `ui:Check`: `ui/src/stories/forms/`, Storybook "Forms", next to Bootstrap's reference for it), the reference the page will be checked against. Its docs page holds:
 
 - **Twig usage and props**: the `<twig:ui:{Name}>` call, every prop with its allowed values and default, the content block and slots.
 - **Defaults and Twig code**: `const DEFAULTS = {…}` with the PHP defaults, `argTypes: withDefaults({…}, DEFAULTS)` and `args: DEFAULTS` (`ui/src/stories/story-defaults.js`), so the controls table shows each default; a prop whose PHP default is `null` takes `nullableSelect(options, description)` with its arg set to `NONE` (the select reads "none", the story gets `null`; numbers go as `{ h2: 2 }` labels), never a `null` option or an `=== 'none'` test in the story; every story built with `withTwig` (`ui/src/stories/twig-snippet.js`), so "Show code" gives the HTML then the `<twig:ui:{Name}>` call (see `Cluster.stories.js`). Labels or a frame around the component go in the HTML only, with `rendered` giving the bare markup; session data the render reads (flash messages) goes in `session`. A `.stories.js` file exports only stories (Storybook shows every named export as one): the builder, its defaults and sample data another story reuses go in a helper, `ui/src/stories/{name}.js` (see `header-search.js`, used by the HeaderSearch and Header stories).

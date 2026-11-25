@@ -1,0 +1,44 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// <twig:ui:EmptyState> (Admin/Component/Ui/empty_state.html.twig): an icon, a title, a message and the actions, centred
+// one under the other. md for a list with nothing yet, sm inside a card or a table row (no match). The icon is neutral:
+// nothing went wrong.
+$component-name: ps-empty-state;
+
+.#{$component-name} {
+  display: flex;
+  flex-direction: column;
+  gap: map-get($spacers, 2);
+  align-items: center;
+  padding: map-get($spacers, 5) map-get($spacers, 3);
+  text-align: center;
+
+  &__icon {
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: $h5-font-size;
+  }
+
+  &__message {
+    max-width: $ps-empty-state-message-width;
+    color: var(--#{$prefix}secondary-color);
+
+    > :last-child {
+      margin-block-end: 0;
+    }
+  }
+
+  &--sm {
+    padding-block: map-get($spacers, 3);
+  }
+
+  &--sm &__title {
+    font-size: $font-size-base;
+  }
+}

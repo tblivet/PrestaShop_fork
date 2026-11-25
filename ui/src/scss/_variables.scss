@@ -369,6 +369,28 @@ $focus-ring-color: rgba($primary, 0.5);
 $focus-ring-width: .25rem;
 $input-focus-border-color: var(--#{$prefix}border-color);
 
+// ── Pagination ────────────────────────────────────────────────────────────────
+// Round items with no border, the arrows outlined, the current page outlined in the brand (components/_pagination.scss);
+// the focus ring of the buttons (DECISIONS.md #29); the gap a muted grey, readable
+$pagination-padding-y: 0;
+$pagination-font-size: .75rem;
+$pagination-color: $primary;
+$pagination-bg: transparent;
+$pagination-margin-start: 0;
+$pagination-border-color: $gray-400;
+$pagination-hover-color: $primary;
+$pagination-hover-bg: $gray-200;
+$pagination-hover-border-color: $gray-400;
+$pagination-focus-color: $primary;
+$pagination-focus-bg: $gray-200;
+$pagination-focus-box-shadow: 0 0 0 .125rem var(--#{$prefix}body-bg), 0 0 0 calc(.125rem + #{$focus-ring-width}) $focus-ring-color;
+$pagination-active-color: $primary;
+$pagination-active-bg: var(--#{$prefix}body-bg);
+$pagination-active-border-color: $primary-800;
+$pagination-disabled-color: $gray-600;
+$pagination-disabled-bg: transparent;
+$pagination-disabled-border-color: $gray-300;
+
 // ── Navs ──────────────────────────────────────────────────────────────────────
 // The page head's sub-pages (nav-underline): more room between them than Bootstrap's 1rem, a step of $spacers (4)
 $nav-underline-gap: 1.5rem;
@@ -487,6 +509,14 @@ $ps-page-head-title-min-width: 10rem;
 $ps-kpi-line-width: 3;
 $ps-kpi-icon-size: 2.5rem;
 $ps-kpi-placeholder-width: 5rem;
+// <twig:ui:Pagination>: the size of an item; under the full width, only Previous, "Page 3 of 25" and Next show
+$ps-pagination-item-size: 2.25rem;
+$ps-pagination-item-padding-x: .375rem;
+$ps-pagination-full-min-width: 24rem;
+// <twig:ui:EmptyState>: the message keeps a readable line length
+$ps-empty-state-message-width: 36rem;
+// <twig:ui:Check> with its label hidden: the click target around the box (WCAG 2.5.8)
+$ps-check-target-size: 1.5rem;
 // The KPI row on a phone: a card takes most of the width, the next one shows; room for a card's focus ring
 $ps-kpi-row-phone-width: 80%;
 $ps-kpi-row-focus-room: $focus-ring-width;

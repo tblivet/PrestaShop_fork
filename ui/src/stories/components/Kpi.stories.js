@@ -69,7 +69,8 @@ export const ThreeInARow = withTwig(() => row([
   { title: 'Average Age', value: '34 years', subtitle: 'All time', icon: 'calendar_today', color: 'amber' },
 ]), fixed('An odd count: three KPIs, three a line from lg; two a line on md, the third alone on its line; scrolling sideways on a phone.'));
 
-export const TwoInARow = withTwig(() => row(ORDERS.slice(0, 2)), fixed('Two KPIs: two a line from md; on a phone they already scroll sideways, the second one showing.'));
+// Without the ids of the Orders row: both stories are on the docs page
+export const TwoInARow = withTwig(() => row(ORDERS.slice(0, 2).map(({ id, ...item }) => item)), fixed('Two KPIs: two a line from md; on a phone they already scroll sideways, the second one showing.'));
 
 export const Alone = withTwig(() => row([
   { title: 'Total Cart', value: '€128.40', subtitle: 'Tax incl.', icon: 'shopping_cart', color: 'oceanblue' },

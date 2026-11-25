@@ -1,0 +1,19 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set message -%}{%- block content %}{% endblock -%}{%- endset -%}
+{%- set actions -%}{%- block actions %}{% endblock -%}{%- endset -%}
+
+<div{{ attributes.defaults({class: 'ps-empty-state' ~ (size != 'md' ? ' ps-empty-state--' ~ size)}) }}>
+  {%- if icon -%}
+    <twig:ui:Icon :name="icon" :size="size == 'sm' ? 'lg' : 'xxl'" class="ps-empty-state__icon"/>
+  {%- endif -%}
+  <h{{ headingLevel }} class="ps-empty-state__title">{{ title }}</h{{ headingLevel }}>
+  {%- if message|trim is not empty -%}
+    <div class="ps-empty-state__message">{{ message }}</div>
+  {%- endif -%}
+  {%- if actions|trim is not empty -%}
+    <twig:ui:Layout:Cluster justify="center">{{ actions }}</twig:ui:Layout:Cluster>
+  {%- endif -%}
+</div>

@@ -1,0 +1,73 @@
+{
+  "component": "Check",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-check/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 14,
+    "captured": 14,
+    "skipped": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 2,
+    "minor": 6,
+    "suggestion": 2
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "The check keeps Bootstrap's .form-check bottom margin on its root",
+      "where": "ui/src/scss/components/_check.scss:11-19 (root .ps-check, visible-label case)"
+    },
+    {
+      "severity": "major",
+      "title": "Unchecked checkbox border is #ddd on white (about 1.4:1), below the 3:1 needed for a control",
+      "where": "ui/src/scss/_variables.scss:19, 362 (no $form-check-input-border override); stories default, states, hidden-label at every width"
+    },
+    {
+      "severity": "minor",
+      "title": "Hidden-label switch keeps the labelled switch's top margin, so it sits off-centre in its 24px target",
+      "where": "ui/src/scss/forms/_form-check.scss:13 vs ui/src/scss/components/_check.scss:21-24; case hidden-label-switch-off at 375"
+    },
+    {
+      "severity": "minor",
+      "title": "Clearing the name or value control gives a Show code that does not match the canvas",
+      "where": "components-check--default, name and value controls; ui/src/stories/check.js:31-32 vs ui/src/stories/twig-snippet.js:37"
+    },
+    {
+      "severity": "minor",
+      "title": "SomeSelected shows an empty box on the docs page, not the 'some selected' dash",
+      "where": "ui/src/stories/components/Check.stories.js:71-76; components-check--docs"
+    },
+    {
+      "severity": "minor",
+      "title": "Story chrome uses Bootstrap layout utilities instead of kit layouts",
+      "where": "ui/src/stories/components/Check.stories.js:12 (d-flex flex-column gap-2), :63 (table w-auto)"
+    },
+    {
+      "severity": "minor",
+      "title": "A label with a long unbroken word does not wrap: it is cut off and the page scrolls sideways at 375 and 768",
+      "where": "ui/src/scss/components/_check.scss (no wrap rule on .ps-check__label); case long-label-no-spaces at 375 and 768"
+    },
+    {
+      "severity": "minor",
+      "title": "Fixed story ids clash on the Docs page: labels point to Storybook headings or to another story",
+      "where": "ui/src/stories/components/Check.stories.js:41, 45 (id 'newsletter' twice), :72 ('some-selected'), :79 ('long-label'); components-check--docs at every width"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Switch off track overrides background-color instead of Bootstrap's --bs-form-check-bg",
+      "where": "ui/src/scss/forms/_form-check.scss:14-20"
+    },
+    {
+      "severity": "suggestion",
+      "title": "No story for a disabled box with a hidden label (a grid row that can't be selected)",
+      "where": "ui/src/stories/components/Check.stories.js:65-68"
+    }
+  ]
+}

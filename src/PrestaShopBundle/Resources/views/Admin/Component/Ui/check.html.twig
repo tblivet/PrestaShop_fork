@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set input = {class: 'form-check-input ps-check__input', type: 'checkbox', id: id}
+  |merge(type == 'switch' ? {role: 'switch'} : {})
+  |merge(name is not null ? {name: name} : {})
+  |merge(value is not null ? {value: value} : {})
+  |merge(checked ? {checked: true} : {})
+  |merge(disabled ? {disabled: true} : {}) -%}
+
+<div class="form-check ps-check{{ type == 'switch' ? ' form-switch' }}{{ hideLabel ? ' ps-check--label-hidden' }}">
+  <input{{ attributes.defaults(input) }}>
+  {#- Hidden, the label keeps naming the box and becomes its click target -#}
+  <label class="form-check-label ps-check__label" for="{{ id }}">
+    {%- if hideLabel -%}
+      <span class="visually-hidden">{{ label }}</span>
+    {%- else -%}
+      {{ label }}
+    {%- endif -%}
+  </label>
+</div>

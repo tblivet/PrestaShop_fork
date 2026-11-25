@@ -1,0 +1,34 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- In a narrow nav only Previous, "Page 3 of 25" and Next show: the other pages and the gaps are far (_pagination.scss) -#}
+{%- if links|length > 1 -%}
+  {%- set position = 'Page %current% of %total%'|trans({'%current%': current, '%total%': this.last}, 'Admin.Global') -%}
+  <nav{{ attributes.defaults({class: 'ps-pagination', 'aria-label': label}) }}>
+    <ul class="pagination">
+      {%- if links[current - 1] is defined -%}
+        <li class="page-item ps-pagination__item ps-pagination__item--step">
+          <a class="page-link ps-pagination__link" href="{{ links[current - 1] }}" rel="prev"><twig:ui:Icon name="chevron_left" flipRtl/><span class="visually-hidden">{{ 'Previous'|trans({}, 'Admin.Global') }}</span></a>
+        </li>
+      {%- endif -%}
+
+      {%- for page in this.items -%}
+        {%- if page is null -%}
+          <li class="page-item disabled ps-pagination__item ps-pagination__item--gap ps-pagination__item--far" aria-hidden="true"><span class="page-link ps-pagination__link">…</span></li>
+        {%- elseif page == current -%}
+          {#- The number for the eye, its position for screen readers and, in a narrow nav, for everyone -#}
+          <li class="page-item active ps-pagination__item ps-pagination__item--current"><a class="page-link ps-pagination__link" href="{{ links[page] }}" aria-current="page"><span class="ps-pagination__number" aria-hidden="true">{{ page }}</span><span class="ps-pagination__position">{{ position }}</span></a></li>
+        {%- else -%}
+          <li class="page-item ps-pagination__item ps-pagination__item--far"><a class="page-link ps-pagination__link" href="{{ links[page] }}">{{ page }}</a></li>
+        {%- endif -%}
+      {%- endfor -%}
+
+      {%- if links[current + 1] is defined -%}
+        <li class="page-item ps-pagination__item ps-pagination__item--step">
+          <a class="page-link ps-pagination__link" href="{{ links[current + 1] }}" rel="next"><span class="visually-hidden">{{ 'Next'|trans({}, 'Admin.Global') }}</span><twig:ui:Icon name="chevron_right" flipRtl/></a>
+        </li>
+      {%- endif -%}
+    </ul>
+  </nav>
+{%- endif -%}

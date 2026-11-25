@@ -14,6 +14,8 @@ import initQuickAccess from '../src/js/components/quick-access';
 import initScrollFade from '../src/js/components/scroll-fade';
 import initTooltips from '../src/js/components/tooltips';
 import { addons } from '@storybook/preview-api';
+import { Controls, Description, Primary, Stories, Subtitle, Title } from '@storybook/blocks';
+import { createElement, Fragment } from 'react';
 import { format } from 'prettier/standalone';
 import * as htmlPlugin from 'prettier/plugins/html';
 import announcer from '../src/stories/announcer';
@@ -117,6 +119,17 @@ const preview = {
     backgrounds: { disable: true },
     docs: {
       source: { language: 'html' },
+      // Storybook's docs page, without the first story twice (at the top, then in the list): an id in it would clash
+      page: () => createElement(
+        Fragment,
+        null,
+        createElement(Title),
+        createElement(Subtitle),
+        createElement(Description),
+        createElement(Primary),
+        createElement(Controls),
+        createElement(Stories, { includePrimary: false }),
+      ),
     },
     controls: {
       matchers: {

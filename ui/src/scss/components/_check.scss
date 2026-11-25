@@ -1,0 +1,34 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// <twig:ui:Check> (Admin/Component/Ui/check.html.twig): Bootstrap's form-check, its switch in forms/_form-check.scss,
+// imported before this partial.
+// With its label hidden (a grid's selection) the box stands alone, and its label, kept for screen readers, becomes a
+// click target of $ps-check-target-size around it (WCAG 2.5.8).
+$component-name: ps-check;
+
+.#{$component-name} {
+  // Bootstrap's form-check spaces itself under; a component never places itself (DECISIONS.md #24)
+  margin-block-end: 0;
+
+  &--label-hidden {
+    position: relative;
+    display: inline-flex;
+    min-height: 0;
+    padding-inline-start: 0;
+    vertical-align: middle;
+  }
+
+  &--label-hidden &__input {
+    float: none;
+    margin: 0;
+  }
+
+  &--label-hidden &__label {
+    position: absolute;
+    inset: calc((100% - #{$ps-check-target-size}) / 2);
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "component": "EmptyState",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-emptystate-pagination/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 17,
+    "captured": 17,
+    "skipped": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 3,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "A title or message with no break opportunity overflows the empty state and the page",
+      "where": "ui/src/scss/components/_empty-state.scss:11-31 (.ps-empty-state, __title, __message); cases long-title-no-spaces, long-message-no-spaces, sm-long-title-no-spaces at 375 and 768"
+    },
+    {
+      "severity": "minor",
+      "title": "Root attributes (class, id, data-ps-*) are never rendered in a test or a story",
+      "where": "empty_state.html.twig:8; EmptyStateComponentTest.php:27-48"
+    },
+    {
+      "severity": "minor",
+      "title": "A whitespace-only content block is untested, and the story builder disagrees with Twig on it",
+      "where": "empty_state.html.twig:13,16; ui/src/stories/empty-state.js:38-39,42"
+    },
+    {
+      "severity": "minor",
+      "title": "Icon control description shows 'name' instead of '<twig:ui:Icon> name'",
+      "where": "ui/src/stories/components/EmptyState.stories.js:41; Docs page props table, icon row"
+    }
+  ]
+}

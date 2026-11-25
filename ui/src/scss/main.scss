@@ -73,6 +73,7 @@
 @import 'components/close';
 @import 'components/dropdown-menu';
 @import 'components/employee-dropdown';
+@import 'components/empty-state';
 @import 'components/flash-messages';
 @import 'components/header';
 @import 'components/header-action';
@@ -110,6 +111,8 @@
 @import 'forms/form-text';
 @import 'forms/input-group';
 @import 'forms/labels';
+// After forms/form-check: a check with its label hidden drops the switch's top margin
+@import 'components/check';
 
 // ── PHASE 6: New/custom components not in Bootstrap ───────────────────────────
 @import 'components/side-menu';
