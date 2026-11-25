@@ -20,7 +20,7 @@ export const FontFamilies = {
   render: () => `
     <p class="text-body-secondary small mb-4">
       Font family CSS variables available at <code>:root</code>.
-      <code>--bs-body-font-family</code> is the compiled result of
+      <code>--psk-body-font-family</code> is the compiled result of
       <code>$font-family-sans-serif</code> (IBM Plex Sans with system fallbacks).
     </p>
     <table class="table table-bordered align-middle">
@@ -34,19 +34,19 @@ export const FontFamilies = {
       <tbody>
         ${[
           {
-            varName: '--bs-body-font-family',
+            varName: '--psk-body-font-family',
             label: 'Body / sans-serif',
             sample: 'The quick brown fox jumps over the lazy dog. 0123456789',
           },
           {
-            varName: '--bs-font-sans-serif',
+            varName: '--psk-font-sans-serif',
             label: 'Sans-serif stack (Bootstrap alias)',
             sample: 'The quick brown fox jumps over the lazy dog. 0123456789',
           },
           {
-            varName: '--bs-font-monospace',
+            varName: '--psk-font-monospace',
             label: 'Monospace',
-            sample: "const token = 'var(--bs-primary)'; // #1d1d1b",
+            sample: "const token = 'var(--psk-primary)'; // #1d1d1b",
           },
         ]
           .map(
@@ -73,7 +73,7 @@ export const BodyTokens = {
   render: () => `
     <p class="text-body-secondary small mb-4">
       Global body-level CSS variables defined by Bootstrap at <code>:root</code>.
-      These drive the base typographic rhythm and switch automatically in dark mode.
+      These drive the base typographic rhythm (the back office has no dark mode, DECISIONS.md #5).
     </p>
     <table class="table table-bordered table-sm align-middle">
       <thead class="table-light">
@@ -85,19 +85,19 @@ export const BodyTokens = {
       </thead>
       <tbody>
         ${[
-          { name: '--bs-body-font-family', purpose: 'Default font stack for all body text' },
-          { name: '--bs-body-font-size', purpose: 'Base font size (1rem = 16px at browser default)' },
-          { name: '--bs-body-font-weight', purpose: 'Default text weight (400 = regular)' },
-          { name: '--bs-body-line-height', purpose: 'Default line height (1.5)' },
-          { name: '--bs-body-color', purpose: 'Default text color — adapts in dark mode' },
-          { name: '--bs-body-bg', purpose: 'Default background color — adapts in dark mode' },
-          { name: '--bs-emphasis-color', purpose: 'High-contrast text (headings, labels)' },
-          { name: '--bs-secondary-color', purpose: 'Muted / helper text color' },
-          { name: '--bs-tertiary-color', purpose: 'Very muted text (placeholders)' },
-          { name: '--bs-heading-color', purpose: 'Heading color (inherits from body by default)' },
-          { name: '--bs-link-color', purpose: 'Anchor tag default color' },
-          { name: '--bs-link-hover-color', purpose: 'Anchor tag hover color' },
-          { name: '--bs-code-color', purpose: 'Inline <code> element color' },
+          { name: '--psk-body-font-family', purpose: 'Default font stack for all body text' },
+          { name: '--psk-body-font-size', purpose: 'Base font size (1rem = 16px at browser default)' },
+          { name: '--psk-body-font-weight', purpose: 'Default text weight (400 = regular)' },
+          { name: '--psk-body-line-height', purpose: 'Default line height (1.5)' },
+          { name: '--psk-body-color', purpose: 'Default text color' },
+          { name: '--psk-body-bg', purpose: 'Default background color' },
+          { name: '--psk-emphasis-color', purpose: 'High-contrast text (headings, labels)' },
+          { name: '--psk-secondary-color', purpose: 'Muted / helper text color' },
+          { name: '--psk-tertiary-color', purpose: 'Very muted text (placeholders)' },
+          { name: '--psk-heading-color', purpose: 'Heading color (inherits from body by default)' },
+          { name: '--psk-link-color', purpose: 'Anchor tag default color' },
+          { name: '--psk-link-hover-color', purpose: 'Anchor tag hover color' },
+          { name: '--psk-code-color', purpose: 'Inline <code> element color' },
         ]
           .map(
             ({ name, purpose }) => `
@@ -181,13 +181,13 @@ export const FontWeights = {
       </thead>
       <tbody>
         ${[
-          { varName: '--bs-font-weight-lighter', cls: 'fw-lighter', note: 'relative' },
-          { varName: '--bs-font-weight-light', cls: 'fw-light' },
-          { varName: '--bs-font-weight-normal', cls: 'fw-normal' },
-          { varName: '--bs-font-weight-medium', cls: 'fw-medium' },
-          { varName: '--bs-font-weight-semibold', cls: 'fw-semibold' },
-          { varName: '--bs-font-weight-bold', cls: 'fw-bold' },
-          { varName: '--bs-font-weight-bolder', cls: 'fw-bolder', note: 'relative' },
+          { varName: '--psk-font-weight-lighter', cls: 'fw-lighter', note: 'relative' },
+          { varName: '--psk-font-weight-light', cls: 'fw-light' },
+          { varName: '--psk-font-weight-normal', cls: 'fw-normal' },
+          { varName: '--psk-font-weight-medium', cls: 'fw-medium' },
+          { varName: '--psk-font-weight-semibold', cls: 'fw-semibold' },
+          { varName: '--psk-font-weight-bold', cls: 'fw-bold' },
+          { varName: '--psk-font-weight-bolder', cls: 'fw-bolder', note: 'relative' },
         ]
           .map(
             ({ varName, cls, note }) => `

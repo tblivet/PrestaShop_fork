@@ -496,4 +496,11 @@ $ps-page-head-focus-room: $focus-ring-width;
 $ps-layout-gaps: (none: 0, xs: 1, sm: 2, md: 3, lg: 4, xl: 5);
 
 // ── Options ───────────────────────────────────────────────────────────────────
+// Square corners: components draw no radius, and the radius tokens are 0 so the .rounded utilities are square too. The
+// pill ($border-radius-pill) stays, for pill badges, counters, progress bars and switches
 $enable-rounded: false;
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+$border-radius-xl: 0;
+$border-radius-xxl: 0;

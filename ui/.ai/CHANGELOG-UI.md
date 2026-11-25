@@ -644,3 +644,12 @@ From the `ui-screen-review` of the KPI row (Orders, Cart #1, Categories). `kpi.h
 - Average Order Value: the value is the amount only (was "%amount% tax excl.", as the refreshed value already was); its subtitle "30 days" → "30 days, tax excl." (`Admin.Orderscustomers.Feature`).
 - Categories: "Average number of products per category" → "Products per category" (`Admin.Catalog.Feature`).
 
+## Design tokens in Storybook, square radius tokens — 2026-11-25
+
+**Look**
+- The radius tokens are 0 (`$border-radius`, `-sm`, `-lg`, `-xl`, `-xxl`): `.rounded`, `.rounded-{side}` and `.rounded-{1…5}` are square, as the components already were (`$enable-rounded: false`). `.rounded-pill` and `.rounded-circle` stay round.
+
+**Stories**
+- The token and utility stories read the kit's CSS variables (`--psk-…`, the `$prefix`), not `--bs-…`: the colour, border, motion, shadow, spacing and typography previews show again.
+- Design Tokens/Colors: palettes with each step's value and text contrast, the theme colours on real buttons and badges, a card for the surface and text tokens, the subtle trios as real alerts, the category colours on KPI cards and badges.
+- Design Tokens/Borders: square corners, the kit's focus ring (the brand at 50%, DECISIONS #29); no dark mode mentions (DECISIONS #5).

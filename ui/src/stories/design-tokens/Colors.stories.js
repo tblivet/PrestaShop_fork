@@ -2,295 +2,177 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Design tokens — color primitives and semantic theme colors
-// Palettes: src/scss/_custom.scss · Tokens: src/scss/_variables.scss
-// https://getbootstrap.com/docs/5.3/customize/css-variables/
-// ⚠ Keep in sync with _variables.scss, _maps.scss, and _custom.scss whenever colors change.
+// Design tokens: the colour palettes, the theme colours built on them, the surface and text tokens, the subtle trios,
+// each shown where the kit uses it. Values are read from the page (CSS variables, prefix psk-), so they follow
+// _variables.scss, _maps.scss and _custom.scss.
+import alert from '../alert';
+import badge from '../badge';
+import kpi from '../kpi';
+import { contrast, hex, inkOn, rating, token } from './color-swatch';
 
-const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '—';
+const STEPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
 
-const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-
-const paletteScales = [
-  { name: 'primary' },
-  { name: 'secondary' },
-  { name: 'red' },
-  { name: 'yellow' },
-  { name: 'amber' },
-  { name: 'green' },
-  { name: 'blue' },
-  { name: 'oceanblue' },
-  { name: 'purple' },
+// Each palette, its base step (the $name in _variables.scss) and what the kit does with it
+const PALETTES = [
+  { name: 'gray', base: null, use: 'Borders (400), placeholders (400), surfaces (50–200), muted text (600), body text (800).' },
+  { name: 'primary', base: 500, use: 'The brand ($gray-800), near black: primary buttons, links, focus rings at 50%; its own steps around it.' },
+  { name: 'secondary', base: 500, use: '$gray-600: secondary buttons and muted text; its own steps around it.' },
+  { name: 'red', base: 500, use: 'Danger and destructive: errors, delete buttons.' },
+  { name: 'yellow', base: 500, use: 'Warning.' },
+  { name: 'green', base: 500, use: 'Success; the fourth KPI colour.' },
+  { name: 'blue', base: 500, use: 'Info.' },
+  { name: 'oceanblue', base: 500, use: 'Category colour: badges, the first KPI colour.' },
+  { name: 'purple', base: 500, use: 'Category colour: badges, the second KPI colour.' },
+  { name: 'amber', base: 500, use: 'Category colour: badges, the third KPI colour.' },
 ];
 
-function swatchCell(varName, step) {
-  const isDark = step >= 500;
-  const textColor = isDark ? 'rgba(255,255,255,.7)' : 'rgba(0,0,0,.5)';
+const swatch = (name, step, base) => {
+  const variable = `${name}-${step}`;
+  const background = `var(${token(variable)})`;
+  const ink = inkOn(background);
+
   return `
-    <td style="padding:0;width:10%">
-      <div
-        style="background:var(${varName});height:64px;position:relative"
-        title="${varName}"
-      >
-        <span style="position:absolute;bottom:4px;left:4px;right:4px;font-size:.5rem;font-family:var(--bs-font-monospace);color:${textColor};line-height:1.3;word-break:break-all">
-          ${step}<br>${cssVar(varName)}
-        </span>
-      </div>
-    </td>`;
-}
+    <div style="background:${background};color:${ink};padding:.5rem;min-height:5.5rem;display:flex;flex-direction:column;justify-content:space-between;${step === base ? 'box-shadow:inset 0 0 0 2px currentColor;' : ''}" title="var(${token(variable)})">
+      <strong style="font-size:.875rem">${step}${step === base ? ' · base' : ''}</strong>
+      <span style="font-family:var(${token('font-monospace')});font-size:.6875rem;line-height:1.4">${hex(variable)}<br>Aa ${rating(contrast(background, ink))}</span>
+    </div>`;
+};
+
+const intro = (text) => `<p class="text-body-secondary small" style="max-width:48rem">${text}</p>`;
 
 export default {
   title: 'Design Tokens/Colors',
+  parameters: {
+    docs: {
+      description: {
+        component: 'The back office colours (no dark mode, DECISIONS.md #5). Use the theme colours and the tokens in components; a palette step only for what has no token (a category colour, a line). In SCSS `$oceanblue-600`, in CSS `var(--psk-oceanblue-600)`. Each swatch gives its value and the contrast of text on it (WCAG: 4.5:1 for text, 3:1 for large text and shapes).',
+      },
+    },
+  },
 };
 
-// ── Primitive palettes ─────────────────────────────────────────────────────────
-
-export const PrimitivePalettes = {
-  name: 'Primitive Palettes',
+export const Palettes = {
   render: () => `
-    <p class="text-body-secondary small mb-1">
-      Custom palette primitives exposed at <code>:root</code> in
-      <code>src/scss/_custom.scss</code>. Consume via
-      <code>var(--bs-{color}-{step})</code>.
-      Steps range from <code>50</code> (lightest) to <code>900</code> (darkest).
-    </p>
-    <p class="text-body-secondary small mb-4">
-      Resolved values shown for the <strong>current color mode</strong> — toggle
-      dark mode to see dark-mode values.
-    </p>
-    <div class="overflow-x-auto">
-      <table class="table table-bordered mb-0" style="min-width:640px;table-layout:fixed">
-        <thead class="table-light">
-          <tr>
-            <th style="width:90px" class="small">Scale</th>
-            ${steps.map((s) => `<th class="text-center small">${s}</th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>
-          ${paletteScales
-            .map(
-              ({ name }) => `
-            <tr>
-              <td class="fw-semibold small align-middle text-capitalize">${name}</td>
-              ${steps.map((step) => swatchCell(`--bs-${name}-${step}`, step)).join('')}
-            </tr>`
-            )
-            .join('')}
-        </tbody>
-      </table>
-    </div>
-    <p class="text-body-secondary small mt-3 mb-0">
-      Example usage in a custom component:
-      <code>background-color: var(--bs-blue-100);</code> ·
-      <code>color: var(--bs-red-700);</code>
-    </p>
+    ${intro('Ten steps a palette, 50 the lightest. The framed step is the base colour (<code>$red</code>, <code>$oceanblue</code>…). Text on each swatch is the colour that reads best on it, white or the body text, with its contrast.')}
+    ${PALETTES.map(({ name, base, use }) => `
+      <section style="margin-block-end:1.5rem">
+        <h3 class="h6" style="margin-block-end:.25rem;text-transform:capitalize">${name}</h3>
+        <p class="small text-body-secondary" style="margin-block-end:.5rem">${use}</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(5.5rem,1fr))">
+          ${STEPS.map((step) => swatch(name, step, base)).join('')}
+        </div>
+      </section>`).join('')}
   `,
 };
 
-// ── Gray scale ─────────────────────────────────────────────────────────────────
-
-export const GrayScale = {
-  name: 'Gray Scale',
-  render: () => `
-    <p class="text-body-secondary small mb-4">
-      Bootstrap's native gray scale, overridden in
-      <code>src/scss/_variables.scss</code> with the brand palette.
-      Accessible via <code>var(--bs-gray-{step})</code>.
-    </p>
-    <div class="overflow-x-auto">
-      <table class="table table-bordered mb-0" style="min-width:640px;table-layout:fixed">
-        <thead class="table-light">
-          <tr>
-            <th style="width:90px" class="small">Scale</th>
-            ${steps.map((s) => `<th class="text-center small">${s}</th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="fw-semibold small align-middle">gray</td>
-            ${steps.map((step) => swatchCell(`--bs-gray-${step}`, step)).join('')}
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="text-body-secondary small mt-3 mb-0">
-      Example: <code>border-color: var(--bs-gray-400);</code> ·
-      <code>color: var(--bs-gray-600);</code>
-    </p>
-  `,
-};
-
-// ── Theme colors ───────────────────────────────────────────────────────────────
-
-const themeColors = [
-  { name: 'primary', note: '$gray-800 (brand)' },
-  { name: 'secondary', note: '$gray-600 (brand-secondary)' },
-  { name: 'success', note: '$green-500' },
-  { name: 'danger', note: '$red-500' },
-  { name: 'warning', note: '$yellow-500' },
-  { name: 'info', note: '$blue-500' },
-  { name: 'light', note: 'Bootstrap default' },
-  { name: 'dark', note: 'Bootstrap default' },
-  { name: 'destructive', note: '$red-500 · custom (src/scss/_maps.scss)' },
+// The theme colours and the components they drive
+const THEME = [
+  { name: 'primary', source: '$gray-800, the brand', button: 'primary' },
+  { name: 'secondary', source: '$gray-600', button: 'secondary' },
+  { name: 'success', source: '$green' },
+  { name: 'danger', source: '$red' },
+  { name: 'warning', source: '$yellow' },
+  { name: 'info', source: '$blue' },
+  { name: 'destructive', source: '$red (_maps.scss)', button: 'destructive' },
 ];
 
 export const ThemeColors = {
-  name: 'Theme Colors',
   render: () => `
-    <p class="text-body-secondary small mb-4">
-      Bootstrap semantic theme colors. These drive all component variants
-      (<code>.btn-primary</code>, <code>.badge-success</code>, <code>.alert-danger</code>, etc.).
-      <code>destructive</code> is a custom addition defined in
-      <code>src/scss/_maps.scss</code>.
-    </p>
-    <table class="table table-bordered table-sm align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>CSS variable</th>
-          <th style="width:56px">Swatch</th>
-          <th>Resolved value</th>
-          <th><code>-rgb</code> variable</th>
-          <th class="d-none d-lg-table-cell">SCSS source</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${themeColors
-          .map(
-            ({ name, note }) => `
-          <tr>
-            <td><code class="small">var(--bs-${name})</code></td>
-            <td>
-              <div style="background:var(--bs-${name});height:32px;border:1px solid rgba(0,0,0,.08)"></div>
-            </td>
-            <td><code class="small">${cssVar(`--bs-${name}`)}</code></td>
-            <td><code class="small text-body-secondary">var(--bs-${name}-rgb)</code><br><code class="small text-body-secondary" style="font-size:.6rem">${cssVar(`--bs-${name}-rgb`)}</code></td>
-            <td class="d-none d-lg-table-cell text-body-secondary small">${note}</td>
-          </tr>`
-          )
-          .join('')}
-      </tbody>
-    </table>
+    ${intro('Bootstrap\'s theme colours, from the palettes. They drive the variants of the components: <code>.btn-primary</code>, <code>&lt;twig:ui:Badge variant="success"&gt;</code>, <code>&lt;twig:ui:Alert type="danger"&gt;</code>. On each, the text that reads best (white, or dark on warning) and its contrast.')}
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:1rem">
+      ${THEME.map(({ name, source, button }) => `
+        <div class="card">
+          <div style="background:var(${token(name)});color:${inkOn(`var(${token(name)})`)};padding:1rem;min-height:5rem">
+            <strong>${name}</strong><br>
+            <span style="font-family:var(${token('font-monospace')});font-size:.75rem">${hex(name)} · ${inkOn(`var(${token(name)})`) === '#fff' ? 'white' : 'dark'} text ${rating(contrast(`var(${token(name)})`, inkOn(`var(${token(name)})`)))}</span>
+          </div>
+          <div class="card-body">
+            <p class="small text-body-secondary" style="margin-block-end:.75rem"><code>var(${token(name)})</code> · ${source}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.5rem;align-items:center">
+              ${button ? `<button type="button" class="btn btn-${button} btn-sm">Button</button>` : ''}
+              ${name === 'destructive' ? '' : badge({ label: 'Badge', variant: name }).html}
+              <span style="color:var(${token(`${name}-text-emphasis`)})">Text</span>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>
   `,
 };
 
-// ── Surface & text tokens ──────────────────────────────────────────────────────
+export const SurfaceAndText = {
+  name: 'Surface & Text',
+  render: () => {
+    const rows = [
+      ['body-bg', 'Page and component background'],
+      ['secondary-bg', 'Muted surface: disabled inputs'],
+      ['tertiary-bg', 'Subtle surface: table stripes, page background'],
+      ['body-color', 'Body text'],
+      ['emphasis-color', 'Headings, strong text'],
+      ['secondary-color', 'Muted text: help, subtitles'],
+      ['tertiary-color', 'Placeholders'],
+      ['border-color', 'Borders and dividers ($gray-400)'],
+      ['link-color', 'Links'],
+    ];
 
-export const SurfaceTokens = {
-  name: 'Surface & Text Tokens',
-  render: () => `
-    <p class="text-body-secondary small mb-4">
-      Global surface and text CSS variables (the back office has no dark mode, DECISIONS.md #5).
-      Always prefer these over hardcoded colors for background and text in custom
-      components.
-    </p>
+    return `
+    ${intro('The tokens a component takes its background, text and borders from: prefer them to a palette step.')}
+    <div class="card" style="max-width:32rem;margin-block-end:1.5rem">
+      <div class="card-body">
+        <h3 class="h5" style="color:var(${token('emphasis-color')})">A card on the page</h3>
+        <p style="color:var(${token('body-color')})">Body text in <code>--psk-body-color</code>, with a <a href="#colors">link</a>.</p>
+        <p class="small" style="color:var(${token('secondary-color')});margin-block-end:.75rem">Help text in <code>--psk-secondary-color</code>.</p>
+        <input class="form-control" placeholder="Placeholder in --psk-tertiary-color" aria-label="Example">
+      </div>
+    </div>
     <table class="table table-bordered table-sm align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>CSS variable</th>
-          <th style="width:56px">Swatch</th>
-          <th>Resolved value</th>
-          <th>Typical use</th>
-        </tr>
-      </thead>
+      <thead><tr><th scope="col">Token</th><th scope="col" style="width:4rem">Colour</th><th scope="col">Value</th><th scope="col">Text on white</th><th scope="col">Use</th></tr></thead>
       <tbody>
-        ${[
-          { name: '--bs-body-bg', purpose: 'Page / component default background' },
-          { name: '--bs-body-color', purpose: 'Default body text color' },
-          { name: '--bs-secondary-bg', purpose: 'Muted surface — inputs, disabled states' },
-          { name: '--bs-secondary-color', purpose: 'Muted / de-emphasised text' },
-          { name: '--bs-tertiary-bg', purpose: 'Subtle surface — zebra rows, tooltips' },
-          { name: '--bs-tertiary-color', purpose: 'Placeholder / very muted text' },
-          { name: '--bs-emphasis-color', purpose: 'High-contrast text — headings' },
-          { name: '--bs-border-color', purpose: 'Default border / divider ($gray-400)' },
-          { name: '--bs-link-color', purpose: 'Anchor default color' },
-          { name: '--bs-link-hover-color', purpose: 'Anchor hover color' },
-          { name: '--bs-code-color', purpose: 'Inline <code> text color' },
-        ]
-          .map(
-            ({ name, purpose }) => `
+        ${rows.map(([name, use]) => `
           <tr>
-            <td><code class="small">var(${name})</code></td>
-            <td>
-              <div style="background:var(${name});height:32px;border:1px solid rgba(0,0,0,.08)"></div>
-            </td>
-            <td><code class="small">${cssVar(name)}</code></td>
-            <td class="small text-body-secondary">${purpose}</td>
-          </tr>`
-          )
-          .join('')}
+            <td><code class="small">var(${token(name)})</code></td>
+            <td><div style="background:var(${token(name)});height:2rem;border:1px solid var(${token('border-color')})"></div></td>
+            <td><code class="small">${hex(name)}</code></td>
+            <td class="small">${name.endsWith('bg') ? '—' : rating(contrast(`var(${token(name)})`, '#fff'))}</td>
+            <td class="small text-body-secondary">${use}</td>
+          </tr>`).join('')}
       </tbody>
-    </table>
-  `,
+    </table>`;
+  },
 };
 
-// ── Subtle variants ────────────────────────────────────────────────────────────
-
-const subtleColors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'destructive'];
+const SUBTLE = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
 
 export const SubtleVariants = {
   name: 'Subtle Variants',
   render: () => `
-    <p class="text-body-secondary small mb-4">
-      Semantic subtle tokens for muted, contextual UI surfaces. Use the utility
-      classes directly (<code>.bg-{color}-subtle</code>,
-      <code>.border-{color}-subtle</code>, <code>.text-{color}-emphasis</code>)
-      or the CSS variables in custom component SCSS.
-    </p>
+    ${intro('Each theme colour has a trio used together: <code>-bg-subtle</code> for the surface, <code>-border-subtle</code> for its edge, <code>-text-emphasis</code> for the text on it. Alerts are built on it; the contrast is the text\'s on its surface.')}
+    <div style="display:grid;gap:.75rem;max-width:48rem;margin-block-end:1.5rem">
+      ${SUBTLE.map((name) => alert({ type: name, content: `<strong>${name}</strong> · text ${rating(contrast(`var(${token(`${name}-text-emphasis`)})`, `var(${token(`${name}-bg-subtle`)})`))} on its surface` }).html).join('')}
+    </div>
     <table class="table table-bordered table-sm align-middle">
-      <thead class="table-light">
-        <tr>
-          <th style="width:110px">Color</th>
-          <th><code>-bg-subtle</code></th>
-          <th><code>-border-subtle</code></th>
-          <th><code>-text-emphasis</code></th>
-        </tr>
-      </thead>
+      <thead><tr><th scope="col">Colour</th><th scope="col">-bg-subtle</th><th scope="col">-border-subtle</th><th scope="col">-text-emphasis</th></tr></thead>
       <tbody>
-        ${subtleColors
-          .map(
-            (name) => `
+        ${SUBTLE.map((name) => `
           <tr>
-            <td class="fw-semibold small">${name}</td>
-            <td>
-              <div style="background:var(--bs-${name}-bg-subtle);padding:.375rem .5rem;border:1px solid rgba(0,0,0,.06)">
-                <code style="font-size:.6rem">var(--bs-${name}-bg-subtle)</code>
-                <br><code style="font-size:.55rem;color:var(--bs-secondary-color)">${cssVar(`--bs-${name}-bg-subtle`)}</code>
-              </div>
-            </td>
-            <td>
-              <div style="border:2px solid var(--bs-${name}-border-subtle);padding:.375rem .5rem">
-                <code style="font-size:.6rem">var(--bs-${name}-border-subtle)</code>
-                <br><code style="font-size:.55rem;color:var(--bs-secondary-color)">${cssVar(`--bs-${name}-border-subtle`)}</code>
-              </div>
-            </td>
-            <td>
-              <span style="color:var(--bs-${name}-text-emphasis)">
-                <code style="font-size:.6rem">var(--bs-${name}-text-emphasis)</code>
-                <br><code style="font-size:.55rem;opacity:.7">${cssVar(`--bs-${name}-text-emphasis`)}</code>
-              </span>
-            </td>
-          </tr>`
-          )
-          .join('')}
+            <th scope="row" class="small">${name}</th>
+            ${['bg-subtle', 'border-subtle', 'text-emphasis'].map((part) => `
+              <td><span style="display:inline-block;width:1rem;height:1rem;vertical-align:middle;background:var(${token(`${name}-${part}`)});border:1px solid var(${token('border-color')})"></span> <code class="small">${hex(`${name}-${part}`)}</code></td>`).join('')}
+          </tr>`).join('')}
       </tbody>
     </table>
+  `,
+};
 
-    <h6 class="mt-4 mb-2">Extended palette — bg-subtle only</h6>
-    <p class="text-body-secondary small mb-3">
-      Non-theme palette colors that expose a <code>bg-subtle</code> token.
-      Use <code>.bg-{color}-subtle</code> or
-      <code>var(--bs-{color}-bg-subtle)</code>.
-    </p>
-    <div class="d-flex flex-wrap gap-3">
-      ${['oceanblue', 'purple', 'amber']
-        .map(
-          (name) => `
-        <div style="background:var(--bs-${name}-bg-subtle);padding:.75rem 1.25rem;border:1px solid rgba(0,0,0,.06);min-width:190px">
-          <code style="font-size:.65rem;display:block">var(--bs-${name}-bg-subtle)</code>
-          <code style="font-size:.6rem;color:var(--bs-secondary-color)">${cssVar(`--bs-${name}-bg-subtle`)}</code>
-        </div>`
-        )
-        .join('')}
+export const CategoryColors = {
+  name: 'Category Colours',
+  render: () => `
+    ${intro('Oceanblue, purple, amber and green tell items of the same kind apart, without meaning a status: a KPI from the others of its row (its 600 line, or green 300, its 100 tint, its 800 icon), a badge. Their <code>-bg-subtle</code> is the 100 step.')}
+    <div class="ps-kpi-row ps-kpi-row--4" style="margin-block-end:1.5rem">
+      ${[['oceanblue', 'Conversion Rate', '1.8%', 'monitoring'], ['purple', 'Abandoned Carts', '12', 'remove_shopping_cart'], ['amber', 'Average Order Value', '€45.20', 'account_balance_wallet'], ['green', 'Net Profit per Visit', '€3.10', 'account_box']]
+    .map(([color, title, value, icon]) => kpi({ title, value, subtitle: '30 days', icon, color }).html).join('')}
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:.5rem">
+      ${['oceanblue', 'purple', 'amber'].map((variant) => badge({ label: variant, variant }).html).join('')}
     </div>
   `,
 };

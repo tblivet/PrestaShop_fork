@@ -34,14 +34,14 @@ export const TransitionTokens = {
       </thead>
       <tbody>
         <tr>
-          <td><code class="small">var(--bs-transition-duration)</code></td>
-          <td><code class="small">${cssVar('--bs-transition-duration')}</code></td>
+          <td><code class="small">var(--psk-transition-duration)</code></td>
+          <td><code class="small">${cssVar('--psk-transition-duration')}</code></td>
           <td><code class="small text-body-secondary">$transition-duration</code></td>
           <td class="small text-body-secondary">Standard interaction duration — fast enough to feel responsive</td>
         </tr>
         <tr>
-          <td><code class="small">var(--bs-transition-easing)</code></td>
-          <td><code class="small">${cssVar('--bs-transition-easing')}</code></td>
+          <td><code class="small">var(--psk-transition-easing)</code></td>
+          <td><code class="small">${cssVar('--psk-transition-easing')}</code></td>
           <td><code class="small text-body-secondary">$transition-easing</code></td>
           <td class="small text-body-secondary">Material Design standard easing — natural deceleration</td>
         </tr>
@@ -61,18 +61,18 @@ export const TransitionTokens = {
         <div
           style="
             width:140px;height:88px;
-            background:var(--bs-primary);
+            background:var(--psk-primary);
             cursor:pointer;
             transition:
-              background-color var(--bs-transition-duration) var(--bs-transition-easing),
-              transform var(--bs-transition-duration) var(--bs-transition-easing);
+              background-color var(--psk-transition-duration) var(--psk-transition-easing),
+              transform var(--psk-transition-duration) var(--psk-transition-easing);
           "
-          onmouseover="this.style.background='var(--bs-blue-400)';this.style.transform='scale(1.06)'"
-          onmouseout="this.style.background='var(--bs-primary)';this.style.transform=''"
+          onmouseover="this.style.background='var(--psk-blue-400)';this.style.transform='scale(1.06)'"
+          onmouseout="this.style.background='var(--psk-primary)';this.style.transform=''"
         ></div>
         <code style="font-size:.6rem;display:block;margin-top:.5rem;line-height:1.5;max-width:200px">
-          transition-duration: var(--bs-transition-duration)<br>
-          transition-timing: var(--bs-transition-easing)
+          transition-duration: var(--psk-transition-duration)<br>
+          transition-timing: var(--psk-transition-easing)
         </code>
       </div>
       <div>
@@ -80,12 +80,12 @@ export const TransitionTokens = {
         <div
           style="
             width:140px;height:88px;
-            background:var(--bs-primary);
+            background:var(--psk-primary);
             cursor:pointer;
             transition: background-color 0.4s ease-in, transform 0.4s ease-in;
           "
-          onmouseover="this.style.background='var(--bs-blue-400)';this.style.transform='scale(1.06)'"
-          onmouseout="this.style.background='var(--bs-primary)';this.style.transform=''"
+          onmouseover="this.style.background='var(--psk-blue-400)';this.style.transform='scale(1.06)'"
+          onmouseout="this.style.background='var(--psk-primary)';this.style.transform=''"
         ></div>
         <code style="font-size:.6rem;display:block;margin-top:.5rem;line-height:1.5;max-width:200px">
           transition: 0.4s ease-in<br>

@@ -2,10 +2,9 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Design tokens — border variables
-// $enable-rounded: false → all radius variables resolve to 0 in this design system
+// Design tokens — border variables: widths and colour, square corners (radius 0 but the pill), the focus ring
 // https://getbootstrap.com/docs/5.3/utilities/borders/
-// ⚠ Keep in sync with _variables.scss if $enable-rounded or $border-* is changed.
+// ⚠ Keep in sync with _variables.scss if $enable-rounded, $border-* or $focus-ring-* change.
 
 const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '—';
 
@@ -19,8 +18,8 @@ export const BorderProperties = {
   name: 'Border Properties',
   render: () => `
     <p class="text-body-secondary small mb-4">
-      Global border CSS variables. <code>--bs-border-color</code> maps to
-      <code>$gray-400</code> and switches in dark mode.
+      Global border CSS variables. <code>--psk-border-color</code> maps to
+      <code>$gray-400</code>.
       Use these variables in custom component SCSS instead of hardcoding
       border values.
     </p>
@@ -34,11 +33,11 @@ export const BorderProperties = {
       </thead>
       <tbody>
         ${[
-          { name: '--bs-border-width', purpose: 'Default border width (1px)' },
-          { name: '--bs-border-style', purpose: 'Default border style (solid)' },
-          { name: '--bs-border-color', purpose: 'Default border color ($gray-400) — switches in dark mode' },
+          { name: '--psk-border-width', purpose: 'Default border width (1px)' },
+          { name: '--psk-border-style', purpose: 'Default border style (solid)' },
+          { name: '--psk-border-color', purpose: 'Default border color ($gray-400)' },
           {
-            name: '--bs-border-color-translucent',
+            name: '--psk-border-color-translucent',
             purpose: 'Semi-transparent variant for overlapping borders',
           },
         ]
@@ -82,11 +81,10 @@ export const BorderRadius = {
   name: 'Border Radius',
   render: () => `
     <p class="text-body-secondary small mb-4">
-      Border radius variables. All resolve to <code>0</code> in this design system
-      because <code>$enable-rounded: false</code> is set in
-      <code>src/scss/_variables.scss</code>. To use rounding on a specific custom
-      component, override <code>--bs-border-radius</code> locally on that component's
-      root element — this keeps the global default sharp while allowing exceptions.
+      Corners are square: <code>$enable-rounded: false</code> keeps components from drawing a radius, and the radius
+      tokens are <code>0</code> (<code>src/scss/_variables.scss</code>), so the <code>.rounded</code> utilities are square
+      too. The only round shapes are the pill (pill badges, counters, progress bars, switches) and the circle
+      (<code>.rounded-circle</code>, avatars).
     </p>
     <table class="table table-bordered table-sm align-middle mb-4">
       <thead class="table-light">
@@ -94,29 +92,27 @@ export const BorderRadius = {
           <th>CSS variable</th>
           <th>Utility class</th>
           <th>Resolved value</th>
-          <th>Bootstrap default</th>
           <th>Preview</th>
         </tr>
       </thead>
       <tbody>
         ${[
-          { varName: '--bs-border-radius', cls: '.rounded', bsDefault: '0.375rem' },
-          { varName: '--bs-border-radius-sm', cls: '.rounded-sm', bsDefault: '0.25rem' },
-          { varName: '--bs-border-radius-lg', cls: '.rounded-lg', bsDefault: '0.5rem' },
-          { varName: '--bs-border-radius-xl', cls: '.rounded-xl', bsDefault: '1rem' },
-          { varName: '--bs-border-radius-xxl', cls: '.rounded-xxl', bsDefault: '2rem' },
-          { varName: '--bs-border-radius-pill', cls: '.rounded-pill', bsDefault: '50rem' },
+          { varName: '--psk-border-radius', cls: '.rounded' },
+          { varName: '--psk-border-radius-sm', cls: '.rounded-1' },
+          { varName: '--psk-border-radius-lg', cls: '.rounded-3' },
+          { varName: '--psk-border-radius-xl', cls: '.rounded-4' },
+          { varName: '--psk-border-radius-xxl', cls: '.rounded-5' },
+          { varName: '--psk-border-radius-pill', cls: '.rounded-pill' },
         ]
           .map(
-            ({ varName, cls, bsDefault }) => `
+            ({ varName, cls }) => `
           <tr>
             <td><code class="small">var(${varName})</code></td>
             <td><code class="small">${cls}</code></td>
             <td><code class="small">${cssVar(varName)}</code></td>
-            <td><code class="small text-body-secondary">${bsDefault}</code></td>
             <td>
               <div
-                style="width:56px;height:28px;background:var(--bs-primary);border-radius:var(${varName})"
+                style="width:56px;height:28px;background:var(--psk-primary);border-radius:var(${varName})"
               ></div>
             </td>
           </tr>`
@@ -124,7 +120,6 @@ export const BorderRadius = {
           .join('')}
       </tbody>
     </table>
-
   `,
 };
 
@@ -134,9 +129,11 @@ export const FocusRing = {
   name: 'Focus Ring',
   render: () => `
     <p class="text-body-secondary small mb-4">
-      Focus ring variables control the accessible keyboard focus indicator.
-      Override <code>--bs-focus-ring-color</code> per component to match its
-      context color.
+      The keyboard focus indicator (DECISIONS.md #29). Bootstrap's ring, <code>$focus-ring-width</code> wide, in the brand
+      at 50% (<code>$focus-ring-color</code>, 3.3:1 on white) instead of Bootstrap's 25%, which the near-black brand
+      made invisible. A button's ring is a 2px gap in the page colour, then the button's own colour at 50%. In SCSS,
+      <code>box-shadow: $focus-ring-box-shadow</code>; a focus room of <code>$focus-ring-width</code> keeps it from
+      being cut by a box that scrolls.
     </p>
     <table class="table table-bordered table-sm align-middle mb-4">
       <thead class="table-light">
@@ -148,9 +145,8 @@ export const FocusRing = {
       </thead>
       <tbody>
         ${[
-          { name: '--bs-focus-ring-width', purpose: 'Outline width (0.25rem)' },
-          { name: '--bs-focus-ring-opacity', purpose: 'Ring alpha (0.25)' },
-          { name: '--bs-focus-ring-color', purpose: 'Ring color (rgba primary)' },
+          { name: '--psk-focus-ring-width', purpose: 'Ring width ($focus-ring-width)' },
+          { name: '--psk-focus-ring-color', purpose: 'Ring colour: the brand at 50% ($focus-ring-color)' },
         ]
           .map(
             ({ name, purpose }) => `
@@ -164,15 +160,13 @@ export const FocusRing = {
       </tbody>
     </table>
 
-    <h6 class="mb-3">Demo — click or tab to the button to see the focus ring</h6>
+    <h6 class="mb-3">Tab to each control to see its ring</h6>
     <div class="d-flex gap-3 flex-wrap align-items-center">
-      <button class="btn btn-primary">Default focus ring</button>
-      <button
-        class="btn btn-success"
-        style="--bs-focus-ring-color: rgba(var(--bs-success-rgb), 0.25)"
-      >
-        Custom color focus ring
-      </button>
+      <button type="button" class="btn btn-primary">Primary button</button>
+      <button type="button" class="btn btn-secondary">Secondary button</button>
+      <button type="button" class="btn btn-destructive">Destructive button</button>
+      <input class="form-control" style="max-width:14rem" placeholder="A field" aria-label="A field">
+      <a href="#focus-ring">A link</a>
     </div>
   `,
 };

@@ -91,7 +91,7 @@ export const CustomColor = {
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         title="This tooltip uses a custom green background"
-        style="--bs-tooltip-bg: #198754; --bs-tooltip-color: #fff;"
+        style="--psk-tooltip-bg: #198754; --psk-tooltip-color: #fff;"
       >
         Custom green tooltip
       </button>
@@ -102,7 +102,7 @@ export const CustomColor = {
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         title="This tooltip uses a custom red background"
-        style="--bs-tooltip-bg: #dc3545; --bs-tooltip-color: #fff;"
+        style="--psk-tooltip-bg: #dc3545; --psk-tooltip-color: #fff;"
       >
         Custom red tooltip
       </button>
@@ -113,7 +113,7 @@ export const CustomColor = {
         data-bs-toggle="tooltip"
         data-bs-placement="top"
         title="This tooltip uses a custom dark text"
-        style="--bs-tooltip-bg: #ffc107; --bs-tooltip-color: #000;"
+        style="--psk-tooltip-bg: #ffc107; --psk-tooltip-color: #000;"
       >
         Custom warning tooltip
       </button>

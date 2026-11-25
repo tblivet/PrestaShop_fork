@@ -67,7 +67,7 @@ export const SpacingScale = {
               <td><code class="small">${px}px</code></td>
               <td><code class="small">${remApprox}rem</code></td>
               <td>
-                <div style="height:8px;width:${maxPx > 0 ? Math.round((px / maxPx) * 240) : 2}px;min-width:${px > 0 ? 4 : 2}px;background:var(--bs-primary)"></div>
+                <div style="height:8px;width:${maxPx > 0 ? Math.round((px / maxPx) * 240) : 2}px;min-width:${px > 0 ? 4 : 2}px;background:var(--psk-primary)"></div>
               </td>
               <td class="small"><code>m-${n} p-${n} gap-${n} mb-${n}</code></td>
             </tr>`
@@ -85,7 +85,7 @@ export const SpacingScale = {
           <div>
             <div
               class="bg-primary-subtle border border-primary-subtle"
-              style="display:inline-block;padding:var(--bs-spacer, 1rem);padding:0"
+              style="display:inline-block;padding:var(--psk-spacer, 1rem);padding:0"
             >
               <div class="bg-primary p-${n}" style="min-width:40px;min-height:40px"></div>
             </div>

@@ -83,14 +83,14 @@ export const Custom = {
         <tbody>
           <tr>
             <td class="fw-semibold small">base</td>
-            ${paletteColors.map((c) => `<td style="height:40px;border-bottom:3px solid var(--bs-${c}-500)"><span style="font-size:.65rem">.border-${c}</span></td>`).join('')}
+            ${paletteColors.map((c) => `<td style="height:40px;border-bottom:3px solid var(--psk-${c}-500)"><span style="font-size:.65rem">.border-${c}</span></td>`).join('')}
           </tr>
           ${paletteSteps
             .map(
               (step) => `
             <tr>
               <td class="fw-semibold small">${step}</td>
-              ${paletteColors.map((c) => `<td style="height:40px;border-bottom:3px solid var(--bs-${c}-${step})"><span style="font-size:.65rem">.border-${c}-${step}</span></td>`).join('')}
+              ${paletteColors.map((c) => `<td style="height:40px;border-bottom:3px solid var(--psk-${c}-${step})"><span style="font-size:.65rem">.border-${c}-${step}</span></td>`).join('')}
             </tr>`
             )
             .join('')}
@@ -108,27 +108,14 @@ export const Width = {
   `,
 };
 
+// Corners are square (radius tokens 0, Design Tokens/Borders): only the circle and the pill are round
 export const Radius = {
   render: () => `
+    <p class="small text-body-secondary">Square corners: <code>.rounded</code>, <code>.rounded-{side}</code> and <code>.rounded-{1…5}</code> are 0. Only <code>.rounded-circle</code> (avatars) and <code>.rounded-pill</code> (pill badges, counters) are round.</p>
     <div class="d-flex flex-wrap gap-3 align-items-center">
       <div class="bg-primary rounded" style="width:80px;height:80px"></div>
-      <div class="bg-secondary rounded-top" style="width:80px;height:80px"></div>
-      <div class="bg-success rounded-end" style="width:80px;height:80px"></div>
-      <div class="bg-danger rounded-bottom" style="width:80px;height:80px"></div>
-      <div class="bg-warning rounded-start" style="width:80px;height:80px"></div>
       <div class="bg-info rounded-circle" style="width:80px;height:80px"></div>
       <div class="bg-dark rounded-pill" style="width:120px;height:60px"></div>
-      <div class="bg-primary rounded-0" style="width:80px;height:80px"></div>
-    </div>
-  `,
-};
-
-export const RadiusSize = {
-  render: () => `
-    <div class="d-flex flex-wrap gap-3 align-items-center">
-      ${[0, 1, 2, 3, 4, 5].map((s) => `<div class="bg-primary rounded-${s}" style="width:80px;height:80px;display:inline-block"></div>`).join('')}
-      <div class="bg-secondary rounded-circle" style="width:80px;height:80px;display:inline-block"></div>
-      <div class="bg-success rounded-pill" style="width:120px;height:60px;display:inline-block"></div>
     </div>
   `,
 };

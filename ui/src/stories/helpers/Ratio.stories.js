@@ -29,8 +29,8 @@ export const AllRatios = {
 
 export const CustomRatio = {
   render: () => `
-    <p class="text-body-secondary small mb-3">Custom ratio via <code>--bs-aspect-ratio</code> CSS variable.</p>
-    <div class="ratio bg-body-secondary border rounded" style="--bs-aspect-ratio:75%;max-width:240px;">
+    <p class="text-body-secondary small mb-3">Custom ratio via <code>--psk-aspect-ratio</code> CSS variable.</p>
+    <div class="ratio bg-body-secondary border rounded" style="--psk-aspect-ratio:75%;max-width:240px;">
       <div class="d-flex align-items-center justify-content-center text-body-secondary small">4×3 custom (75%)</div>
     </div>
   `,

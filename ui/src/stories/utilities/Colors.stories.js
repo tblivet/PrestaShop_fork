@@ -3,6 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // https://getbootstrap.com/docs/5.3/utilities/colors/
+import { inkOn, token } from '../design-tokens/color-swatch';
 
 export default {
   title: 'Utilities/Colors',
@@ -31,8 +32,8 @@ export const ColorPalette = {
               ${colorFamilies
                 .map(
                   (color) => `
-                <td style="background-color:var(--bs-${color}-${step});height:48px">
-                  <span class="${step >= 500 ? 'text-white' : 'text-dark'}" style="opacity:.75;font-size:.7rem">${step}</span>
+                <td style="background-color:var(${token(`${color}-${step}`)});height:48px">
+                  <span style="color:${inkOn(`var(${token(`${color}-${step}`)})`)};font-size:.7rem">${step}</span>
                 </td>`
                 )
                 .join('')}
@@ -76,7 +77,7 @@ const nativeTextBgColors = ['primary', 'secondary', 'success', 'danger', 'warnin
 export const TextColors = {
   render: () => `
     <div>
-      ${nativeTextColors.map((c) => `<p class="text-${c}${c === 'white' ? ' bg-dark p-1' : ''}">.text-${c}</p>`).join('')}
+      ${nativeTextColors.map((c) => `<p class="text-${c}${c === 'white' || c === 'light' ? ' bg-dark p-1' : ''}">.text-${c}</p>`).join('')}
     </div>
   `,
 };
@@ -87,7 +88,7 @@ export const TextBg = {
       ${nativeTextBgColors
         .map(
           (c) => `
-        <div class="p-3 text-bg-${c} rounded border" style="min-width:140px">
+        <div class="p-3 text-bg-${c} border" style="min-width:140px">
           <small>.text-bg-${c}</small>
         </div>
       `
@@ -136,7 +137,7 @@ export const Custom = {
 export const LinkColors = {
   render: () => `
     <div>
-      ${['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'body-emphasis'].map((c) => `<p><a href="#" class="link-${c}${c === 'light' ? ' bg-dark p-1 rounded' : ''}">.link-${c}</a></p>`).join('')}
+      ${['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'body-emphasis'].map((c) => `<p><a href="#" class="link-${c}${c === 'light' ? ' bg-dark p-1' : ''}">.link-${c}</a></p>`).join('')}
     </div>
   `,
 };

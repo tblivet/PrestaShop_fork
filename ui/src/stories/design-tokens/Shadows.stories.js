@@ -14,25 +14,25 @@ export default {
 
 const shadows = [
   {
-    varName: '--bs-box-shadow-sm',
+    varName: '--psk-box-shadow-sm',
     utilityClass: '.shadow-sm',
     label: 'Small',
     usage: 'Subtle lift — inline cards, tags, small surfaces',
   },
   {
-    varName: '--bs-box-shadow',
+    varName: '--psk-box-shadow',
     utilityClass: '.shadow',
     label: 'Default',
     usage: 'Standard elevation — dropdowns, popovers, cards',
   },
   {
-    varName: '--bs-box-shadow-lg',
+    varName: '--psk-box-shadow-lg',
     utilityClass: '.shadow-lg',
     label: 'Large',
     usage: 'High elevation — modals, drawers, large overlays',
   },
   {
-    varName: '--bs-box-shadow-inset',
+    varName: '--psk-box-shadow-inset',
     utilityClass: '.shadow-none',
     label: 'Inset',
     usage: 'Pressed / sunken state — inputs on focus, well surfaces',
@@ -44,7 +44,7 @@ export const BoxShadows = {
   render: () => `
     <p class="text-body-secondary small mb-4">
       Bootstrap's four box shadow CSS variables. Use
-      <code>var(--bs-box-shadow)</code> etc. in custom component SCSS, or apply
+      <code>var(--psk-box-shadow)</code> etc. in custom component SCSS, or apply
       the utility classes directly. The <code>inset</code> variant has no
       dedicated utility class — set it via the CSS variable.
     </p>
@@ -56,7 +56,7 @@ export const BoxShadows = {
         <div class="text-center">
           <div
             class="bg-body d-flex align-items-center justify-content-center"
-            style="width:140px;height:90px;box-shadow:var(${varName});border:1px solid var(--bs-border-color)"
+            style="width:140px;height:90px;box-shadow:var(${varName});border:1px solid var(--psk-border-color)"
           ></div>
           <code class="small d-block mt-2">${label}</code>
         </div>`
