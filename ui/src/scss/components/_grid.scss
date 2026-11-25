@@ -5,10 +5,22 @@
 
 // <twig:ui:Grid> (Admin/Component/Ui/grid.html.twig, its cells in Component/Ui/Grid/cell): Bootstrap's card and table.
 // The header's title and count, the toolbar, the results summary, the table scrolling in its own box (ps-scroll-fade)
-// with its sort links and its row of filters, small fields there; the pages and rows per page in the footer.
+// with its sort links and its row of filters, small fields there; the pages and rows per page in the footer. The list's
+// actions in the header, a row's in its actions cell; the SQL query modal.
 $component-name: ps-grid;
 
 .#{$component-name} {
+  &__header {
+    display: flex;
+    gap: map-get($spacers, 2);
+    align-items: center;
+  }
+
+  // At the end even when the title is for screen readers only
+  &__list-actions {
+    margin-inline-start: auto;
+  }
+
   &__title {
     display: flex;
     flex-wrap: wrap;
@@ -204,5 +216,22 @@ $component-name: ps-grid;
   &__links {
     display: inline-flex;
     gap: map-get($spacers, 1);
+  }
+
+  // As narrow as its buttons
+  &__cell--action {
+    width: 1%;
+    white-space: nowrap;
+  }
+
+  &__actions {
+    display: inline-flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
+  }
+
+  &__query-text {
+    font-family: $font-family-monospace;
+    font-size: $font-size-sm;
   }
 }

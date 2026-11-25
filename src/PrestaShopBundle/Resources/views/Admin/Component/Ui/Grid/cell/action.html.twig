@@ -1,0 +1,21 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- A row's actions (Grid::rowActions()): icon buttons, then the others in a menu; each described by the row's header, so
+    "Delete" is heard with its order. None that applies: an empty cell -#}
+{%- set actions = component.rowActions(record, column) -%}
+{%- if actions.buttons is not empty or actions.menu is not empty -%}
+  <div class="ps-grid__actions">
+    {%- for action in actions.buttons -%}
+      <twig:ui:IconButton :icon="action.icon" :label="action.label" variant="link" size="sm" tooltip :aria-describedby="rowHeaderId" {{ ...action.props }}/>
+    {%- endfor -%}
+    {%- if actions.menu is not empty -%}
+      {#- Fixed: the table scrolls in its own box, the menu is not cut by it -#}
+      <div class="dropdown">
+        <twig:ui:IconButton icon="more_vert" :label="'More actions'|trans({}, 'Admin.Global')" variant="link" size="sm" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config='{"strategy":"fixed"}' :aria-describedby="rowHeaderId"/>
+        <twig:ui:DropdownMenu align="end" :items="actions.menu"/>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

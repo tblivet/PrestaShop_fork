@@ -51,9 +51,9 @@ export default {
         component: [
           '**Twig usage**: a list page renders the grid its controller presents (`GridPresenter::present()`), as it is: `<twig:ui:Grid :grid="orderGrid"/>`; inside a card of a view page: `<twig:ui:Grid :grid="customerOrdersGrid" embedded :headingLevel="3"/>`. Blocks: `before` (above the toolbar), `toolbar` (beside Search), `empty` (the page\'s EmptyState when there is nothing yet), `footer` (after the pages: Back to list). The design: `ui/.ai/designs/grid.md`.',
           '**Props**: `grid` (required: the presented grid), `embedded` (default `false`: in another card, no card and no visible header; its title is for screen readers only), `headingLevel` (2 to 6, default 2: the level of the grid\'s title, visible or not, after the page head\'s h1; its empty states\' titles are one level under). Other attributes (`data-ps-*`, `aria-*`) go on the `<section>`.',
-          '**Behaviour**: sorting, pages and rows per page are links on the current URL with the grid\'s prefix (`order[orderBy]`, `order[offset]`…), Search submits the filter form, Clear filters posts the reset; each lands on the results summary (`#order_grid_results`), focused after the reload. In these stories the links and the form only change the address.',
+          '**Behaviour**: sorting, pages and rows per page are links on the current URL with the grid\'s prefix (`order[orderBy]`, `order[offset]`…), Search submits the filter form, Clear filters posts the reset; each lands on the results summary (`#order_grid_results`), focused after the reload. The list\'s actions (export, refresh, SQL query) are a menu in the header; a row\'s actions are icon buttons (those with `use_inline_display`, then the first other one) and a More actions menu, a submit one sending the hidden action form (`_method` for DELETE) after its confirmation. In these stories the links and the form only change the address.',
           '**Do**: the presented grid as the controller gives it; the page\'s own empty state in `empty`. **Don\'t**: a grid built by hand, per-page behaviour options, a grid in a grid.',
-          '**States**: a list (sorted, filters, pages), filtered, no match, nothing yet, one page, embedded, every block, a hidden title and centred column.',
+          '**States**: a list (sorted, filters, pages, row and list actions), filtered, no match, nothing yet, one page, embedded, every block, a hidden title and centred column.',
         ].join('\n\n'),
       },
     },
@@ -93,4 +93,4 @@ export const HiddenTitleCentredColumn = ordersStory({
   columns: orderGrid.columns.map((column) => (column.id === 'new' ? { ...column, options: { ...column.options, alignment: 'center' } } : column)),
   records_total: 3,
   pagination: { offset: 0, limit: 50 },
-}, {}, '`display_name: false` in the definition: no header band, the title for screen readers only. A column with `alignment: center`.');
+}, {}, '`display_name: false` in the definition: the title for screen readers only, the header band kept for the list\'s actions (without any, no band). A column with `alignment: center`.');

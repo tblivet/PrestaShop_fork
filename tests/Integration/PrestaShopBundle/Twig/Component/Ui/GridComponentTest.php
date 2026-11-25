@@ -168,10 +168,66 @@ class GridComponentTest extends KernelTestCase
 
     public function testATitleNotShownIsForScreenReadersWithoutAHeaderBand(): void
     {
-        $html = $this->render(['view_options' => ['display_name' => false]]);
+        $html = $this->render(['view_options' => ['display_name' => false], 'grid_actions' => []]);
 
         $this->assertStringContainsString('<h2 id="order_grid_title" class="visually-hidden">Orders</h2>', $html);
         $this->assertStringNotContainsString('ps-grid__header', $html);
+    }
+
+    public function testATitleNotShownKeepsTheBandForTheListActions(): void
+    {
+        $html = $this->render(['view_options' => ['display_name' => false]]);
+
+        $this->assertMatchesRegularExpression('#<header class="ps-grid__header card-header">\s*<h2 id="order_grid_title" class="ps-grid__title visually-hidden">Orders #', $html);
+        $this->assertStringContainsString('ps-grid__list-actions', $html);
+    }
+
+    public function testTheListActionsAreAMenuInTheHeader(): void
+    {
+        $html = $this->render();
+
+        $this->assertStringContainsString('aria-label="List actions" id="order-grid-actions-button" data-bs-toggle="dropdown" aria-expanded="false"', $html);
+        $this->assertMatchesRegularExpression('#<a class="dropdown-item ps-dropdown-menu__item" href="/sell/orders/">.*?Export</span></a>#', $html);
+        $this->assertMatchesRegularExpression('#<a class="dropdown-item ps-dropdown-menu__item" href="\?\#order_grid_results">.*?Refresh list</span></a>#', $html);
+        $this->assertStringContainsString('<button type="button" class="dropdown-item ps-dropdown-menu__item" data-bs-toggle="modal" data-bs-target="#order_grid_common_show_query_modal">', $html);
+        $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_common_show_query_modal_form">', $html);
+    }
+
+    public function testTheQueryModalSendsTheQueryToTheSqlManager(): void
+    {
+        $html = $this->render();
+
+        $this->assertStringContainsString('id="order_grid_common_show_query_modal"', $html);
+        $this->assertMatchesRegularExpression('#<form id="order_common_show_query_modal_form" class="ps-grid__query" method="post" action="[^"]*">#', $html);
+        $this->assertStringContainsString('<label class="form-label" for="order_grid_query">SQL query</label>', $html);
+        $this->assertStringContainsString('id="order_grid_query" name="sql" rows="10" readonly>SELECT o.id_order, o.reference FROM ps_orders o ORDER BY o.date_add DESC LIMIT 50, 50</textarea>', $html);
+        $this->assertStringContainsString('<input type="hidden" name="name" value="Orders">', $html);
+        $this->assertMatchesRegularExpression('#<button class="btn btn-primary ps-button" type="submit"[^>]* form="order_common_show_query_modal_form">#', $html);
+    }
+
+    public function testNoQueryModalWithoutAQueryAction(): void
+    {
+        $html = $this->render(['grid_actions' => []]);
+
+        $this->assertStringNotContainsString('_common_show_query_modal', $html);
+        $this->assertStringNotContainsString('ps-grid__list-actions', $html);
+    }
+
+    public function testARowShowsItsFirstActionsAsButtonsAndTheRestInAMenu(): void
+    {
+        $html = $this->render();
+
+        $this->assertStringContainsString('<a class="btn btn-link btn-sm ps-button ps-icon-button" href="/sell/orders/1024/view" aria-label="View" data-bs-toggle="tooltip" data-bs-title="View" aria-describedby="order_grid_rowhead_1">', $html);
+        $this->assertStringContainsString('<a class="btn btn-link btn-sm ps-button ps-icon-button" href="/sell/orders/?orderId=1024" aria-label="Download the invoice"', $html);
+        $this->assertStringContainsString('aria-label="More actions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="order_grid_rowhead_1"', $html);
+    }
+
+    public function testARowSubmitActionSendsTheActionFormWithItsMethod(): void
+    {
+        $html = $this->render();
+
+        $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_grid_action_form" formaction="/sell/orders/?orderId=1024" formmethod="post" name="_method" value="DELETE" data-ps-confirm="Delete this order? This cannot be undone." data-ps-data-confirm-title="Delete order?" data-ps-data-confirm-label="Delete" data-ps-data-confirm-variant="danger">', $html);
+        $this->assertStringContainsString('<form id="order_grid_action_form" method="post" hidden></form>', $html);
     }
 
     public function testEachRowHasACheckNamedWithItsHeader(): void

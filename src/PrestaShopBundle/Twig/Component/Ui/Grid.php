@@ -220,7 +220,7 @@ final class Grid
     }
 
     /**
-     * The filter fields of a column
+     * The filter fields of a column, but search and reset (the actions column's): the toolbar renders it
      *
      * @return FormView[]
      */
@@ -231,7 +231,7 @@ final class Grid
         return array_values(array_filter(array_map(
             fn (string $name): ?FormView => $form->children[$name] ?? null,
             $this->grid['column_filters'][$columnId] ?? []
-        )));
+        ), fn (?FormView $field): bool => null !== $field && !in_array('search_and_reset', $field->vars['block_prefixes'] ?? [], true)));
     }
 
     public function hasFilters(): bool
@@ -322,6 +322,102 @@ final class Grid
         }
 
         return $items;
+    }
+
+    /**
+     * The grid actions as <twig:ui:DropdownMenu> items, for the header's menu: a link goes to its route; Refresh list is
+     * the current page again; Show SQL query opens the grid's query modal, Export to SQL Manager sends its form; another
+     * simple action is a button for the page (data-ps-action="grid-action"). Submit actions are not on kit grids yet.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getGridItems(): array
+    {
+        $items = [];
+        foreach ($this->grid['actions']['grid'] as $action) {
+            $item = ['label' => (string) $action['name'], 'icon' => $this->icon($action['icon'] ?? null)];
+
+            if ('link' === $action['type']) {
+                $items[] = $item + ['type' => 'link', 'href' => $this->router->generate($action['options']['route'], $action['options']['route_params'] ?? [])];
+            } elseif ('simple' === $action['type']) {
+                $items[] = $item + match ($action['id']) {
+                    'common_refresh_list' => ['type' => 'link', 'href' => $this->url([])],
+                    'common_show_query' => ['type' => 'button', 'attr' => ['data-bs-toggle' => 'modal', 'data-bs-target' => '#' . $this->grid['id'] . '_grid_common_show_query_modal']],
+                    'common_export_sql_manager' => ['type' => 'submit', 'attr' => ['form' => $this->grid['id'] . '_common_show_query_modal_form']],
+                    default => ['type' => 'button', 'attr' => ['class' => 'js-' . $action['id'] . '-grid-action', 'data-ps-action' => 'grid-action', 'data-ps-data-action-id' => (string) $action['id']]],
+                };
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * The SQL query modal is rendered when an action shows or exports the query
+     */
+    public function hasQueryModal(): bool
+    {
+        return [] !== array_intersect(['common_show_query', 'common_export_sql_manager'], array_column($this->grid['actions']['grid'], 'id'));
+    }
+
+    /**
+     * A row's actions that apply to it, as the old grids split them: those with use_inline_display, then the first other
+     * one, as icon buttons (props for <twig:ui:IconButton>); the rest in its menu (<twig:ui:DropdownMenu> items). An
+     * action whose icon the kit has not goes to the menu. A link goes to its route; a submit sends the grid's action form
+     * with _method for a DELETE (method override); both ask first with their confirm message.
+     *
+     * @return array{buttons: list<array<string, mixed>>, menu: list<array<string, mixed>>}
+     */
+    public function rowActions(array $record, array $column): array
+    {
+        $buttons = [];
+        $menu = [];
+        $firstRegular = true;
+
+        foreach ($column['options']['actions'] ?? [] as $action) {
+            if (!$action->isApplicable($record) || !in_array($action->getType(), ['link', 'submit'], true)) {
+                continue;
+            }
+            $options = $action->getOptions();
+            $icon = $this->icon($action->getIcon());
+            $label = (string) $action->getName();
+            $parameters = [$options['route_param_name'] => $record[$options['route_param_field']] ?? null];
+            foreach ($options['extra_route_params'] ?? [] as $name => $field) {
+                $parameters[$name] = $record[$field] ?? $field;
+            }
+            $url = $this->router->generate($options['route'], $parameters);
+            $confirm = $this->confirmAttributes([
+                'confirm_message' => 'dynamic' === ($options['confirm_message_type'] ?? null) && !empty($record[$options['dynamic_message_field'] ?? ''])
+                    ? $record[$options['dynamic_message_field']]
+                    : ($options['confirm_message'] ?? null),
+                'modal_options' => $options['modal_options'] ?? null,
+            ]);
+
+            if ('link' === $action->getType()) {
+                $attributes = $confirm + (empty($options['target']) ? [] : ['target' => (string) $options['target']]);
+                $asButton = ['href' => $url] + $attributes;
+                $asItem = ['type' => 'link', 'label' => $label, 'icon' => $icon, 'href' => $url, 'attr' => $attributes];
+            } else {
+                $method = strtoupper($options['method'] ?? 'POST');
+                $attributes = ['form' => $this->grid['id'] . '_grid_action_form', 'formaction' => $url, 'formmethod' => 'GET' === $method ? 'get' : 'post']
+                    + (in_array($method, ['GET', 'POST'], true) ? [] : ['name' => '_method', 'value' => $method])
+                    + $confirm;
+                $asButton = ['type' => 'submit'] + $attributes;
+                $asItem = ['type' => 'submit', 'label' => $label, 'icon' => $icon, 'attr' => $attributes];
+            }
+
+            $shown = null !== $icon && (($options['use_inline_display'] ?? false) || $firstRegular);
+            if (!($options['use_inline_display'] ?? false)) {
+                $firstRegular = false;
+            }
+            if ($shown) {
+                $buttons[] = ['icon' => $icon, 'label' => $label, 'props' => $asButton];
+            } else {
+                $menu[] = $asItem;
+            }
+        }
+
+        return ['buttons' => $buttons, 'menu' => $menu];
     }
 
     /**

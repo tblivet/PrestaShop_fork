@@ -8,19 +8,27 @@
 import arrowDownward from '../../icons/material-symbols/arrow-downward.svg?raw';
 import arrowUpward from '../../icons/material-symbols/arrow-upward.svg?raw';
 import cancel from '../../icons/material-symbols/cancel.svg?raw';
+import cloudDownload from '../../icons/material-symbols/cloud-download.svg?raw';
+import code from '../../icons/material-symbols/code.svg?raw';
 import deleteIcon from '../../icons/material-symbols/delete.svg?raw';
 import keyboardArrowDown from '../../icons/material-symbols/keyboard-arrow-down.svg?raw';
 import openInNew from '../../icons/material-symbols/open-in-new.svg?raw';
 import checkCircle from '../../icons/material-symbols/check-circle.svg?raw';
 import inbox from '../../icons/material-symbols/inbox.svg?raw';
 import keyboardArrowUp from '../../icons/material-symbols/keyboard-arrow-up.svg?raw';
+import moreVert from '../../icons/material-symbols/more-vert.svg?raw';
+import print from '../../icons/material-symbols/print.svg?raw';
+import refresh from '../../icons/material-symbols/refresh.svg?raw';
 import search from '../../icons/material-symbols/search.svg?raw';
 import searchOff from '../../icons/material-symbols/search-off.svg?raw';
+import settings from '../../icons/material-symbols/settings.svg?raw';
+import storage from '../../icons/material-symbols/storage.svg?raw';
 import unfoldMore from '../../icons/material-symbols/unfold-more.svg?raw';
 import badge from './badge';
 import check from './check';
 import dropdownMenu from './dropdown-menu';
 import emptyState from './empty-state';
+import modal from './modal';
 import pagination from './pagination';
 import uiIcon from './ui-icon';
 import { clusterClasses } from './layouts/layout-classes';
@@ -32,6 +40,13 @@ export const GRID_DEFAULTS = { embedded: false, headingLevel: 2 };
 const LIMITS = [10, 20, 50, 100, 300, 1000];
 
 const ALIGNMENTS = { right: 'end', center: 'center' };
+
+// The icons of the fixtures' actions, by their kit name (Grid::icon(): zoom_in is search)
+const ICONS = {
+  cloud_download: cloudDownload, code, delete: deleteIcon, open_in_new: openInNew, print, refresh, search, settings, storage,
+};
+const ICON_ALIASES = { zoom_in: 'search' };
+const kitIcon = (name) => (name ? ICON_ALIASES[name] ?? name : null);
 
 // Grid::inkOn(): the text that reads best on a record's colour, dark ($gray-800) or light, by their WCAG contrast
 const luminance = (hex) => {
@@ -102,6 +117,94 @@ const filterField = (grid, filter, column) => {
   return `<label class="visually-hidden form-label" for="${id}">${escape(column.name)}</label><input type="text" id="${id}" name="${name}"${value ? ` value="${escape(value)}"` : ''} class="form-control-sm form-control">`;
 };
 
+// A <twig:ui:IconButton>: a link with href, else a button
+const iconButton = ({
+  icon, label, size = null, tooltip = false, attributes = {},
+}) => {
+  const { href, type = 'button', ...rest } = attributes;
+  const classes = `btn btn-link${size ? ` btn-${size}` : ''} ps-button ps-icon-button`;
+  const tip = tooltip ? ` data-bs-toggle="tooltip" data-bs-title="${escape(label)}"` : '';
+  const extra = Object.entries(rest).map(([name, value]) => ` ${name}="${value}"`).join('');
+  const svg = uiIcon(icon === 'more_vert' ? moreVert : ICONS[icon], { size: 'lg' });
+
+  return href
+    ? `<a class="${classes}" href="${href}" aria-label="${escape(label)}"${tip}${extra}>${svg}</a>`
+    : `<button class="${classes}" type="${type}" data-ps-data-busy-label="Loading..." aria-label="${escape(label)}"${tip}${extra}>${svg}</button>`;
+};
+
+// Grid::confirmAttributes(): what the page's ConfirmDialog asks with
+const confirmAttributes = (message, modalOptions = {}) => (message ? Object.fromEntries(Object.entries({
+  'data-ps-confirm': message,
+  'data-ps-data-confirm-title': modalOptions.title ?? '',
+  'data-ps-data-confirm-label': modalOptions.confirm_button_label ?? '',
+  'data-ps-data-confirm-variant': (modalOptions.confirm_button_class ?? '').includes('danger') ? 'danger' : '',
+}).filter(([, value]) => value !== '')) : {});
+
+// Grid::rowActions(): inline ones and the first other one as buttons, the rest in the menu (the fixture's url is what the
+// router gives the route, {field} the record's)
+const rowActions = (grid, record, column) => {
+  const buttons = [];
+  const menu = [];
+  let firstRegular = true;
+
+  column.options.actions.forEach((action) => {
+    const { options } = action;
+    const icon = kitIcon(action.icon);
+    const href = action.url.replace(/\{(\w+)\}/g, (match, field) => record[field]);
+    const confirm = confirmAttributes(options.confirm_message, options.modal_options);
+    let asButton;
+    let asItem;
+
+    if (action.type === 'link') {
+      const attributes = { ...confirm, ...(options.target ? { target: options.target } : {}) };
+      asButton = { href, ...attributes };
+      asItem = {
+        type: 'link', label: action.name, icon, href, attr: attributes,
+      };
+    } else {
+      const method = (options.method ?? 'POST').toUpperCase();
+      const attributes = {
+        form: `${grid.id}_grid_action_form`, formaction: href, formmethod: method === 'GET' ? 'get' : 'post', ...(['GET', 'POST'].includes(method) ? {} : { name: '_method', value: method }), ...confirm,
+      };
+      asButton = { type: 'submit', ...attributes };
+      asItem = {
+        type: 'submit', label: action.name, icon, attr: attributes,
+      };
+    }
+
+    const inline = options.use_inline_display ?? false;
+    const shown = icon !== null && (inline || firstRegular);
+    if (!inline) {
+      firstRegular = false;
+    }
+    if (shown) {
+      buttons.push({ icon, label: action.name, props: asButton });
+    } else {
+      menu.push(asItem);
+    }
+  });
+
+  return { buttons, menu };
+};
+
+// Grid::getGridItems(): the list's actions, as menu items
+const gridItems = (fixture) => (fixture.grid_actions ?? []).map((action) => {
+  const item = { label: action.name, icon: kitIcon(action.icon) };
+
+  if (action.type === 'link') {
+    return { ...item, type: 'link', href: action.url };
+  }
+
+  return {
+    ...item,
+    ...({
+      common_refresh_list: { type: 'link', href: url(fixture, {}) },
+      common_show_query: { type: 'button', attr: { 'data-bs-toggle': 'modal', 'data-bs-target': `#${fixture.id}_grid_common_show_query_modal` } },
+      common_export_sql_manager: { type: 'submit', attr: { form: `${fixture.id}_common_show_query_modal_form` } },
+    }[action.id] ?? { type: 'button', attr: { class: `js-${action.id}-grid-action`, 'data-ps-action': 'grid-action', 'data-ps-data-action-id': action.id } }),
+  };
+});
+
 // Grid/cell/{type}.html.twig
 const cell = (grid, column, record, rowHeaderId) => {
   const { options } = column;
@@ -150,6 +253,21 @@ const cell = (grid, column, record, rowHeaderId) => {
 
       return value ? `<time datetime="${date(value, 'Y-m-d\\TH:i:s')}">${date(value, options.format)}</time>` : escape(options.empty_data ?? '');
     }
+    case 'action': {
+      const { buttons, menu } = rowActions(grid, record, column);
+      if (!buttons.length && !menu.length) {
+        return '';
+      }
+      const more = menu.length
+        ? `<div class="dropdown">${iconButton({
+          icon: 'more_vert', label: 'More actions', size: 'sm', attributes: { 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false', 'data-bs-popper-config': '{&quot;strategy&quot;:&quot;fixed&quot;}', 'aria-describedby': rowHeaderId },
+        })}${dropdownMenu({ items: menu, align: 'end' }, ICONS)}</div>`
+        : '';
+
+      return `<div class="ps-grid__actions">${buttons.map((action) => iconButton({
+        icon: action.icon, label: action.label, size: 'sm', tooltip: true, attributes: { ...action.props, 'aria-describedby': rowHeaderId },
+      })).join('')}${more}</div>`;
+    }
     default:
       return escape(record[options.field] ?? '');
   }
@@ -161,13 +279,7 @@ const bulkItems = (fixture) => (fixture.bulk_actions ?? []).map((action) => {
   const item = { label: action.name, icon: action.icon };
 
   if (action.type === 'submit') {
-    const modal = options.modal_options ?? {};
-    const confirm = options.confirm_message ? Object.fromEntries(Object.entries({
-      'data-ps-confirm': options.confirm_message,
-      'data-ps-data-confirm-title': modal.title ?? '',
-      'data-ps-data-confirm-label': modal.confirm_button_label ?? '',
-      'data-ps-data-confirm-variant': (modal.confirm_button_class ?? '').includes('danger') ? 'danger' : '',
-    }).filter(([, value]) => value !== '')) : {};
+    const confirm = confirmAttributes(options.confirm_message, options.modal_options);
 
     return {
       ...item,
@@ -224,9 +336,16 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
   const subLevel = Math.min(headingLevel + 1, 6);
 
   const resultsWord = total === 1 ? 'result' : 'results';
-  const header = embedded || fixture.view_options.display_name === false
+  const listItems = gridItems(fixture);
+  const hideName = fixture.view_options.display_name === false;
+  const listActions = listItems.length
+    ? `<div class="dropdown ps-grid__list-actions">${iconButton({
+      icon: 'settings', label: 'List actions', attributes: { id: `${id}-grid-actions-button`, 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false' },
+    })}${dropdownMenu({ items: listItems, align: 'end' }, ICONS)}</div>`
+    : '';
+  const header = embedded || (hideName && !listItems.length)
     ? `<h${headingLevel} id="${id}_grid_title" class="visually-hidden">${escape(fixture.name)}</h${headingLevel}>`
-    : `<header class="ps-grid__header card-header"><h${headingLevel} id="${id}_grid_title" class="ps-grid__title">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'secondary', pill: true }).html}</h${headingLevel}></header>`;
+    : `<header class="ps-grid__header card-header"><h${headingLevel} id="${id}_grid_title" class="ps-grid__title${hideName ? ' visually-hidden' : ''}">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'secondary', pill: true }).html}</h${headingLevel}>${listActions}</header>`;
 
   let body;
 
@@ -241,7 +360,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     const items = state === 'list' ? bulkItems(fixture) : [];
     const bulk = items.length
       ? '<div class="ps-grid__bulk"><div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-outline-secondary ps-button" type="button" data-ps-data-busy-label="Loading..." disabled data-bs-toggle="dropdown" aria-expanded="false">'
-        + `<span class="ps-button__label">Bulk actions</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items }, { open_in_new: openInNew, delete: deleteIcon })}</div>`
+        + `<span class="ps-button__label">Bulk actions</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items }, ICONS)}</div>`
         + '<p class="ps-grid__selection" role="status" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p></div>'
       : '';
     const toolbar = searchCluster || bulk || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${searchCluster}</div>` : '';
@@ -292,7 +411,8 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     body = `${toolbar}${summary}<form name="${id}" method="post" action="${fixture.action}#${id}_grid_results" id="${id}_filter_form" class="ps-grid__form" novalidate="novalidate" data-ps-action="validate">`
       + `<div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="${escape(fixture.name)} table">`
       + `<table id="${id}_grid_table" class="ps-grid__table table" aria-describedby="${id}_grid_results"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
-      + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`;
+      + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`
+      + `<form id="${id}_grid_action_form" method="post" hidden></form>`;
   }
 
   const paginated = state !== 'empty' && (total > 10 || offset > 0);
@@ -323,8 +443,26 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     .map((name) => `  <twig:block name="${name}">\n${blocks[name].twig.split('\n').map((line) => `    ${line}`).join('\n')}\n  </twig:block>`);
   const props = `${embedded ? ' embedded' : ''}${headingLevel !== 2 ? ` :headingLevel="${headingLevel}"` : ''}`;
 
+  const queryFormId = `${id}_common_show_query_modal_form`;
+  const queryModal = listItems.some((item) => item.attr?.form === queryFormId || item.attr?.['data-bs-target'] === `#${id}_grid_common_show_query_modal`)
+    ? modal({
+      id: `${id}_grid_common_show_query_modal`,
+      title: 'SQL query',
+      size: 'lg',
+      body: {
+        html: `<form id="${queryFormId}" class="ps-grid__query" method="post" action="/configure/advanced/sql-requests/new"><label class="form-label" for="${id}_grid_query">SQL query</label>`
+          + `<textarea class="form-control ps-grid__query-text" id="${id}_grid_query" name="sql" rows="10" readonly>${escape(fixture.query ?? '')}</textarea><input type="hidden" name="name" value="${escape(fixture.name)}"></form>`,
+        twig: '',
+      },
+      footer: [
+        { html: '<button class="btn btn-link ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-dismiss="modal">Cancel</button>', twig: '' },
+        { html: `<button class="btn btn-primary ps-button" type="submit" data-ps-data-busy-label="Loading..." form="${queryFormId}">Export to SQL Manager</button>`, twig: '' },
+      ],
+    }).html
+    : '';
+
   return {
-    html: `<section id="${id}_grid_panel" class="ps-grid ${embedded ? 'ps-grid--embedded' : 'card'}" data-ps-ref="grid" data-ps-data-grid-id="${id}" aria-labelledby="${id}_grid_title">${header}<div id="${id}_grid" class="ps-grid__body${embedded ? '' : ' card-body'}">${block('before')}${body}</div>${footer}</section>`,
+    html: `<section id="${id}_grid_panel" class="ps-grid ${embedded ? 'ps-grid--embedded' : 'card'}" data-ps-ref="grid" data-ps-data-grid-id="${id}" aria-labelledby="${id}_grid_title">${header}<div id="${id}_grid" class="ps-grid__body${embedded ? '' : ' card-body'}">${block('before')}${body}</div>${footer}${queryModal}</section>`,
     twig: blockTwig.length
       ? `<twig:ui:Grid :grid="${fixture.variable}"${props}>\n${blockTwig.join('\n')}\n</twig:ui:Grid>`
       : `<twig:ui:Grid :grid="${fixture.variable}"${props}/>`,

@@ -10,6 +10,11 @@ namespace Tests\Unit\PrestaShopBundle\Twig\Component\Ui;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShopBundle\Twig\Component\Ui\Grid;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
@@ -135,6 +140,7 @@ class GridTest extends TestCase
 
         $this->assertSame([$form->children['reference']], $grid->filtersFor('reference'));
         $this->assertSame([], $grid->filtersFor('date_add'));
+        $this->assertSame([], $grid->filtersFor('actions'));
         $this->assertSame($form->children['actions'], $grid->getSearchAndReset());
         $this->assertTrue($grid->hasFilters());
         $this->assertNull($this->grid()->getSearchAndReset());
@@ -185,6 +191,61 @@ class GridTest extends TestCase
         $this->assertSame(['form' => 'order_filter_form', 'formaction' => '/orders?', 'formmethod' => 'post', 'data-ps-confirm' => 'Delete?'], $items[0]['attr']);
         $this->assertSame(['data-route' => 'admin_orders_view', 'class' => 'open_tabs', 'data-ps-action' => 'grid-bulk-button', 'data-ps-data-action-id' => 'open_tabs'], $items[1]['attr']);
         $this->assertSame('#statusModal', $items[2]['attr']['data-bs-target']);
+    }
+
+    public function testListActionsAsMenuItems(): void
+    {
+        $grid = $this->grid(['actions' => ['bulk' => [], 'grid' => [
+            ['id' => 'export', 'name' => 'Export', 'type' => 'link', 'icon' => 'cloud_download', 'options' => ['route' => 'admin_orders_export', 'route_params' => ['a' => 1]]],
+            ['id' => 'common_refresh_list', 'name' => 'Refresh list', 'type' => 'simple', 'icon' => 'refresh', 'options' => []],
+            ['id' => 'common_show_query', 'name' => 'Show SQL query', 'type' => 'simple', 'icon' => 'code', 'options' => []],
+            ['id' => 'common_export_sql_manager', 'name' => 'Export to SQL Manager', 'type' => 'simple', 'icon' => 'storage', 'options' => []],
+            ['id' => 'import', 'name' => 'Import', 'type' => 'simple', 'icon' => null, 'options' => []],
+            ['id' => 'enable', 'name' => 'Enable', 'type' => 'submit', 'icon' => null, 'options' => []],
+        ]]]);
+        $items = $grid->getGridItems();
+
+        $this->assertCount(5, $items);
+        $this->assertSame(['label' => 'Export', 'icon' => null, 'type' => 'link', 'href' => '/orders?a=1'], $items[0]);
+        $this->assertSame('/orders?#order_grid_results', $items[1]['href']);
+        $this->assertSame(['data-bs-toggle' => 'modal', 'data-bs-target' => '#order_grid_common_show_query_modal'], $items[2]['attr']);
+        $this->assertSame(['form' => 'order_common_show_query_modal_form'], $items[3]['attr']);
+        $this->assertSame(['class' => 'js-import-grid-action', 'data-ps-action' => 'grid-action', 'data-ps-data-action-id' => 'import'], $items[4]['attr']);
+        $this->assertTrue($grid->hasQueryModal());
+        $this->assertFalse($this->grid()->hasQueryModal());
+    }
+
+    public function testARowsActionsInlineFirstTheRestInItsMenu(): void
+    {
+        $actions = (new RowActionCollection())
+            ->add((new LinkRowAction('edit'))->setName('Edit')->setIcon('edit')->setOptions(['route' => 'admin_orders_edit', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order']))
+            ->add((new LinkRowAction('view'))->setName('View')->setIcon('remove_red_eye')->setOptions(['route' => 'admin_orders_view', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'use_inline_display' => true, 'target' => '_blank']))
+            ->add((new LinkRowAction('print'))->setName('Print')->setIcon('print')->setOptions(['route' => 'admin_orders_print', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'extra_route_params' => ['ref' => 'reference']]))
+            ->add((new SubmitRowAction('delete'))->setName('Delete')->setIcon('delete')->setOptions([
+                'route' => 'admin_orders_delete', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'method' => 'DELETE',
+                'confirm_message' => 'Delete?', 'modal_options' => new ModalOptions(['title' => 'Delete order?', 'confirm_button_class' => 'btn-danger']),
+            ]));
+        $row = $this->grid()->rowActions(['id_order' => 7, 'reference' => 'XKB'], ['options' => ['actions' => $actions]]);
+
+        $this->assertSame([
+            ['icon' => 'edit', 'label' => 'Edit', 'props' => ['href' => '/orders?orderId=7']],
+            ['icon' => 'visibility', 'label' => 'View', 'props' => ['href' => '/orders?orderId=7', 'target' => '_blank']],
+        ], $row['buttons']);
+        $this->assertSame(['type' => 'link', 'label' => 'Print', 'icon' => null, 'href' => '/orders?orderId=7&ref=XKB', 'attr' => []], $row['menu'][0]);
+        $this->assertSame([
+            'form' => 'order_grid_action_form', 'formaction' => '/orders?orderId=7', 'formmethod' => 'post', 'name' => '_method', 'value' => 'DELETE',
+            'data-ps-confirm' => 'Delete?', 'data-ps-data-confirm-title' => 'Delete order?', 'data-ps-data-confirm-variant' => 'danger',
+        ], $row['menu'][1]['attr']);
+    }
+
+    public function testARowsActionThatDoesNotApplyIsLeftOut(): void
+    {
+        $checker = $this->createMock(AccessibilityCheckerInterface::class);
+        $checker->method('isGranted')->willReturn(false);
+        $actions = (new RowActionCollection())
+            ->add((new SubmitRowAction('delete'))->setName('Delete')->setIcon('delete')->setOptions(['route' => 'admin_orders_delete', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'accessibility_checker' => $checker]));
+
+        $this->assertSame(['buttons' => [], 'menu' => []], $this->grid()->rowActions(['id_order' => 7], ['options' => ['actions' => $actions]]));
     }
 
     public function testHookParameters(): void
@@ -247,7 +308,7 @@ class GridTest extends TestCase
 
         $icons = $this->createMock(IconRegistryInterface::class);
         $icons->method('get')->willReturnCallback(function (string $name): Icon {
-            if (!in_array($name, ['material-symbols:visibility', 'material-symbols:add-circle', 'material-symbols:edit'], true)) {
+            if (!in_array($name, ['material-symbols:visibility', 'material-symbols:add-circle', 'material-symbols:edit', 'material-symbols:delete'], true)) {
                 throw new IconNotFoundException($name);
             }
 

@@ -752,6 +752,21 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: row and list actions — 2026-11-25
+
+Step 8 of the grid's build plan. `Grid::getGridItems()`, `hasQueryModal()`, `rowActions()`, `Grid/cell/action.html.twig`; the fixture gets an actions column (view, invoice, delete), the list's actions and its query.
+
+**Markup**
+- The header holds the list's actions: `div.dropdown.ps-grid__list-actions`, a `<twig:ui:IconButton>` "List actions" (settings icon; the old grids' id `#{id}-grid-actions-button` kept) and a `<twig:ui:DropdownMenu>`: `link` actions to their route, Refresh list a link to the current URL, Show SQL query opens `#{id}_grid_common_show_query_modal`, Export to SQL Manager submits its form; other `simple` actions a button `data-ps-action="grid-action"` `data-ps-data-action-id` (keeps `js-{id}-grid-action`). With `display_name: false` the band stays for them, the title visually hidden. `submit` grid actions are not on kit grids yet.
+- The SQL query: a `<twig:ui:Modal>` "SQL query" (lg), a form `#{id}_common_show_query_modal_form` posting `sql` (read-only textarea `#{id}_grid_query`) and `name` (the list's name) to the SQL Manager; Cancel and Export to SQL Manager. The old `#{id}_grid_common_show_query_modal` id kept.
+- An `action` column: `div.ps-grid__actions`, the actions with `use_inline_display` and the first other one as `<twig:ui:IconButton size="sm" tooltip>` described by the row's header; the rest in a More actions menu (`more_vert`, fixed popper so the scroll box does not clip it). An action whose icon the kit has not goes to the menu; one that does not apply (`accessibility_checker`) is left out. Links go to their route (`route_param_name`/`field`, `extra_route_params`); submits send a hidden `form#{id}_grid_action_form` (`form`, `formaction`, `formmethod`, `name="_method"` for DELETE and other methods); both ask first with `data-ps-confirm` (static or `dynamic_message_field`) and `modal_options`. The old grids' `.js-link-row-action`, `.js-submit-row-action` and `data-confirm-*` are not kept.
+- The search and reset filter (associated with the actions column) is no longer looked for in the filter row: the toolbar renders it.
+
+**Look**
+- The header is a flex row, the list actions at its end; the actions cell as narrow as its buttons; the query in the monospace font.
+
+**Strings** (`Admin.Global`): new "List actions"; reused "More actions", "SQL query", "Export to SQL Manager" and "Cancel" (`Admin.Actions`).
+
 ## `<twig:ui:Grid>`: selection and bulk actions — 2026-11-25
 
 Step 7 of the grid's build plan. `Grid::getBulkItems()`, `Grid/cell/bulk_action.html.twig`, `grid-selection.js`, `grid-bulk.js`; the fixture gets a selection column and three bulk actions.

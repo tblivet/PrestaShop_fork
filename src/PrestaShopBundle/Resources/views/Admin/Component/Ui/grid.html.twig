@@ -16,6 +16,7 @@
 {%- set searchAndReset = this.searchAndReset -%}
 {%- set hasFilters = this.hasFilters -%}
 {%- set bulkItems = this.bulkItems -%}
+{%- set gridItems = this.gridItems -%}
 {%- set rowCount = grid.data.records|length -%}
 {%- set paginated = grid.data.records_total > 10 or grid.pagination.offset > 0 -%}
 {%- set showName = grid.view_options.display_name ?? true -%}
@@ -46,14 +47,22 @@
   'data-ps-data-grid-id': id,
   'aria-labelledby': titleId,
 }) }}>
-  {#- The title names the section; embedded or display_name false, for screen readers only, with no header band -#}
-  {%- if embedded or showName is same as(false) -%}
+  {#- The title names the section; embedded or display_name false, for screen readers only. The header band holds the
+      title and the list's actions (export, refresh, SQL query): none without either -#}
+  {%- if embedded or (showName is same as(false) and gridItems is empty) -%}
     <h{{ headingLevel }} id="{{ titleId }}" class="visually-hidden">{{ grid.name }}</h{{ headingLevel }}>
   {%- else -%}
     <header class="ps-grid__header card-header">
-      <h{{ headingLevel }} id="{{ titleId }}" class="ps-grid__title">
+      <h{{ headingLevel }} id="{{ titleId }}" class="ps-grid__title{{ showName is same as(false) ? ' visually-hidden' }}">
         {{- grid.name }} <twig:ui:Badge variant="secondary" pill>{{ total }}<span class="visually-hidden"> {{ resultsWord }}</span></twig:ui:Badge>
       </h{{ headingLevel }}>
+      {%- if gridItems is not empty -%}
+        {#- The toggle keeps the old grids' id -#}
+        <div class="dropdown ps-grid__list-actions">
+          <twig:ui:IconButton :id="id ~ '-grid-actions-button'" icon="settings" :label="'List actions'|trans({}, 'Admin.Global')" variant="link" data-bs-toggle="dropdown" aria-expanded="false"/>
+          <twig:ui:DropdownMenu align="end" :items="gridItems"/>
+        </div>
+      {%- endif -%}
     </header>
   {%- endif -%}
 
@@ -189,6 +198,8 @@
         </twig:ui:EmptyState>
       {%- endif -%}
       {{- form_end(grid.filter_form) -}}
+      {#- What a row's submit action sends (form, formaction, _method): outside the filter form, so its fields do not go -#}
+      <form id="{{ id }}_grid_action_form" method="post" hidden></form>
     {%- endif -%}
 
     {{- renderhook('displayAdminGridTableAfter', this.hookParams) -}}
@@ -223,5 +234,23 @@
       {%- endif -%}
       {{- footer -}}
     </footer>
+  {%- endif -%}
+
+  {#- The list's query, shown and sent to the SQL Manager as a new request named after the list -#}
+  {%- if this.hasQueryModal -%}
+    {#- Set here: inside the modal, id is the modal's -#}
+    {%- set queryFormId = id ~ '_common_show_query_modal_form' -%}
+    {%- set queryFieldId = id ~ '_grid_query' -%}
+    <twig:ui:Modal :id="id ~ '_grid_common_show_query_modal'" :title="'SQL query'|trans({}, 'Admin.Global')" size="lg">
+      <form id="{{ queryFormId }}" class="ps-grid__query" method="post" action="{{ path('admin_sql_requests_create') }}">
+        <label class="form-label" for="{{ queryFieldId }}">{{ 'SQL query'|trans({}, 'Admin.Global') }}</label>
+        <textarea class="form-control ps-grid__query-text" id="{{ queryFieldId }}" name="sql" rows="10" readonly>{{ grid.data.query }}</textarea>
+        <input type="hidden" name="name" value="{{ grid.name }}">
+      </form>
+      <twig:block name="footer">
+        <twig:ui:Button variant="link" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+        <twig:ui:Button type="submit" :form="queryFormId">{{ 'Export to SQL Manager'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+      </twig:block>
+    </twig:ui:Modal>
   {%- endif -%}
 </section>

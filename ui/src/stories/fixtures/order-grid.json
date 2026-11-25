@@ -87,6 +87,60 @@
         "sortable": true,
         "empty_data": ""
       }
+    },
+    {
+      "id": "actions",
+      "name": "Actions",
+      "type": "action",
+      "options": {
+        "actions": [
+          {
+            "type": "link",
+            "id": "view",
+            "name": "View",
+            "icon": "zoom_in",
+            "url": "/sell/orders/{id_order}/view",
+            "options": {
+              "route": "admin_orders_view",
+              "route_param_name": "orderId",
+              "route_param_field": "id_order",
+              "use_inline_display": true
+            }
+          },
+          {
+            "type": "link",
+            "id": "invoice",
+            "name": "Download the invoice",
+            "icon": "print",
+            "url": "/sell/orders/?orderId={id_order}",
+            "options": {
+              "route": "admin_orders_index",
+              "route_param_name": "orderId",
+              "route_param_field": "id_order"
+            }
+          },
+          {
+            "type": "submit",
+            "id": "delete",
+            "name": "Delete",
+            "icon": "delete",
+            "url": "/sell/orders/?orderId={id_order}",
+            "options": {
+              "route": "admin_orders_index",
+              "route_param_name": "orderId",
+              "route_param_field": "id_order",
+              "method": "DELETE",
+              "confirm_message": "Delete this order? This cannot be undone.",
+              "modal_options": {
+                "title": "Delete order?",
+                "confirm_button_label": "Delete",
+                "confirm_button_class": "btn-danger"
+              }
+            }
+          }
+        ],
+        "sortable": false
+      }
     }
   ],
   "filters": [
@@ -207,5 +261,40 @@
         }
       }
     }
-  ]
+  ],
+  "grid_actions": [
+    {
+      "id": "export",
+      "name": "Export",
+      "type": "link",
+      "icon": "cloud_download",
+      "url": "/sell/orders/",
+      "options": {
+        "route": "admin_orders_index",
+        "route_params": {}
+      }
+    },
+    {
+      "id": "common_refresh_list",
+      "name": "Refresh list",
+      "type": "simple",
+      "icon": "refresh",
+      "options": {}
+    },
+    {
+      "id": "common_show_query",
+      "name": "Show SQL query",
+      "type": "simple",
+      "icon": "code",
+      "options": {}
+    },
+    {
+      "id": "common_export_sql_manager",
+      "name": "Export to SQL Manager",
+      "type": "simple",
+      "icon": "storage",
+      "options": {}
+    }
+  ],
+  "query": "SELECT o.id_order, o.reference FROM ps_orders o ORDER BY o.date_add DESC LIMIT 50, 50"
 }

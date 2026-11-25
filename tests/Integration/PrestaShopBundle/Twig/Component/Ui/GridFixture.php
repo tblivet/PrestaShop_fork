@@ -9,6 +9,9 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Twig\Component\Ui;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
@@ -58,10 +61,13 @@ final class GridFixture
             'name' => $fixture['name'],
             'filter_form' => $builder->getForm()->createView(),
             'form_prefix' => $fixture['form_prefix'],
-            'columns' => $fixture['columns'],
+            'columns' => array_map(self::column(...), $fixture['columns']),
             'column_filters' => $columnFilters,
-            'actions' => ['grid' => [], 'bulk' => array_map(self::bulkAction(...), $fixture['bulk_actions'] ?? [])],
-            'data' => ['records' => $fixture['records'], 'records_total' => $fixture['records_total'], 'query' => ''],
+            'actions' => [
+                'grid' => array_map(fn (array $action): array => array_diff_key($action, ['url' => 0]), $fixture['grid_actions'] ?? []),
+                'bulk' => array_map(self::bulkAction(...), $fixture['bulk_actions'] ?? []),
+            ],
+            'data' => ['records' => $fixture['records'], 'records_total' => $fixture['records_total'], 'query' => $fixture['query'] ?? ''],
             'pagination' => $fixture['pagination'],
             'sorting' => $fixture['sorting'],
             'filters' => $fixture['filter_data'],
@@ -81,5 +87,27 @@ final class GridFixture
         }
 
         return $action;
+    }
+
+    /**
+     * An action column's actions as the definition gives them: a RowActionCollection of row actions
+     */
+    private static function column(array $column): array
+    {
+        if ('action' !== $column['type']) {
+            return $column;
+        }
+        $actions = new RowActionCollection();
+        foreach ($column['options']['actions'] as $action) {
+            $options = $action['options'];
+            if (is_array($options['modal_options'] ?? null)) {
+                $options['modal_options'] = new ModalOptions($options['modal_options']);
+            }
+            $row = 'submit' === $action['type'] ? new SubmitRowAction($action['id']) : new LinkRowAction($action['id']);
+            $actions->add($row->setName($action['name'])->setIcon($action['icon'])->setOptions($options));
+        }
+        $column['options']['actions'] = $actions;
+
+        return $column;
     }
 }
