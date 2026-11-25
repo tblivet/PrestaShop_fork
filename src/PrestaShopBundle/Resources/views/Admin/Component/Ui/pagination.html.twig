@@ -2,10 +2,11 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
-{#- In a narrow nav only Previous, "Page 3 of 25" and Next show: the other pages and the gaps are far (_pagination.scss) -#}
+{#- In a narrow nav only Previous, "Page 3 of 25" and Next show: the other pages and the gaps are far (_pagination.scss);
+    with jumpUrl, the field to go to a page replaces "Page 3 of 25" there -#}
 {%- if links|length > 1 -%}
   {%- set position = 'Page %current% of %total%'|trans({'%current%': current, '%total%': this.last}, 'Admin.Global') -%}
-  <nav{{ attributes.defaults({class: 'ps-pagination', 'aria-label': label}) }}>
+  <nav{{ attributes.defaults({class: 'ps-pagination' ~ (jumpUrl ? ' ps-pagination--jump'), 'aria-label': label}) }}>
     <ul class="pagination">
       {%- if links[current - 1] is defined -%}
         <li class="page-item ps-pagination__item ps-pagination__item--step">
@@ -30,5 +31,14 @@
         </li>
       {%- endif -%}
     </ul>
+
+    {%- if jumpUrl -%}
+      {#- The field inside its label: its name reads "Page 12 of 25"; pagination-jump.js goes to the page typed, or puts the
+          current one back and announces the invalid message (novalidate: the pattern only says digits are expected) -#}
+      <form class="ps-pagination__jump" data-ps-action="pagination-jump" data-ps-data-url="{{ jumpUrl }}" data-ps-data-last="{{ this.last }}" data-ps-data-invalid-message="{{ 'Enter a page number from 1 to %last%'|trans({'%last%': this.last}, 'Admin.Global') }}"{% if perPage %} data-ps-data-per-page="{{ perPage }}"{% endif %} novalidate>
+        <label class="ps-pagination__jump-field">{{ 'Page'|trans({}, 'Admin.Global') }} <input class="form-control form-control-sm ps-pagination__jump-input" type="text" inputmode="numeric" pattern="[0-9]*" name="page" value="{{ current }}" autocomplete="off"> {{ 'of %total%'|trans({'%total%': this.last}, 'Admin.Global') }}</label>
+        <twig:ui:Button type="submit" variant="outline-secondary" size="sm">{{ 'Go'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+      </form>
+    {%- endif -%}
   </nav>
 {%- endif -%}

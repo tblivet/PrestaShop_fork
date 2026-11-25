@@ -61,6 +61,17 @@ class PaginationComponentTest extends KernelTestCase
         );
     }
 
+    public function testAFieldToGoToAPage(): void
+    {
+        $html = $this->render('<twig:ui:Pagination :current="2" :links="{1: \'/p1\', 2: \'/p2\', 3: \'/p3\', 40: \'/p40\'}" label="Pages" jumpUrl="/orders?offset={offset}&limit=50" :perPage="50"/>');
+
+        $this->assertStringStartsWith('<nav class="ps-pagination ps-pagination--jump" aria-label="Pages">', $html);
+        $this->assertStringContainsString('<form class="ps-pagination__jump" data-ps-action="pagination-jump" data-ps-data-url="/orders?offset={offset}&amp;limit=50" data-ps-data-last="40" data-ps-data-invalid-message="Enter a page number from 1 to 40" data-ps-data-per-page="50" novalidate>', $html);
+        $this->assertStringContainsString('<label class="ps-pagination__jump-field">Page <input class="form-control form-control-sm ps-pagination__jump-input" type="text" inputmode="numeric" pattern="[0-9]*" name="page" value="2" autocomplete="off"> of 40</label>', $html);
+        $this->assertStringContainsString('<button class="btn btn-outline-secondary btn-sm ps-button" type="submit"', $html);
+        $this->assertStringNotContainsString('ps-pagination__jump', $this->render('<twig:ui:Pagination :current="1" :links="{1: \'/p1\', 2: \'/p2\'}" label="Pages"/>'));
+    }
+
     public function testNothingForASinglePage(): void
     {
         $this->assertSame('', $this->render('<twig:ui:Pagination :current="1" :links="{1: \'/p1\'}" label="Pages"/>'));

@@ -9,8 +9,8 @@ import chevronRight from '../../icons/material-symbols/chevron-right.svg?raw';
 import uiIcon from './ui-icon';
 import { twigCall } from './twig-snippet';
 
-// Pagination.php has no defaults: current, links and label are required
-export const PAGINATION_DEFAULTS = {};
+// Pagination.php defaults; current, links and label are required
+export const PAGINATION_DEFAULTS = { jumpUrl: null, perPage: null };
 
 const escape = (text) => String(text).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -30,16 +30,18 @@ const items = (current, pages) => {
 /**
  * @param {object} props the props and attributes as in Twig: current, links (page number => URL), label
  */
-export default function pagination({ current, links, label, ...attributes }) {
+export default function pagination({
+  current, links, label, jumpUrl = null, perPage = null, ...attributes
+}) {
   const pages = Object.keys(links).map(Number).sort((a, b) => a - b);
-  const twig = twigCall('ui:Pagination', { current, links, label, ...attributes }, PAGINATION_DEFAULTS);
+  const twig = twigCall('ui:Pagination', { current, links, label, jumpUrl, perPage, ...attributes }, PAGINATION_DEFAULTS);
 
   if (pages.length <= 1) {
     return { html: '', twig };
   }
 
   const last = pages[pages.length - 1];
-  const classes = ['ps-pagination', attributes.class].filter(Boolean).join(' ');
+  const classes = ['ps-pagination', jumpUrl && 'ps-pagination--jump', attributes.class].filter(Boolean).join(' ');
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${escape(value)}"`).join('');
   const previous = links[current - 1]
     ? `<li class="page-item ps-pagination__item ps-pagination__item--step"><a class="page-link ps-pagination__link" href="${escape(links[current - 1])}" rel="prev">${uiIcon(chevronLeft, { flipRtl: true })}<span class="visually-hidden">Previous</span></a></li>`
@@ -58,8 +60,15 @@ export default function pagination({ current, links, label, ...attributes }) {
     return `<li class="page-item ps-pagination__item ps-pagination__item--far"><a class="page-link ps-pagination__link" href="${escape(links[page])}">${page}</a></li>`;
   }).join('');
 
+  // The field inside its label, read "Page 12 of 25"; a <twig:ui:Button> to go
+  const jump = jumpUrl
+    ? `<form class="ps-pagination__jump" data-ps-action="pagination-jump" data-ps-data-url="${escape(jumpUrl)}" data-ps-data-last="${last}" data-ps-data-invalid-message="Enter a page number from 1 to ${last}"${perPage ? ` data-ps-data-per-page="${perPage}"` : ''} novalidate>`
+      + `<label class="ps-pagination__jump-field">Page <input class="form-control form-control-sm ps-pagination__jump-input" type="text" inputmode="numeric" pattern="[0-9]*" name="page" value="${current}" autocomplete="off"> of ${last}</label>`
+      + '<button class="btn btn-outline-secondary btn-sm ps-button" type="submit" data-ps-data-busy-label="Loading...">Go</button></form>'
+    : '';
+
   return {
-    html: `<nav class="${escape(classes)}" aria-label="${escape(label)}"${extra}><ul class="pagination">${previous}${list}${next}</ul></nav>`,
+    html: `<nav class="${escape(classes)}" aria-label="${escape(label)}"${extra}><ul class="pagination">${previous}${list}${next}</ul>${jump}</nav>`,
     twig,
   };
 }

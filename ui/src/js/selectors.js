@@ -14,6 +14,7 @@ export default {
   showcaseModal: '[data-ps-ref="showcase-modal"]',
   kpiToRefresh: '[data-ps-ref="kpi"][data-ps-data-refresh-url]',
   kpiValue: '[data-ps-ref="kpi-value"]',
+  paginationJump: '[data-ps-action~="pagination-jump"]',
   // The page's live region (<twig:ui:Announcer>, announcer.js)
   announcer: '[data-ps-target="announcer"]',
   flashAlert: '[data-ps-ref="flash-alert"]',

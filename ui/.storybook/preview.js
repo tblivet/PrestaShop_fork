@@ -10,6 +10,7 @@ import initBusyButtons from '../src/js/components/busy-button';
 import initPasswordToggle from '../src/js/components/password-toggle';
 import initHeaderSearch from '../src/js/components/header-search';
 import initKpis from '../src/js/components/kpi';
+import initPaginationJump from '../src/js/components/pagination-jump';
 import initQuickAccess from '../src/js/components/quick-access';
 import initScrollFade from '../src/js/components/scroll-fade';
 import initTooltips from '../src/js/components/tooltips';
@@ -33,6 +34,7 @@ initBusyButtons();
 initPasswordToggle();
 initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
+initPaginationJump();
 initTooltips(bootstrap.Tooltip);
 initScrollFade();
 

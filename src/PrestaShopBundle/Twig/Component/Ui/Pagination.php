@@ -20,7 +20,8 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  * <twig:ui:Pagination :current="3" :links="{1: '/orders?offset=0', 2: '…', 3: '…', 4: '…', 25: '…'}" label="{{ 'Pages of the Orders list'|trans(…) }}"/>
  * The caller builds the links (page number to URL): the first, the last, the current one and its neighbours at least
  * (checked: the last is the highest given). It shows those, a gap where pages are left out, Previous and Next to the
- * neighbours. One page: nothing.
+ * neighbours. One page: nothing. With jumpUrl, a field goes to any page: the URL with {page}, or with {offset} and
+ * perPage for a list that pages by offset (a grid); pagination-jump.js builds it.
  */
 #[AsTwigComponent('ui:Pagination', template: '@PrestaShop/Admin/Component/Ui/pagination.html.twig')]
 final class Pagination
@@ -33,6 +34,12 @@ final class Pagination
     /** Names the navigation for screen readers: which list's pages */
     public string $label;
 
+    /** The URL of any page, with {page}, or {offset} and perPage: a field to type the page to go to */
+    public ?string $jumpUrl = null;
+
+    /** The rows a page has, to turn the page typed into the {offset} of jumpUrl */
+    public ?int $perPage = null;
+
     #[PreMount]
     public function preMount(array $data): array
     {
@@ -40,6 +47,7 @@ final class Pagination
         $resolver
             ->setIgnoreUndefined()
             ->setRequired(['current', 'links', 'label'])
+            ->setDefaults(['jumpUrl' => null, 'perPage' => null])
             ->setAllowedTypes('current', 'int')
             ->setAllowedTypes('links', 'array')
             ->setAllowedValues('links', fn (array $links): bool => [] !== $links
@@ -47,6 +55,22 @@ final class Pagination
                 && [] === array_filter($links, fn ($url): bool => !is_string($url) || '' === $url))
             ->setAllowedTypes('label', 'string')
             ->setAllowedValues('label', fn (string $label): bool => '' !== trim($label))
+            ->setAllowedTypes('jumpUrl', ['null', 'string'])
+            ->setAllowedTypes('perPage', ['null', 'int'])
+            ->setAllowedValues('perPage', fn (?int $perPage): bool => null === $perPage || $perPage >= 1)
+            ->setNormalizer('jumpUrl', function (Options $options, ?string $url): ?string {
+                if (null === $url) {
+                    return null;
+                }
+                if (str_contains($url, '{offset}') && null === $options['perPage']) {
+                    throw new InvalidOptionsException('jumpUrl with {offset} needs perPage.');
+                }
+                if (!str_contains($url, '{page}') && !str_contains($url, '{offset}')) {
+                    throw new InvalidOptionsException('jumpUrl must have {page} or {offset}.');
+                }
+
+                return $url;
+            })
             ->setNormalizer('links', function (Options $options, array $links): array {
                 ksort($links);
                 $current = $options['current'];

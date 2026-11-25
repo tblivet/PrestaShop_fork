@@ -7,11 +7,15 @@
 // (_variables.scss, "Pagination"). Round items of one size, the arrows outlined, the current page outlined in the brand.
 // The nav is a container: narrower than $ps-pagination-full-min-width (a phone, a narrow card) only Previous, the
 // current page as "Page 3 of 25" and Next show; wider, every page shown, the current one as its number, its position
-// for screen readers only.
+// for screen readers only. With a field to go to a page (--jump), the field replaces "Page 3 of 25" in a narrow nav.
 $component-name: ps-pagination;
 
 .#{$component-name} {
   container: #{$component-name} / inline-size;
+  display: flex;
+  flex-wrap: wrap;
+  gap: map-get($spacers, 2) map-get($spacers, 3);
+  align-items: center;
 
   .pagination {
     gap: map-get($spacers, 1);
@@ -30,6 +34,13 @@ $component-name: ps-pagination;
     line-height: 1;
     border-color: transparent;
     border-radius: $border-radius-pill;
+
+    // Bootstrap rings a page link on :focus, a mouse click too; the kit, as its buttons, only on :focus-visible
+    &:focus:not(:focus-visible) {
+      color: var(--#{$prefix}pagination-color);
+      background-color: var(--#{$prefix}pagination-bg);
+      box-shadow: none;
+    }
   }
 
   &__item--step &__link {
@@ -48,12 +59,34 @@ $component-name: ps-pagination;
   }
 
   &__item--far,
-  &__number {
+  &__number,
+  &--jump &__item--current {
     display: none;
   }
 
+  &__jump {
+    display: flex;
+    gap: map-get($spacers, 2);
+    align-items: center;
+  }
+
+  &__jump-field {
+    display: flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
+    margin: 0;
+    font-size: $font-size-sm;
+    white-space: nowrap;
+  }
+
+  &__jump-input {
+    width: $ps-pagination-jump-input-width;
+    text-align: center;
+  }
+
   @container #{$component-name} (min-width: #{$ps-pagination-full-min-width}) {
-    &__item--far {
+    &__item--far,
+    &--jump &__item--current {
       display: block;
     }
 

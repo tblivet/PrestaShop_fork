@@ -1,83 +1,38 @@
 {
   "component": "Pagination",
   "date": "2026-11-25",
-  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-emptystate-pagination/index.html",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-pagination-jump/index.html",
   "tests": {
     "unit": "pass",
     "integration": "pass",
     "storyMarkup": "pass"
   },
   "cases": {
-    "total": 13,
-    "captured": 13,
+    "total": 17,
+    "captured": 17,
     "skipped": []
   },
   "findings": {
     "blocker": 0,
-    "major": 5,
-    "minor": 7,
+    "major": 2,
+    "minor": 1,
     "suggestion": 0
   },
   "open": [
     {
       "severity": "major",
-      "title": "Bootstrap's pagination CSS variables re-declared in a second .pagination rule instead of set by its Sass variables",
-      "where": "ui/src/scss/components/_pagination.scss:10-31"
+      "title": "Default story accepts jumpUrl, perPage and links values that the component refuses, and Show code then gives Twig that throws",
+      "where": "ui/src/stories/components/Pagination.stories.js:49-59 (Default) and ui/src/stories/pagination.js:37-75; the rules are in Pagination.php:61-73"
     },
     {
       "severity": "major",
-      "title": "Default story: changing the current control alone gives Twig that throws",
-      "where": "ui/src/stories/components/Pagination.stories.js:35,39,42"
-    },
-    {
-      "severity": "major",
-      "title": "Compact story does not render at 375px: story globals for the viewport are ignored",
-      "where": "ui/src/stories/components/Pagination.stories.js:56-59 (Compact); Docs page Compact block"
-    },
-    {
-      "severity": "major",
-      "title": "Links without the current page's neighbours are accepted and drop Previous/Next",
-      "where": "src/PrestaShopBundle/Twig/Component/Ui/Pagination.php:49-56; pagination.html.twig:10,27"
-    },
-    {
-      "severity": "major",
-      "title": "Gap ellipsis is #ddd on white (about 1.4:1)",
-      "where": "ui/src/scss/components/_pagination.scss:29, applied to the gap li in pagination.html.twig:18; default and many-pages at 768/1280"
-    },
-    {
-      "severity": "minor",
-      "title": "Arrows and current page styled through :has(.ps-icon) and Bootstrap state classes, not their BEM elements",
-      "where": "ui/src/scss/components/_pagination.scss:64-71,96-99,115-118"
-    },
-    {
-      "severity": "minor",
-      "title": "Attribute pass-through on the <nav> is not tested",
-      "where": "tests/Integration/PrestaShopBundle/Twig/Component/Ui/PaginationComponentTest.php:27-35; pagination.html.twig:8"
-    },
-    {
-      "severity": "minor",
-      "title": "--psk-pagination-margin-start does not exist, and margin-inline-start: 0 loses to Bootstrap's -1px margin",
-      "where": "ui/src/scss/components/_pagination.scss:18 and :52"
-    },
-    {
-      "severity": "minor",
-      "title": "Unit test misses the non-integer page key and non-string label rejections",
-      "where": "tests/Unit/PrestaShopBundle/Twig/Component/Ui/PaginationTest.php:58-67"
-    },
-    {
-      "severity": "minor",
-      "title": "Story mirror does not escape attribute values: a label with a quote breaks the <nav> markup",
-      "where": "ui/src/stories/pagination.js:38-60"
-    },
-    {
-      "severity": "minor",
-      "title": "Many Pages stacks three <nav> landmarks with the same accessible name",
-      "where": "ui/src/stories/components/Pagination.stories.js:46-50 (ManyPages)"
+      "title": "Jump field drops a non-number silently, with no error message",
+      "where": "ui/src/js/components/pagination-jump.js:24-31; pagination.html.twig:38-39 (with-jump and compact --jump stories)"
     },
     {
       "severity": "minor",
       "title": "Focus ring is box-shadow only, so it disappears in forced colours mode",
-      "where": "ui/src/scss/components/_pagination.scss:44-61 (Bootstrap's :focus sets outline 0 + box-shadow); default story, all widths"
+      "where": "ui/src/scss/_variables.scss:384-386 (Pagination block, no $pagination-focus-outline); ui/node_modules/bootstrap/scss/_pagination.scss:48-54"
     }
   ]
 }

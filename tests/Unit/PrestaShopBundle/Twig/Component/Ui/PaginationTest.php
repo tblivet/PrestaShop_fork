@@ -40,6 +40,15 @@ class PaginationTest extends TestCase
         $this->assertSame(25, $this->pagination(1, [25, 1, 2])->getLast());
     }
 
+    public function testAJumpUrlWithThePageOrTheOffset(): void
+    {
+        $base = ['current' => 1, 'links' => [1 => '/1', 2 => '/2'], 'label' => 'Pages'];
+
+        $this->assertSame(['jumpUrl' => null, 'perPage' => null], array_intersect_key((new Pagination())->preMount($base), ['jumpUrl' => 0, 'perPage' => 0]));
+        $this->assertSame('/orders?page={page}', (new Pagination())->preMount($base + ['jumpUrl' => '/orders?page={page}'])['jumpUrl']);
+        $this->assertSame(50, (new Pagination())->preMount($base + ['jumpUrl' => '/orders?offset={offset}', 'perPage' => 50])['perPage']);
+    }
+
     public function testRequiresItsProps(): void
     {
         $this->expectException(MissingOptionsException::class);
@@ -69,6 +78,10 @@ class PaginationTest extends TestCase
         yield 'empty URL' => [['links' => [1 => '/1', 2 => '']]];
         yield 'non string URL' => [['links' => [1 => '/1', 2 => 2]]];
         yield 'blank label' => [['label' => ' ']];
+        yield 'jump URL without page or offset' => [['jumpUrl' => '/orders']];
+        yield 'jump URL with offset and no perPage' => [['jumpUrl' => '/orders?offset={offset}']];
+        yield 'perPage 0' => [['jumpUrl' => '/orders?offset={offset}', 'perPage' => 0]];
+        yield 'non int perPage' => [['jumpUrl' => '/orders?offset={offset}', 'perPage' => '50']];
     }
 
     private function pagination(int $current, array $pages): Pagination

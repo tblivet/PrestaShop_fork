@@ -12,6 +12,7 @@ import initFormValidation from './components/form-validation';
 import initHeaderSearch from './components/header-search';
 import initKpis from './components/kpi';
 import initNotifications from './components/notifications';
+import initPaginationJump from './components/pagination-jump';
 import initQuickAccess from './components/quick-access';
 import initScrollFade from './components/scroll-fade';
 import initShowcaseModals from './components/showcase-modal';
@@ -29,6 +30,7 @@ initPasswordToggle();
 initFormValidation();
 initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
+initPaginationJump();
 // The bell is rendered after this script (in <head>)
 document.addEventListener('DOMContentLoaded', initNotifications);
 initBusyButtons();

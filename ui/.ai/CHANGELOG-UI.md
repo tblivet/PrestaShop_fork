@@ -697,3 +697,20 @@ Step 2 of the grid's build plan (`ui/.ai/designs/grid.md`). New `EmptyState.php`
 
 **Strings** (`Admin.Global`)
 - New: "Page %current% of %total%". Reused: "Previous", "Next".
+
+## `<twig:ui:Pagination>`: a field to go to a page — 2026-11-25
+
+Step 2b of the grid's build plan: the old grids had it (`paginator_jump_page`), a long list needs it.
+
+**Markup**
+- New props `jumpUrl` (the URL of any page, with `{page}`, or with `{offset}` and `perPage` for a list that pages by offset) and `perPage`. With them the nav is `.ps-pagination--jump` and ends with `<form class="ps-pagination__jump" data-ps-action="pagination-jump" data-ps-data-url data-ps-data-last[ data-ps-data-per-page] novalidate>`: the field inside its label (`Page <input name="page" inputmode="numeric" pattern="[0-9]*"> of 25`, read "Page 12 of 25") and a small `outline-secondary` Go button.
+
+**Look**
+- A page link shows its focus ring on `:focus-visible` only, as the buttons (Bootstrap rings it on `:focus`, a mouse click too).
+- The nav lays out the pages and the form in a row that wraps. In a narrow nav the field takes the place of "Page 12 of 25": Previous, Next, then "Page [12] of 25 Go".
+
+**Behaviour**
+- `pagination-jump.js`: on submit, goes to the page typed, kept between 1 and the last page; something that is not a number puts the current page back, sets `aria-invalid` until the next key and the page's Announcer says "Enter a page number from 1 to 25" (`data-ps-data-invalid-message`). Enter submits; nothing happens while typing.
+
+**Strings**
+- New (`Admin.Global`): "of %total%", "Enter a page number from 1 to %last%". Reused: "Page" (`Admin.Global`), "Go" (`Admin.Actions`).
