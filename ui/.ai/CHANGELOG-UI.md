@@ -653,3 +653,14 @@ From the `ui-screen-review` of the KPI row (Orders, Cart #1, Categories). `kpi.h
 - The token and utility stories read the kit's CSS variables (`--psk-…`, the `$prefix`), not `--bs-…`: the colour, border, motion, shadow, spacing and typography previews show again.
 - Design Tokens/Colors: palettes with each step's value and text contrast, the theme colours on real buttons and badges, a card for the surface and text tokens, the subtle trios as real alerts, the category colours on KPI cards and badges.
 - Design Tokens/Borders: square corners, the kit's focus ring (the brand at 50%, DECISIONS #29); no dark mode mentions (DECISIONS #5).
+
+## Side menu footer: View my shop on one line — 2026-11-25
+
+`side_menu.html.twig`, `_side-menu.scss`, the SideMenu story and the sidebar mockup.
+
+**Markup**
+- The new tab icon (`.ps-side-menu__external`, now `size="sm"`) moved inside `.ps-side-menu__label`, after the visually hidden "(opens in a new tab)": it follows the label's last word instead of taking a column at the end of the row.
+- The version is under the link, `<p class="ps-side-menu__version">PrestaShop <span class="badge ps-badge ps-badge--oceanblue">9.3.0</span></p>`: "PrestaShop" is visible text (it was only for screen readers), the number keeps its `oceanblue` badge; `.ps-side-menu__version` moved from the badge to the paragraph.
+
+**Look**
+- The footer is a centred block under a top border (`--psk-side-menu-border-color`): View my shop, then the version in small muted text with its number in a badge; .25rem between them, .5rem above and below. The label has 174px instead of 99px: View my shop fits one line in en, fr, de, es, it, nl, pl, pt, ru (it wrapped in all but en and es).

@@ -66,7 +66,8 @@
     {%- block content %}{% endblock -%}
   </div>
 
-  {#- Pinned under the menu, which scrolls under it -#}
+  {#- Pinned under the menu, which scrolls under it: View my shop, the version under it. The new tab icon follows the
+      label's words, so a long label (Italian, German) keeps the whole row -#}
   {%- if shopUrl or version -%}
     <div class="ps-side-menu__footer">
       {%- if shopUrl -%}
@@ -74,14 +75,12 @@
           <twig:ui:Icon name="storefront" size="lg" class="ps-side-menu__icon"/>
           <span class="ps-side-menu__label">
             {{- 'View my shop'|trans({}, 'Admin.Navigation.Header') -}}
-            <span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>
-          </span>
-          <twig:ui:Icon name="open_in_new" size="lg" class="ps-side-menu__external"/>
+            <span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span><twig:ui:Icon name="open_in_new" size="sm" class="ps-side-menu__external"/></span>
         </a>
       {%- endif -%}
 
       {%- if version -%}
-        <twig:ui:Badge variant="oceanblue" class="ps-side-menu__version"><span class="visually-hidden">PrestaShop </span>{{ version }}</twig:ui:Badge>
+        <p class="ps-side-menu__version">PrestaShop <twig:ui:Badge variant="oceanblue">{{ version }}</twig:ui:Badge></p>
       {%- endif -%}
     </div>
   {%- endif -%}

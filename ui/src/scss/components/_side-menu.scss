@@ -42,31 +42,43 @@ $component-name: ps-side-menu;
     border-inline-end: var(--#{$prefix}border-width) solid var(--#{$prefix}side-menu-border-color);
   }
 
-  // View my shop and the version, one row under the menu
+  // View my shop and the version under it, centred: a block of its own, set apart from the menu by a line
   &__footer {
     display: flex;
     flex-shrink: 0;
-    gap: map-get($spacers, 2);
+    flex-direction: column;
+    gap: map-get($spacers, 1);
     align-items: center;
-    padding: .5rem .75rem 1rem;
+    padding: map-get($spacers, 2) .75rem;
     background-color: var(--#{$prefix}side-menu-bg);
+    border-block-start: var(--#{$prefix}border-width) solid var(--#{$prefix}side-menu-border-color);
     border-inline-end: var(--#{$prefix}border-width) solid var(--#{$prefix}side-menu-border-color);
   }
 
-  // Its link takes the room the version leaves
+  // Its link keeps the menu's full-width row, its content centred
   &__footer &__link {
-    flex: 1 1 auto;
-    min-width: 0;
+    justify-content: center;
+    text-align: center;
   }
 
-  // Says the link opens another tab, at the end of the row
+  &__footer &__label {
+    flex-grow: 0;
+  }
+
+  // Says the link opens another tab: after the label's last word, wrapping with it
   &__external {
-    margin-inline-start: auto;
+    display: inline-block;
+    margin-inline-start: map-get($spacers, 1);
     color: var(--#{$prefix}secondary-color);
+    vertical-align: middle;
   }
 
+  // Information, not a status: quiet text, not a badge
   &__version {
-    flex-shrink: 0;
+    margin: 0;
+    // Between the headings (.75rem) and the links ($font-size-sm)
+    font-size: .8125rem;
+    color: var(--#{$prefix}secondary-color);
   }
 
   &__heading {

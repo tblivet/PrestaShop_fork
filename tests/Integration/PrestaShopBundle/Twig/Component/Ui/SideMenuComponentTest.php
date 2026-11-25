@@ -65,7 +65,8 @@ class SideMenuComponentTest extends KernelTestCase
 
         $this->assertMatchesRegularExpression('#</div>\s*<div class="ps-side-menu__footer"><a class="ps-side-menu__link" href="/shop" target="_blank" rel="noopener noreferrer">#', $html);
         $this->assertStringContainsString('<span class="visually-hidden"> (opens in a new tab)</span>', $html);
-        $this->assertStringContainsString('<span class="badge ps-badge ps-badge--oceanblue ps-side-menu__version"><span class="visually-hidden">PrestaShop </span>9.3.0</span>', $html);
+        $this->assertMatchesRegularExpression('#<span class="visually-hidden"> \(opens in a new tab\)</span><svg[^>]*class="ps-icon ps-icon--sm ps-side-menu__external"[^>]*>.*?</svg></span>\s*</a>#s', $html);
+        $this->assertMatchesRegularExpression('#<p class="ps-side-menu__version">PrestaShop <span class="badge ps-badge ps-badge--oceanblue">9.3.0</span>\s*</p>#', $html);
         $this->assertStringNotContainsString('ps-side-menu__footer', $this->render('<twig:ui:SideMenu :sections="' . self::SECTIONS . '"/>'));
     }
 

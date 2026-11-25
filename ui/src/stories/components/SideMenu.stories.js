@@ -103,12 +103,11 @@ const footer = (shopUrl, version) => {
   }
   const shop = shopUrl
     ? `<a class="ps-side-menu__link" href="${shopUrl}" target="_blank" rel="noopener noreferrer">${uiIcon(storefront, { size: 'lg', class: 'ps-side-menu__icon' })}`
-      + '<span class="ps-side-menu__label">View my shop<span class="visually-hidden"> (opens in a new tab)</span></span>'
-      + `${uiIcon(openInNew, { size: 'lg', class: 'ps-side-menu__external' })}</a>`
+      + `<span class="ps-side-menu__label">View my shop<span class="visually-hidden"> (opens in a new tab)</span>${uiIcon(openInNew, { size: 'sm', class: 'ps-side-menu__external' })}</span></a>`
     : '';
-  const badge = version ? `<span class="badge ps-badge ps-badge--oceanblue ps-side-menu__version"><span class="visually-hidden">PrestaShop </span>${version}</span>` : '';
+  const versionHtml = version ? `<p class="ps-side-menu__version">PrestaShop <span class="badge ps-badge ps-badge--oceanblue">${version}</span></p>` : '';
 
-  return `<div class="ps-side-menu__footer">${shop}${badge}</div>`;
+  return `<div class="ps-side-menu__footer">${shop}${versionHtml}</div>`;
 };
 
 // The markup of side_menu.html.twig and the Twig call that renders it; other attributes (id, class…) go on the <nav>
@@ -140,7 +139,7 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:SideMenu :sections="this.sections">{{ renderhook(\'displayAdminNavBarBeforeEnd\') }}</twig:ui:SideMenu>`. The back office main menu: rendered once by the page shell (`NavBar` builds the sections from the tabs), never by a page.',
-          '**Props**: `sections` (required: a list of `{title, items}`; `title` is optional, a section without one has no heading. Each item is `{label, href, icon, current}` or, with a submenu, `{label, icon, children: [{label, href, current}]}`: a parent opens its submenu and has no `href` of its own), `label` (default "Main menu": the name of the navigation for screen readers), `shopUrl` (default none: View my shop, pinned under the menu, opens the shop in a new tab and says so), `version` (default none: the PrestaShop version, an `oceanblue` badge pinned under the menu, read as "PrestaShop 9.3.0"); the menu scrolls under them and fades just above. `icon` is a [Material Symbols](https://fonts.google.com/icons) name; none, or a name with no SVG file (tab icons come from modules), shows `extension`; the old names `assessment` and `payment` show `analytics` and `credit_card`. `current` marks the page shown (`aria-current="page"`); the submenu holding it starts open. `badge` (optional, on an item without children or a sub-item, never on a parent): `{label, logo}`, a short tag after the label ("New"), with the PrestaShop mark when `logo` is `true`. Content: what modules add at the end of the menu (the `displayAdminNavBarBeforeEnd` hook). Other attributes (`id`, default `ps-side-menu`) go on the `<nav>`; the header\'s menu button opens the drawer by this id.',
+          '**Props**: `sections` (required: a list of `{title, items}`; `title` is optional, a section without one has no heading. Each item is `{label, href, icon, current}` or, with a submenu, `{label, icon, children: [{label, href, current}]}`: a parent opens its submenu and has no `href` of its own), `label` (default "Main menu": the name of the navigation for screen readers), `shopUrl` (default none: View my shop, pinned under the menu, opens the shop in a new tab and says so, its icon after the label\'s last word so a long translation keeps the row), `version` (default none: the PrestaShop version, "PrestaShop" in small muted text and the number in an `oceanblue` badge, under View my shop; both centred under a line); the menu scrolls under them and fades just above. `icon` is a [Material Symbols](https://fonts.google.com/icons) name; none, or a name with no SVG file (tab icons come from modules), shows `extension`; the old names `assessment` and `payment` show `analytics` and `credit_card`. `current` marks the page shown (`aria-current="page"`); the submenu holding it starts open. `badge` (optional, on an item without children or a sub-item, never on a parent): `{label, logo}`, a short tag after the label ("New"), with the PrestaShop mark when `logo` is `true`. Content: what modules add at the end of the menu (the `displayAdminNavBarBeforeEnd` hook). Other attributes (`id`, default `ps-side-menu`) go on the `<nav>`; the header\'s menu button opens the drawer by this id.',
           '**Do**: one item per page or group of pages, with the name the page has in its title; a submenu when a group has several pages. **Don\'t**: a second menu in a page (use tabs), an item that runs an action, a submenu inside a submenu.',
           '**States**: current page, current page inside a submenu (open), badges, long labels, unknown icon, drawer below md. Collapsed to icons only comes later.',
         ].join('\n\n'),
