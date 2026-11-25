@@ -91,6 +91,36 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringContainsString('ps-grid__choice--ink-light" type="button" data-ps-data-busy-label="Loading..." style="--psk-grid-choice-color: #34209E"', $html);
     }
 
+    public function testAToggleIsASwitchNamedByItsColumnAndRow(): void
+    {
+        $html = $this->render([], '', true, 'carrier-grid');
+
+        $this->assertStringContainsString('<input class="form-check-input ps-check__input ps-grid__toggle" type="checkbox" id="carrier_grid_active_1" role="switch" checked aria-labelledby="carrier_col_active carrier_grid_rowhead_1" data-ps-action="grid-toggle" data-ps-data-url="/improve/shipping/carriers/1/toggle-status" data-ps-data-error="The change could not be saved. Try again.">', $html);
+        $this->assertStringContainsString('id="carrier_grid_is_free_2" role="switch" aria-labelledby="carrier_col_is_free carrier_grid_rowhead_2"', $html);
+    }
+
+    public function testSortedByPositionEachRowMovesAndDoneGoesBack(): void
+    {
+        $html = $this->render([], '', true, 'carrier-grid');
+
+        $this->assertStringContainsString('<th scope="col" id="carrier_col_position_handle" class="ps-grid__heading ps-grid__heading--select"><span class="visually-hidden">Move</span></th>', $html);
+        $this->assertStringContainsString('<div class="ps-grid__position" data-ps-ref="grid-position" data-ps-data-id="1" data-ps-data-position="0" data-ps-data-url="/improve/shipping/carriers/update-position" data-ps-data-method="POST">', $html);
+        $this->assertMatchesRegularExpression('#type="button" data-ps-data-busy-label="Loading..." disabled aria-label="Move up" aria-describedby="carrier_grid_rowhead_1" data-ps-action="grid-move" data-ps-data-direction="up">#', $html);
+        $this->assertMatchesRegularExpression('#disabled aria-label="Move down" aria-describedby="carrier_grid_rowhead_4"#', $html);
+        $this->assertSame(2, substr_count($html, ' disabled aria-label="Move'));
+        $this->assertMatchesRegularExpression('#<td class="ps-grid__cell ps-grid__cell--position">\s*1\s*</td>#', $html);
+        $this->assertMatchesRegularExpression('#<a class="btn btn-outline-secondary ps-button" href="\?carrier%5BorderBy%5D=id_carrier&amp;carrier%5BsortOrder%5D=asc\#carrier_grid_results">.*?Done</span></a>#s', $html);
+        $this->assertStringNotContainsString('js-btn-reorder-positions', $html);
+    }
+
+    public function testNotSortedByPositionRearrangeSortsByIt(): void
+    {
+        $html = $this->render(['sorting' => ['order_by' => 'id_carrier', 'order_way' => 'asc'], 'columns' => array_values(array_filter($this->columns(fn (array $column): array => $column, 'carrier-grid'), fn (array $column): bool => 'position_handle' !== $column['type']))], '', true, 'carrier-grid');
+
+        $this->assertMatchesRegularExpression('#href="\?carrier%5BorderBy%5D=position&amp;carrier%5BsortOrder%5D=asc\#carrier_grid_results">.*?Rearrange</span></a>#s', $html);
+        $this->assertStringNotContainsString('grid-position', $html);
+    }
+
     public function testARowWithAClickableLinkFollowsItFromItsClickableCells(): void
     {
         $html = $this->render();
@@ -259,7 +289,7 @@ class GridComponentTest extends KernelTestCase
         $html = $this->render();
 
         $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_grid_action_form" formaction="/sell/orders/?orderId=1024" formmethod="post" name="_method" value="DELETE" data-ps-confirm="Delete this order? This cannot be undone." data-ps-data-confirm-title="Delete order?" data-ps-data-confirm-label="Delete" data-ps-data-confirm-variant="danger">', $html);
-        $this->assertStringContainsString('<form id="order_grid_action_form" method="post" hidden></form>', $html);
+        $this->assertStringContainsString('<form id="order_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>', $html);
     }
 
     public function testEachRowHasACheckNamedWithItsHeader(): void
@@ -305,14 +335,14 @@ class GridComponentTest extends KernelTestCase
     /**
      * The fixture's columns, changed
      */
-    private function columns(callable $change): array
+    private function columns(callable $change, string $name = 'order-grid'): array
     {
-        $fixture = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/order-grid.json'), true, 512, JSON_THROW_ON_ERROR);
+        $fixture = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/' . $name . '.json'), true, 512, JSON_THROW_ON_ERROR);
 
         return array_map($change, $fixture['columns']);
     }
 
-    private function render(array $override = [], string $props = '', bool $boot = true): string
+    private function render(array $override = [], string $props = '', bool $boot = true, string $fixture = 'order-grid'): string
     {
         if ($boot) {
             self::bootKernel();
@@ -321,7 +351,7 @@ class GridComponentTest extends KernelTestCase
         $request = new Request();
         $request->setSession(new Session(new MockArraySessionStorage()));
         $container->get('request_stack')->push($request);
-        $grid = GridFixture::present($container->get('form.factory'), 'order-grid', $override);
+        $grid = GridFixture::present($container->get('form.factory'), $fixture, $override);
 
         return trim($container->get('twig')->createTemplate('<twig:ui:Grid :grid="orderGrid"' . $props . '/>')->render(['orderGrid' => $grid]));
     }

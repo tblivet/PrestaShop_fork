@@ -275,7 +275,25 @@ $component-name: ps-grid;
     cursor: pointer;
   }
 
+  // A row being dragged by its handle (grid-position.js)
+  &__row[data-ps-state="dragging"] {
+    opacity: .5;
+  }
+
+  &__position {
+    display: inline-flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
+  }
+
+  &__drag {
+    display: inline-flex;
+    color: var(--#{$prefix}secondary-color);
+    cursor: grab;
+  }
+
   // As narrow as its buttons
+  &__cell--position-handle,
   &__cell--action {
     width: 1%;
     white-space: nowrap;

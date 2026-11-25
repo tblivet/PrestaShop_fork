@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PreviewColumn;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
+use PrestaShopBundle\Form\Admin\Type\ReorderPositionsButtonType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,6 +34,7 @@ final class GridFixture
         'date_range' => DateRangeType::class,
         'integer_min_max' => IntegerMinMaxFilterType::class,
         'number_min_max' => NumberMinMaxFilterType::class,
+        'reorder' => ReorderPositionsButtonType::class,
     ];
 
     /**

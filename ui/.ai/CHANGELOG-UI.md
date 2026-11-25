@@ -752,6 +752,26 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: toggles and positions — 2026-11-25
+
+Steps 11 and 12 of the grid's build plan. `Grid::toggleUrl()`, `getReorderField()`, `getOrderingColumnId()`, `getReorder()`, `positionUpdateUrl()`; `Grid/cell/toggle.html.twig`, `position.html.twig`, `position_handle.html.twig`; `grid-toggle.js`, `grid-position.js`; a Carriers fixture and its stories (Toggles and positions, Positions not sorted).
+
+**Markup**
+- A `toggle` cell: `<twig:ui:Check type="switch" hideLabel>` `#{id}_grid_{column}_{key}`, named by its column's heading and the row's header (`aria-labelledby`: "Status 2"), `data-ps-action="grid-toggle"`, `data-ps-data-url` (the route with `route_param_name`/`primary_field` and `extra_route_params`). The old `ps-switch`, `ps-togglable-row`, `data-toggle-url`, the two radios and their ids are not kept.
+- A `position` cell: the position from 1 (`display_offset`), plain.
+- The `position_handle` column (added by the presenter when the list is sorted by position): its heading "Move" for screen readers; each cell `div.ps-grid__position[data-ps-ref="grid-position"]` with `data-ps-data-id`, `-position`, `-url`, `-method`, a drag handle (`data-ps-action="grid-drag"`, hidden from screen readers) and "Move up" / "Move down" icon buttons described by the row's header, off at the page's first and last rows. The old `position-drag-handle`, `js-{id}-position`, `js-drag-handle`, `data-update-url`, the `row_{id}_{position}` row ids are not kept.
+- Rearrange (`ReorderPositionsButtonType`, the position column's filter) is no longer a filter-row button: the toolbar has a link "Rearrange" (sorts by position) or, while sorted by it, "Done" (back to the first other sortable column). The old `js-btn-reorder-positions` is not kept.
+- The grid's action form gets `data-ps-ref="grid-action-form"`.
+
+**Look**
+- A dragged row is faded; the handle shows the grab pointer; the handle and actions cells are as narrow as their content.
+
+**Behaviour**
+- `grid-toggle.js`: a flipped switch posts at once (`redirect: 'manual'`), busy and off meanwhile. A JSON answer `{status, message}`: the message announced, the switch flipped back on a false status; a redirect: the page reloads with its flash; any failure flips it back and announces the error. The old green and red growl messages are replaced by announcements.
+- `grid-position.js`: a row moves by its handle (drag over the page's rows) or by Move up / Move down; then the page's positions are posted as before (`positions[i][rowId]`, `[oldPosition]`, `[newPosition]`, `_method` for other methods) through the action form, and the page reloads. Moves stay within the page.
+
+**Strings**: new "The change could not be saved. Try again." (`Admin.Notifications.Error`), "Move" (`Admin.Actions`); reused "Move up", "Move down", "Rearrange", "Done" (`Admin.Actions`).
+
 ## Orders on the kit — 2026-11-25
 
 Step 10 of the grid's build plan. With PS_UI_KIT on, `Sell/Order/Order/index.html.twig` includes `Ui/index.html.twig` and `preview.html.twig` includes `Ui/preview.html.twig`; the old markup is unchanged with the kit off.

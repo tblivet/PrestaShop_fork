@@ -4,6 +4,7 @@
  */
 // Twig: <twig:ui:Grid> (src/PrestaShopBundle/Twig/Component/Ui/Grid.php) renders this markup, keep both in sync. The
 // stories and the test render the same fixture (ui/src/stories/fixtures/order-grid.json, GridFixture.php).
+import carrierGrid from '../fixtures/carrier-grid.json';
 import orderGrid from '../fixtures/order-grid.json';
 import alert from '../alert';
 import grid, { GRID_DEFAULTS } from '../grid';
@@ -14,11 +15,13 @@ import keepInStorybook from '../grid-story-chrome';
 // A story that shows a fixed case: its controls would change nothing
 const fixed = (story) => ({ controls: { disable: true }, docs: { description: { story } } });
 
-// A story of the Orders fixture, some of its keys replaced; with a description, a fixed case
-const ordersStory = (override = {}, props = {}, description = null, blocks = {}) => withTwig((args) => ({
-  ...grid({ ...orderGrid, ...override }, { ...args, ...props }, blocks),
-  fixture: { name: 'order-grid', ...(Object.keys(override).length ? { override } : {}) },
+// A story of a fixture, some of its keys replaced; with a description, a fixed case
+const fixtureStory = (data, name) => (override = {}, props = {}, description = null, blocks = {}) => withTwig((args) => ({
+  ...grid({ ...data, ...override }, { ...args, ...props }, blocks),
+  fixture: { name, ...(Object.keys(override).length ? { override } : {}) },
 }), description ? fixed(description) : {});
+const ordersStory = fixtureStory(orderGrid, 'order-grid');
+const carriersStory = fixtureStory(carrierGrid, 'carrier-grid');
 
 const EMPTY = { records: [], records_total: 0, pagination: { offset: 0, limit: 50 } };
 
@@ -32,9 +35,9 @@ export default {
         component: [
           '**Twig usage**: a list page renders the grid its controller presents (`GridPresenter::present()`), as it is: `<twig:ui:Grid :grid="orderGrid"/>`; inside a card of a view page: `<twig:ui:Grid :grid="customerOrdersGrid" embedded :headingLevel="3"/>`. Blocks: `before` (above the toolbar), `toolbar` (beside Search), `empty` (the page\'s EmptyState when there is nothing yet), `footer` (after the pages: Back to list). The design: `ui/.ai/designs/grid.md`.',
           '**Props**: `grid` (required: the presented grid), `embedded` (default `false`: in another card, no card and no visible header; its title is for screen readers only), `headingLevel` (2 to 6, default 2: the level of the grid\'s title, visible or not, after the page head\'s h1; its empty states\' titles are one level under). Other attributes (`data-ps-*`, `aria-*`) go on the `<section>`.',
-          '**Behaviour**: sorting, pages and rows per page are links on the current URL with the grid\'s prefix (`order[orderBy]`, `order[offset]`…), Search submits the filter form, Clear filters posts the reset; each lands on the results summary (`#order_grid_results`), focused after the reload. The list\'s actions (export, refresh, SQL query) are a menu in the header; a row\'s actions are icon buttons (those with `use_inline_display`, then the first other one) and a More actions menu, a submit one sending the hidden action form (`_method` for DELETE) after its confirmation. A row with a `clickable_row` link follows it from its clickable cells (the mouse; the keyboard has the link). Orders: the status is a menu posting `value`; the ID\'s toggle opens the order\'s preview under its row (here, order 1023\'s fails, with Try again). In these stories the links and the form only change the address.',
+          '**Behaviour**: sorting, pages and rows per page are links on the current URL with the grid\'s prefix (`order[orderBy]`, `order[offset]`…), Search submits the filter form, Clear filters posts the reset; each lands on the results summary (`#order_grid_results`), focused after the reload. The list\'s actions (export, refresh, SQL query) are a menu in the header; a row\'s actions are icon buttons (those with `use_inline_display`, then the first other one) and a More actions menu, a submit one sending the hidden action form (`_method` for DELETE) after its confirmation. A row with a `clickable_row` link follows it from its clickable cells (the mouse; the keyboard has the link). A toggle column is a switch posting to its route (JSON or redirect); sorted by position, rows move by a handle or Move up/down and the page\'s positions are sent as before, Rearrange/Done in the toolbar. Orders: the status is a menu posting `value`; the ID\'s toggle opens the order\'s preview under its row (here, order 1023\'s fails, with Try again). In these stories the links and the form only change the address.',
           '**Do**: the presented grid as the controller gives it; the page\'s own empty state in `empty`. **Don\'t**: a grid built by hand, per-page behaviour options, a grid in a grid.',
-          '**States**: a list (sorted, filters, pages, row and list actions, status choice, preview, clickable rows), filtered, no match, nothing yet, one page, embedded, every block, a hidden title and centred column.',
+          '**States**: a list (sorted, filters, pages, row and list actions, status choice, preview, clickable rows), toggles and positions (Carriers), filtered, no match, nothing yet, one page, embedded, every block, a hidden title and centred column.',
         ].join('\n\n'),
       },
     },
@@ -75,3 +78,7 @@ export const HiddenTitleCentredColumn = ordersStory({
   records_total: 3,
   pagination: { offset: 0, limit: 50 },
 }, {}, '`display_name: false` in the definition: the title for screen readers only, the header band kept for the list\'s actions (without any, no band). A column with `alignment: center`.');
+
+export const TogglesAndPositions = carriersStory({}, {}, 'Carriers, sorted by position: a switch per toggle column (posted at once, announced; flipped back when it fails), and each row moves by its handle or Move up and Move down (the page\'s positions sent, the page reloaded). Done goes back to the ID order.');
+
+export const PositionsNotSorted = carriersStory({ sorting: { order_by: 'id_carrier', order_way: 'asc' }, columns: carrierGrid.columns.filter((column) => column.type !== 'position_handle') }, {}, 'Carriers sorted by ID: no handles (the presenter adds them only when sorted by position), Rearrange sorts by position.');

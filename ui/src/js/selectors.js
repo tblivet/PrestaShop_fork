@@ -28,6 +28,12 @@ export default {
   gridRowLink: '[data-ps-action~="grid-row-link"]',
   gridClickableCell: '.ps-grid__cell--clickable',
   gridPreview: '[data-ps-action~="grid-preview"]',
+  gridToggle: '[data-ps-action~="grid-toggle"]',
+  gridPosition: '[data-ps-ref="grid-position"]',
+  gridMove: '[data-ps-action~="grid-move"]',
+  gridDrag: '[data-ps-action~="grid-drag"]',
+  gridPreviewRow: '[data-ps-ref="grid-preview"]',
+  gridActionForm: '[data-ps-ref="grid-action-form"]',
   gridPreviewContent: '[data-ps-target="grid-preview-content"]',
   gridPreviewRetry: '[data-ps-action~="grid-preview-retry"]',
   // A button or a link that asks first (confirm-dialog.js), and the page's one <twig:ui:ConfirmDialog>

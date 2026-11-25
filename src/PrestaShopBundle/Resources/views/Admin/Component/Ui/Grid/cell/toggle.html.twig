@@ -1,0 +1,17 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- A switch named by its column and its row ("Status 2"): grid-toggle.js posts the change and says how it went -#}
+<twig:ui:Check
+  type="switch"
+  :label="column.name"
+  hideLabel
+  :checked="(record[column.options.field] ?? 0) == 1"
+  :id="grid.id ~ '_grid_' ~ column.id ~ '_' ~ record[column.options.primary_field]"
+  class="ps-grid__toggle"
+  :aria-labelledby="grid.id ~ '_col_' ~ column.id ~ ' ' ~ rowHeaderId"
+  data-ps-action="grid-toggle"
+  :data-ps-data-url="component.toggleUrl(record, column)"
+  :data-ps-data-error="'The change could not be saved. Try again.'|trans({}, 'Admin.Notifications.Error')"
+/>

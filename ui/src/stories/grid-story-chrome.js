@@ -6,7 +6,8 @@
 // links, row links and forms stay in Storybook, the address showing where they would go; an order's preview answered
 // as the Orders page does.
 
-// An order's preview as the Orders page answers it (JSON {preview}), after a short wait; order 1023's fails
+// An order's preview as the Orders page answers it (JSON {preview}), after a short wait, order 1023's failing; a toggle's
+// JSON answer
 const previewOf = (url) => `<div class="ps-grid__preview-sample"><p><strong>Order ${url.match(/orders\/(\d+)/)[1]}</strong>: 2 products, delivered by My carrier to 16, Main street, Paris.</p></div>`;
 const fakePreviews = () => {
   if (window.fetch.isGridPreviewFake) {
@@ -16,6 +17,12 @@ const fakePreviews = () => {
   const fake = (input, init) => {
     const url = String(input);
 
+    // A toggle: Carrier 3's free shipping fails, the others are saved
+    if (/\/toggle-/.test(url)) {
+      return Promise.resolve(url.includes('/3/toggle-is-free')
+        ? new Response(JSON.stringify({ status: false, message: 'Free shipping could not be changed for this carrier.' }), { headers: { 'Content-Type': 'application/json' } })
+        : new Response(JSON.stringify({ status: true, message: 'The status has been successfully updated.' }), { headers: { 'Content-Type': 'application/json' } }));
+    }
     if (!/\/sell\/orders\/\d+\/preview/.test(url)) {
       return realFetch(input, init);
     }
@@ -34,6 +41,15 @@ const fakePreviews = () => {
 export default function keepInStorybook(render) {
   fakePreviews();
   requestAnimationFrame(() => document.querySelectorAll('[data-ps-ref="grid"]').forEach((section) => {
+    // A move sends the action form without a submit event: the address shows the positions instead
+    section.querySelectorAll('[data-ps-ref="grid-action-form"]').forEach((form) => {
+      Object.defineProperty(form, 'submit', {
+        value: () => {
+          window.location.hash = new URLSearchParams(new FormData(form)).toString();
+          delete section.dataset.psState;
+        },
+      });
+    });
     section.addEventListener('click', (event) => {
       const target = event.target instanceof Element ? event.target : null;
       const link = target?.closest('a[href^="?"], a[href^="/"]');

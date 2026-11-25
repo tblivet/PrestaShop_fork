@@ -18,6 +18,8 @@
 {%- set hasFilters = this.hasFilters -%}
 {%- set bulkItems = this.bulkItems -%}
 {%- set gridItems = this.gridItems -%}
+{%- set reorder = this.reorder -%}
+{%- set reorderField = this.reorderField -%}
 {%- set rowCount = grid.data.records|length -%}
 {%- set paginated = grid.data.records_total > 10 or grid.pagination.offset > 0 -%}
 {%- set showName = grid.view_options.display_name ?? true -%}
@@ -78,7 +80,7 @@
         <twig:ui:EmptyState icon="inbox" :title="'No records found'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)"/>
       {%- endif -%}
     {%- else -%}
-      {%- if searchAndReset or bulkItems is not empty or toolbar|trim is not empty -%}
+      {%- if searchAndReset or bulkItems is not empty or reorder or toolbar|trim is not empty -%}
         <div class="ps-grid__toolbar">
           {#- The bulk menu, off until a row is checked, and what is checked: grid-selection.js keeps both up to date -#}
           {%- if bulkItems is not empty and 'list' == state -%}
@@ -88,6 +90,12 @@
             </div>
           {%- endif -%}
           {{- toolbar -}}
+          {#- Rows move while the list is sorted by position: Rearrange sorts it so, Done goes back -#}
+          {%- if reorder and 'list' == state -%}
+            <twig:ui:Button variant="outline-secondary" :href="reorder.href" :icon="reorder.active ? 'check' : 'swap_vert'">
+              {{- reorder.active ? 'Done'|trans({}, 'Admin.Actions') : 'Rearrange'|trans({}, 'Admin.Actions') -}}
+            </twig:ui:Button>
+          {%- endif -%}
           {%- if searchAndReset -%}
             <twig:ui:Layout:Cluster class="ps-grid__search">
               {#- Outside the form, named by it: Enter in a filter field submits with Search, the form's first button -#}
@@ -112,6 +120,7 @@
 
       {{- form_start(grid.filter_form, {action: grid.filter_form.vars.action ~ '#' ~ resultsId, attr: {id: formId, class: 'ps-grid__form'}}) -}}
       {%- if searchAndReset -%}{%- do searchAndReset.setRendered -%}{%- endif -%}
+      {%- if reorderField -%}{%- do reorderField.setRendered -%}{%- endif -%}
       <div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="{{ '%list% table'|trans({'%list%': grid.name}, 'Admin.Global') }}">
         <table id="{{ id }}_grid_table" class="ps-grid__table table" aria-describedby="{{ resultsId }}">
           <caption id="{{ captionId }}" class="visually-hidden">{{ grid.name }}</caption>
@@ -120,8 +129,10 @@
               {%- for column in grid.columns -%}
                 {%- set sort = 'list' == state ? this.sortState(column.id) : null -%}
                 {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
-                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ 'bulk_action' == column.type ? ' ps-grid__heading--select' }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
-                  {%- if 'bulk_action' == column.type -%}
+                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ column.type in ['bulk_action', 'position_handle'] ? ' ps-grid__heading--select' }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
+                  {%- if 'position_handle' == column.type -%}
+                    <span class="visually-hidden">{{ 'Move'|trans({}, 'Admin.Actions') }}</span>
+                  {%- elseif 'bulk_action' == column.type -%}
                     {%- if 'list' == state -%}
                       <twig:ui:Check
                         :label="'Select all %count% rows on this page'|trans({'%count%': rowCount}, 'Admin.Global')"
@@ -164,7 +175,8 @@
           <tbody>
             {%- if 'list' == state -%}
               {%- for record in grid.data.records -%}
-                {%- set rowHeaderId = id ~ '_grid_rowhead_' ~ loop.index -%}
+                {%- set rowIndex = loop.index -%}
+                {%- set rowHeaderId = id ~ '_grid_rowhead_' ~ rowIndex -%}
                 {#- A click on a clickable cell follows the row's link (grid-row-link.js); the keyboard has the link itself -#}
                 {%- set rowLink = this.rowLink(record) -%}
                 <tr class="ps-grid__row"{% if rowLink %} data-ps-action="grid-row-link" data-ps-data-href="{{ rowLink }}"{% endif %}>
@@ -179,7 +191,7 @@
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.type ~ '.html.twig',
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ column.type ~ '.html.twig',
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/_fallback.html.twig',
-                      ], {record: record, column: column, grid: grid, rowHeaderId: rowHeaderId, component: this}) -}}
+                      ], {record: record, column: column, grid: grid, rowHeaderId: rowHeaderId, rowIndex: rowIndex, component: this}) -}}
                     </{{ tag }}>
                   {%- endfor -%}
                 </tr>
@@ -208,8 +220,9 @@
         </twig:ui:EmptyState>
       {%- endif -%}
       {{- form_end(grid.filter_form) -}}
-      {#- What a row's submit action sends (form, formaction, _method): outside the filter form, so its fields do not go -#}
-      <form id="{{ id }}_grid_action_form" method="post" hidden></form>
+      {#- What a row's submit action, a choice and a move send (form, formaction, _method; positions[] from
+          grid-position.js): outside the filter form, so its fields do not go -#}
+      <form id="{{ id }}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>
     {%- endif -%}
 
     {{- renderhook('displayAdminGridTableAfter', this.hookParams) -}}

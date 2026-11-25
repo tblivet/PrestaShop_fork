@@ -297,6 +297,38 @@ class GridTest extends TestCase
         $this->assertNull($this->grid()->previewUrl(['id_order' => 7], ['options' => []]));
     }
 
+    public function testAToggleAndAPositionPostToTheirRoutes(): void
+    {
+        $grid = $this->grid();
+
+        $this->assertSame('/orders?carrierId=3&shop=1', $grid->toggleUrl(['id_carrier' => 3], ['options' => ['route' => 'admin_carriers_toggle_status', 'route_param_name' => 'carrierId', 'primary_field' => 'id_carrier', 'extra_route_params' => ['shop' => 1]]]));
+        $this->assertSame('/orders?groupId=5', $grid->positionUpdateUrl(['id_group' => 5], ['options' => ['update_route' => 'admin_x_update_position', 'record_route_params' => ['id_group' => 'groupId']]]));
+    }
+
+    public function testRearrangeWhileNotSortedByPositionDoneWhileSo(): void
+    {
+        $form = new FormView();
+        $form->children['position'] = new FormView($form);
+        $form->children['position']->vars['block_prefixes'] = ['form', 'reorder_positions_button'];
+        $columns = [
+            ['id' => 'position_handle', 'type' => 'position_handle', 'options' => ['sortable' => true]],
+            ['id' => 'id_carrier', 'type' => 'data', 'options' => ['sortable' => true]],
+            ['id' => 'position', 'type' => 'position', 'options' => ['sortable' => true]],
+        ];
+        $base = ['filter_form' => $form, 'columns' => $columns, 'column_filters' => ['position' => ['position']]];
+
+        $sorted = $this->grid($base + ['sorting' => ['order_by' => 'position', 'order_way' => 'asc']]);
+        $this->assertSame('position', $sorted->getOrderingColumnId());
+        $this->assertSame(['active' => true, 'href' => '/orders?order[orderBy]=id_carrier&order[sortOrder]=asc#order_grid_results'], array_map(fn ($value) => is_string($value) ? urldecode($value) : $value, $sorted->getReorder()));
+        $this->assertSame([], $sorted->filtersFor('position'));
+        $this->assertFalse($sorted->isSortable($columns[0]));
+
+        $other = $this->grid($base + ['sorting' => ['order_by' => 'id_carrier', 'order_way' => 'asc']]);
+        $this->assertNull($other->getOrderingColumnId());
+        $this->assertSame('/orders?order[orderBy]=position&order[sortOrder]=asc#order_grid_results', urldecode($other->getReorder()['href']));
+        $this->assertNull($this->grid()->getReorder());
+    }
+
     public function testHookParameters(): void
     {
         $params = $this->grid()->getHookParams();

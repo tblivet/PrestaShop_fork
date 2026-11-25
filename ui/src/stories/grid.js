@@ -11,9 +11,12 @@ import cancel from '../../icons/material-symbols/cancel.svg?raw';
 import cloudDownload from '../../icons/material-symbols/cloud-download.svg?raw';
 import code from '../../icons/material-symbols/code.svg?raw';
 import deleteIcon from '../../icons/material-symbols/delete.svg?raw';
+import dragIndicator from '../../icons/material-symbols/drag-indicator.svg?raw';
+import edit from '../../icons/material-symbols/edit.svg?raw';
 import keyboardArrowDown from '../../icons/material-symbols/keyboard-arrow-down.svg?raw';
 import openInNew from '../../icons/material-symbols/open-in-new.svg?raw';
 import checkCircle from '../../icons/material-symbols/check-circle.svg?raw';
+import checkIcon from '../../icons/material-symbols/check.svg?raw';
 import inbox from '../../icons/material-symbols/inbox.svg?raw';
 import keyboardArrowUp from '../../icons/material-symbols/keyboard-arrow-up.svg?raw';
 import moreVert from '../../icons/material-symbols/more-vert.svg?raw';
@@ -23,6 +26,7 @@ import search from '../../icons/material-symbols/search.svg?raw';
 import searchOff from '../../icons/material-symbols/search-off.svg?raw';
 import settings from '../../icons/material-symbols/settings.svg?raw';
 import storage from '../../icons/material-symbols/storage.svg?raw';
+import swapVert from '../../icons/material-symbols/swap-vert.svg?raw';
 import unfoldMore from '../../icons/material-symbols/unfold-more.svg?raw';
 import badge from './badge';
 import check from './check';
@@ -43,7 +47,7 @@ const ALIGNMENTS = { right: 'end', center: 'center' };
 
 // The icons of the fixtures' actions, by their kit name (Grid::icon(): zoom_in is search)
 const ICONS = {
-  cloud_download: cloudDownload, code, delete: deleteIcon, open_in_new: openInNew, print, refresh, search, settings, storage,
+  arrow_downward: arrowDownward, arrow_upward: arrowUpward, cloud_download: cloudDownload, code, delete: deleteIcon, edit, open_in_new: openInNew, print, refresh, search, settings, storage,
 };
 const ICON_ALIASES = { zoom_in: 'search' };
 const kitIcon = (name) => (name ? ICON_ALIASES[name] ?? name : null);
@@ -121,7 +125,9 @@ const filterField = (grid, filter, column) => {
 const iconButton = ({
   icon, label, size = null, tooltip = false, class: own = '', attributes = {},
 }) => {
-  const { href, type = 'button', ...rest } = attributes;
+  const {
+    href, type = 'button', disabled, ...rest
+  } = attributes;
   const classes = `btn btn-link${size ? ` btn-${size}` : ''} ps-button ps-icon-button${own ? ` ${own}` : ''}`;
   const tip = tooltip ? ` data-bs-toggle="tooltip" data-bs-title="${escape(label)}"` : '';
   const extra = Object.entries(rest).map(([name, value]) => ` ${name}="${value}"`).join('');
@@ -129,7 +135,7 @@ const iconButton = ({
 
   return href
     ? `<a class="${classes}" href="${href}" aria-label="${escape(label)}"${tip}${extra}>${svg}</a>`
-    : `<button class="${classes}" type="${type}" data-ps-data-busy-label="Loading..." aria-label="${escape(label)}"${tip}${extra}>${svg}</button>`;
+    : `<button class="${classes}" type="${type}" data-ps-data-busy-label="Loading..."${disabled !== undefined ? ' disabled' : ''} aria-label="${escape(label)}"${tip}${extra}>${svg}</button>`;
 };
 
 // Grid::confirmAttributes(): what the page's ConfirmDialog asks with
@@ -241,6 +247,41 @@ const cell = (grid, column, record, rowHeaderId) => {
           'data-ps-data-retry': 'Try again',
         },
       })}`;
+    }
+    case 'toggle': {
+      const key = record[options.primary_field];
+
+      return check({
+        type: 'switch',
+        label: column.name,
+        hideLabel: true,
+        checked: Number(record[options.field] ?? 0) === 1,
+        id: `${grid.id}_grid_${column.id}_${key}`,
+        class: 'ps-grid__toggle',
+        'aria-labelledby': `${grid.id}_col_${column.id} ${rowHeaderId}`,
+        'data-ps-action': 'grid-toggle',
+        'data-ps-data-url': options.url.replace(/\{(\w+)\}/g, (match, field) => record[field]),
+        'data-ps-data-error': 'The change could not be saved. Try again.',
+      }).html;
+    }
+    case 'position':
+      return escape(Number(record[options.position_field]) + (options.display_offset ?? 1));
+    case 'position_handle': {
+      const index = grid.records.indexOf(record) + 1;
+      const move = (direction) => iconButton({
+        icon: direction === 'up' ? 'arrow_upward' : 'arrow_downward',
+        label: direction === 'up' ? 'Move up' : 'Move down',
+        size: 'sm',
+        attributes: {
+          ...((direction === 'up' ? index === 1 : index === grid.records.length) ? { disabled: '' } : {}),
+          'aria-describedby': rowHeaderId,
+          'data-ps-action': 'grid-move',
+          'data-ps-data-direction': direction,
+        },
+      });
+
+      return `<div class="ps-grid__position" data-ps-ref="grid-position" data-ps-data-id="${record[options.id_field]}" data-ps-data-position="${record[options.position_field]}" data-ps-data-url="${options.url}" data-ps-data-method="${options.update_method.toUpperCase()}">`
+        + `<span class="ps-grid__drag" data-ps-action="grid-drag" aria-hidden="true">${uiIcon(dragIndicator)}</span>${move('up')}${move('down')}</div>`;
     }
     case 'choice': {
       const current = record[options.field];
@@ -409,7 +450,14 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         + `<span class="ps-button__label">Bulk actions</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items }, ICONS)}</div>`
         + '<p class="ps-grid__selection" role="status" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p></div>'
       : '';
-    const toolbar = searchCluster || bulk || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${searchCluster}</div>` : '';
+    // Grid::getReorder()
+    const positionColumn = fixture.columns.find((column) => column.type === 'position');
+    const ordering = positionColumn && fixture.sorting.order_by === positionColumn.id;
+    const other = fixture.columns.find((column) => column.type !== 'position' && column.type !== 'position_handle' && column.options.sortable);
+    const reorder = state === 'list' && positionColumn && fixture.filters.some((filter) => filter.type === 'reorder')
+      ? `<a class="btn btn-outline-secondary ps-button" href="${escape(url(fixture, { orderBy: ordering && other ? other.id : positionColumn.id, sortOrder: 'asc' }))}">${uiIcon(ordering ? checkIcon : swapVert, { size: 'lg' })}<span class="ps-button__label">${ordering ? 'Done' : 'Rearrange'}</span></a>`
+      : '';
+    const toolbar = searchCluster || bulk || reorder || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${reorder}${searchCluster}</div>` : '';
     const [from, to] = [Math.min(offset + 1, total), Math.min(offset + limit, total)];
     const summary = `<p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' ? `${total} ${resultsWord}` : `${from}–${to} of ${total}`}</p>`;
 
@@ -418,6 +466,9 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       const align = ALIGNMENTS[column.options.alignment ?? ''];
       const sortable = column.options.sortable && state === 'list';
       const icon = { ascending: arrowUpward, descending: arrowDownward }[sort] ?? unfoldMore;
+      if (column.type === 'position_handle') {
+        return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading ps-grid__heading--select"><span class="visually-hidden">Move</span></th>`;
+      }
       if (column.type === 'bulk_action') {
         const all = state === 'list' ? check({
           label: `Select all ${fixture.records.length} rows on this page`, hideLabel: true, id: `${id}_grid_bulk_action_select_all`, class: 'ps-grid__check', 'data-ps-action': 'grid-select-all',
@@ -432,7 +483,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
     }).join('');
     const filters = hasFilters
-      ? `<tr class="ps-grid__filters">${fixture.columns.map((column) => `<td class="ps-grid__filter">${fixture.filters.filter((filter) => filter.column === column.id).map((filter) => filterField(fixture, filter, column)).join('')}</td>`).join('')}</tr>`
+      ? `<tr class="ps-grid__filters">${fixture.columns.map((column) => `<td class="ps-grid__filter">${fixture.filters.filter((filter) => filter.column === column.id && filter.type !== 'reorder').map((filter) => filterField(fixture, filter, column)).join('')}</td>`).join('')}</tr>`
       : '';
 
     let noMatch = '';
@@ -468,7 +519,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       + `<div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="${escape(fixture.name)} table">`
       + `<table id="${id}_grid_table" class="ps-grid__table table" aria-describedby="${id}_grid_results"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
       + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`
-      + `<form id="${id}_grid_action_form" method="post" hidden></form>`;
+      + `<form id="${id}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>`;
   }
 
   const paginated = state !== 'empty' && (total > 10 || offset > 0);

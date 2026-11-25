@@ -120,7 +120,7 @@ final class Grid
 
     public function isSortable(array $column): bool
     {
-        return ($column['options']['sortable'] ?? false) && 'list' === $this->getState();
+        return ($column['options']['sortable'] ?? false) && 'position_handle' !== $column['type'] && 'list' === $this->getState();
     }
 
     /**
@@ -222,7 +222,8 @@ final class Grid
     }
 
     /**
-     * The filter fields of a column, but search and reset (the actions column's): the toolbar renders it
+     * The filter fields of a column, but search and reset (the actions column's) and rearrange (the position column's):
+     * the toolbar renders them
      *
      * @return FormView[]
      */
@@ -233,7 +234,7 @@ final class Grid
         return array_values(array_filter(array_map(
             fn (string $name): ?FormView => $form->children[$name] ?? null,
             $this->grid['column_filters'][$columnId] ?? []
-        ), fn (?FormView $field): bool => null !== $field && !in_array('search_and_reset', $field->vars['block_prefixes'] ?? [], true)));
+        ), fn (?FormView $field): bool => null !== $field && [] === array_intersect(['search_and_reset', 'reorder_positions_button'], $field->vars['block_prefixes'] ?? [])));
     }
 
     public function hasFilters(): bool
@@ -259,6 +260,77 @@ final class Grid
         }
 
         return null;
+    }
+
+    /**
+     * The definition's rearrange field (ReorderPositionsButtonType, the position column's filter): the toolbar renders a
+     * link from it instead
+     */
+    public function getReorderField(): ?FormView
+    {
+        foreach ($this->grid['filter_form']->children as $child) {
+            if (in_array('reorder_positions_button', $child->vars['block_prefixes'] ?? [], true)) {
+                return $child;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The position column the list is sorted by, if any: its rows can be moved (the presenter adds its handle column)
+     */
+    public function getOrderingColumnId(): ?string
+    {
+        foreach ($this->grid['columns'] as $column) {
+            if ('position' === $column['type'] && strtolower($column['id']) === strtolower((string) ($this->grid['sorting']['order_by'] ?? ''))) {
+                return $column['id'];
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Rearrange: the list sorted by its position column, where rows move; Done: back to the first other sortable column
+     *
+     * @return array{active: bool, href: string}|null
+     */
+    public function getReorder(): ?array
+    {
+        $position = null;
+        $other = null;
+        foreach ($this->grid['columns'] as $column) {
+            if ('position' === $column['type']) {
+                $position ??= $column['id'];
+            } elseif (null === $other && $this->isSortable($column)) {
+                $other = $column['id'];
+            }
+        }
+        if (null === $position || null === $this->getReorderField()) {
+            return null;
+        }
+        $active = null !== $this->getOrderingColumnId();
+
+        return [
+            'active' => $active,
+            'href' => $active && null !== $other
+                ? $this->url(['orderBy' => $other, 'sortOrder' => 'asc'])
+                : $this->url(['orderBy' => $position, 'sortOrder' => 'asc']),
+        ];
+    }
+
+    /**
+     * What a position handle sends (positions[] through the action form, grid-position.js), as the old grids
+     */
+    public function positionUpdateUrl(array $record, array $column): string
+    {
+        $parameters = [];
+        foreach ($column['options']['record_route_params'] ?? [] as $field => $name) {
+            $parameters[$name] = $record[$field] ?? null;
+        }
+
+        return $this->router->generate($column['options']['update_route'], $parameters);
     }
 
     /**
@@ -510,6 +582,20 @@ final class Grid
         }
 
         return null;
+    }
+
+    /**
+     * Where a toggle cell posts (route_param_name from primary_field, extra_route_params from the record or as given)
+     */
+    public function toggleUrl(array $record, array $column): string
+    {
+        $options = $column['options'];
+        $parameters = [$options['route_param_name'] => $record[$options['primary_field']] ?? null];
+        foreach ($options['extra_route_params'] ?? [] as $name => $field) {
+            $parameters[$name] = $record[$field] ?? $field;
+        }
+
+        return $this->router->generate($options['route'], $parameters);
     }
 
     private function actionUrl(array $options, array $record): string

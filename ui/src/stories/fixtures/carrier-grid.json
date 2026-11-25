@@ -1,0 +1,213 @@
+{
+  "variable": "carrierGrid",
+  "id": "carrier",
+  "name": "Carriers",
+  "form_prefix": "carrier",
+  "action": "/improve/shipping/carriers/filter",
+  "reset_url": "/common/reset_search/carrier",
+  "redirect_url": "/improve/shipping/carriers",
+  "columns": [
+    {
+      "id": "position_handle",
+      "name": "Position",
+      "type": "position_handle",
+      "options": {
+        "clickable": false,
+        "id_field": "id_carrier",
+        "position_field": "position",
+        "update_method": "POST",
+        "update_route": "admin_carriers_update_position",
+        "record_route_params": {},
+        "url": "/improve/shipping/carriers/update-position",
+        "sortable": true
+      }
+    },
+    {
+      "id": "bulk",
+      "name": "",
+      "type": "bulk_action",
+      "options": {
+        "bulk_field": "id_carrier",
+        "disabled_field": null,
+        "sortable": false
+      }
+    },
+    {
+      "id": "id_carrier",
+      "name": "ID",
+      "type": "data",
+      "options": {
+        "field": "id_carrier",
+        "sortable": true
+      }
+    },
+    {
+      "id": "name",
+      "name": "Name",
+      "type": "data",
+      "options": {
+        "field": "name",
+        "sortable": true
+      }
+    },
+    {
+      "id": "delay",
+      "name": "Delay",
+      "type": "data",
+      "options": {
+        "field": "delay",
+        "sortable": false
+      }
+    },
+    {
+      "id": "active",
+      "name": "Status",
+      "type": "toggle",
+      "options": {
+        "field": "active",
+        "primary_field": "id_carrier",
+        "route": "admin_carriers_toggle_status",
+        "route_param_name": "carrierId",
+        "extra_route_params": {},
+        "url": "/improve/shipping/carriers/{id_carrier}/toggle-status",
+        "sortable": false
+      }
+    },
+    {
+      "id": "is_free",
+      "name": "Free shipping",
+      "type": "toggle",
+      "options": {
+        "field": "is_free",
+        "primary_field": "id_carrier",
+        "route": "admin_carriers_toggle_is_free",
+        "route_param_name": "carrierId",
+        "extra_route_params": {},
+        "url": "/improve/shipping/carriers/{id_carrier}/toggle-is-free",
+        "sortable": false
+      }
+    },
+    {
+      "id": "position",
+      "name": "Position",
+      "type": "position",
+      "options": {
+        "id_field": "id_carrier",
+        "position_field": "position",
+        "update_method": "POST",
+        "update_route": "admin_carriers_update_position",
+        "record_route_params": {},
+        "url": "/improve/shipping/carriers/update-position",
+        "sortable": true
+      }
+    },
+    {
+      "id": "actions",
+      "name": "Actions",
+      "type": "action",
+      "options": {
+        "sortable": false,
+        "actions": [
+          {
+            "type": "link",
+            "id": "edit",
+            "name": "Edit",
+            "icon": "edit",
+            "url": "/improve/shipping/carriers/{id_carrier}/edit",
+            "options": {
+              "route": "admin_carriers_edit",
+              "route_param_name": "carrierId",
+              "route_param_field": "id_carrier",
+              "clickable_row": true
+            }
+          },
+          {
+            "type": "submit",
+            "id": "delete",
+            "name": "Delete",
+            "icon": "delete",
+            "url": "/improve/shipping/carriers/{id_carrier}/delete",
+            "options": {
+              "route": "admin_carriers_delete",
+              "route_param_name": "carrierId",
+              "route_param_field": "id_carrier",
+              "method": "DELETE",
+              "confirm_message": "Delete this carrier?",
+              "modal_options": {
+                "title": "Delete carrier?",
+                "confirm_button_label": "Delete",
+                "confirm_button_class": "btn-danger"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "filters": [
+    {
+      "name": "id_carrier",
+      "column": "id_carrier",
+      "type": "text"
+    },
+    {
+      "name": "name",
+      "column": "name",
+      "type": "text"
+    },
+    {
+      "name": "position",
+      "column": "position",
+      "type": "reorder"
+    }
+  ],
+  "filter_data": {},
+  "records": [
+    {
+      "id_carrier": 1,
+      "name": "Click and collect",
+      "delay": "Pick up in-store",
+      "active": 1,
+      "is_free": 1,
+      "position": 0
+    },
+    {
+      "id_carrier": 2,
+      "name": "My carrier",
+      "delay": "Delivery next day!",
+      "active": 1,
+      "is_free": 0,
+      "position": 1
+    },
+    {
+      "id_carrier": 3,
+      "name": "My cheap carrier",
+      "delay": "Buy more to pay less!",
+      "active": 0,
+      "is_free": 0,
+      "position": 2
+    },
+    {
+      "id_carrier": 4,
+      "name": "My light carrier",
+      "delay": "The lighter the cheaper!",
+      "active": 1,
+      "is_free": 0,
+      "position": 3
+    }
+  ],
+  "records_total": 4,
+  "pagination": {
+    "offset": 0,
+    "limit": 50
+  },
+  "sorting": {
+    "order_by": "position",
+    "order_way": "asc"
+  },
+  "is_empty_state": false,
+  "view_options": {},
+  "bulk_actions": [],
+  "grid_actions": [],
+  "query": ""
+}
