@@ -282,6 +282,27 @@ final class Grid
     }
 
     /**
+     * The text that reads best on a record's colour (a status badge): dark or light, by their WCAG contrast with it
+     */
+    public function inkOn(string $color): string
+    {
+        $hex = ltrim(trim($color), '#');
+        if (3 === strlen($hex)) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+        if (!preg_match('/^[0-9a-f]{6}$/i', $hex)) {
+            return 'dark';
+        }
+
+        $luminance = $this->luminance($hex);
+        // The kit's dark text ($gray-800, #1d1d1b) and white
+        $onDark = ($luminance + 0.05) / ($this->luminance('1d1d1b') + 0.05);
+        $onLight = 1.05 / ($luminance + 0.05);
+
+        return $onDark >= $onLight ? 'dark' : 'light';
+    }
+
+    /**
      * What displayAdminGridTableBefore and displayAdminGridTableAfter get, as on the old grids
      */
     public function getHookParams(): array
@@ -293,6 +314,17 @@ final class Grid
             'legacy_controller' => $request?->attributes->get('_legacy_controller'),
             'controller' => $request?->attributes->get('_controller'),
         ];
+    }
+
+    private function luminance(string $hex): float
+    {
+        $channels = array_map(function (string $pair): float {
+            $value = hexdec($pair) / 255;
+
+            return $value <= 0.03928 ? $value / 12.92 : (($value + 0.055) / 1.055) ** 2.4;
+        }, str_split($hex, 2));
+
+        return 0.2126 * $channels[0] + 0.7152 * $channels[1] + 0.0722 * $channels[2];
     }
 
     /**

@@ -60,7 +60,6 @@ $component-name: ps-grid;
 
   &__heading {
     white-space: nowrap;
-    vertical-align: bottom;
 
     &--end {
       text-align: end;
@@ -81,6 +80,11 @@ $component-name: ps-grid;
     &:hover {
       text-decoration: underline;
     }
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: $focus-ring-box-shadow;
+    }
   }
 
   // The shape says the order: an arrow on the sorted column, both ways on the others, muted
@@ -92,17 +96,10 @@ $component-name: ps-grid;
     color: inherit;
   }
 
-  // The fields of the filter row: Bootstrap's small size, wide enough to type in
+  // The fields of the filter row (Bootstrap's small ones), wide enough to type in
   &__filter {
     min-width: $ps-grid-filter-min-width;
     vertical-align: top;
-
-    .form-control,
-    .form-select {
-      min-height: $input-height-sm;
-      padding: $input-padding-y-sm $input-padding-x-sm;
-      font-size: $input-font-size-sm;
-    }
   }
 
   &__cell {
@@ -132,15 +129,15 @@ $component-name: ps-grid;
     color: var(--#{$prefix}danger);
   }
 
-  // A badge in the record's own colour, its text dark or light to read on it
+  // A badge in the record's own colour (over its light variant), its text dark or light by their contrast with it
   &__badge {
     background-color: var(--#{$prefix}grid-badge-color);
 
-    &--bright {
+    &--ink-dark {
       color: $gray-800;
     }
 
-    &--dark {
+    &--ink-light {
       color: $white;
     }
   }
@@ -161,6 +158,11 @@ $component-name: ps-grid;
   &__image {
     max-width: $ps-grid-image-size;
     height: auto;
+  }
+
+  // Embedded, the footer is not a card's: the room a card footer has above it
+  &--embedded &__footer {
+    margin-block-start: map-get($spacers, 3);
   }
 
   // The pagination is a container (its narrow form follows its own width): the footer gives it the room rows per page

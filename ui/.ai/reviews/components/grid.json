@@ -1,0 +1,123 @@
+{
+  "component": "Grid",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-grid/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 12,
+    "captured": 12,
+    "skipped": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 7,
+    "minor": 13,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "display_name, alignment center and the four blocks are untested and not in any story",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/grid.html.twig:19,22-25,45,56-57,62-64,96,170-197"
+    },
+    {
+      "severity": "major",
+      "title": "Filter-row field sizing re-written by hand; on a select filter it removes the room kept for the arrow",
+      "where": "ui/src/scss/components/_grid.scss:99-104; grid.html.twig:116-119"
+    },
+    {
+      "severity": "major",
+      "title": "headingLevel on the title and on the empty states is never rendered at a value other than 2",
+      "where": "grid.html.twig:45,59,132; GridComponentTest.php:34; Grid.stories.js:78"
+    },
+    {
+      "severity": "major",
+      "title": "Most cell templates and the per-grid cell override are not tested",
+      "where": "Ui/Grid/cell/{color,disableable_link,image,link_group,severity_level,status,_fallback}.html.twig; badge.html.twig:10-13; date_time.html.twig:6-7; grid.html.twig:150-155"
+    },
+    {
+      "severity": "major",
+      "title": "No-match empty state is off-screen at 375: the area under the filters is blank",
+      "where": "grid.html.twig:128-140; No match and No match embedded at 375 px"
+    },
+    {
+      "severity": "major",
+      "title": "Status badges in the record's colour fail text contrast",
+      "where": "Ui/Grid/cell/badge.html.twig:15; _grid.scss:136-146; src/Core/Util/ColorBrightnessCalculator.php:17-26; Default, Filtered, Embedded, One page at every width"
+    },
+    {
+      "severity": "major",
+      "title": "Embedded empty grid: the section's aria-labelledby points to a caption that is not rendered",
+      "where": "grid.html.twig:41 and 55-60 vs 91; Nothing yet with embedded:true, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Clear filters fails silently when the reset request fails",
+      "where": "ui/src/js/components/grid-filters.js:32-34"
+    },
+    {
+      "severity": "minor",
+      "title": "Severity labels are translated from a variable, so extraction loses them",
+      "where": "Ui/Grid/cell/severity_level.html.twig:7-17"
+    },
+    {
+      "severity": "minor",
+      "title": "Colour badge is hand-written badge markup with a hard-coded psk- variable",
+      "where": "Ui/Grid/cell/badge.html.twig:15; ui/src/scss/components/_grid.scss:137"
+    },
+    {
+      "severity": "minor",
+      "title": "No match says the same sentence twice",
+      "where": "grid.html.twig:79-80,132"
+    },
+    {
+      "severity": "minor",
+      "title": "Link cell opens a new window without saying so",
+      "where": "Ui/Grid/cell/link.html.twig:7"
+    },
+    {
+      "severity": "minor",
+      "title": "Heading vertical-align repeats Bootstrap's thead rule",
+      "where": "ui/src/scss/components/_grid.scss:61-63"
+    },
+    {
+      "severity": "minor",
+      "title": "headingLevel docs say only 'the title's level'; the Embedded story's :headingLevel=\"3\" changes nothing",
+      "where": "ui/src/stories/components/Grid.stories.js:52,63,78"
+    },
+    {
+      "severity": "minor",
+      "title": "Embedded: two landmarks with the same name ('Orders')",
+      "where": "Embedded story, and Default with embedded=true; grid.html.twig:41 and 89"
+    },
+    {
+      "severity": "minor",
+      "title": "Header count reads '1 results' / '0 results' to screen readers",
+      "where": "grid.html.twig:46, ui/src/stories/grid.js:157; Filtered, No match, Nothing yet"
+    },
+    {
+      "severity": "minor",
+      "title": "Embedded paginated footer sits flush against the last row",
+      "where": "grid.html.twig:171; Default with embedded:true at 375/768/1280"
+    },
+    {
+      "severity": "minor",
+      "title": "display_name false leaves an empty grey header strip",
+      "where": "grid.html.twig:43-48; Default with view_options.display_name false (emulated) at 768"
+    },
+    {
+      "severity": "minor",
+      "title": "Sort links show the browser's default focus outline, not the kit ring",
+      "where": "ui/src/scss/components/_grid.scss:74-84; Default, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Title and EmptyState heading share the same level when headingLevel is 6",
+      "where": "grid.html.twig:59 and 132; Grid.php:36; Nothing yet with headingLevel:6"
+    }
+  ]
+}

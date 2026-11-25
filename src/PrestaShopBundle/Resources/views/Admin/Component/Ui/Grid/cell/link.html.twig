@@ -12,4 +12,7 @@
   {%- set icon = component.icon(column.options.icon ?? null) -%}
   {%- if icon -%}<twig:ui:Icon :name="icon"/> {% endif -%}
   {{- record[column.options.field] -}}
+  {%- if (column.options.target ?? null) == '_blank' -%}
+    <span class="visually-hidden"> {{ '(opens in a new tab)'|trans({}, 'Admin.Global') }}</span>
+  {%- endif -%}
 </a>

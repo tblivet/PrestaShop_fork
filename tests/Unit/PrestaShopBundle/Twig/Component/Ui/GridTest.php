@@ -153,6 +153,23 @@ class GridTest extends TestCase
         $this->assertNull($grid->icon('<script>'));
     }
 
+    #[DataProvider('provideColors')]
+    public function testTheTextThatReadsBestOnARecordsColour(string $color, string $ink): void
+    {
+        $this->assertSame($ink, $this->grid()->inkOn($color));
+    }
+
+    public static function provideColors(): iterable
+    {
+        yield 'a light blue' => ['#3498D8', 'dark'];
+        yield 'a dark purple' => ['#34209E', 'light'];
+        yield 'a green' => ['#01B887', 'dark'];
+        yield 'a red' => ['#E74C3C', 'dark'];
+        yield 'black, short' => ['#000', 'light'];
+        yield 'white' => ['#ffffff', 'dark'];
+        yield 'not a colour' => ['transparent', 'dark'];
+    }
+
     public function testHookParameters(): void
     {
         $params = $this->grid()->getHookParams();

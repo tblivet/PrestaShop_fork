@@ -4,17 +4,18 @@
  -#}
 {#- A log's severity: its badge and, with_message, its word -#}
 {%- set severity = record.severity -%}
+{#- Each word translated where it is written, so the extraction finds it -#}
 {%- set levels = {
-  0: {variant: 'secondary', message: 'Debug'},
-  1: {variant: 'success', message: 'Informative only'},
-  2: {variant: 'warning', message: 'Warning'},
-  3: {variant: 'danger', message: 'Error'},
-  4: {variant: 'dark', message: 'Major issue (crash)!'},
+  0: {variant: 'secondary', message: 'Debug'|trans({}, 'Admin.Advparameters.Help')},
+  1: {variant: 'success', message: 'Informative only'|trans({}, 'Admin.Advparameters.Help')},
+  2: {variant: 'warning', message: 'Warning'|trans({}, 'Admin.Advparameters.Help')},
+  3: {variant: 'danger', message: 'Error'|trans({}, 'Admin.Advparameters.Help')},
+  4: {variant: 'dark', message: 'Major issue (crash)!'|trans({}, 'Admin.Advparameters.Help')},
 } -%}
 {%- set level = levels[severity] ?? {variant: 'light', message: ''} -%}
 <twig:ui:Badge :variant="level.variant" pill>
   {%- if column.options.with_message and level.message -%}
-    {{ level.message|trans({}, 'Admin.Advparameters.Help') }} ({{ severity }})
+    {{ level.message }} ({{ severity }})
   {%- else -%}
     {{ severity }}
   {%- endif -%}

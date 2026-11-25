@@ -5,6 +5,7 @@
 // Twig: <twig:ui:Grid> (src/PrestaShopBundle/Twig/Component/Ui/Grid.php) renders this markup, keep both in sync. The
 // stories and the test render the same fixture (ui/src/stories/fixtures/order-grid.json, GridFixture.php).
 import orderGrid from '../fixtures/order-grid.json';
+import alert from '../alert';
 import grid, { GRID_DEFAULTS } from '../grid';
 import { withTwig } from '../twig-snippet';
 import { withDefaults } from '../story-defaults';
@@ -13,8 +14,8 @@ import { withDefaults } from '../story-defaults';
 const fixed = (story) => ({ controls: { disable: true }, docs: { description: { story } } });
 
 // A story of the Orders fixture, some of its keys replaced; with a description, a fixed case
-const ordersStory = (override = {}, props = {}, description = null) => withTwig((args) => ({
-  ...grid({ ...orderGrid, ...override }, { ...args, ...props }),
+const ordersStory = (override = {}, props = {}, description = null, blocks = {}) => withTwig((args) => ({
+  ...grid({ ...orderGrid, ...override }, { ...args, ...props }, blocks),
   fixture: { name: 'order-grid', ...(Object.keys(override).length ? { override } : {}) },
 }), description ? fixed(description) : {});
 
@@ -49,10 +50,10 @@ export default {
       description: {
         component: [
           '**Twig usage**: a list page renders the grid its controller presents (`GridPresenter::present()`), as it is: `<twig:ui:Grid :grid="orderGrid"/>`; inside a card of a view page: `<twig:ui:Grid :grid="customerOrdersGrid" embedded :headingLevel="3"/>`. Blocks: `before` (above the toolbar), `toolbar` (beside Search), `empty` (the page\'s EmptyState when there is nothing yet), `footer` (after the pages: Back to list). The design: `ui/.ai/designs/grid.md`.',
-          '**Props**: `grid` (required: the presented grid), `embedded` (default `false`: in another card, no card and no visible header; the table\'s caption names it), `headingLevel` (2 to 6, default 2: the title\'s level, after the page head\'s h1). Other attributes (`data-ps-*`, `aria-*`) go on the `<section>`.',
+          '**Props**: `grid` (required: the presented grid), `embedded` (default `false`: in another card, no card and no visible header; its title is for screen readers only), `headingLevel` (2 to 6, default 2: the level of the grid\'s title, visible or not, after the page head\'s h1; its empty states\' titles are one level under). Other attributes (`data-ps-*`, `aria-*`) go on the `<section>`.',
           '**Behaviour**: sorting, pages and rows per page are links on the current URL with the grid\'s prefix (`order[orderBy]`, `order[offset]`…), Search submits the filter form, Clear filters posts the reset; each lands on the results summary (`#order_grid_results`), focused after the reload. In these stories the links and the form only change the address.',
           '**Do**: the presented grid as the controller gives it; the page\'s own empty state in `empty`. **Don\'t**: a grid built by hand, per-page behaviour options, a grid in a grid.',
-          '**States**: a list (sorted, filters, pages), filtered, no match, nothing yet, one page, embedded.',
+          '**States**: a list (sorted, filters, pages), filtered, no match, nothing yet, one page, embedded, every block, a hidden title and centred column.',
         ].join('\n\n'),
       },
     },
@@ -76,3 +77,20 @@ export const NothingYet = ordersStory({ ...EMPTY, is_empty_state: true }, {}, 'N
 export const OnePage = ordersStory({ records_total: 3, pagination: { offset: 0, limit: 50 } }, {}, 'Three orders: no pages, no rows per page, no footer.');
 
 export const Embedded = ordersStory({ records_total: 3, pagination: { offset: 0, limit: 50 } }, { embedded: true, headingLevel: 3 }, 'In a card of a view page (a customer\'s orders): no card, no visible header; the section is named by the table\'s caption.');
+
+// The blocks: as a page writes them, with kit components
+const linkButton = (label, href) => ({ html: `<a class="btn btn-link ps-button" href="${href}">${label}</a>`, twig: `<twig:ui:Button variant="link" href="${href}">${label}</twig:ui:Button>` });
+const plainButton = (label) => ({ html: `<button class="btn btn-outline-secondary ps-button" type="button" data-ps-data-busy-label="Loading...">${label}</button>`, twig: `<twig:ui:Button variant="outline-secondary">${label}</twig:ui:Button>` });
+
+export const WithBlocks = ordersStory({ records_total: 3, pagination: { offset: 0, limit: 50 } }, { headingLevel: 3 }, 'The four blocks: `before` (an alert above the toolbar), `toolbar` (a button beside Search), `footer` (Back to list), here with a title at level 3; `empty` replaces the default empty state (Nothing yet).', {
+  before: alert({ type: 'info', content: 'Orders of the last 30 days only: older ones are archived.' }),
+  toolbar: plainButton('Export'),
+  footer: linkButton('Back to list', '#back'),
+});
+
+export const HiddenTitleCentredColumn = ordersStory({
+  view_options: { display_name: false },
+  columns: orderGrid.columns.map((column) => (column.id === 'new' ? { ...column, options: { ...column.options, alignment: 'center' } } : column)),
+  records_total: 3,
+  pagination: { offset: 0, limit: 50 },
+}, {}, '`display_name: false` in the definition: no header band, the title for screen readers only. A column with `alignment: center`.');

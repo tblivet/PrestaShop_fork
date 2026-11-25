@@ -771,3 +771,12 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 
 **Strings**
 - New (`Admin.Global`): "results", "%from%–%to% of %total%", "No results match these filters", "Pages of %list%", "%limit% per page"; (`Admin.Actions`): "Clear filters". Reused: "No records found", "Search", "Yes", "No", "Deleted customer".
+
+**Review fixes** (`ui-component-review`, 2026-11-25)
+- The section is always named by its title `#{id}_grid_title`: with `embedded` or `display_name: false` a visually hidden heading and no header band (was: the caption, which an empty embedded grid did not render). The scrolling region is named "{name} table".
+- No match: the small EmptyState is under the table (`.ps-grid__no-match`), not in a table row that scrolled out of sight on a phone; the summary reads "0 results" (it repeated the empty state's sentence). The header's count reads "1 result" / "N results".
+- Filter fields take Bootstrap's `form-control-sm` / `form-select-sm` (a range passes `small` to its fields, `ps_filter_range` in the kit form theme) instead of sizes written by hand, which took a select's arrow room.
+- A badge in the record's colour is a `<twig:ui:Badge variant="light">` with `.ps-grid__badge--ink-dark|light`: its text picked by its WCAG contrast (`Grid::inkOn()`), not by `is_color_bright`, which let some statuses fail.
+- A link cell with `target="_blank"` says it opens a new tab; severity words are translated where written; Clear filters announces a failure (`data-ps-data-error`); sort links show the kit focus ring; an embedded grid's footer has room above it.
+
+**Strings**: new (`Admin.Global`) "result", "%list% table"; (`Admin.Notifications.Error`) "The filters could not be cleared. Try again."

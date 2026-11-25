@@ -135,7 +135,8 @@
 {%- endblock date_picker_widget -%}
 
 {# A range of two fields (a grid's filter of a column): a fieldset named by the column, each field by its own label, both
- # for screen readers only as the column header already shows them. The field names stay those of every theme #}
+ # for screen readers only as the column header already shows them; small: Bootstrap's small fields. The field names
+ # stay those of every theme #}
 {%- block ps_filter_range -%}
   {%- set legend = label is same as(false) ? null : (label is empty ? name|humanize : (translation_domain is same as(false) ? label : label|trans(label_translation_parameters, translation_domain))) -%}
   <fieldset class="ps-filter-range" id="{{ id }}">
@@ -145,7 +146,12 @@
     {%- for field in fields -%}
       <div class="ps-filter-range__field">
         {{- form_label(field.child, field.label, {label_attr: {class: 'visually-hidden'}}) -}}
-        {{- form_widget(field.child) -}}
+        {#- small: Bootstrap's small fields (a grid's filter row) -#}
+        {%- if small ?? false -%}
+          {{- form_widget(field.child, {attr: field.child.vars.attr|merge({class: ((field.child.vars.attr.class ?? '') ~ ' form-control-sm')|trim})}) -}}
+        {%- else -%}
+          {{- form_widget(field.child) -}}
+        {%- endif -%}
       </div>
     {%- endfor -%}
     {%- if extra is defined and extra -%}
