@@ -11,7 +11,7 @@
     {% if settingsTipMessage is not empty %}
       {{ ps.infotip(settingsTipMessage, true) }}
     {% endif %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: supplierGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: supplierGrid}) }}
   {% endblock %}
 {% endblock %}
 

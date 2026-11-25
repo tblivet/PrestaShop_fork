@@ -34,27 +34,27 @@
   {% endblock %}
 
   {% block no_qty_product_with_combinations_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: noQtyProductWithCombinationGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: noQtyProductWithCombinationGrid}) }}
   {% endblock %}
 
   {% block no_qty_product_without_combinations_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: noQtyProductWithoutCombinationGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: noQtyProductWithoutCombinationGrid}) }}
   {% endblock %}
 
   {% block disabled_product_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: disabledProductGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: disabledProductGrid}) }}
   {% endblock %}
 
   {% block product_without_image_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: productWithoutImageGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: productWithoutImageGrid}) }}
   {% endblock %}
 
   {% block product_without_description_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: productWithoutDescriptionGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: productWithoutDescriptionGrid}) }}
   {% endblock %}
 
   {% block product_without_price_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: productWithoutPriceGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: productWithoutPriceGrid}) }}
   {% endblock %}
 
 {% endblock %}

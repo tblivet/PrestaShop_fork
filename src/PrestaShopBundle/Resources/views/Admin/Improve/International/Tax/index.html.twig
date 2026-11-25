@@ -14,7 +14,7 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block content %}
-  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: taxGrid}) }}
+  {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: taxGrid}) }}
   {{ include('@PrestaShop/Admin/Improve/International/Tax/Blocks/tax_options.html.twig') }}
 {% endblock %}
 

@@ -1,0 +1,12 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- A list page's grid. With PS_UI_KIT on, <twig:ui:Grid> when it renders every type of the grid (Grid::renders()); the
+    old panel otherwise, and with the kit off. Pages include this one rather than Common/Grid/grid_panel.html.twig, which
+    a module may override (ps_linklist does) -#}
+{%- if ui_kit and ui_kit_renders_grid(grid) -%}
+  <twig:ui:Grid :grid="grid"/>
+{%- else -%}
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: grid}) }}
+{%- endif -%}

@@ -6,6 +6,7 @@
 
 namespace PrestaShopBundle\Twig\Extension;
 
+use PrestaShopBundle\Twig\Component\Ui\Grid;
 use RuntimeException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Form\FormInterface;
@@ -20,6 +21,7 @@ use Twig\TwigTest;
  *
  * - column_content(column, record, grid): renders column content based on column type.
  * - column_header(column, grid): renders column header based on column type.
+ * - ui_kit_renders_grid(grid): whether <twig:ui:Grid> renders the grid (PS_UI_KIT pages).
  */
 class GridExtension extends AbstractExtension
 {
@@ -61,6 +63,7 @@ class GridExtension extends AbstractExtension
             new TwigFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
                 'is_safe' => ['html'],
             ]),
+            new TwigFunction('ui_kit_renders_grid', [Grid::class, 'renders']),
         ];
     }
 

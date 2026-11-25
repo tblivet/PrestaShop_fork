@@ -752,6 +752,16 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## List pages on `<twig:ui:Grid>` — 2026-11-25
+
+Step 13 of the grid's build plan. The list pages include `Common/Grid/Ui/grid_panel.html.twig` instead of `Common/Grid/grid_panel.html.twig`: with PS_UI_KIT on it renders `<twig:ui:Grid>` when the kit has a template for every type of the grid (`Grid::renders()`, `unknownTypes()`; Twig `ui_kit_renders_grid(grid)`), the old panel otherwise and with the kit off. The switch is not in `Common/Grid/grid_panel.html.twig` itself: the native module ps_linklist overrides that template for the whole back office.
+
+**Pages on the kit grid** (45 templates switched): Shopping carts, Credit slips, Brands (and addresses), Suppliers, Catalog price rules, Files, Features, Attributes, Monitoring (most of its grids), Merchandise returns, Order messages, Customer service, Outstanding, Addresses, Business entities, Admin API, Customer and employee sessions, Webservice, Profiles, Extra properties, Backups, Employees, Quick access, SQL Manager, Titles, Search engines, Customer groups, SEO & URLs, Contacts, Stores, Tags, Pages (CMS), Carriers, Languages, States, Email body translations, Countries, Tax rules, Zones, Taxes.
+
+**Still on the old grid** (a column type of their own, step 14): Discounts (`discount_usage`), Logs (`employee_name_with_avatar`), Search aliases (`aliases`), Currencies (`currency_name`); and the pages that do not include the panel this way (Orders has its own kit template, Customers, Categories, Products, Image settings, Email logs, the view pages' grids).
+
+**Behaviour**: the pages' own scripts still load; their old grid extensions find none of their classes on a kit grid and do nothing. Each page still needs its review (`ui-review`) and its UI tests updated.
+
 ## `<twig:ui:Grid>`: toggles and positions — 2026-11-25
 
 Steps 11 and 12 of the grid's build plan. `Grid::toggleUrl()`, `getReorderField()`, `getOrderingColumnId()`, `getReorder()`, `positionUpdateUrl()`; `Grid/cell/toggle.html.twig`, `position.html.twig`, `position_handle.html.twig`; `grid-toggle.js`, `grid-position.js`; a Carriers fixture and its stories (Toggles and positions, Positions not sorted).

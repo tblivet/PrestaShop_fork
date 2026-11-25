@@ -6,7 +6,7 @@
 
 {% block content %}
   {% block discount_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: discountGrid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: discountGrid}) }}
   {% endblock %}
 
   {{ include('@PrestaShop/Admin/Sell/Catalog/Discount/create_discount_modal.html.twig') }}

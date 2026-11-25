@@ -47,6 +47,19 @@ final class Grid
         'zoom_in' => 'search',
     ];
 
+    /** Column types with a kit cell (Grid/cell/*.html.twig) */
+    public const COLUMN_TYPES = [
+        'action', 'badge', 'boolean', 'bulk_action', 'choice', 'color', 'data', 'date_time', 'disableable_link', 'html', 'identifier',
+        'image', 'link', 'link_group', 'order_price', 'position', 'position_handle', 'severity_level', 'status', 'toggle',
+    ];
+
+    /** Action types the kit renders: the others (modules', domain ones) need their own kit template first */
+    public const ACTION_TYPES = [
+        'bulk' => ['button', 'modal_form_submit', 'submit'],
+        'grid' => ['link', 'simple', 'submit'],
+        'row' => ['link', 'submit'],
+    ];
+
     public array $grid;
 
     /** Inside another card: no card, no visible header; the table's caption names it */
@@ -62,6 +75,45 @@ final class Grid
         private readonly IconRegistryInterface $icons,
         private readonly CsrfTokenManagerInterface $csrfTokens,
     ) {
+    }
+
+    /**
+     * Whether the kit renders this presented grid as it is: every column, row, bulk and list action of a type it has.
+     * Otherwise a kit page keeps the old grid (Common/Grid/Ui/grid_panel.html.twig), so nothing is lost.
+     */
+    public static function renders(array $grid): bool
+    {
+        return [] === self::unknownTypes($grid);
+    }
+
+    /**
+     * The types of a presented grid the kit has no template for, as "column:employee_name_with_avatar", "row:…",
+     * "bulk:…", "grid:…"
+     *
+     * @return list<string>
+     */
+    public static function unknownTypes(array $grid): array
+    {
+        $unknown = [];
+        foreach ($grid['columns'] ?? [] as $column) {
+            if (!in_array($column['type'], self::COLUMN_TYPES, true)) {
+                $unknown[] = 'column:' . $column['type'];
+            }
+            foreach ('action' === $column['type'] ? $column['options']['actions'] ?? [] : [] as $action) {
+                if (!in_array($action->getType(), self::ACTION_TYPES['row'], true)) {
+                    $unknown[] = 'row:' . $action->getType();
+                }
+            }
+        }
+        foreach (['bulk', 'grid'] as $kind) {
+            foreach ($grid['actions'][$kind] ?? [] as $action) {
+                if (!in_array($action['type'] ?? null, self::ACTION_TYPES[$kind], true)) {
+                    $unknown[] = $kind . ':' . ($action['type'] ?? '?');
+                }
+            }
+        }
+
+        return array_values(array_unique($unknown));
     }
 
     #[PreMount]

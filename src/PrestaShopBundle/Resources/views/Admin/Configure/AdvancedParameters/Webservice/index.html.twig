@@ -54,7 +54,7 @@
     {% endif %}
   {% endblock %}
 
-  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: grid}) }}
+  {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: grid}) }}
 
   {{ form_start(webserviceConfigurationForm, {action: path('admin_webservice_save_settings'), attr: {class: 'form', id: 'configuration_form'}}) }}
 

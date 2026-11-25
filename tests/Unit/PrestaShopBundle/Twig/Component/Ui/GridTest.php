@@ -329,6 +329,22 @@ class GridTest extends TestCase
         $this->assertNull($this->grid()->getReorder());
     }
 
+    public function testTheKitRendersAGridWhoseEveryTypeItHas(): void
+    {
+        $actions = (new RowActionCollection())->add((new LinkRowAction('edit'))->setName('Edit')->setOptions(['route' => 'a', 'route_param_name' => 'id', 'route_param_field' => 'id']));
+        $grid = self::presentedArray();
+        $grid['columns'][] = ['id' => 'actions', 'type' => 'action', 'options' => ['actions' => $actions]];
+        $grid['actions'] = ['grid' => [['type' => 'simple']], 'bulk' => [['type' => 'submit']]];
+
+        $this->assertTrue(Grid::renders($grid));
+        $this->assertSame([], Grid::unknownTypes($grid));
+
+        $grid['columns'][] = ['id' => 'employee', 'type' => 'employee_name_with_avatar', 'options' => []];
+        $grid['actions']['bulk'][] = ['type' => 'ajax'];
+        $this->assertFalse(Grid::renders($grid));
+        $this->assertSame(['column:employee_name_with_avatar', 'bulk:ajax'], Grid::unknownTypes($grid));
+    }
+
     public function testHookParameters(): void
     {
         $params = $this->grid()->getHookParams();

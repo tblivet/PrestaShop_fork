@@ -14,7 +14,7 @@
       </div>
     </div>
   {% else %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {grid: grid}) }}
+    {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: grid}) }}
   {% endif %}
 
   {{ form_start(setUpUrlsForm, {attr: {class: 'form'}, action: path('admin_metas_set_up_urls_save')}) }}
