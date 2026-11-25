@@ -28,7 +28,7 @@ class IconComponentTest extends KernelTestCase
     public function testRendersADecorativeInlineSvg(): void
     {
         $this->assertSame(
-            '<svg width="1em" height="1em" fill="currentColor" viewBox="0 -960 960 960" class="ps-icon" aria-hidden="true"><path d="m274-450 248 248-42 42-320-320 320-320 42 42-248 248h526v60H274Z"></path></svg>',
+            '<svg width="1em" height="1em" fill="currentColor" viewBox="0 -960 960 960" class="ps-icon" aria-hidden="true"><path d="m297.18-440.39 238.95 238.96L480-145.87 145.87-480 480-814.7l56.13 56.13-238.95 238.96H814.7v79.22H297.18Z"></path></svg>',
             $this->render('<twig:ui:Icon name="arrow_back"/>')
         );
     }
