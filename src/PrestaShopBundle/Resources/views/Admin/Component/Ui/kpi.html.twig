@@ -15,11 +15,14 @@
     <div class="ps-kpi__text">
       <p class="ps-kpi__title">{{ title }}</p>
       {#- A value to refresh shows a placeholder, named for screen readers, until kpi.js sets it (a cached one may be out
-          of date); none or blank, a long dash -#}
+          of date); none or blank, a long dash, named too -#}
+      {%- set noValue = 'No value'|trans({}, 'Admin.Global') -%}
       {%- if refreshUrl -%}
-        <p class="ps-kpi__value placeholder-wave" data-ps-ref="kpi-value" aria-busy="true"><span class="placeholder ps-kpi__placeholder" aria-hidden="true"></span><span class="visually-hidden">{{ 'Loading...'|trans({}, 'Admin.Global') }}</span></p>
+        <p class="ps-kpi__value" data-ps-ref="kpi-value" data-ps-data-no-value="{{ noValue }}" aria-busy="true"><span class="placeholder-wave" aria-hidden="true"><span class="placeholder ps-kpi__placeholder"></span></span><span class="visually-hidden">{{ 'Loading...'|trans({}, 'Admin.Global') }}</span></p>
+      {%- elseif value is null or value|trim is same as('') -%}
+        <p class="ps-kpi__value" data-ps-ref="kpi-value"><span aria-hidden="true">—</span><span class="visually-hidden">{{ noValue }}</span></p>
       {%- else -%}
-        <p class="ps-kpi__value" data-ps-ref="kpi-value">{{ value is null or value|trim is same as('') ? '—' : value }}</p>
+        <p class="ps-kpi__value" data-ps-ref="kpi-value">{{ value }}</p>
       {%- endif -%}
       {%- if subtitle -%}
         <p class="ps-kpi__subtitle">{{ subtitle }}</p>

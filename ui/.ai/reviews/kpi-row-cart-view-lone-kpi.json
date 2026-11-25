@@ -1,0 +1,50 @@
+{
+  "page": "KPI row - Cart view (lone KPI)",
+  "url": "http://localhost:8001/admin-dev/index.php/sell/orders/carts/1/view",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-kpi-pages/index.html",
+  "states": {
+    "total": 8,
+    "captured": 3,
+    "emulated": 5,
+    "missing": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 2,
+    "minor": 3,
+    "suggestion": 0
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "At 375px the whole content area scrolls sideways because of the cart summary table",
+      "where": "Cart view, 375px"
+    },
+    {
+      "severity": "major",
+      "title": "Material Icons ligature text is read as part of the button names (\"remove_red_eye View order\")",
+      "where": "Cart view, every width: View order, View customer, Write an email buttons"
+    },
+    {
+      "severity": "minor",
+      "title": "Cart information and Customer information cards touch with no gap on a phone",
+      "where": "Cart view, 375px"
+    },
+    {
+      "severity": "minor",
+      "title": "Focused KPI row shows the browser outline, and the fade mask hides its right edge",
+      "where": "ui/src/scss/components/_kpi-row.scss:12-41 (no :focus-visible rule); row with 2+ KPIs at 375px"
+    },
+    {
+      "severity": "minor",
+      "title": "A module's raw-HTML KPI sits in a bare, unclassed div with no tile",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:14"
+    }
+  ],
+  "outOfScope": [
+    "CartController calls setAllowRefresh(false), but the kit path of CommonController::renderKpiRowAction ignores it: every visit fetches AdminStats getKpi for a total the server already rendered. Pass refreshUrl only when allowRefresh is true.",
+    "Because of that refetch, an employee who can view AdminCarts but not AdminStats always sees a dash for the cart total.",
+    "Give CartNotFoundException its own translation key instead of the generic 'The object cannot be loaded (or found).' shared by about 40 files."
+  ]
+}

@@ -29,11 +29,14 @@ trait HelperKpiTrait
     public function getKpiData(): KpiData
     {
         $helper = $this->createHelper();
-        $text = fn (mixed $value): ?string => null === $value || false === $value || '' === $value ? null : (string) $value;
+        // HelperKpi's texts are HTML ("&infin;%"); Twig escapes what it prints
+        $text = fn (mixed $value): ?string => null === $value || false === $value || '' === $value
+            ? null
+            : html_entity_decode((string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 
         return new KpiData(
             id: (string) $helper->id,
-            title: (string) $helper->title,
+            title: (string) $text($helper->title),
             value: $text($helper->value),
             subtitle: $text($helper->subtitle),
             icon: $text($helper->icon),

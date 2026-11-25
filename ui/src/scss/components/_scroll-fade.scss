@@ -63,6 +63,14 @@ $component-name: ps-scroll-fade;
     scroll-padding-block: var(--#{$prefix}scroll-fade-size);
   }
 
+  // A named region the keyboard scrolls (scroll-fade.js makes it a tab stop while it overflows): focused, its content
+  // shows whole, unmasked, and Bootstrap's focus ring goes inside its edge
+  &:focus-visible {
+    outline: 0;
+    box-shadow: inset 0 0 0 $focus-ring-width $focus-ring-color;
+    mask-image: none;
+  }
+
   &[data-ps-state~="more-before"] {
     --#{$prefix}scroll-fade-before: var(--#{$prefix}scroll-fade-size);
   }

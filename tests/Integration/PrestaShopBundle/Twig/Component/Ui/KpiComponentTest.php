@@ -41,9 +41,9 @@ class KpiComponentTest extends KernelTestCase
         $this->assertStringEndsWith('</a>', trim($html));
     }
 
-    public function testABlankValueIsALongDash(): void
+    public function testABlankValueIsALongDashNamedForScreenReaders(): void
     {
-        $this->assertStringContainsString('<p class="ps-kpi__value" data-ps-ref="kpi-value">—</p>', $this->render('<twig:ui:Kpi title="Average Age" value=" "/>'));
+        $this->assertStringContainsString('<p class="ps-kpi__value" data-ps-ref="kpi-value"><span aria-hidden="true">—</span><span class="visually-hidden">No value</span></p>', $this->render('<twig:ui:Kpi title="Average Age" value=" "/>'));
     }
 
     public function testShowsAPlaceholderInsteadOfAValueToRefresh(): void
@@ -51,9 +51,9 @@ class KpiComponentTest extends KernelTestCase
         $html = $this->render('<twig:ui:Kpi title="Average Order Value" value=" tax excl." refreshUrl="/stats?kpi=age"/>');
 
         $this->assertStringContainsString('data-ps-data-refresh-url="/stats?kpi=age"', $html);
-        $this->assertStringContainsString('<p class="ps-kpi__value placeholder-wave" data-ps-ref="kpi-value" aria-busy="true"><span class="placeholder ps-kpi__placeholder" aria-hidden="true"></span><span class="visually-hidden">Loading...</span></p>', $html);
+        $this->assertStringContainsString('<p class="ps-kpi__value" data-ps-ref="kpi-value" data-ps-data-no-value="No value" aria-busy="true"><span class="placeholder-wave" aria-hidden="true"><span class="placeholder ps-kpi__placeholder"></span></span><span class="visually-hidden">Loading...</span></p>', $html);
         $this->assertStringNotContainsString('tax excl.', $html);
-        $this->assertStringContainsString('<p class="ps-kpi__value" data-ps-ref="kpi-value">—</p>', $this->render('<twig:ui:Kpi title="Average Age"/>'));
+        $this->assertStringContainsString('<p class="ps-kpi__value" data-ps-ref="kpi-value"><span aria-hidden="true">—</span><span class="visually-hidden">No value</span></p>', $this->render('<twig:ui:Kpi title="Average Age"/>'));
         $this->assertStringNotContainsString('ps-kpi__icon', $html);
         $this->assertStringNotContainsString('ps-kpi__subtitle', $html);
     }
@@ -66,7 +66,7 @@ class KpiComponentTest extends KernelTestCase
             ['html' => '<div class="module-kpi">Module</div>'],
         ]);
 
-        $this->assertStringContainsString('<div class="ps-kpi-row ps-kpi-row--3 ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="Key figures" tabindex="0">', $html);
+        $this->assertStringContainsString('<div class="ps-kpi-row ps-kpi-row--3 ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="Key figures">', $html);
         $this->assertSame(2, substr_count($html, 'data-ps-ref="kpi"'));
         $this->assertStringContainsString('<div><div class="module-kpi">Module</div></div>', $html);
     }
@@ -79,12 +79,9 @@ class KpiComponentTest extends KernelTestCase
         $this->assertStringContainsString('ps-kpi-row--2 ', $this->renderRow(array_fill(0, 2, $kpi)));
     }
 
-    public function testALoneKpiTakesTheRowAndDoesNotScroll(): void
+    public function testALoneKpiTakesTheRow(): void
     {
-        $html = $this->renderRow([['props' => ['title' => 'Total Cart', 'value' => '€128.40']]]);
-
-        $this->assertStringContainsString('ps-kpi-row--1 ', $html);
-        $this->assertStringNotContainsString('tabindex', $html);
+        $this->assertStringContainsString('ps-kpi-row--1 ', $this->renderRow([['props' => ['title' => 'Total Cart', 'value' => '€128.40']]]));
     }
 
     private function renderRow(array $kpis): string

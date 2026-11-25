@@ -16,9 +16,9 @@ export default {
 };
 
 const KPIS = [
-  { title: 'Conversion Rate', value: '1.8%', subtitle: '30 days', icon: 'percent', color: 'oceanblue', id: 'box-conversion-rate' },
-  { title: 'Abandoned Carts', value: '12', subtitle: 'From 2026-11-22 to 2026-11-23 per unique visitors', icon: 'remove_shopping_cart', color: 'purple', href: '#carts', id: 'box-carts' },
-  { title: 'Average Order Value', value: '€45.20', subtitle: '30 days', icon: 'account_balance_wallet', color: 'amber', id: 'box-average-order' },
+  { title: 'Conversion Rate', value: '1.8%', subtitle: '30 days', icon: 'monitoring', color: 'oceanblue', id: 'box-conversion-rate' },
+  { title: 'Abandoned Carts', value: '12', subtitle: 'Yesterday', icon: 'remove_shopping_cart', color: 'purple', href: '#carts', id: 'box-carts' },
+  { title: 'Average Order Value', value: '€45.20', subtitle: '30 days, tax excl.', icon: 'account_balance_wallet', color: 'amber', id: 'box-average-order' },
   { title: 'Net Profit per Visit', value: '€3.10', subtitle: '30 days', icon: 'account_box', color: 'green', id: 'box-net-profit-visit' },
 ];
 
@@ -28,7 +28,7 @@ const head = pageHead({
   help: 'https://docs.prestashop-project.org/',
 }).html;
 
-const kpis = `<div class="ps-kpi-row ps-kpi-row--4 ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="Key figures" tabindex="0">${KPIS.map((item) => kpi(item).html).join('')}</div>`;
+const kpis = `<div class="ps-kpi-row ps-kpi-row--4 ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="Key figures">${KPIS.map((item) => kpi(item).html).join('')}</div>`;
 
 // Story chrome: what the grid will be
 const grid = '<div class="card ps-grid-panel flex-grow-1"><div class="card-body text-body-secondary"><p>Orders grid goes here.</p></div></div>';

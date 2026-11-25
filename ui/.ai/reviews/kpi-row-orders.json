@@ -1,0 +1,92 @@
+{
+  "page": "KPI row - Orders",
+  "url": "http://localhost:8001/admin-dev/index.php/sell/orders/",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-kpi-pages/index.html",
+  "states": {
+    "total": 16,
+    "captured": 9,
+    "emulated": 6,
+    "missing": [
+      "refresh-denied-limited-employee"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 2,
+    "minor": 9,
+    "suggestion": 2
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "A module KPI without data renders as run-together bare text, with no tile",
+      "where": "kpi_row.html.twig:14, xl 1280 / md 768 / 375 (module-kpis-more-than-four)"
+    },
+    {
+      "severity": "major",
+      "title": "Row focus ring fades out once the row is scrolled from the keyboard",
+      "where": "keyboard-row-focus, 375 px, after ArrowRight; ui/src/scss/components/_scroll-fade.scss:30-41, src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:9"
+    },
+    {
+      "severity": "minor",
+      "title": "A negative value breaks after its minus sign",
+      "where": "_kpi.scss:57-62, xl 1200 (cached-extreme-values)"
+    },
+    {
+      "severity": "minor",
+      "title": "Conversion Rate icon differs from the Storybook Orders row",
+      "where": "Kpi.php:29 vs Kpi.stories.js:12, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Abandoned Carts subtitle misreads the figure and is the longest string in the row",
+      "where": "src/Adapter/Kpi/AbandonedCartKpi.php:44 (all widths; worst at xl 1200 and in French)"
+    },
+    {
+      "severity": "minor",
+      "title": "Average order value: 'tax excl.' goes in the value on one path and is missing on the other",
+      "where": "src/Adapter/Kpi/AverageOrderValueKpi.php:40-44 vs refreshed value from AdminStatsController.php:949-954"
+    },
+    {
+      "severity": "minor",
+      "title": "Focused Abandoned Carts card is not scrolled into view and its ring is cut by the fade",
+      "where": "linked-card-hover-focus, 375 px, Tab from the row at scrollLeft 120; ui/src/js/components/scroll-fade.js"
+    },
+    {
+      "severity": "minor",
+      "title": "A missing or failed value is a bare em dash, silent for screen readers",
+      "where": "refresh-failed, all widths; ui/src/js/components/kpi.js:10,26-29, src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:22"
+    },
+    {
+      "severity": "minor",
+      "title": "An HTML entity in a KPI value shows literally ('&infin;%')",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:22 and ui/src/js/components/kpi.js:15,26 (cached-extreme-values, every width)"
+    },
+    {
+      "severity": "minor",
+      "title": "The row is a Tab stop even where it does not scroll (md and up)",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:9 (keyboard-row-focus, 1280)"
+    },
+    {
+      "severity": "minor",
+      "title": "Cards on different lines of the 2x2 grid have different heights",
+      "where": "ui/src/scss/components/_kpi-row.scss:20-23 (layout-md-lg-two-by-two, 768 and 992)"
+    },
+    {
+      "severity": "suggestion",
+      "title": "The KPI title is still a flex row, left over from the removed tooltip",
+      "where": "ui/src/scss/components/_kpi.scss:49-55"
+    },
+    {
+      "severity": "suggestion",
+      "title": "The KPI row's focus room hard-codes .25rem instead of using $focus-ring-width",
+      "where": "ui/src/scss/_variables.scss:487-489; ui/src/scss/components/_kpi-row.scss:17-18"
+    }
+  ],
+  "outOfScope": [
+    "The Orders KPI adapters read CONVERSION_RATE, ABANDONED_CARTS and the others from ps_configuration, but AdminStats getKpi writes them to ps_configuration_kpi: the cache never hits, so every load shows placeholders and makes four fetches.",
+    "AdminStats getKpi should return plain text ready to display, formatted like the server-rendered path: Average Order Value comes back without its tax scope, and the conversion rate as the literal '&infin;%' entity instead of '∞'.",
+    "An employee who can read Orders but not Stats gets a dash on all four cards: hide the row, or skip the refresh, when AdminStats is not readable."
+  ]
+}

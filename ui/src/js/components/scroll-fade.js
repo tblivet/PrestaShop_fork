@@ -6,7 +6,9 @@ import selectors from '../selectors';
 
 // <div class="ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade">: says in data-ps-state which ends of the box
 // hide content ("more-before", "more-after"), for _scroll-fade.scss to fade them. Read on the axis that overflows,
-// sideways first; kept up to date on scroll, on resize and when the content changes.
+// sideways first; kept up to date on scroll, on resize and when the content changes. A named region (role="region",
+// the KPI row) is a tab stop only while it overflows, so the keyboard scrolls it; an item focused inside a box comes
+// into view clear of the fade (its scroll-padding).
 
 // Below a pixel is rounding, not content
 const EDGE = 1;
@@ -23,6 +25,14 @@ const update = (box) => {
   }
   if (hidden - position > EDGE) {
     states.push('more-after');
+  }
+
+  if (box.getAttribute('role') === 'region') {
+    if (hidden > EDGE) {
+      box.setAttribute('tabindex', '0');
+    } else {
+      box.removeAttribute('tabindex');
+    }
   }
 
   if (states.length > 0) {
@@ -59,6 +69,14 @@ export default function initScrollFade() {
   // Boxes added later (a modal, a refreshed list, a story) are watched too
   new MutationObserver((records) => records.forEach((record) => record.addedNodes.forEach(watch)))
     .observe(document.body, { childList: true, subtree: true });
+
+  document.addEventListener('focusin', (event) => {
+    const box = event.target instanceof Element && event.target.parentElement?.closest(selectors.scrollFade);
+
+    if (box) {
+      event.target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  });
 
   // Scroll events do not bubble: caught on the way down
   document.addEventListener('scroll', (event) => {

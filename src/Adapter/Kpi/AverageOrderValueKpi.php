@@ -34,14 +34,10 @@ final class AverageOrderValueKpi implements KpiInterface, KpiDataInterface
         $helper->icon = 'account_balance_wallet';
         $helper->color = 'color4';
         $helper->title = $this->translator->trans('Average Order Value', [], 'Admin.Global');
-        $helper->subtitle = $this->translator->trans('30 days', [], 'Admin.Global');
+        $helper->subtitle = $this->translator->trans('30 days, tax excl.', [], 'Admin.Orderscustomers.Feature');
 
         if ($this->configuration->get('AVG_ORDER_VALUE') !== false) {
-            $helper->value = $this->translator->trans(
-                '%amount% tax excl.',
-                ['%amount%' => $this->configuration->get('AVG_ORDER_VALUE')],
-                'Admin.Orderscustomers.Feature'
-            );
+            $helper->value = $this->configuration->get('AVG_ORDER_VALUE');
         }
 
         $helper->source = $this->contextAdapter->getAdminLink('AdminStats', true, [

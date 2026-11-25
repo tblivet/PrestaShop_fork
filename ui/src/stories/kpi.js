@@ -8,6 +8,7 @@ import accountBox from '../../icons/material-symbols/account-box.svg?raw';
 import bookmark from '../../icons/material-symbols/bookmark.svg?raw';
 import calendarToday from '../../icons/material-symbols/calendar-today.svg?raw';
 import mail from '../../icons/material-symbols/mail.svg?raw';
+import monitoring from '../../icons/material-symbols/monitoring.svg?raw';
 import percent from '../../icons/material-symbols/percent.svg?raw';
 import person from '../../icons/material-symbols/person.svg?raw';
 import removeShoppingCart from '../../icons/material-symbols/remove-shopping-cart.svg?raw';
@@ -30,6 +31,7 @@ export const KPI_ICONS = {
   bookmark,
   calendar_today: calendarToday,
   mail,
+  monitoring,
   percent,
   person,
   remove_shopping_cart: removeShoppingCart,
@@ -56,9 +58,14 @@ export default function kpi({
     id,
   });
   const iconHtml = icon ? `<span class="ps-kpi__icon">${uiIcon(KPI_ICONS[icon] ?? '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"></svg>', { size: 'lg' })}</span>` : '';
-  const valueHtml = refreshUrl
-    ? '<p class="ps-kpi__value placeholder-wave" data-ps-ref="kpi-value" aria-busy="true"><span class="placeholder ps-kpi__placeholder" aria-hidden="true"></span><span class="visually-hidden">Loading...</span></p>'
-    : `<p class="ps-kpi__value" data-ps-ref="kpi-value">${value === null || String(value).trim() === '' ? '—' : escape(value)}</p>`;
+  const noValue = value === null || String(value).trim() === '';
+  let valueHtml = `<p class="ps-kpi__value" data-ps-ref="kpi-value">${escape(value)}</p>`;
+
+  if (refreshUrl) {
+    valueHtml = '<p class="ps-kpi__value" data-ps-ref="kpi-value" data-ps-data-no-value="No value" aria-busy="true"><span class="placeholder-wave" aria-hidden="true"><span class="placeholder ps-kpi__placeholder"></span></span><span class="visually-hidden">Loading...</span></p>';
+  } else if (noValue) {
+    valueHtml = '<p class="ps-kpi__value" data-ps-ref="kpi-value"><span aria-hidden="true">—</span><span class="visually-hidden">No value</span></p>';
+  }
   const subtitleHtml = subtitle ? `<p class="ps-kpi__subtitle">${escape(subtitle)}</p>` : '';
 
   return {

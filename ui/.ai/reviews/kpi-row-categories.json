@@ -1,0 +1,87 @@
+{
+  "page": "KPI row - Categories",
+  "url": "http://localhost:8001/admin-dev/index.php/sell/catalog/categories",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-kpi-pages/index.html",
+  "states": {
+    "total": 11,
+    "captured": 6,
+    "emulated": 4,
+    "missing": [
+      "french-employee"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 1,
+    "minor": 7,
+    "suggestion": 4
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "A module's HTML KPI renders as bare inline text, with no tile",
+      "where": "module-kpi-and-fifth-card at 1440, 1280, 800, 768 and 375; src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:13-14"
+    },
+    {
+      "severity": "minor",
+      "title": "In the two-column grid, the two rows have different heights",
+      "where": "default-cached-four / md-lg-two-columns at 768, 800 and 1100; ui/src/scss/components/_kpi-row.scss:20-23"
+    },
+    {
+      "severity": "minor",
+      "title": "On a phone, tabbing to the linked card leaves it partly under the right fade",
+      "where": "keyboard-focus-row-and-link, 375; ui/src/scss/components/_scroll-fade.scss:48-53; ui/src/js/components/scroll-fade.js:35-69"
+    },
+    {
+      "severity": "minor",
+      "title": "The KPI row takes a Tab stop at desktop widths, where it does not scroll",
+      "where": "keyboard-focus-row-and-link, 1440; src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:9"
+    },
+    {
+      "severity": "minor",
+      "title": "kpi.js removes a class to end the loading state",
+      "where": "ui/src/js/components/kpi.js:16; src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:20"
+    },
+    {
+      "severity": "minor",
+      "title": "The 'no value' dash has no translatable text for screen readers",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:22; ui/src/js/components/kpi.js:10,26-28"
+    },
+    {
+      "severity": "minor",
+      "title": "In _kpi-row.scss a modifier comes after the breakpoints",
+      "where": "ui/src/scss/components/_kpi-row.scss:37-41"
+    },
+    {
+      "severity": "minor",
+      "title": "The scrolling KPI row's focus ring is the browser's default outline, not Bootstrap's focus ring",
+      "where": "ui/src/scss/components/_kpi-row.scss:12-41 (and _scroll-fade.scss:48-57); 1440 and 375, row focused with Tab"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Longest KPI title wraps to 3 lines and sets the values at different heights",
+      "where": "src/Adapter/Kpi/AverageProductsInCategoryKpi.php:61, xl at 1200px (French will be longer)"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Leftover flex rules on the KPI title from the removed tooltip",
+      "where": "ui/src/scss/components/_kpi.scss:49-55"
+    },
+    {
+      "severity": "suggestion",
+      "title": "The KPI row's focus room hard-codes Bootstrap's focus ring width",
+      "where": "ui/src/scss/_variables.scss:489 ($ps-kpi-row-focus-room: .25rem), used at ui/src/scss/components/_kpi-row.scss:17-18"
+    },
+    {
+      "severity": "suggestion",
+      "title": "The KPI's coloured top line hard-codes a width Bootstrap's border scale already has",
+      "where": "ui/src/scss/_variables.scss:484 ($ps-kpi-line-width: .1875rem), used at ui/src/scss/components/_kpi.scss:20"
+    }
+  ],
+  "outOfScope": [
+    "Every Categories card gets data-ps-data-refresh-url on every load, even when its *_EXPIRE in ps_configuration_kpi is in the future: getKpi refetches all four values, the cache is never used and a cached empty value is never shown (check the expiry logic in HelperKpiTrait / the KPI adapters).",
+    "Top Category changes from one load to the next (Stationery, Art, Men, Clothes, Home Accessories): the ranking query seems to have no stable tie-break (TopCategoryKpi / AdminStatsController getKpi).",
+    "With 5 or more KPIs from actionCategoriesKpiRowModifier, the controller could pass the real count so the row picks a better arrangement than a lone fifth card wrapping."
+  ]
+}

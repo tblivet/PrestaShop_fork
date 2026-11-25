@@ -9,18 +9,18 @@ import { nullableSelect, withDefaults } from '../story-defaults';
 
 // The Orders row (CommonController::renderKpiRowAction renders it from the core KPIs)
 const ORDERS = [
-  { title: 'Conversion Rate', value: '1.8%', subtitle: '30 days', icon: 'percent', color: 'oceanblue', id: 'box-conversion-rate' },
-  { title: 'Abandoned Carts', value: '12', subtitle: 'From 2026-11-22 to 2026-11-23 per unique visitors', icon: 'remove_shopping_cart', color: 'purple', href: '#carts', id: 'box-carts' },
-  { title: 'Average Order Value', value: '€45.20', subtitle: '30 days', icon: 'account_balance_wallet', color: 'amber', id: 'box-average-order' },
+  { title: 'Conversion Rate', value: '1.8%', subtitle: '30 days', icon: 'monitoring', color: 'oceanblue', id: 'box-conversion-rate' },
+  { title: 'Abandoned Carts', value: '12', subtitle: 'Yesterday', icon: 'remove_shopping_cart', color: 'purple', href: '#carts', id: 'box-carts' },
+  { title: 'Average Order Value', value: '€45.20', subtitle: '30 days, tax excl.', icon: 'account_balance_wallet', color: 'amber', id: 'box-average-order' },
   { title: 'Net Profit per Visit', value: '€3.10', subtitle: '30 days', icon: 'account_box', color: 'green', id: 'box-net-profit-visit' },
 ];
 
 // A row as kpi_row.html.twig renders it: up to four a line; on a phone two or more scroll sideways, a lone one takes the
-// whole width
+// whole width; scroll-fade.js makes it a tab stop while it scrolls
 const row = (items) => {
   const nodes = items.map(kpi);
   const columns = Math.min(items.length, 4);
-  const open = `<div class="ps-kpi-row ps-kpi-row--${columns} ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="Key figures"${columns > 1 ? ' tabindex="0"' : ''}>`;
+  const open = `<div class="ps-kpi-row ps-kpi-row--${columns} ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="Key figures">`;
 
   return {
     html: `${open}${nodes.map((node) => node.html).join('')}</div>`,
@@ -38,8 +38,8 @@ export default {
       description: {
         component: [
           '**Twig usage**: a page shows its KPI row with `render(controller(\'PrestaShopBundle\\\\Controller\\\\Admin\\\\CommonController::renderKpiRowAction\', {kpiRow: …}))`; on a kit page it renders each core KPI (`KpiDataInterface`) as a `<twig:ui:Kpi>` in `.ps-kpi-row`, up to four a line, two or more scrolling sideways on a phone, a lone one the whole width; a module\'s KPI keeps its own HTML. Called directly:',
-          '```twig\n<twig:ui:Kpi\n  title="{{ \'Conversion Rate\'|trans({}, \'Admin.Global\') }}"\n  value="1.8%"\n  subtitle="{{ \'30 days\'|trans({}, \'Admin.Global\') }}"\n  icon="percent"\n  color="oceanblue"\n/>\n```',
-          '**Props**: `title` (required), `value` (default none: a long dash, also when blank; not shown with a `refreshUrl`), `subtitle` (default none: the period or the scope, "30 days", "All time"), `icon` (default none: any [Material Symbols](https://fonts.google.com/icons) name, decorative), `color` (`oceanblue`, `purple`, `amber`, `green`; default `oceanblue`: the KPI\'s place in its row), `href` (default none: the card is a link to where the figure comes from), `refreshUrl` (default none: the value is out of date; a placeholder, named "Loading..." for screen readers, stands until `kpi.js` sets the fresh one, fetched from it when the page loads, JSON `{value}`, or a long dash if none comes). Other attributes (`id`) go on the card.',
+          '```twig\n<twig:ui:Kpi\n  title="{{ \'Conversion Rate\'|trans({}, \'Admin.Global\') }}"\n  value="1.8%"\n  subtitle="{{ \'30 days\'|trans({}, \'Admin.Global\') }}"\n  icon="monitoring"\n  color="oceanblue"\n/>\n```',
+          '**Props**: `title` (required), `value` (default none: a long dash, "No value" for screen readers, also when blank; not shown with a `refreshUrl`), `subtitle` (default none: the period or the scope, "30 days", "All time"), `icon` (default none: any [Material Symbols](https://fonts.google.com/icons) name, decorative), `color` (`oceanblue`, `purple`, `amber`, `green`; default `oceanblue`: the KPI\'s place in its row), `href` (default none: the card is a link to where the figure comes from), `refreshUrl` (default none: the value is out of date; a placeholder, named "Loading..." for screen readers, stands until `kpi.js` sets the fresh one, fetched from it when the page loads, JSON `{value}`, its HTML entities read as text, or a long dash if none comes). Other attributes (`id`) go on the card.',
           '**Colour**: a line on the card\'s top edge and the tint of its icon tell a KPI from the others of its row; the four line steps weigh the same on white.',
           '**Do**: a short title, a value with its unit, the period in the subtitle; the four colours in their order in a row. **Don\'t**: a sentence as a value, a KPI alone where a figure in the page would do.',
           '**States**: a row of four (Orders), of three, of two, a lone KPI, a linked KPI, without an icon, without a value, a value loading then refreshed, a long value.',
@@ -56,7 +56,7 @@ export default {
     href: { control: 'text', description: 'Where the figure comes from: the card is a link', table: { type: { summary: 'string' } } },
     refreshUrl: { control: 'text', description: 'URL of a fresh value (JSON), fetched on load', table: { type: { summary: 'string' } } },
   }, KPI_DEFAULTS),
-  args: { title: 'Conversion Rate', value: '1.8%', subtitle: '30 days', icon: 'percent', color: 'oceanblue' },
+  args: { title: 'Conversion Rate', value: '1.8%', subtitle: '30 days', icon: 'monitoring', color: 'oceanblue' },
 };
 
 export const Default = withTwig((args) => kpi(args));
@@ -85,7 +85,7 @@ export const WithoutIcon = withTwig(() => kpi({
 
 export const WithoutValue = withTwig(() => kpi({
   title: 'Main Country', subtitle: '30 days', icon: 'person', color: 'purple',
-}), fixed('No value (or a blank one): a long dash.'));
+}), fixed('No value (or a blank one): a long dash, "No value" for screen readers.'));
 
 export const Refreshing = withTwig(() => kpi({
   title: 'Average Age', subtitle: 'All time', icon: 'calendar_today', color: 'green', refreshUrl: 'data:application/json,{"value":"34 years"}',

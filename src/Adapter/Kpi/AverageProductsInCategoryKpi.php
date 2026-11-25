@@ -57,8 +57,7 @@ final class AverageProductsInCategoryKpi implements KpiInterface, KpiDataInterfa
         $helper->id = 'box-products-per-category';
         $helper->icon = 'search';
         $helper->color = 'color4';
-        $helper->title =
-            $this->translator->trans('Average number of products per category', [], 'Admin.Catalog.Feature');
+        $helper->title = $this->translator->trans('Products per category', [], 'Admin.Catalog.Feature');
 
         if (false !== $this->kpiConfiguration->get('PRODUCTS_PER_CATEGORY')) {
             $helper->value = $this->kpiConfiguration->get('PRODUCTS_PER_CATEGORY');

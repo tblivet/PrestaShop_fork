@@ -9,7 +9,6 @@ namespace PrestaShop\PrestaShop\Adapter\Kpi;
 use HelperKpi;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Context\LanguageContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartStatus;
 use PrestaShop\PrestaShop\Core\Kpi\KpiDataInterface;
 use PrestaShop\PrestaShop\Core\Kpi\KpiInterface;
@@ -27,24 +26,18 @@ final class AbandonedCartKpi implements KpiInterface, KpiDataInterface
         private readonly LegacyContext $contextAdapter,
         private readonly TranslatorInterface $translator,
         private readonly ConfigurationInterface $configuration,
-        private readonly LanguageContext $languageContext,
         private readonly UrlGeneratorInterface $router
     ) {
     }
 
     private function createHelper(): HelperKpi
     {
-        $dateFormat = $this->languageContext->getDateFormat();
-
         $helper = new HelperKpi();
         $helper->id = 'box-carts';
         $helper->icon = 'remove_shopping_cart';
         $helper->color = 'color2';
         $helper->title = $this->translator->trans('Abandoned Carts', [], 'Admin.Global');
-        $helper->subtitle = $this->translator->trans('From %date1% to %date2% per unique visitors', [
-            '%date1%' => date($dateFormat, strtotime('-2 day')),
-            '%date2%' => date($dateFormat, strtotime('-1 day')),
-        ], 'Admin.Orderscustomers.Feature');
+        $helper->subtitle = $this->translator->trans('Yesterday', [], 'Admin.Global');
 
         $helper->href = $this->router->generate('admin_carts_index', [
             'cart[filters][status]' => CartStatus::ABANDONED_CART,

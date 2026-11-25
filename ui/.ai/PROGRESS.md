@@ -54,6 +54,45 @@ Adoption counts `<twig:ui:*>` uses against raw Bootstrap component markup (alert
 
 ## Open findings
 
+### KPI row - Cart view (lone KPI) — 2026-11-25
+
+- **major** At 375px the whole content area scrolls sideways because of the cart summary table (Cart view, 375px)
+- **major** Material Icons ligature text is read as part of the button names ("remove_red_eye View order") (Cart view, every width: View order, View customer, Write an email buttons)
+- **minor** Cart information and Customer information cards touch with no gap on a phone (Cart view, 375px)
+- **minor** Focused KPI row shows the browser outline, and the fade mask hides its right edge (ui/src/scss/components/_kpi-row.scss:12-41 (no :focus-visible rule); row with 2+ KPIs at 375px)
+- **minor** A module's raw-HTML KPI sits in a bare, unclassed div with no tile (src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:14)
+
+### KPI row - Categories — 2026-11-25
+
+- **major** A module's HTML KPI renders as bare inline text, with no tile (module-kpi-and-fifth-card at 1440, 1280, 800, 768 and 375; src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:13-14)
+- **minor** In the two-column grid, the two rows have different heights (default-cached-four / md-lg-two-columns at 768, 800 and 1100; ui/src/scss/components/_kpi-row.scss:20-23)
+- **minor** On a phone, tabbing to the linked card leaves it partly under the right fade (keyboard-focus-row-and-link, 375; ui/src/scss/components/_scroll-fade.scss:48-53; ui/src/js/components/scroll-fade.js:35-69)
+- **minor** The KPI row takes a Tab stop at desktop widths, where it does not scroll (keyboard-focus-row-and-link, 1440; src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:9)
+- **minor** kpi.js removes a class to end the loading state (ui/src/js/components/kpi.js:16; src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:20)
+- **minor** The 'no value' dash has no translatable text for screen readers (src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:22; ui/src/js/components/kpi.js:10,26-28)
+- **minor** In _kpi-row.scss a modifier comes after the breakpoints (ui/src/scss/components/_kpi-row.scss:37-41)
+- **minor** The scrolling KPI row's focus ring is the browser's default outline, not Bootstrap's focus ring (ui/src/scss/components/_kpi-row.scss:12-41 (and _scroll-fade.scss:48-57); 1440 and 375, row focused with Tab)
+- **suggestion** Longest KPI title wraps to 3 lines and sets the values at different heights (src/Adapter/Kpi/AverageProductsInCategoryKpi.php:61, xl at 1200px (French will be longer))
+- **suggestion** Leftover flex rules on the KPI title from the removed tooltip (ui/src/scss/components/_kpi.scss:49-55)
+- **suggestion** The KPI row's focus room hard-codes Bootstrap's focus ring width (ui/src/scss/_variables.scss:489 ($ps-kpi-row-focus-room: .25rem), used at ui/src/scss/components/_kpi-row.scss:17-18)
+- **suggestion** The KPI's coloured top line hard-codes a width Bootstrap's border scale already has (ui/src/scss/_variables.scss:484 ($ps-kpi-line-width: .1875rem), used at ui/src/scss/components/_kpi.scss:20)
+
+### KPI row - Orders — 2026-11-25
+
+- **major** A module KPI without data renders as run-together bare text, with no tile (kpi_row.html.twig:14, xl 1280 / md 768 / 375 (module-kpis-more-than-four))
+- **major** Row focus ring fades out once the row is scrolled from the keyboard (keyboard-row-focus, 375 px, after ArrowRight; ui/src/scss/components/_scroll-fade.scss:30-41, src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:9)
+- **minor** A negative value breaks after its minus sign (_kpi.scss:57-62, xl 1200 (cached-extreme-values))
+- **minor** Conversion Rate icon differs from the Storybook Orders row (Kpi.php:29 vs Kpi.stories.js:12, all widths)
+- **minor** Abandoned Carts subtitle misreads the figure and is the longest string in the row (src/Adapter/Kpi/AbandonedCartKpi.php:44 (all widths; worst at xl 1200 and in French))
+- **minor** Average order value: 'tax excl.' goes in the value on one path and is missing on the other (src/Adapter/Kpi/AverageOrderValueKpi.php:40-44 vs refreshed value from AdminStatsController.php:949-954)
+- **minor** Focused Abandoned Carts card is not scrolled into view and its ring is cut by the fade (linked-card-hover-focus, 375 px, Tab from the row at scrollLeft 120; ui/src/js/components/scroll-fade.js)
+- **minor** A missing or failed value is a bare em dash, silent for screen readers (refresh-failed, all widths; ui/src/js/components/kpi.js:10,26-29, src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:22)
+- **minor** An HTML entity in a KPI value shows literally ('&infin;%') (src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:22 and ui/src/js/components/kpi.js:15,26 (cached-extreme-values, every width))
+- **minor** The row is a Tab stop even where it does not scroll (md and up) (src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:9 (keyboard-row-focus, 1280))
+- **minor** Cards on different lines of the 2x2 grid have different heights (ui/src/scss/components/_kpi-row.scss:20-23 (layout-md-lg-two-by-two, 768 and 992))
+- **suggestion** The KPI title is still a flex row, left over from the removed tooltip (ui/src/scss/components/_kpi.scss:49-55)
+- **suggestion** The KPI row's focus room hard-codes .25rem instead of using $focus-ring-width (ui/src/scss/_variables.scss:487-489; ui/src/scss/components/_kpi-row.scss:17-18)
+
 ### login — 2026-11-13
 
 Validated as the reference page on 2026-11-05: no blocker or major. Re-checked on 2026-11-12 after the layouts: still no blocker or major. The minor findings are non-blocking; the out-of-scope ideas are for a back-end change. Re-checked on 2026-11-13 after Button, Link and IconButton: no new blocker or major, axe clean on the four screens.

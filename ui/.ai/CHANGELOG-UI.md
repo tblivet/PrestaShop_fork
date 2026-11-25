@@ -613,3 +613,34 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Strings** (`Admin.Global`)
 - Reused: "Loading..." (already translated).
+
+## KPI row on real pages — 2026-11-25
+
+From the `ui-screen-review` of the KPI row (Orders, Cart #1, Categories). `kpi.html.twig`, `kpi_row.html.twig`, `kpi.js`, `scroll-fade.js`, `_kpi.scss`, `_kpi-row.scss`, `_scroll-fade.scss`, `HelperKpiTrait`, the Kpi stories.
+
+**Markup**
+- The row has no `tabindex` in the template any more: `scroll-fade.js` makes a named region (`role="region"`) a tab stop only while it overflows (a phone), and takes it back when it does not.
+- No value: `<span aria-hidden="true">—</span><span class="visually-hidden">No value</span>`, from Twig and from `kpi.js`.
+- Loading: `.placeholder-wave` moved from the value to a wrapper of the placeholder (`<span class="placeholder-wave" aria-hidden="true"><span class="placeholder ps-kpi__placeholder"></span></span>`); the value carries `data-ps-data-no-value` (the translated "No value" for `kpi.js`).
+- HelperKpi texts are decoded (`html_entity_decode`) into `KpiData`, and `kpi.js` reads a refreshed value as text: `&infin;%` shows `∞%`.
+
+**Look**
+- A focused scroll-fade box (`:focus-visible`) drops its mask and shows Bootstrap's focus ring inside its edge (`inset 0 0 0 $focus-ring-width $focus-ring-color`).
+- `.ps-kpi__title` is a plain paragraph (its flex, for the old tooltip button, is gone).
+- `.ps-kpi__value` breaks a word only when it does not fit (`overflow-wrap: break-word`, was `anywhere`): a negative figure keeps its sign.
+- `_kpi-row.scss`: `--1` first, the two-a-line rule on `--2`, `--3`, `--4` only; no rule depends on its order any more.
+- Values from Bootstrap: `$focus-ring-width` (set in the kit's variables) for `$ps-kpi-row-focus-room` and `$ps-page-head-focus-room`; the KPI line is `$border-widths` step 3 (`$ps-kpi-line-width: 3`).
+
+**Behaviour**
+- `scroll-fade.js`: an item focused inside a box is scrolled into view clear of the fade (`scrollIntoView` with the box's `scroll-padding`).
+- `kpi.js` sets the value and removes `aria-busy` only; no class to remove.
+
+**Stories**
+- Conversion Rate's icon is `monitoring`, as on the page (`assessment` is `monitoring` in the kit).
+
+**Strings** (core KPIs: the old theme shows them too; short, a KPI is read at a glance)
+- New (`Admin.Global`): "No value".
+- Abandoned Carts subtitle: "From %date1% to %date2% per unique visitors" (`Admin.Orderscustomers.Feature`) → "Yesterday" (`Admin.Global`); the window is fixed (the day before the last 24 hours). `AbandonedCartKpi` no longer takes `LanguageContext` (final, autowired).
+- Average Order Value: the value is the amount only (was "%amount% tax excl.", as the refreshed value already was); its subtitle "30 days" → "30 days, tax excl." (`Admin.Orderscustomers.Feature`).
+- Categories: "Average number of products per category" → "Products per category" (`Admin.Catalog.Feature`).
+

@@ -365,6 +365,8 @@ $border-color: $gray-400;
 // Bootstrap derives focus styles from $primary (rgba($primary, .25)) — with the
 // near-black brand that ring is imperceptible. Use the brand at 50% (3.3:1 on white); buttons use their own color (components/_buttons.scss).
 $focus-ring-color: rgba($primary, 0.5);
+// Bootstrap's, set here so the kit's focus rooms below can use it
+$focus-ring-width: .25rem;
 $input-focus-border-color: var(--#{$prefix}border-color);
 
 // ── Navs ──────────────────────────────────────────────────────────────────────
@@ -480,15 +482,16 @@ $ps-content-max-width: 75rem;
 $ps-content-padding: 1.5rem;
 // The room the page title keeps beside the actions; narrower, the actions go under it
 $ps-page-head-title-min-width: 10rem;
-// <twig:ui:Kpi>: the line on top that gives its colour, the tinted square of its icon
-$ps-kpi-line-width: .1875rem;
+// <twig:ui:Kpi>: the line on top that gives its colour (a step of $border-widths, defined later), the tinted square of
+// its icon
+$ps-kpi-line-width: 3;
 $ps-kpi-icon-size: 2.5rem;
 $ps-kpi-placeholder-width: 5rem;
 // The KPI row on a phone: a card takes most of the width, the next one shows; room for a card's focus ring
 $ps-kpi-row-phone-width: 80%;
-$ps-kpi-row-focus-room: .25rem;
+$ps-kpi-row-focus-room: $focus-ring-width;
 // Room around the page head's sub-pages for a link's focus ring, inside their scrolling box
-$ps-page-head-focus-room: .25rem;
+$ps-page-head-focus-room: $focus-ring-width;
 // Gaps of the layouts (<twig:ui:Layout:*>, Gap.php): a size to a Bootstrap spacer index ($spacers is defined later)
 $ps-layout-gaps: (none: 0, xs: 1, sm: 2, md: 3, lg: 4, xl: 5);
 
