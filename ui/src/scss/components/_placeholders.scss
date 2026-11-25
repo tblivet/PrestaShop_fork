@@ -3,8 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // Override Bootstrap placeholders — https://getbootstrap.com/docs/5.3/components/placeholders/
+// The back office's skeleton grey instead of the text colour, square; a bg-* utility still sets another
 
 .placeholder {
-  --#{$prefix}placeholder-border-radius: 0.125rem;
-  border-radius: var(--#{$prefix}placeholder-border-radius, 0.125rem);
+  background-color: $ps-placeholder-bg;
 }

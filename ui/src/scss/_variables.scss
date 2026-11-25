@@ -459,6 +459,12 @@ $dropdown-item-padding-x: .75rem;
 $progress-height: 0.875rem;
 $progress-font-size: 0.75rem;
 
+// Placeholders: the back office's skeleton (new-theme _skeleton.scss), a light grey band sweeping a grey #ddd; with
+// .placeholder-wave the band's peak is #eee
+$placeholder-opacity-max: 1;
+$placeholder-opacity-min: .5;
+$ps-placeholder-bg: $gray-400;
+
 // ── Back-office layout ────────────────────────────────────────────────────────
 // Fixed header height — the mobile drawer and its backdrop are offset by it
 $ps-header-height: 3.5rem;
