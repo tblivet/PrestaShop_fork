@@ -7,6 +7,7 @@ import * as bootstrap from 'bootstrap';
 import initAlertDismissFocus from '../src/js/components/alert-dismiss-focus';
 import initAnnouncer from '../src/js/components/announcer';
 import initBusyButtons from '../src/js/components/busy-button';
+import initConfirmDialog from '../src/js/components/confirm-dialog';
 import initPasswordToggle from '../src/js/components/password-toggle';
 import initHeaderSearch from '../src/js/components/header-search';
 import initKpis from '../src/js/components/kpi';
@@ -35,8 +36,22 @@ initPasswordToggle();
 initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
 initPaginationJump();
+initConfirmDialog(bootstrap.Modal, bootstrap.Dropdown);
 initTooltips(bootstrap.Tooltip);
 initScrollFade();
+
+// Docs pages put each story in a transformed box that clips: a modal opened there would stay in it. It goes to <body>
+// while open, as in the back office, and back to its place once closed.
+document.addEventListener('show.bs.modal', ({ target }) => {
+  if (target.parentElement === document.body) {
+    return;
+  }
+  const placeholder = document.createComment('modal');
+
+  target.before(placeholder);
+  document.body.append(target);
+  target.addEventListener('hidden.bs.modal', () => placeholder.replaceWith(target), { once: true });
+});
 
 /** @type {import('@storybook/html').Preview} */
 const preview = {

@@ -33,7 +33,7 @@ const props = ({ name, title, image, text, ...rest }) => {
 // Story chrome: shown open in place, so the docs page shows it too
 const inPlace = (node) => ({
   ...node,
-  html: `<div class="bg-body-tertiary p-3">${node.html.replace('class="modal fade ps-modal', 'class="modal fade ps-modal show d-block position-static')}</div>`,
+  html: `<div class="bg-body-tertiary p-3">${node.html.replace('class="modal fade ps-modal', 'class="modal ps-modal d-block position-static')}</div>`,
   rendered: node.html,
 });
 

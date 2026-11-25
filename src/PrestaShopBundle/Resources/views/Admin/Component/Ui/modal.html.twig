@@ -30,7 +30,7 @@
         {%- endif -%}
 
         {%- set titleTag = headingLevel is null ? 'p' : 'h' ~ headingLevel -%}
-        <{{ titleTag }} class="modal-title ps-modal__title" id="{{ id }}-title">{{ title }}</{{ titleTag }}>
+        <{{ titleTag }} class="modal-title ps-modal__title" id="{{ id }}-title" data-ps-ref="modal-title">{{ title }}</{{ titleTag }}>
 
         {%- if closable -%}
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>

@@ -1,0 +1,106 @@
+{
+  "component": "ConfirmDialog",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-confirm-dialog/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 10,
+    "captured": 10,
+    "skipped": [
+      "narrow-viewport",
+      "open-danger-submit"
+    ]
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 4,
+    "minor": 10,
+    "suggestion": 2
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "confirm-dialog.js finds the dialog title by its `.modal-title` class",
+      "where": "ui/src/js/components/confirm-dialog.js:18"
+    },
+    {
+      "severity": "major",
+      "title": "Attribute pass-through and the aria-describedby override are not render-tested",
+      "where": "tests/Integration/PrestaShopBundle/Twig/Component/Ui/ConfirmDialogComponentTest.php:28-52"
+    },
+    {
+      "severity": "major",
+      "title": "Clicking a trigger twice before the dialog opens makes one Confirm run the action twice",
+      "where": "ui/src/js/components/confirm-dialog.js:37-83 (document click handler); story components-confirmdialog--default, 768"
+    },
+    {
+      "severity": "major",
+      "title": "Confirming Delete in the story leaves Storybook, which contradicts the story's own help line",
+      "where": "ConfirmDialog.stories.js:35-36, 70-73 (Default story, form action/formaction '#submitted')"
+    },
+    {
+      "severity": "minor",
+      "title": "Accept and Cancel are hooked with `data-ps-target`, which is for containers JS writes into",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/confirm_dialog.html.twig:16-17"
+    },
+    {
+      "severity": "minor",
+      "title": "`ps-confirm-dialog__message` is an element whose block is on no ancestor",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/confirm_dialog.html.twig:11,13; ui/src/scss/components/_confirm-dialog.scss:8-13"
+    },
+    {
+      "severity": "minor",
+      "title": "A confirmed link always opens in the same tab",
+      "where": "ui/src/js/components/confirm-dialog.js:27-28,39-53"
+    },
+    {
+      "severity": "minor",
+      "title": "The plain-button trigger in the story is raw markup, not a `<twig:ui:Button>`",
+      "where": "ui/src/stories/components/ConfirmDialog.stories.js:78"
+    },
+    {
+      "severity": "minor",
+      "title": "A trigger inside an open modal stacks a second Bootstrap modal; Bootstrap's own toggle closes the open one first",
+      "where": "ui/src/js/components/confirm-dialog.js:68-84"
+    },
+    {
+      "severity": "minor",
+      "title": "Capture-phase stopImmediatePropagation blocks Bootstrap's own click handlers, so a dropdown-item trigger leaves its menu open",
+      "where": "ui/src/js/components/confirm-dialog.js:39-53"
+    },
+    {
+      "severity": "minor",
+      "title": "The id prop has no control and the story ignores args",
+      "where": "ui/src/stories/components/ConfirmDialog.stories.js:65,69"
+    },
+    {
+      "severity": "minor",
+      "title": "No story state with long text in the small dialog",
+      "where": "ui/src/stories/components/ConfirmDialog.stories.js:69-79"
+    },
+    {
+      "severity": "minor",
+      "title": "An empty data-ps-confirm still opens a dialog with no question",
+      "where": "selectors.js:19 (confirmTrigger '[data-ps-confirm]'), confirm-dialog.js:63; empty-question at all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "The Twig usage snippet on the docs page runs off the right edge",
+      "where": "ConfirmDialog.stories.js:55 (docs.description.component, 'Twig usage' inline code)"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Pass the trigger to modal.show() so Bootstrap's show/shown events carry relatedTarget",
+      "where": "ui/src/js/components/confirm-dialog.js:84"
+    },
+    {
+      "severity": "suggestion",
+      "title": "The dialog title renders as a <p>, not a heading",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/confirm_dialog.html.twig:7-10 (no headingLevel; Modal.php:38 defaults to null, modal.html.twig:32)"
+    }
+  ]
+}

@@ -21,8 +21,9 @@ const FIELD = markup('<label class="form-label" for="story-shortcut-name">Shortc
 const CANCEL_SAVE = [modalButton({ label: 'Cancel', variant: 'link', 'data-bs-dismiss': 'modal' }), modalButton({ label: 'Save', variant: 'primary' })];
 const LONG_TEXT = markup(Array(10).fill('<p>Every product of the catalog is checked against the file, then its price, stock and categories are updated. Products that are not in the file stay as they are.</p>').join(''));
 
-// Story chrome: shown in place, as an open dialog, instead of waiting for a button
-const open = (html) => `<div class="bg-body-tertiary p-3">${html.replace('class="modal fade ps-modal', 'class="modal fade ps-modal show d-block position-static')}</div>`;
+// Story chrome: shown in place, as an open dialog, instead of waiting for a button. Without Bootstrap's "show" (and its
+// fade): a .modal.show with no instance would break Bootstrap opening another modal on the same docs page
+const open = (html) => `<div class="bg-body-tertiary p-3">${html.replace('class="modal fade ps-modal', 'class="modal ps-modal d-block position-static')}</div>`;
 const shown = (node) => framedNodes([node], open);
 
 export default {

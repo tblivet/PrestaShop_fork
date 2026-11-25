@@ -45,7 +45,7 @@ export default function modal({
     html: `<div id="${id}" class="${classes}" tabindex="-1" aria-labelledby="${id}-title" aria-hidden="true"${state}${extra}>`
       + `<div class="${dialog.join(' ')}"><div class="modal-content">`
       + `<div class="modal-header">${icon ? `<span class="ps-modal__icon ps-modal__icon--${variant ?? 'info'}">${uiIcon(icons[icon], { size: 'lg' })}</span>` : ''}`
-      + `<${titleTag} class="modal-title ps-modal__title" id="${id}-title">${title}</${titleTag}>${close}</div>`
+      + `<${titleTag} class="modal-title ps-modal__title" id="${id}-title" data-ps-ref="modal-title">${title}</${titleTag}>${close}</div>`
       + `<div class="modal-body">${body.html}</div>${footerHtml}`
       + '</div></div></div>',
     twig: twigCall('ui:Modal', {

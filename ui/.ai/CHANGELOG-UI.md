@@ -714,3 +714,29 @@ Step 2b of the grid's build plan: the old grids had it (`paginator_jump_page`), 
 
 **Strings**
 - New (`Admin.Global`): "of %total%", "Enter a page number from 1 to %last%". Reused: "Page" (`Admin.Global`), "Go" (`Admin.Actions`).
+
+## `<twig:ui:ConfirmDialog>` and `data-ps-confirm` — 2026-11-25
+
+Step 3 of the grid's build plan: one confirmation for the whole kit, in place of the grid's `ConfirmModal`, `window.confirm` in link row actions, and each page's own confirm modal (INVENTORY #23). New `ConfirmDialog.php`, `confirm_dialog.html.twig`, `_confirm-dialog.scss`, `confirm-dialog.js`, the ConfirmDialog story and its helper.
+
+**Markup**
+- The kit layout (`default_layout.html.twig`, `ui_kit` branch) places one `<twig:ui:ConfirmDialog/>` after the Announcer: a `<twig:ui:Modal id="ps-confirm-dialog" class="ps-confirm-dialog" data-ps-ref="confirm-dialog" aria-describedby="ps-confirm-dialog-message">` (md size) titled "Are you sure?", an empty `.ps-confirm-dialog__message` (`data-ps-target="confirm-message"`), Cancel (link, `data-ps-ref="confirm-cancel"`) then Confirm (`data-ps-ref="confirm-accept"`).
+- `<twig:ui:Modal>`: its title has `data-ps-ref="modal-title"`, for a script that renames it.
+- A trigger: `data-ps-confirm="question"` on a button or a link, with `data-ps-data-confirm-title`, `data-ps-data-confirm-label` (the action's verb) and `data-ps-data-confirm-variant="danger"` when needed.
+
+**Behaviour**
+- `confirm-dialog.js` holds the trigger's click and fills the dialog (the title and the label back to their defaults when the trigger has none; a danger action red, `btn-destructive`, the focus on Cancel). Confirm submits the trigger's form with it (`requestSubmit`: its name, value and formaction go along), follows a link, or clicks a plain button again once; a link opens in its `target`. Cancel, Esc or a click outside do nothing; focus goes back to the trigger, or to the toggle of the dropdown menu it was in (the menu closes). While it asks, other triggers are held, so a double click confirms one action; a Confirm during the fade-in still closes it. Bootstrap's `show` and `shown` events carry the trigger as `relatedTarget`. A trigger does not go inside another dialog. It keeps Bootstrap's `role="dialog"`: `aria-describedby` reads the question when it opens.
+
+**Strings**
+- Reused: "Are you sure?" (`Admin.Notifications.Warning`), "Cancel" and "Confirm" (`Admin.Actions`).
+
+## `<twig:ui:DropdownMenu>`: submit items — 2026-11-25
+
+Step 4 of the grid's build plan: a menu item that sends a form, for a grid's status choice and row actions.
+
+**Markup**
+- New item type `submit`: `{type: 'submit', label, attr: {form, formaction, name, value}}` renders `<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="…">`. `attr.form` is required (the menu sits anywhere, the form elsewhere); `href` and `external` are refused. With `data-ps-confirm` in `attr`, the page's ConfirmDialog asks first.
+
+**Storybook**
+- A modal opened on a docs page goes to `<body>` while open and back once closed (`.storybook/preview.js`): the docs box around each story clipped it.
+- The Modal and ShowcaseModal stories show their dialog open in place without Bootstrap's `show` (and `fade`): a `.modal.show` with no instance made Bootstrap fail to open another modal on the same page.

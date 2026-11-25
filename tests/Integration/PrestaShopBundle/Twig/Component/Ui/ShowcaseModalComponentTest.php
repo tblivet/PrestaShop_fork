@@ -29,7 +29,7 @@ class ShowcaseModalComponentTest extends KernelTestCase
         $html = $this->render('<twig:ui:ShowcaseModal name="attributes_card" title="Create attributes" image="/img/attributes.svg" learnMore="https://docs.example/attributes"><p>Attributes change from one product to another.</p></twig:ui:ShowcaseModal>');
 
         $this->assertMatchesRegularExpression('#<div id="ps-showcase-attributes-card" class="modal fade ps-modal" tabindex="-1" aria-labelledby="ps-showcase-attributes-card-title" aria-hidden="true" data-bs-backdrop="static" data-ps-ref="showcase-modal" data-ps-data-name="attributes_card" data-ps-data-close-url="[^"]+">#', $html);
-        $this->assertStringContainsString('<h2 class="modal-title ps-modal__title" id="ps-showcase-attributes-card-title">Create attributes</h2>', $html);
+        $this->assertStringContainsString('<h2 class="modal-title ps-modal__title" id="ps-showcase-attributes-card-title" data-ps-ref="modal-title">Create attributes</h2>', $html);
         $this->assertStringContainsString('<img class="ps-showcase__image" src="/img/attributes.svg" alt="">', $html);
         $this->assertStringContainsString('<p>Attributes change from one product to another.</p>', $html);
         $this->assertMatchesRegularExpression('#<a href="https://docs.example/attributes" class="icon-link icon-link-hover" target="_blank" rel="noopener noreferrer">Learn more<span class="visually-hidden"> \(opens in a new tab\)</span><svg #', $html);

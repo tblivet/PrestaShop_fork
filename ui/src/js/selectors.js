@@ -15,6 +15,14 @@ export default {
   kpiToRefresh: '[data-ps-ref="kpi"][data-ps-data-refresh-url]',
   kpiValue: '[data-ps-ref="kpi-value"]',
   paginationJump: '[data-ps-action~="pagination-jump"]',
+  // A button or a link that asks first (confirm-dialog.js), and the page's one <twig:ui:ConfirmDialog>
+  confirmTrigger: '[data-ps-confirm]',
+  confirmDialog: '[data-ps-ref="confirm-dialog"]',
+  confirmMessage: '[data-ps-target="confirm-message"]',
+  confirmAccept: '[data-ps-ref="confirm-accept"]',
+  confirmCancel: '[data-ps-ref="confirm-cancel"]',
+  // A <twig:ui:Modal>'s title, a script can rename it
+  modalTitle: '[data-ps-ref="modal-title"]',
   // The page's live region (<twig:ui:Announcer>, announcer.js)
   announcer: '[data-ps-target="announcer"]',
   flashAlert: '[data-ps-ref="flash-alert"]',

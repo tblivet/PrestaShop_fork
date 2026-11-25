@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Empty of the question until confirm-dialog.js fills it from the trigger; the title and the action's label are the
+    defaults it puts back when a trigger has none. Bootstrap's dialog role; aria-describedby reads the question on open -#}
+<twig:ui:Modal
+  :id="id"
+  :title="'Are you sure?'|trans({}, 'Admin.Notifications.Warning')"
+  {{ ...attributes.defaults({class: 'ps-confirm-dialog', 'data-ps-ref': 'confirm-dialog', 'aria-describedby': id ~ '-message'}).all() }}
+>
+  <p class="ps-confirm-dialog__message" id="{{ id }}-message" data-ps-target="confirm-message"></p>
+
+  <twig:block name="footer">
+    <twig:ui:Button variant="link" data-bs-dismiss="modal" data-ps-ref="confirm-cancel">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button data-ps-ref="confirm-accept">{{ 'Confirm'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:Modal>

@@ -1,0 +1,14 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// <twig:ui:ConfirmDialog> (Admin/Component/Ui/confirm_dialog.html.twig): a <twig:ui:Modal>; its question is the body's
+// only paragraph, the body's padding around it.
+$component-name: ps-confirm-dialog;
+
+.#{$component-name} {
+  &__message {
+    margin: 0;
+  }
+}
