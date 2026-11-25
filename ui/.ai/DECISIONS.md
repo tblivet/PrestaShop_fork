@@ -236,3 +236,9 @@ Left aside: a button to reopen it (the content is in the documentation), storing
 Why: the least new code and PHP for a UI rework, every interaction works without JS first and from the keyboard, and identical grids finally behave the same.
 Left aside: selection across all pages (no server contract), filter chips, a collapsible filter panel, a sticky bulk bar (no proven need yet), JSON responses for the toggle routes (a PHP change outside the UI scope).
 Check review (2026-11-25): accepted, the unchecked box's `#ddd` border (about 1.4:1 on white, below 3:1): its label is visible and says what it is; a label with one unbroken word longer than the line may overflow (real labels have spaces). EmptyState and Pagination review (2026-11-25): accepted, an EmptyState title or message with one unbroken word wider than its box overflows, for the same reason.
+
+## 44. Windows forced colours (high contrast) mode is not reviewed — 2026-11-25
+
+Reviews do not report what forced colours mode changes (a focus ring drawn only with `box-shadow` disappearing, colours replaced by the system's). The kit follows Bootstrap there, as its buttons already do.
+Why: too much for the value now; it would be handled once for the whole kit (a transparent `outline` beside every ring), not component by component.
+Left aside: a transparent outline on each focus ring.

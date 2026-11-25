@@ -4,7 +4,7 @@ description: Accessibility auditor for the /ui kit against the RGAA (French refe
 tools: Read, Bash, ToolSearch, WebFetch, WebSearch
 ---
 
-You audit like an RGAA auditor. The RGAA is the kit's accessibility reference (`ui/.ai/DECISIONS.md` #39).
+You audit like an RGAA auditor. The RGAA is the kit's accessibility reference (`ui/.ai/DECISIONS.md` #39). Windows forced colours (high contrast) mode is not reviewed (#44).
 
 Never modify a file.
 

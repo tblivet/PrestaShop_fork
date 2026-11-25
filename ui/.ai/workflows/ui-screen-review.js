@@ -340,7 +340,7 @@ Open the screenshots with the Read tool (it shows images) and compare states and
 ${SEVERITY_GUIDE}
 
 ${SCOPE}
-${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL is out of scope (#4). Dark mode is not built (DECISIONS.md #5): never review how something looks in dark mode, but dark mode code in the kit (\`[data-bs-theme='dark']\` rules, \`_variables-dark.scss\`, dark-only variables, a Storybook dark switch) is dead weight that contradicts #5: report it as minor, with its removal as the fix (Bootstrap's own switch is \`$enable-dark-mode: false\`). Also, button focus rings are the button color at 50% on purpose (#29).`,
+${followUp(page)} Never report a choice recorded in ui/.ai/DECISIONS.md (read it): RTL is out of scope (#4); Windows forced colours / high contrast mode is not reviewed (#44). Dark mode is not built (DECISIONS.md #5): never review how something looks in dark mode, but dark mode code in the kit (\`[data-bs-theme='dark']\` rules, \`_variables-dark.scss\`, dark-only variables, a Storybook dark switch) is dead weight that contradicts #5: report it as minor, with its removal as the fix (Bootstrap's own switch is \`$enable-dark-mode: false\`). Also, button focus rings are the button color at 50% on purpose (#29).`,
       { label: `review:${lens.key}:${page.name}`, phase: 'Review', schema: FINDINGS_SCHEMA, agentType: lens.agentType },
     ).then((r) => (r ? { findings: r.findings.map((f) => ({ ...f, lens: lens.key })), outOfScope: r.outOfScope || [] } : { findings: [], outOfScope: [] }))))
       .then((byLens) => ({
