@@ -73,6 +73,13 @@ class DropdownComponentTest extends KernelTestCase
         $this->assertSame(1, substr_count($html, 'class="dropdown-item'));
     }
 
+    public function testASubmitItemSendsTheFormItNames(): void
+    {
+        $html = $this->render("<twig:ui:DropdownMenu :items=\"[{type: 'submit', label: 'Shipped', active: true, attr: {form: 'order_grid_action_form', formaction: '/orders/12/status', name: 'value', value: '4'}}]\"/>");
+
+        $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" aria-current="true" form="order_grid_action_form" formaction="/orders/12/status" name="value" value="4">', $html);
+    }
+
     private function render(string $template): string
     {
         return $this->twig->createTemplate($template)->render();

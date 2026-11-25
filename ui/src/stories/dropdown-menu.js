@@ -38,7 +38,7 @@ const item = (entry, icons) => {
     return `<li><a class="${classes}"${href}${state}${external}${extra}>${content}</a></li>`;
   }
 
-  return `<li><button type="button" class="${classes}"${state}${entry.disabled ? ' disabled' : ''}${extra}>${content}</button></li>`;
+  return `<li><button type="${type === 'submit' ? 'submit' : 'button'}" class="${classes}"${state}${entry.disabled ? ' disabled' : ''}${extra}>${content}</button></li>`;
 };
 
 // Without items, content is the HTML the menu holds (a form, text)

@@ -29,7 +29,8 @@
             {#- A disabled link loses its href, like <twig:ui:Button> -#}
             <a class="{{ classes }}"{% if not item.disabled %} href="{{ item.href }}"{% else %} role="link"{% endif %}{{ state|raw }}{% if item.external %} target="_blank" rel="noopener noreferrer"{% endif %}{{ extra|raw }}>
           {%- else -%}
-            <button type="button" class="{{ classes }}"{{ state|raw }}{% if item.disabled %} disabled{% endif %}{{ extra|raw }}>
+            {#- A submit item sends the form named by attr.form (its formaction, name and value with it) -#}
+            <button type="{{ 'submit' == item.type ? 'submit' : 'button' }}" class="{{ classes }}"{{ state|raw }}{% if item.disabled %} disabled{% endif %}{{ extra|raw }}>
           {%- endif -%}
 
             {%- if item.icon -%}

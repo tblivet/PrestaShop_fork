@@ -17,7 +17,9 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 /**
  * The menu of a Bootstrap dropdown, mirrors ui/src/stories/components/DropdownMenu.stories.js:
  * <twig:ui:DropdownMenu :items="[{label: 'Edit', href: '…', icon: 'edit'}, {type: 'divider'}, {label: 'Delete', …}]"/>
- * or, without items, any markup: <twig:ui:DropdownMenu><form>…</form></twig:ui:DropdownMenu>
+ * A submit item sends a form from the menu: {type: 'submit', label: 'Shipped', attr: {form: 'order_grid_action_form',
+ * formaction: '…', name: 'value', value: '4'}}, with data-ps-confirm in attr to ask first.
+ * Or, without items, any markup: <twig:ui:DropdownMenu><form>…</form></twig:ui:DropdownMenu>
  * Placed after a trigger with data-bs-toggle="dropdown"; <twig:ui:Dropdown> renders both.
  */
 #[AsTwigComponent('ui:DropdownMenu', template: '@PrestaShop/Admin/Component/Ui/dropdown_menu.html.twig')]
@@ -25,7 +27,7 @@ final class DropdownMenu
 {
     public const ALIGNMENTS = ['start', 'end'];
 
-    public const ITEM_TYPES = ['button', 'divider', 'heading', 'link', 'text'];
+    public const ITEM_TYPES = ['button', 'divider', 'heading', 'link', 'submit', 'text'];
 
     /**
      * @var list<array{type: string, label: ?string, href: ?string, icon: ?string, active: bool, disabled: bool, external: bool, attr: array<string, string>}>
@@ -97,8 +99,11 @@ final class DropdownMenu
                 throw new InvalidOptionsException('Item attributes are name => value pairs such as "data-ps-action" => "…".');
             }
         }
-        if ('button' === $item['type'] && (null !== $item['href'] || $item['external'])) {
-            throw new InvalidOptionsException('A button item takes no href and does not open a tab: make it a link.');
+        if (in_array($item['type'], ['button', 'submit'], true) && (null !== $item['href'] || $item['external'])) {
+            throw new InvalidOptionsException(sprintf('A %s item takes no href and does not open a tab: make it a link.', $item['type']));
+        }
+        if ('submit' === $item['type'] && (!isset($item['attr']['form']) || '' === trim((string) $item['attr']['form']))) {
+            throw new InvalidOptionsException('A submit item names the form it sends: attr.form.');
         }
 
         return $item;

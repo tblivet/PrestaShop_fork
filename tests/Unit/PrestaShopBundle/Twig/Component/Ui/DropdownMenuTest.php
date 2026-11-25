@@ -66,6 +66,9 @@ class DropdownMenuTest extends TestCase
         yield 'blank label' => [['items' => [['label' => ' ', 'href' => '/edit']]]];
         yield 'link without href' => [['items' => [['type' => 'link', 'label' => 'Edit']]]];
         yield 'external button' => [['items' => [['type' => 'button', 'label' => 'Print', 'external' => true]]]];
+        yield 'submit without form' => [['items' => [['type' => 'submit', 'label' => 'Shipped', 'attr' => ['formaction' => '/status']]]]];
+        yield 'submit with a blank form' => [['items' => [['type' => 'submit', 'label' => 'Shipped', 'attr' => ['form' => ' ']]]]];
+        yield 'submit with an href' => [['items' => [['type' => 'submit', 'label' => 'Shipped', 'href' => '/status', 'attr' => ['form' => 'order_grid_action_form']]]]];
         yield 'divider with an icon' => [['items' => [['type' => 'divider', 'icon' => 'edit']]]];
         yield 'heading with a link' => [['items' => [['type' => 'heading', 'label' => 'Export', 'href' => '/export']]]];
         yield 'text with an icon' => [['items' => [['type' => 'text', 'label' => 'Pick one.', 'icon' => 'info']]]];

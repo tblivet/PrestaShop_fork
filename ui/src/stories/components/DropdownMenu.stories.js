@@ -9,6 +9,7 @@ import deleteIcon from '../../../icons/material-symbols/delete.svg?raw';
 import download from '../../../icons/material-symbols/download.svg?raw';
 import edit from '../../../icons/material-symbols/edit.svg?raw';
 import visibility from '../../../icons/material-symbols/visibility.svg?raw';
+import confirmDialog from '../confirm-dialog';
 import dropdownMenu from '../dropdown-menu';
 import { stackClasses } from '../layouts/layout-classes';
 import { framedNodes, twigCall, withTwig } from '../twig-snippet';
@@ -58,9 +59,9 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<button type="button" class="…" data-bs-toggle="dropdown" aria-expanded="false">…</button><twig:ui:DropdownMenu :items="[…]"/>`, both inside an element with `class="dropdown"`. The menu of a trigger that is not a button: a header link, an avatar. For a button that opens a menu, use `<twig:ui:Dropdown>`, which renders this menu.',
-          '**Props**: `items` (default none: a list of items. An item is `{label, href, icon, active, disabled, external, attr}`: with `href` a link, without a button (its action through `attr`, e.g. `{\'data-ps-action\': \'delete\'}`); `{type: \'divider\'}` a line; `{type: \'heading\', label}` a title over the next items; `{type: \'text\', label}` a line of plain text. `icon` is a [Material Symbols](https://fonts.google.com/icons) name, `active` marks the chosen item (`aria-current`), `disabled` turns it off (a link loses its `href`), `external` opens a link in a new tab and says so), `align` (`start`, `end`; default `start`: the side the menu lines up with, `end` for a trigger at the end of a row). Content, without `items`: any markup the menu holds (a form, text), in a `<div>` with room around it; give the trigger `data-bs-auto-close="outside"` when it holds a form, or a click in a field closes it. Other attributes (`id`, `data-ps-*`) go on the `<ul>` or the `<div>`.',
+          '**Props**: `items` (default none: a list of items. An item is `{label, href, icon, active, disabled, external, attr}`: with `href` a link, without a button (its action through `attr`, e.g. `{\'data-ps-action\': \'delete\'}`); `{type: \'submit\', label, attr: {form, formaction, name, value}}` a button that sends the form named by `attr.form` (required), from wherever the menu is, with `data-ps-confirm` in `attr` to ask first; `{type: \'divider\'}` a line; `{type: \'heading\', label}` a title over the next items; `{type: \'text\', label}` a line of plain text. `icon` is a [Material Symbols](https://fonts.google.com/icons) name, `active` marks the chosen item (`aria-current`), `disabled` turns it off (a link loses its `href`), `external` opens a link in a new tab and says so), `align` (`start`, `end`; default `start`: the side the menu lines up with, `end` for a trigger at the end of a row). Content, without `items`: any markup the menu holds (a form, text), in a `<div>` with room around it; give the trigger `data-bs-auto-close="outside"` when it holds a form, or a click in a field closes it. Other attributes (`id`, `data-ps-*`) go on the `<ul>` or the `<div>`.',
           '**Do**: secondary actions of one thing, most used first and the destructive one last after a divider; links to go somewhere, buttons to act; `active` for a menu that picks one value (a search scope). Content for what items cannot say: a short form (filters, a setting), text. **Don\'t**: the main action of a page (keep it a visible button), a menu with one item, a long form (use a modal or a page), `items` and content together (the content is not shown).',
-          '**States**: actions with icons, every item kind (heading, text, active, disabled, external), long labels, aligned to the end, a form as content.',
+          '**States**: actions with icons, every item kind (heading, text, active, disabled, external), submit items, long labels, aligned to the end, a form as content.',
         ].join('\n\n'),
       },
     },
@@ -104,3 +105,35 @@ export const Content = withTwig(() => framedNodes(
   [menu({ children: FILTER_FORM })],
   (html) => `<div style="min-height: 18rem"><div class="dropdown"><button type="button" class="btn btn-secondary" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Filter (story trigger)</button>${html}</div></div>`,
 ), { docs: { description: { story: 'Without `items`, the menu holds its content: here a short form. Its trigger has `data-bs-auto-close="outside"`, so typing in the field keeps it open; Esc or a click outside closes it.' } } });
+
+// Story chrome: the form the submit items send, out of the menu, and where it "went"
+const statusForm = (html) => `<form id="story-menu-status-form" action="#status" method="post"></form>${open(html)}<p class="small text-body-secondary">Picking a status or deleting changes the address to the formaction (#status-…, #deleted); Delete asks first.</p>${confirmDialog({ id: 'story-menu-confirm' }).html}`;
+
+const keepInStorybook = (render) => {
+  requestAnimationFrame(() => document.getElementById('story-menu-status-form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    window.location.hash = new URL(event.submitter?.formAction || event.target.action).hash;
+  }));
+
+  return render();
+};
+
+export const SubmitItems = {
+  ...withTwig(() => framedNodes([menu({
+    items: [
+      { type: 'heading', label: 'Change status' },
+      { type: 'submit', label: 'Payment accepted', active: true, attr: { form: 'story-menu-status-form', formaction: '#status-payment-accepted', name: 'value', value: '2' } },
+      { type: 'submit', label: 'Shipped', attr: { form: 'story-menu-status-form', formaction: '#status-shipped', name: 'value', value: '4' } },
+      { type: 'divider' },
+      {
+        type: 'submit',
+        label: 'Delete',
+        icon: 'delete',
+        attr: {
+          form: 'story-menu-status-form', formaction: '#deleted', name: '_method', value: 'DELETE', 'data-ps-confirm': 'Delete order #1024?', 'data-ps-data-confirm-label': 'Delete', 'data-ps-data-confirm-variant': 'danger',
+        },
+      },
+    ],
+  })], statusForm), { docs: { description: { story: 'Items that send a form from the menu: the form is named by `attr.form`, so the menu can sit anywhere (a table cell); each item carries its `formaction`, `name` and `value`, as a grid\'s status choice or row actions. With `data-ps-confirm`, the page\'s ConfirmDialog asks first.' } } }),
+  decorators: [keepInStorybook],
+};
