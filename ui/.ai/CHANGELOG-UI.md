@@ -584,7 +584,7 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **Behaviour**
 - The colour is the KPI's place in the row (no more `color1`…`color4`).
-- An out-of-date value is fetched on load (`data-ps-data-refresh-url`, same AdminStats endpoint); no refresh button. Until it comes the value is a Bootstrap placeholder (`.placeholder-glow`, `aria-busy`), not the cached value; if none comes, a long dash.
+- An out-of-date value is fetched on load (`data-ps-data-refresh-url`, same AdminStats endpoint); no refresh button. Until it comes the value is a Bootstrap placeholder (`.placeholder-wave`, `aria-busy`), not the cached value; if none comes, a long dash.
 - On a phone the KPIs scroll sideways (the next one shows, the hidden edge fades); from md up a grid of two, three or four a line.
 
 **Strings** (`Admin.Global`)
@@ -592,3 +592,24 @@ Kit form theme (`ui_kit_layout.html.twig`), kit JS (`form-validation.js`, `load-
 
 **PHP**
 - New `KpiDataInterface::getKpiData(): KpiData`, implemented by the core KPIs; `KpiInterface::render()` is unchanged. A module's KPI can implement it to be rendered by the kit.
+
+## KPI review fixes — 2026-11-25
+
+`<twig:ui:Kpi>`, `kpi_row.html.twig`, `_kpi.scss`, new `_kpi-row.scss`, `kpi.js`, `KpiData`, the Kpi stories.
+
+**Markup**
+- No tooltip on a KPI any more: no `tooltip` prop, no info button (`.ps-kpi__info`, `[data-ps-ref="kpi-info"]`), no `data-bs-toggle="tooltip"` on a linked card. No core KPI of a kit page has one (only the old product KPIs did); `KpiData::$tooltip` is gone too.
+- The row's modifier is its count up to four: `.ps-kpi-row--1` (new: a lone KPI, the whole width at every size, nothing to scroll), `--2`, `--3`, `--4`. Only a row of two or more is focusable (`tabindex="0"`).
+- A loading value has a visually hidden "Loading..." beside its placeholder.
+- A blank value is a long dash, as a missing one.
+
+**Look**
+- The row has its own partial (`_kpi-row.scss`); the card no longer sets its height (the row's grid does) nor its colour (`.card` does).
+- A linked card's focus is Bootstrap's focus ring (`$focus-ring-box-shadow`), square, outside the card: the colour line stays.
+- `.placeholder` looks like the back office's skeleton (new-theme `_skeleton.scss`): square, on its grey `$gray-400` (`$ps-placeholder-bg`) instead of the text colour, opaque (`$placeholder-opacity-max: 1`); the KPI's sweeps with Bootstrap's `.placeholder-wave` (instead of `.placeholder-glow`), its band's peak `$gray-300` (`$placeholder-opacity-min: .5`).
+
+**Behaviour**
+- `kpi.js` sets the value only (no tooltip); `initKpis(root = document)`, run by Storybook on each story too.
+
+**Strings** (`Admin.Global`)
+- Reused: "Loading..." (already translated).

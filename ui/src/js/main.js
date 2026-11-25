@@ -38,6 +38,6 @@ initTooltips(bootstrap.Tooltip);
 // The script loads in <head>: the boxes are not there yet
 document.addEventListener('DOMContentLoaded', initScrollFade);
 document.addEventListener('DOMContentLoaded', () => initShowcaseModals(bootstrap.Modal));
-document.addEventListener('DOMContentLoaded', () => initKpis(bootstrap.Tooltip));
+document.addEventListener('DOMContentLoaded', () => initKpis());
 // The script loads in <head>: wait for the page
 document.addEventListener('DOMContentLoaded', focusOnLoad);

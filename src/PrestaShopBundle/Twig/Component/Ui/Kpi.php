@@ -30,7 +30,7 @@ final class Kpi
 
     public string $title;
 
-    /** None: a long dash. Not shown with a refreshUrl: a placeholder stands until the fresh one comes */
+    /** None or blank: a long dash. Not shown with a refreshUrl: a placeholder stands until the fresh one comes */
     public ?string $value = null;
 
     /** The period or the scope of the value: "30 days", "All time" */
@@ -44,10 +44,7 @@ final class Kpi
     /** The page the figure comes from: the card is a link to it */
     public ?string $href = null;
 
-    /** What the figure means, on an info button (on the link itself when there is an href) */
-    public ?string $tooltip = null;
-
-    /** The URL kpi.js fetches a fresh value from (JSON: value, tooltip) */
+    /** The URL kpi.js fetches a fresh value from (JSON: value) */
     public ?string $refreshUrl = null;
 
     #[PreMount]
@@ -57,7 +54,7 @@ final class Kpi
         $resolver
             ->setIgnoreUndefined()
             ->setRequired('title')
-            ->setDefaults(['value' => null, 'subtitle' => null, 'icon' => null, 'color' => 'oceanblue', 'href' => null, 'tooltip' => null, 'refreshUrl' => null])
+            ->setDefaults(['value' => null, 'subtitle' => null, 'icon' => null, 'color' => 'oceanblue', 'href' => null, 'refreshUrl' => null])
             ->setAllowedTypes('title', 'string')
             ->setAllowedValues('title', fn (string $title): bool => '' !== trim($title))
             ->setAllowedTypes('value', ['null', 'string'])
@@ -66,7 +63,6 @@ final class Kpi
             ->setAllowedValues('icon', fn (?string $icon): bool => null === $icon || 1 === preg_match(Icon::MATERIAL_SYMBOL, $icon))
             ->setAllowedValues('color', self::COLORS)
             ->setAllowedTypes('href', ['null', 'string'])
-            ->setAllowedTypes('tooltip', ['null', 'string'])
             ->setAllowedTypes('refreshUrl', ['null', 'string'])
         ;
 
@@ -91,7 +87,6 @@ final class Kpi
             'icon' => null === $icon ? null : self::ICONS[$icon] ?? $icon,
             'color' => self::COLORS[max(0, $place) % count(self::COLORS)],
             'href' => $kpi->href,
-            'tooltip' => $kpi->tooltip,
             'refreshUrl' => $kpi->refresh ? $kpi->source : null,
         ];
     }

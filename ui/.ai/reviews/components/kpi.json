@@ -1,0 +1,153 @@
+{
+  "component": "Kpi",
+  "date": "2026-11-25",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-kpi/index.html",
+  "tests": {
+    "unit": "pass",
+    "integration": "pass",
+    "storyMarkup": "pass"
+  },
+  "cases": {
+    "total": 18,
+    "captured": 18,
+    "skipped": []
+  },
+  "findings": {
+    "blocker": 0,
+    "major": 6,
+    "minor": 18,
+    "suggestion": 2
+  },
+  "open": [
+    {
+      "severity": "major",
+      "title": "Reduced-motion override of the value placeholder never applies",
+      "where": "ui/src/scss/components/_kpi.scss:71-78"
+    },
+    {
+      "severity": "major",
+      "title": "The KPI row block .ps-kpi-row lives in the ps-kpi partial",
+      "where": "ui/src/scss/components/_kpi.scss:99-126"
+    },
+    {
+      "severity": "major",
+      "title": "Untested branches: row column count, null icon and negative place in propsFromKpiData, prop type checks",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:8; src/PrestaShopBundle/Twig/Component/Ui/Kpi.php:62-70,84,91-92; tests/Unit/PrestaShopBundle/Twig/Component/Ui/KpiTest.php:35-43; tests/Integration/PrestaShopBundle/Twig/Component/Ui/KpiComponentTest.php:63-74"
+    },
+    {
+      "severity": "major",
+      "title": "Refreshing story never leaves the placeholder: kpi.js is not run in Storybook",
+      "where": "ui/.storybook/preview.js:7-34 (no initKpis); ui/src/stories/components/Kpi.stories.js:78-80; story components-kpi--refreshing at all widths"
+    },
+    {
+      "severity": "major",
+      "title": "An unbreakable title runs out of the card and scrolls the page sideways on a phone",
+      "where": "ui/src/scss/components/_kpi.scss:51-57 (.ps-kpi__title); case long-title-no-spaces @375"
+    },
+    {
+      "severity": "major",
+      "title": "Tooltip does not close with Escape when opened by keyboard focus",
+      "where": "ui/src/js/components/tooltips.js:13-47 (no Escape handler); kpi.html.twig:8 and :20; cases with-tooltip and link-with-tooltip @768"
+    },
+    {
+      "severity": "minor",
+      "title": "Hover rule spells the element's full class name",
+      "where": "ui/src/scss/components/_kpi.scss:86-88"
+    },
+    {
+      "severity": "minor",
+      "title": "Card takes its height from its container",
+      "where": "ui/src/scss/components/_kpi.scss:19"
+    },
+    {
+      "severity": "minor",
+      "title": "The KPI placeholder has rounded corners",
+      "where": "ui/src/scss/components/_placeholders.scss:7-10 (used by kpi.html.twig:25)"
+    },
+    {
+      "severity": "minor",
+      "title": "ThreeInARow story does not show the real Translations KPIs it claims to show",
+      "where": "ui/src/stories/components/Kpi.stories.js:64-68"
+    },
+    {
+      "severity": "minor",
+      "title": "A lone KPI (Cart view) gets the two-column row and an 80% card on phones",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:8; ui/src/scss/components/_kpi.scss:102-113"
+    },
+    {
+      "severity": "minor",
+      "title": "A tooltip returned by the refresh is dropped when the card had none at render",
+      "where": "ui/src/js/components/kpi.js:34-39; src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:19-21"
+    },
+    {
+      "severity": "minor",
+      "title": "Card colour re-declared: .card already sets color to the body colour",
+      "where": "ui/src/scss/components/_kpi.scss:20"
+    },
+    {
+      "severity": "minor",
+      "title": "No story shows a tooltip on a linked KPI, though the docs describe it",
+      "where": "ui/src/stories/components/Kpi.stories.js:37,70-76"
+    },
+    {
+      "severity": "minor",
+      "title": "Optional props left out: no story without an icon or without a value",
+      "where": "ui/src/stories/components/Kpi.stories.js:58-84"
+    },
+    {
+      "severity": "minor",
+      "title": "Docs 'States' line is out of step with the stories",
+      "where": "ui/src/stories/components/Kpi.stories.js:40"
+    },
+    {
+      "severity": "minor",
+      "title": "An empty value renders an empty figure instead of the long dash",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:27; ui/src/stories/components/Kpi.stories.js:47"
+    },
+    {
+      "severity": "minor",
+      "title": "Fixed stories show 8 controls that change nothing",
+      "where": "ui/src/stories/components/Kpi.stories.js:60-84 (OrdersRow, ThreeInARow, Linked, WithTooltip, Refreshing, LongValue)"
+    },
+    {
+      "severity": "minor",
+      "title": "The story's HTML does not escape attribute text, so Show code differs from Twig",
+      "where": "ui/src/stories/kpi.js:42 (attributes) and :58 (infoButton aria-label/data-bs-title)"
+    },
+    {
+      "severity": "minor",
+      "title": "The info button makes the title line taller and shrinks when the title wraps",
+      "where": "ui/src/scss/components/_kpi.scss:59-62 (.ps-kpi__info); cases with-tooltip, long-title-spaces-tooltip @375"
+    },
+    {
+      "severity": "minor",
+      "title": "The info button's focus ring touches the title text",
+      "where": "ui/src/scss/components/_kpi.scss:51-57 (.ps-kpi__title gap: spacer 1); case kbd-with-tooltip-focus @768"
+    },
+    {
+      "severity": "minor",
+      "title": "A linked card's focus ring is rounded and hides the colour line",
+      "where": "ui/src/scss/components/_kpi.scss:18-22 (a.ps-kpi, no focus style); cases kbd-linked-focus @1280, kbd-orders-row-link-focus @375"
+    },
+    {
+      "severity": "minor",
+      "title": "Loading value is silent for screen readers",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:25; ui/src/js/components/kpi.js:12-18"
+    },
+    {
+      "severity": "minor",
+      "title": "Tooltip on a link card is unreachable on touch",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Component/Ui/kpi.html.twig:8; case link-with-tooltip @375"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Props table: the icon default shows 'null', the other optional props show '-'",
+      "where": "Docs page components-kpi--docs, props table; ui/src/stories/story-defaults.js:9-13 (withDefaults keeps null when argType.mapping)"
+    },
+    {
+      "severity": "suggestion",
+      "title": "A row of KPIs is not exposed as a list",
+      "where": "src/PrestaShopBundle/Resources/views/Admin/Common/Kpi/Ui/kpi_row.html.twig:9-17"
+    }
+  ]
+}

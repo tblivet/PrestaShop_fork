@@ -1,0 +1,42 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// The row of a page's KPIs (Common/Kpi/Ui/kpi_row.html.twig, <twig:ui:Kpi> in _kpi.scss): on a phone two or more scroll
+// sideways, each most of the width so the next one shows (ps-scroll-fade fades the edge that hides more); from md up a
+// grid, two a line, three or four from lg or xl. A lone KPI takes the whole width. The room around them, taken back by
+// the margins, keeps a linked card's focus ring inside the box
+$component-name: ps-kpi-row;
+
+.#{$component-name} {
+  display: grid;
+  grid-auto-columns: $ps-kpi-row-phone-width;
+  grid-auto-flow: column;
+  gap: map-get($spacers, 3);
+  padding: $ps-kpi-row-focus-room;
+  margin: calc(-1 * #{$ps-kpi-row-focus-room});
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
+  }
+
+  @include media-breakpoint-up(lg) {
+    &--3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @include media-breakpoint-up(xl) {
+    &--4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  // After the breakpoints, which it overrides
+  &--1 {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-flow: row;
+  }
+}

@@ -19,7 +19,7 @@ class KpiTest extends TestCase
     public function testDefaults(): void
     {
         $this->assertEquals(
-            ['title' => 'Conversion Rate', 'value' => null, 'subtitle' => null, 'icon' => null, 'color' => 'oceanblue', 'href' => null, 'tooltip' => null, 'refreshUrl' => null],
+            ['title' => 'Conversion Rate', 'value' => null, 'subtitle' => null, 'icon' => null, 'color' => 'oceanblue', 'href' => null, 'refreshUrl' => null],
             (new Kpi())->preMount(['title' => 'Conversion Rate'])
         );
     }
@@ -37,7 +37,9 @@ class KpiTest extends TestCase
         yield 'empty title' => [['title' => ' ']];
         yield 'unknown colour' => [['color' => 'color1']];
         yield 'icon not a symbol name' => [['icon' => 'icon-envelope']];
+        yield 'non string title' => [['title' => 3]];
         yield 'number as value' => [['value' => 12]];
+        yield 'non string subtitle' => [['subtitle' => 1]];
         yield 'non string href' => [['href' => 42]];
         yield 'non string refresh url' => [['refreshUrl' => true]];
     }
@@ -64,7 +66,6 @@ class KpiTest extends TestCase
             'icon' => 'monitoring',
             'color' => 'amber',
             'href' => '/stats',
-            'tooltip' => null,
             'refreshUrl' => '/stats?ajax=1',
         ], $props);
     }
@@ -75,6 +76,14 @@ class KpiTest extends TestCase
 
         $this->assertNull($props['refreshUrl']);
         $this->assertSame('mail', $props['icon']);
+        $this->assertSame('oceanblue', $props['color']);
+    }
+
+    public function testAKpiWithoutIconOrPlaceKeepsTheFirstColour(): void
+    {
+        $props = Kpi::propsFromKpiData(new KpiData(id: 'box-module', title: 'Module KPI'), -1);
+
+        $this->assertNull($props['icon']);
         $this->assertSame('oceanblue', $props['color']);
     }
 }

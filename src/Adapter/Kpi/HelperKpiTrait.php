@@ -39,7 +39,6 @@ trait HelperKpiTrait
             icon: $text($helper->icon),
             color: $text($helper->color),
             href: $text($helper->href),
-            tooltip: $text($helper->tooltip),
             source: $text($helper->source),
             refresh: (bool) $helper->refresh && null !== $text($helper->source),
         );

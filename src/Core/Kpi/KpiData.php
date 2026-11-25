@@ -15,7 +15,7 @@ final class KpiData
 {
     /**
      * @param string|null $color the KPI's place in its row: color1 to color4
-     * @param string|null $source the URL that gives a fresh value (JSON: value, tooltip)
+     * @param string|null $source the URL that gives a fresh value (JSON: value)
      * @param bool $refresh whether the value is out of date and must be fetched from the source
      */
     public function __construct(
@@ -26,7 +26,6 @@ final class KpiData
         public readonly ?string $icon = null,
         public readonly ?string $color = null,
         public readonly ?string $href = null,
-        public readonly ?string $tooltip = null,
         public readonly ?string $source = null,
         public readonly bool $refresh = false,
     ) {

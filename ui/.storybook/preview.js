@@ -9,6 +9,7 @@ import initAnnouncer from '../src/js/components/announcer';
 import initBusyButtons from '../src/js/components/busy-button';
 import initPasswordToggle from '../src/js/components/password-toggle';
 import initHeaderSearch from '../src/js/components/header-search';
+import initKpis from '../src/js/components/kpi';
 import initQuickAccess from '../src/js/components/quick-access';
 import initScrollFade from '../src/js/components/scroll-fade';
 import initTooltips from '../src/js/components/tooltips';
@@ -104,6 +105,8 @@ const preview = {
           .forEach((node) => bootstrap.Popover.getOrCreateInstance(node));
         root.querySelectorAll('.toast:not(.hide)').forEach((node) => bootstrap.Toast.getOrCreateInstance(node));
         root.querySelectorAll('.carousel').forEach((node) => bootstrap.Carousel.getOrCreateInstance(node));
+        // As main.js on DOMContentLoaded: the out-of-date KPIs fetch their value
+        initKpis(root);
       });
 
       // A story may return an element with its listeners (Content/Icons search): hand it back as it is

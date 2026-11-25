@@ -3,12 +3,13 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // A Twig component story declares its component's defaults once (DEFAULTS, same values as the PHP props, checked by
-// ui/.ai/bin/story-parity.mjs): they fill the "Default" column of the controls table and the story args.
+// ui/.ai/bin/story-parity.mjs): they fill the "Default" column of the controls table and the story args. A null default
+// (not set) leaves the column at "-", whatever the control, so every optional prop reads the same.
 const summary = (value) => (typeof value === 'string' ? value : JSON.stringify(value));
 
 export const withDefaults = (argTypes, defaults) => Object.fromEntries(Object.entries(argTypes).map(([name, argType]) => [
   name,
-  name in defaults && (defaults[name] !== null || argType.mapping)
+  name in defaults && defaults[name] !== null
     ? { ...argType, table: { ...argType.table, defaultValue: { summary: summary(defaults[name]) } } }
     : argType,
 ]));
