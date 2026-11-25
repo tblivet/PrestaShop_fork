@@ -26,6 +26,7 @@ use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
@@ -244,6 +245,17 @@ class GridTest extends TestCase
         ], $row['menu'][1]['attr']);
     }
 
+    public function testAnUnnamedActionGetsTheUsualNameOfItsId(): void
+    {
+        $actions = (new RowActionCollection())
+            ->add((new LinkRowAction('edit'))->setIcon('edit')->setOptions(['route' => 'admin_currencies_edit', 'route_param_name' => 'currencyId', 'route_param_field' => 'id']))
+            ->add((new LinkRowAction('show_rates'))->setOptions(['route' => 'a', 'route_param_name' => 'id', 'route_param_field' => 'id']));
+        $row = $this->grid()->rowActions(['id' => 1], ['options' => ['actions' => $actions]]);
+
+        $this->assertSame('Edit', $row['buttons'][0]['label']);
+        $this->assertSame('Show rates', $row['menu'][0]['label']);
+    }
+
     public function testARowsActionThatDoesNotApplyIsLeftOut(): void
     {
         $checker = $this->createMock(AccessibilityCheckerInterface::class);
@@ -339,10 +351,10 @@ class GridTest extends TestCase
         $this->assertTrue(Grid::renders($grid));
         $this->assertSame([], Grid::unknownTypes($grid));
 
-        $grid['columns'][] = ['id' => 'employee', 'type' => 'employee_name_with_avatar', 'options' => []];
+        $grid['columns'][] = ['id' => 'position', 'type' => 'category_position', 'options' => []];
         $grid['actions']['bulk'][] = ['type' => 'ajax'];
         $this->assertFalse(Grid::renders($grid));
-        $this->assertSame(['column:employee_name_with_avatar', 'bulk:ajax'], Grid::unknownTypes($grid));
+        $this->assertSame(['column:category_position', 'bulk:ajax'], Grid::unknownTypes($grid));
     }
 
     public function testHookParameters(): void
@@ -415,6 +427,9 @@ class GridTest extends TestCase
         $tokens = $this->createMock(CsrfTokenManagerInterface::class);
         $tokens->method('getToken')->willReturnCallback(fn (string $id): CsrfToken => new CsrfToken($id, 'token-of-' . $id));
 
-        return new Grid($requestStack, $router, $icons, $tokens);
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator->method('trans')->willReturnArgument(0);
+
+        return new Grid($requestStack, $router, $icons, $tokens, $translator);
     }
 }

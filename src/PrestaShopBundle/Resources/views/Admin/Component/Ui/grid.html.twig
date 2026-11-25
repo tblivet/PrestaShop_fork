@@ -74,8 +74,17 @@
     {{- before -}}
 
     {%- if 'empty' == state -%}
+      {#- The page's empty block, else the grid's own (Grid/empty/{gridId}.html.twig, a module may add one), else the
+          default -#}
+      {%- set ownEmpty -%}
+        {%- if empty|trim is empty -%}
+          {{- include('@PrestaShop/Admin/Component/Ui/Grid/empty/' ~ id ~ '.html.twig', {grid: grid, headingLevel: min(headingLevel + 1, 6)}, ignore_missing = true) -}}
+        {%- endif -%}
+      {%- endset -%}
       {%- if empty|trim is not empty -%}
         {{- empty -}}
+      {%- elseif ownEmpty|trim is not empty -%}
+        {{- ownEmpty -}}
       {%- else -%}
         <twig:ui:EmptyState icon="inbox" :title="'No records found'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)"/>
       {%- endif -%}

@@ -1,0 +1,9 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Currencies: the name, then whether the merchant made it or changed it -#}
+{{- record[column.options.field] -}}
+{%- if record.unofficial ?? false %} <twig:ui:Icon name="person" class="ps-grid__mark" :label="'Unofficial'|trans({}, 'Admin.International.Feature')"/>
+{%- elseif record.modified ?? false %} <span class="ps-grid__note">({{ 'Edited'|trans({}, 'Admin.International.Feature') }})</span>
+{%- endif -%}

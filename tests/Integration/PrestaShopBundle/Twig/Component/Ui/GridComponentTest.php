@@ -121,6 +121,15 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('grid-position', $html);
     }
 
+    public function testAGridsOwnEmptyStateReplacesTheDefault(): void
+    {
+        $html = $this->render(['id' => 'supplier', 'is_empty_state' => true, 'records' => [], 'records_total' => 0, 'pagination' => ['offset' => 0, 'limit' => 50]]);
+
+        $this->assertStringContainsString('Keep in touch with your suppliers', $html);
+        $this->assertStringNotContainsString('No records found', $html);
+        $this->assertMatchesRegularExpression('#<h3 [^>]*>\s*Keep in touch with your suppliers#', $html);
+    }
+
     public function testARowWithAClickableLinkFollowsItFromItsClickableCells(): void
     {
         $html = $this->render();

@@ -249,6 +249,28 @@ $component-name: ps-grid;
     border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
   }
 
+  // A mark beside a value (a custom currency) and a note after it ("(Edited)")
+  &__mark {
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  &__note {
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  // An employee: picture and name
+  &__person {
+    display: inline-flex;
+    gap: map-get($spacers, 2);
+    align-items: center;
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
   &__image {
     max-width: $ps-grid-image-size;
     height: auto;

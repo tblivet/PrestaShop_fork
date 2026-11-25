@@ -1,0 +1,10 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+<twig:ui:EmptyState icon="inventory_2" :title="'Manage your products'|trans({}, 'Admin.Catalog.Feature')" :headingLevel="headingLevel">
+  <twig:block name="actions">
+      <twig:ui:Button :href="path('admin_products_create')">{{ 'Create new product'|trans({}, 'Admin.Catalog.Feature') }}</twig:ui:Button>
+      <twig:ui:Button variant="outline-secondary" :href="path('admin_import')">{{ 'Import a list of products.'|trans({}, 'Admin.Catalog.Feature') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:EmptyState>

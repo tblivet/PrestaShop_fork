@@ -1,0 +1,10 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Logs: the employee's picture and name; the picture says nothing the name does not -#}
+{%- if record.employee is not null -%}
+  <span class="ps-grid__person"><img class="ps-grid__avatar" src="{{ asset(record.image) }}" alt="" width="32" height="32" loading="lazy">{{ record.employee }}</span>
+{%- else -%}
+  {{ 'N/A'|trans({}, 'Admin.Global') }}
+{%- endif -%}

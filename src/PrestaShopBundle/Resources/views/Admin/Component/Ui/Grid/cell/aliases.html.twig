@@ -1,0 +1,13 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Search aliases: an inactive one struck through, said so -#}
+{%- for alias in record[column.id] -%}
+  {%- if alias.active -%}
+    {{ alias.alias }}
+  {%- else -%}
+    <del>{{ alias.alias }}<span class="visually-hidden"> ({{ 'Disabled'|trans({}, 'Admin.Global') }})</span></del>
+  {%- endif -%}
+  {%- if not loop.last %}, {% endif -%}
+{%- endfor -%}

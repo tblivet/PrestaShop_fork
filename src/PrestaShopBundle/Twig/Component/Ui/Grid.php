@@ -16,6 +16,7 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRegistryInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -49,8 +50,9 @@ final class Grid
 
     /** Column types with a kit cell (Grid/cell/*.html.twig) */
     public const COLUMN_TYPES = [
-        'action', 'badge', 'boolean', 'bulk_action', 'choice', 'color', 'data', 'date_time', 'disableable_link', 'html', 'identifier',
-        'image', 'link', 'link_group', 'order_price', 'position', 'position_handle', 'severity_level', 'status', 'toggle',
+        'action', 'aliases', 'badge', 'boolean', 'bulk_action', 'choice', 'color', 'currency_name', 'data', 'date_time', 'discount_usage',
+        'disableable_link', 'employee_name_with_avatar', 'html', 'identifier', 'image', 'link', 'link_group', 'order_price', 'position',
+        'position_handle', 'severity_level', 'status', 'toggle',
     ];
 
     /** Action types the kit renders: the others (modules', domain ones) need their own kit template first */
@@ -74,6 +76,7 @@ final class Grid
         #[Autowire(service: '.ux_icons.icon_registry')]
         private readonly IconRegistryInterface $icons,
         private readonly CsrfTokenManagerInterface $csrfTokens,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -419,7 +422,7 @@ final class Grid
         $items = [];
         foreach ($this->grid['actions']['bulk'] as $action) {
             $options = $action['options'];
-            $item = ['label' => (string) $action['name'], 'icon' => $this->icon($action['icon'] ?? null)];
+            $item = ['label' => $this->actionLabel($action['name'] ?? null, (string) $action['id']), 'icon' => $this->icon($action['icon'] ?? null)];
 
             switch ($action['type']) {
                 case 'submit':
@@ -515,7 +518,7 @@ final class Grid
             }
             $options = $action->getOptions();
             $icon = $this->icon($action->getIcon());
-            $label = (string) $action->getName();
+            $label = $this->actionLabel($action->getName(), (string) $action->getId());
             $url = $this->actionUrl($options, $record);
             $confirm = $this->confirmAttributes([
                 'confirm_message' => 'dynamic' === ($options['confirm_message_type'] ?? null) && !empty($record[$options['dynamic_message_field'] ?? ''])
@@ -648,6 +651,20 @@ final class Grid
         }
 
         return $this->router->generate($options['route'], $parameters);
+    }
+
+    /**
+     * An action's name, or for one a definition left unnamed (Currencies' edit) the usual name of its id: an icon button
+     * needs one
+     */
+    private function actionLabel(?string $name, string $id): string
+    {
+        if (null !== $name && '' !== trim($name)) {
+            return $name;
+        }
+        $usual = ['delete' => 'Delete', 'duplicate' => 'Duplicate', 'edit' => 'Edit', 'view' => 'View'][$id] ?? null;
+
+        return null !== $usual ? $this->translator->trans($usual, [], 'Admin.Actions') : ucfirst(str_replace('_', ' ', $id));
     }
 
     private function actionUrl(array $options, array $record): string

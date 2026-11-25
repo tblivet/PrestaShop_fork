@@ -752,6 +752,19 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: domain columns, unnamed actions, grids' own empty states — 2026-11-25
+
+Part of step 14 of the grid's build plan. Discounts, Logs, Search aliases and Currencies now render on the kit grid.
+
+**Markup**
+- New cells: `currency_name` (the name, a "Unofficial" person mark or "(Edited)"), `employee_name_with_avatar` (`.ps-grid__person`: the picture, decorative, and the name; "N/A" without an employee), `aliases` (an inactive alias struck through and said "Disabled"), `discount_usage` ("3 / ∞", the sign read "Unlimited"). The old `employee_avatar_small`, `unofficial` Material icon are not kept.
+- An action without a name (Currencies' edit) is named after its id ("Edit", "Delete", "View", "Duplicate", else the id in words): an icon button needs a name.
+- A grid's own empty state: when the page gives no `empty` block, the grid looks for `Component/Ui/Grid/empty/{gridId}.html.twig` (a module may add one) before the default. Kit versions of the old `Blocks/EmptyState/*` for attachment (Files), credit_slip, supplier, discount (its Create discount opens the page's `#createDiscountModal`), customer and product, as `<twig:ui:EmptyState>` with their messages and actions; their illustrations are replaced by an icon.
+
+**Look**: a person's picture is round, as in the header.
+
+**Strings**: reused "Unofficial", "Edited" (`Admin.International.Feature`), "Disabled", "Unlimited", "N/A", "(opens in a new tab)" (`Admin.Global`), the empty states' own strings.
+
 ## List pages on `<twig:ui:Grid>` — 2026-11-25
 
 Step 13 of the grid's build plan. The list pages include `Common/Grid/Ui/grid_panel.html.twig` instead of `Common/Grid/grid_panel.html.twig`: with PS_UI_KIT on it renders `<twig:ui:Grid>` when the kit has a template for every type of the grid (`Grid::renders()`, `unknownTypes()`; Twig `ui_kit_renders_grid(grid)`), the old panel otherwise and with the kit off. The switch is not in `Common/Grid/grid_panel.html.twig` itself: the native module ps_linklist overrides that template for the whole back office.
