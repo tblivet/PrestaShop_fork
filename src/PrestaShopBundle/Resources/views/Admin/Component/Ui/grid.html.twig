@@ -1,0 +1,200 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- A list page's grid (ui/.ai/designs/grid.md): a named section, the header (title and count), the toolbar (Search and
+    Clear filters), the results summary the links land on, the table with its sort links and filter row, the pages -#}
+{%- form_theme grid.filter_form '@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig' -%}
+
+{%- set id = grid.id -%}
+{%- set state = this.state -%}
+{%- set titleId = id ~ '_grid_title' -%}
+{%- set captionId = id ~ '_grid_caption' -%}
+{%- set resultsId = id ~ '_grid_results' -%}
+{%- set formId = id ~ '_filter_form' -%}
+{%- set rowHeaderColumnId = this.rowHeaderColumnId -%}
+{%- set searchAndReset = this.searchAndReset -%}
+{%- set hasFilters = this.hasFilters -%}
+{%- set paginated = grid.data.records_total > 10 or grid.pagination.offset > 0 -%}
+{%- set showName = grid.view_options.display_name ?? true -%}
+{%- set alignments = {right: 'end', center: 'center'} -%}
+
+{%- set before -%}{%- block before %}{% endblock -%}{%- endset -%}
+{%- set toolbar -%}{%- block toolbar %}{% endblock -%}{%- endset -%}
+{%- set empty -%}{%- block empty %}{% endblock -%}{%- endset -%}
+{%- set footer -%}{%- block footer %}{% endblock -%}{%- endset -%}
+
+{#- Clear filters: grid-filters.js posts the reset and comes back to the results -#}
+{%- set clearFilters = searchAndReset and searchAndReset.vars.show_reset_button ? {
+  variant: 'link',
+  'data-ps-action': 'grid-reset-filters',
+  'data-ps-data-url': searchAndReset.vars.reset_url,
+  'data-ps-data-redirect': searchAndReset.vars.redirect_url,
+  'data-ps-data-fragment': resultsId,
+} : null -%}
+
+<section{{ attributes.defaults({
+  id: id ~ '_grid_panel',
+  class: 'ps-grid' ~ (embedded ? ' ps-grid--embedded' : ' card'),
+  'data-ps-ref': 'grid',
+  'data-ps-data-grid-id': id,
+  'aria-labelledby': embedded ? captionId : titleId,
+}) }}>
+  {%- if not embedded -%}
+    <header class="ps-grid__header card-header">
+      <h{{ headingLevel }} id="{{ titleId }}" class="ps-grid__title{{ showName is same as(false) ? ' visually-hidden' }}">
+        {{- grid.name }} <twig:ui:Badge variant="secondary" pill>{{ grid.data.records_total }}<span class="visually-hidden"> {{ 'results'|trans({}, 'Admin.Global') }}</span></twig:ui:Badge>
+      </h{{ headingLevel }}>
+    </header>
+  {%- endif -%}
+
+  <div id="{{ id }}_grid" class="ps-grid__body{{ embedded ? '' : ' card-body' }}">
+    {{- renderhook('displayAdminGridTableBefore', this.hookParams) -}}
+    {{- before -}}
+
+    {%- if 'empty' == state -%}
+      {%- if empty|trim is not empty -%}
+        {{- empty -}}
+      {%- else -%}
+        <twig:ui:EmptyState icon="inbox" :title="'No records found'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)"/>
+      {%- endif -%}
+    {%- else -%}
+      {%- if searchAndReset or toolbar|trim is not empty -%}
+        <div class="ps-grid__toolbar">
+          {{- toolbar -}}
+          {%- if searchAndReset -%}
+            <twig:ui:Layout:Cluster class="ps-grid__search">
+              {#- Outside the form, named by it: Enter in a filter field submits with Search, the form's first button -#}
+              <twig:ui:Button type="submit" variant="outline-primary" icon="search" :form="formId">{{ 'Search'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+              {%- if clearFilters -%}
+                <twig:ui:Button {{ ...clearFilters }}>{{ 'Clear filters'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+              {%- endif -%}
+            </twig:ui:Layout:Cluster>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {#- Where sorting, pages and filters land (#{id}_grid_results, load-focus.js); it describes the table -#}
+      <p id="{{ resultsId }}" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">
+        {%- if 'no-match' == state -%}
+          {{ 'No results match these filters'|trans({}, 'Admin.Global') }}
+        {%- else -%}
+          {%- set range = this.range -%}
+          {{ '%from%–%to% of %total%'|trans({'%from%': range[0], '%to%': range[1], '%total%': grid.data.records_total}, 'Admin.Global') }}
+        {%- endif -%}
+      </p>
+
+      {{- form_start(grid.filter_form, {action: grid.filter_form.vars.action ~ '#' ~ resultsId, attr: {id: formId, class: 'ps-grid__form'}}) -}}
+      {%- if searchAndReset -%}{%- do searchAndReset.setRendered -%}{%- endif -%}
+      <div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-labelledby="{{ captionId }}">
+        <table id="{{ id }}_grid_table" class="ps-grid__table table" aria-describedby="{{ resultsId }}">
+          <caption id="{{ captionId }}" class="visually-hidden">{{ grid.name }}</caption>
+          <thead>
+            <tr class="ps-grid__headings">
+              {%- for column in grid.columns -%}
+                {%- set sort = 'list' == state ? this.sortState(column.id) : null -%}
+                {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
+                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
+                  {%- if this.isSortable(column) -%}
+                    <a class="ps-grid__sort" href="{{ this.sortHref(column.id) }}">
+                      {{- column.name -}}
+                      <twig:ui:Icon :name="{ascending: 'arrow_upward', descending: 'arrow_downward'}[sort] ?? 'unfold_more'" class="ps-grid__sort-icon"/>
+                    </a>
+                  {%- else -%}
+                    {{ column.name }}
+                  {%- endif -%}
+                </th>
+              {%- endfor -%}
+            </tr>
+            {%- if hasFilters -%}
+              <tr class="ps-grid__filters">
+                {%- for column in grid.columns -%}
+                  <td class="ps-grid__filter">
+                    {%- for filter in this.filtersFor(column.id) -%}
+                      {#- A range is a fieldset named by the column; a field gets its hidden label -#}
+                      {%- if filter.vars.compound -%}
+                        {{- form_widget(filter, {label: column.name}) -}}
+                      {%- else -%}
+                        {{- form_label(filter, column.name, {label_attr: {class: 'visually-hidden'}}) -}}
+                        {{- form_widget(filter) -}}
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </td>
+                {%- endfor -%}
+              </tr>
+            {%- endif -%}
+          </thead>
+          <tbody>
+            {%- if 'no-match' == state -%}
+              <tr class="ps-grid__no-match">
+                <td colspan="{{ grid.columns|length }}">
+                  {%- set clearFiltersHere = clearFilters ? clearFilters|merge({variant: 'outline-secondary'}) : null -%}
+                  <twig:ui:EmptyState size="sm" icon="search_off" :title="'No results match these filters'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)">
+                    <twig:block name="actions">
+                      {%- if clearFiltersHere -%}
+                        <twig:ui:Button {{ ...clearFiltersHere }}>{{ 'Clear filters'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+                      {%- endif -%}
+                    </twig:block>
+                  </twig:ui:EmptyState>
+                </td>
+              </tr>
+            {%- else -%}
+              {%- for record in grid.data.records -%}
+                {%- set rowHeaderId = id ~ '_grid_rowhead_' ~ loop.index -%}
+                <tr class="ps-grid__row">
+                  {%- for column in grid.columns -%}
+                    {%- set isRowHeader = column.id == rowHeaderColumnId -%}
+                    {%- set tag = isRowHeader ? 'th' : 'td' -%}
+                    {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
+                    <{{ tag }}{% if isRowHeader %} scope="row" id="{{ rowHeaderId }}"{% endif %} class="ps-grid__cell ps-grid__cell--{{ column.type|replace({'_': '-'}) }}{{ align ? ' ps-grid__cell--' ~ align }}">
+                      {{- include([
+                        '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.id ~ '_' ~ column.type ~ '.html.twig',
+                        '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.type ~ '.html.twig',
+                        '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ column.type ~ '.html.twig',
+                        '@PrestaShop/Admin/Component/Ui/Grid/cell/_fallback.html.twig',
+                      ], {record: record, column: column, grid: grid, rowHeaderId: rowHeaderId, component: this}) -}}
+                    </{{ tag }}>
+                  {%- endfor -%}
+                </tr>
+              {%- endfor -%}
+            {%- endif -%}
+          </tbody>
+        </table>
+      </div>
+      {{- form_end(grid.filter_form) -}}
+    {%- endif -%}
+
+    {{- renderhook('displayAdminGridTableAfter', this.hookParams) -}}
+  </div>
+
+  {%- if ('empty' != state and paginated) or footer|trim is not empty -%}
+    <footer class="ps-grid__footer{{ embedded ? '' : ' card-footer' }}">
+      {%- if 'empty' != state and paginated -%}
+        {#- Read here: inside the layout below, this is the layout. A field to go to a page past five pages: for the first
+            ones the links do -#}
+        {%- set pages = {current: this.currentPage, links: this.pageLinks, jumpUrl: this.pageCount > 5 ? this.jumpUrl : null, perPage: this.pageCount > 5 ? this.limit : null} -%}
+        {%- set limit = this.limit -%}
+        {%- set limitItems = this.limitItems -%}
+        <twig:ui:Layout:Cluster justify="between">
+          <twig:ui:Pagination
+            class="ps-grid__pagination"
+            :current="pages.current"
+            :links="pages.links"
+            :label="'Pages of %list%'|trans({'%list%': grid.name}, 'Admin.Global')"
+            :jumpUrl="pages.jumpUrl"
+            :perPage="pages.perPage"
+          />
+          <twig:ui:Dropdown
+            :label="'%limit% per page'|trans({'%limit%': limit}, 'Admin.Global')"
+            :items="limitItems"
+            variant="outline-secondary"
+            size="sm"
+            direction="up"
+            align="end"
+          />
+        </twig:ui:Layout:Cluster>
+      {%- endif -%}
+      {{- footer -}}
+    </footer>
+  {%- endif -%}
+</section>

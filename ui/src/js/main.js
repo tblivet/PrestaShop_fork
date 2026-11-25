@@ -10,6 +10,7 @@ import initBusyButtons from './components/busy-button';
 import initConfirmDialog from './components/confirm-dialog';
 import initPasswordToggle from './components/password-toggle';
 import initFormValidation from './components/form-validation';
+import initGridFilters from './components/grid-filters';
 import initHeaderSearch from './components/header-search';
 import initKpis from './components/kpi';
 import initNotifications from './components/notifications';
@@ -33,6 +34,7 @@ initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
 initPaginationJump();
 initConfirmDialog(bootstrap.Modal, bootstrap.Dropdown);
+initGridFilters();
 // The bell is rendered after this script (in <head>)
 document.addEventListener('DOMContentLoaded', initNotifications);
 initBusyButtons();

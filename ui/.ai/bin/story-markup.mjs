@@ -18,7 +18,7 @@ const storiesDir = join(repo, 'ui/src/stories');
 
 export const SNAPSHOT = join(repo, 'tests/Integration/PrestaShopBundle/Twig/Component/Ui/story-markup.json');
 
-// Load stories the way Vite does: imports without extension, "?raw" files as text
+// Load stories the way Vite does: imports without extension, "?raw" files as text, JSON files as their data
 register(`data:text/javascript,${encodeURIComponent(`
   import {readFileSync} from 'node:fs';
   import {fileURLToPath} from 'node:url';
@@ -32,6 +32,9 @@ register(`data:text/javascript,${encodeURIComponent(`
     if (url.endsWith('?raw')) {
       const text = readFileSync(fileURLToPath(url.slice(0, -4)), 'utf8');
       return {format: 'module', source: 'export default ' + JSON.stringify(text), shortCircuit: true};
+    }
+    if (url.endsWith('.json')) {
+      return {format: 'module', source: 'export default ' + readFileSync(fileURLToPath(url), 'utf8'), shortCircuit: true};
     }
     return next(url, context);
   }

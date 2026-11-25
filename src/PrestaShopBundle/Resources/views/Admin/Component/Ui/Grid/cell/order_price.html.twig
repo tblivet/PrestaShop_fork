@@ -1,0 +1,10 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- A paid order's total in a success badge -#}
+{%- if record[column.options.is_paid_field] -%}
+  <twig:ui:Badge variant="success">{{ record[column.options.field] }}</twig:ui:Badge>
+{%- else -%}
+  {{- record[column.options.field] -}}
+{%- endif -%}

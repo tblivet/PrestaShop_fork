@@ -1,0 +1,10 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Its shape and its word say it, not a colour alone -#}
+{%- set on = record[column.options.field] -%}
+<span class="ps-grid__state ps-grid__state--{{ on ? 'on' : 'off' }}">
+  <twig:ui:Icon :name="on ? 'check_circle' : 'cancel'" class="ps-grid__state-icon"/>
+  {{- on ? column.options.true_name : column.options.false_name -}}
+</span>

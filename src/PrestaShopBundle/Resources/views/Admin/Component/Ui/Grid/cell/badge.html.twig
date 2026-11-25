@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- A badge of the column's type, of the record's, or of the record's colour (its text dark or light to read on it) -#}
+{%- set text = record[column.options.field] ?? null -%}
+{%- set variants = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'] -%}
+{%- set type = (column.options.badge_type ?? null) ?: (record[column.options.badge_type_field ?? ''] ?? null) -%}
+{%- set color = record[column.options.color_field ?? ''] ?? null -%}
+{%- if text is empty -%}
+  {{- column.options.empty_value ?? '' -}}
+{%- elseif type in variants -%}
+  <twig:ui:Badge :variant="type">{{ text }}</twig:ui:Badge>
+{%- elseif color -%}
+  <span class="badge ps-badge ps-grid__badge ps-grid__badge--{{ is_color_bright(color) ? 'bright' : 'dark' }}" style="--psk-grid-badge-color: {{ color }}">{{ text }}</span>
+{%- else -%}
+  {{- text -}}
+{%- endif -%}

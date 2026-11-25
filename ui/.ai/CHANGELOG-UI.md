@@ -751,3 +751,23 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
+
+## `<twig:ui:Grid>`: the list, read only — 2026-11-25
+
+Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `grid.html.twig`, the cells in `Component/Ui/Grid/cell/`, `_grid.scss`, `grid-filters.js`, the Grid story, its helper `grid.js` and its fixture `ui/src/stories/fixtures/order-grid.json`. Selection, bulk and row actions, toggles, positions and the row preview come in the next steps; no page uses it yet.
+
+**Markup**
+- `<section id="{id}_grid_panel" class="ps-grid card" data-ps-ref="grid" data-ps-data-grid-id="{id}" aria-labelledby="{id}_grid_title">`: a header with the title (`headingLevel`, visually hidden with `display_name: false`) and the count in a badge; the body with `displayAdminGridTableBefore`/`After` (same parameters as the old grids), the `before` and `toolbar` blocks, Search (`form="{id}_filter_form"`) and Clear filters (`data-ps-action="grid-reset-filters"`), the results summary `#{id}_grid_results` (`tabindex="-1"`, `data-ps-ref="grid-results"`), the filter form `#{id}_filter_form` around a scrolling region `.ps-grid__scroll` (a named `role="region"`, ps-scroll-fade) and `table#{id}_grid_table` with a hidden caption; a footer with the pagination (a field to go to a page past five pages) and rows per page (a menu of links). `embedded`: no card, no header, named by the caption.
+- Headings: `th scope="col" id="{id}_col_{column}"`, a sortable one a link with `aria-sort` on the sorted one and an arrow, both ways on the others. Filters: each field with its hidden label (the column's name), a range a fieldset. Rows: one `th scope="row"` each (the identifier, else the first data or link column).
+- Cells: `data` (a cut text whole for screen readers), `identifier`, `link`, `disableable_link`, `boolean` and `status` (an icon and a word), `badge` (a theme badge or the record's colour), `color` (a swatch and the value), `date_time` (`<time>`, local), `order_price`, `image`, `html`, `link_group` (named icon buttons), `severity_level`; any other type through the old grids' template (`column_content`). A page or a module overrides a cell in `Component/Ui/Grid/cell/{gridId}_{column}_{type}.html.twig`.
+- Nothing yet (`is_empty_state`): the header and the `empty` block (default: an EmptyState). No match: the headings without sort links, the filters, and a small EmptyState with Clear filters. Not rendered on kit grids: `pagination_view: quicknav`, `empty_state_without_headers`, `Blocks/EmptyState/{gridId}` (the page's `empty` block replaces them).
+- The kit form theme gets a `text_widget`: the global theme's `aria-label="{id} input"` no longer replaces a field's label on kit pages.
+
+**Look**
+- A page with a grid (not embedded) takes the full width (`_layout.scss`). The filter row's fields are Bootstrap's small size.
+
+**Behaviour**
+- Sorting, pages and rows per page are links on the current URL with the grid's prefix (`order[orderBy]`, `order[offset]`, `order[limit]`), as the old grids'. They and Search land on `#{id}_grid_results`, which `load-focus.js` now focuses after the reload (after an invalid field or a flash). `grid-filters.js`: Clear filters posts the reset, then goes to the list on its summary.
+
+**Strings**
+- New (`Admin.Global`): "results", "%from%–%to% of %total%", "No results match these filters", "Pages of %list%", "%limit% per page"; (`Admin.Actions`): "Clear filters". Reused: "No records found", "Search", "Yes", "No", "Deleted customer".

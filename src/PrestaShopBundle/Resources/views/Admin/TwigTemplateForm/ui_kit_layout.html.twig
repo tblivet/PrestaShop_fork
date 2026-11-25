@@ -113,6 +113,21 @@
   {{- block('button_widget') -}}
 {%- endblock reset_widget -%}
 
+{# A text field named by its label, not by the "{id} input" aria-label the back office's global theme adds (it would
+ # replace the label for screen readers); its suggestions (data_list) in a datalist #}
+{%- block text_widget -%}
+  {%- set suggestions = data_list ?? null -%}
+  {%- if suggestions is not null -%}
+    {%- set attr = attr|merge({list: id ~ '_datalist'}) -%}
+  {%- endif -%}
+  {{- block('form_widget_simple') -}}
+  {%- if suggestions is not null -%}
+    <datalist id="{{ id }}_datalist">
+      {%- for suggestion in suggestions -%}<option value="{{ suggestion }}"></option>{%- endfor -%}
+    </datalist>
+  {%- endif -%}
+{%- endblock text_widget -%}
+
 {# A date: the browser's date field when the format is the one it sends (YYYY-MM-DD), text otherwise #}
 {%- block date_picker_widget -%}
   {%- set type = date_format == 'YYYY-MM-DD' ? 'date' : 'text' -%}

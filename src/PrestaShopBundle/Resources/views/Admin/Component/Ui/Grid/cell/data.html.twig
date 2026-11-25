@@ -1,0 +1,12 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Text; cut after max_displayed_characters for the eye, whole for screen readers -#}
+{%- set text = record[column.options.field] ?? '' -%}
+{%- set max = column.options.max_displayed_characters ?? 0 -%}
+{%- if max > 0 and text|length > max -%}
+  <span aria-hidden="true">{{ text|slice(0, max) }}…</span><span class="visually-hidden">{{ text }}</span>
+{%- else -%}
+  {{- text -}}
+{%- endif -%}

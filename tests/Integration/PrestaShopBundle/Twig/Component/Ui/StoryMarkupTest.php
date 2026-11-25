@@ -29,8 +29,9 @@ class StoryMarkupTest extends KernelTestCase
      * @dataProvider provideStories
      *
      * @param array{flashes?: array<string, string[]>} $session
+     * @param array{name: string, override?: array}|null $fixture a grid of ui/src/stories/fixtures the Twig code reads
      */
-    public function testTheStoryShowsWhatTheComponentRenders(string $twig, string $html, array $session): void
+    public function testTheStoryShowsWhatTheComponentRenders(string $twig, string $html, array $session, ?array $fixture = null): void
     {
         self::bootKernel();
         $container = static::getContainer();
@@ -44,7 +45,13 @@ class StoryMarkupTest extends KernelTestCase
         }
         $container->get('request_stack')->push($request);
 
-        $rendered = $container->get('twig')->createTemplate($twig)->render();
+        $context = [];
+        if (null !== $fixture) {
+            $variable = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/' . $fixture['name'] . '.json'), true, 512, JSON_THROW_ON_ERROR)['variable'];
+            $context[$variable] = GridFixture::present($container->get('form.factory'), $fixture['name'], $fixture['override'] ?? []);
+        }
+
+        $rendered = $container->get('twig')->createTemplate($twig)->render($context);
 
         $this->assertSame(self::canonical($html), self::canonical($rendered));
     }
@@ -54,7 +61,7 @@ class StoryMarkupTest extends KernelTestCase
         $stories = json_decode(file_get_contents(__DIR__ . '/story-markup.json'), true, 512, JSON_THROW_ON_ERROR);
 
         foreach ($stories as $id => $story) {
-            yield $id => [$story['twig'], $story['html'], $story['session']];
+            yield $id => [$story['twig'], $story['html'], $story['session'], $story['fixture'] ?? null];
         }
     }
 

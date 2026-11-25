@@ -1,0 +1,9 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- if record[column.options.disabled_field] -%}
+  {{- 'Deleted customer'|trans({}, 'Admin.Global') -}}
+{%- else -%}
+  {{- include('@PrestaShop/Admin/Component/Ui/Grid/cell/link.html.twig') -}}
+{%- endif -%}

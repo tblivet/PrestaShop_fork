@@ -1,0 +1,19 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- Icon links, each named by its label or its icon -#}
+<span class="ps-grid__links">
+  {%- for link in column.options.links -%}
+    {%- if record[link.is_link_available_field] ?? false -%}
+      <twig:ui:IconButton
+        :href="path(link.route, {(link.route_param_name): record[link.route_param_field]})"
+        :icon="component.icon(link.icon) ?? 'link'"
+        :label="link.label ?? link.icon"
+        variant="link"
+        size="sm"
+        tooltip
+      />
+    {%- endif -%}
+  {%- endfor -%}
+</span>

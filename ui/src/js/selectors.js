@@ -15,6 +15,9 @@ export default {
   kpiToRefresh: '[data-ps-ref="kpi"][data-ps-data-refresh-url]',
   kpiValue: '[data-ps-ref="kpi-value"]',
   paginationJump: '[data-ps-action~="pagination-jump"]',
+  // A <twig:ui:Grid>: its Clear filters, and the results summary its links land on
+  gridResetFilters: '[data-ps-action~="grid-reset-filters"]',
+  gridResults: '[data-ps-ref="grid-results"]',
   // A button or a link that asks first (confirm-dialog.js), and the page's one <twig:ui:ConfirmDialog>
   confirmTrigger: '[data-ps-confirm]',
   confirmDialog: '[data-ps-ref="confirm-dialog"]',

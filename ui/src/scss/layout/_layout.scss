@@ -90,9 +90,10 @@ $component-name: ps-layout;
     }
 
     // The full width: a page with a grid takes it (its wide table needs it), any page can ask for it (layoutFluid) or
-    // keep the centred width (--contained)
+    // keep the centred width (--contained). An embedded grid sits in a card of the page: it does not. .ps-grid-panel
+    // while the old grids still render on kit pages
     &--fluid,
-    &:not(.#{$component-name}__container--contained):has(.ps-grid-panel) {
+    &:not(.#{$component-name}__container--contained):has(.ps-grid-panel, .ps-grid:not(.ps-grid--embedded)) {
       max-width: none;
     }
   }

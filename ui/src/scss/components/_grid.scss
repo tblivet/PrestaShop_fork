@@ -1,0 +1,176 @@
+/**
+ * For the full copyright and license information, please view the
+ * docs/licenses/LICENSE.txt file that was distributed with this source code.
+ */
+
+// <twig:ui:Grid> (Admin/Component/Ui/grid.html.twig, its cells in Component/Ui/Grid/cell): Bootstrap's card and table.
+// The header's title and count, the toolbar, the results summary, the table scrolling in its own box (ps-scroll-fade)
+// with its sort links and its row of filters, small fields there; the pages and rows per page in the footer.
+$component-name: ps-grid;
+
+.#{$component-name} {
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    margin: 0;
+    font-size: $h5-font-size;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacers, 3);
+  }
+
+  &__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  // Where the links land: focused after a reload (load-focus.js), so it shows Bootstrap's ring
+  &__summary {
+    margin: 0;
+    font-size: $font-size-sm;
+    color: var(--#{$prefix}secondary-color);
+
+    &:focus-visible {
+      outline: 0;
+      box-shadow: $focus-ring-box-shadow;
+    }
+  }
+
+  &__form {
+    margin: 0;
+  }
+
+  // The box the table scrolls in holds what is positioned in it too: the hidden labels of the filter row would widen the
+  // page otherwise
+  &__scroll {
+    position: relative;
+  }
+
+  &__table {
+    margin-block-end: 0;
+  }
+
+  &__heading {
+    white-space: nowrap;
+    vertical-align: bottom;
+
+    &--end {
+      text-align: end;
+    }
+
+    &--center {
+      text-align: center;
+    }
+  }
+
+  &__sort {
+    display: inline-flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // The shape says the order: an arrow on the sorted column, both ways on the others, muted
+  &__sort-icon {
+    color: var(--#{$prefix}secondary-color);
+  }
+
+  &__heading[aria-sort] &__sort-icon {
+    color: inherit;
+  }
+
+  // The fields of the filter row: Bootstrap's small size, wide enough to type in
+  &__filter {
+    min-width: $ps-grid-filter-min-width;
+    vertical-align: top;
+
+    .form-control,
+    .form-select {
+      min-height: $input-height-sm;
+      padding: $input-padding-y-sm $input-padding-x-sm;
+      font-size: $input-font-size-sm;
+    }
+  }
+
+  &__cell {
+    vertical-align: middle;
+
+    &--end {
+      text-align: end;
+    }
+
+    &--center {
+      text-align: center;
+    }
+  }
+
+  // Yes / No, enabled / disabled: an icon shape and a word, not a colour alone
+  &__state {
+    display: inline-flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
+  }
+
+  &__state--on &__state-icon {
+    color: var(--#{$prefix}success);
+  }
+
+  &__state--off &__state-icon {
+    color: var(--#{$prefix}danger);
+  }
+
+  // A badge in the record's own colour, its text dark or light to read on it
+  &__badge {
+    background-color: var(--#{$prefix}grid-badge-color);
+
+    &--bright {
+      color: $gray-800;
+    }
+
+    &--dark {
+      color: $white;
+    }
+  }
+
+  &__color {
+    display: inline-flex;
+    gap: map-get($spacers, 2);
+    align-items: center;
+  }
+
+  &__swatch {
+    width: 1rem;
+    height: 1rem;
+    background-color: var(--#{$prefix}grid-swatch-color);
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
+  }
+
+  &__image {
+    max-width: $ps-grid-image-size;
+    height: auto;
+  }
+
+  // The pagination is a container (its narrow form follows its own width): the footer gives it the room rows per page
+  // leaves
+  &__pagination {
+    flex: 1 1 auto;
+  }
+
+  &__links {
+    display: inline-flex;
+    gap: map-get($spacers, 1);
+  }
+}

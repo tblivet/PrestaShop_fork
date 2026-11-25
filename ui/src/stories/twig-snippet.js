@@ -6,6 +6,8 @@
 // A node is { html, twig }; plain markup (a button, a paragraph) is the same in both. A story's build may add:
 // - rendered: the HTML the Twig code renders, when html adds story labels or a frame around it (default: html)
 // - session: what the render reads from the session, e.g. { flashes: { success: ['Saved'] } }
+// - fixture: data the Twig code reads, built by the test: { name: 'order-grid', override: {…} } (a grid fixture of
+//   ui/src/stories/fixtures, its filter form a real one, see GridFixture.php)
 // ui/.ai/bin/story-markup.mjs snapshots them; StoryMarkupTest renders each Twig call and compares it with the HTML.
 
 const indent = (text) => text.split('\n').map((line) => (line ? `  ${line}` : line)).join('\n');
@@ -90,9 +92,9 @@ export const withTwig = (build, parameters = {}) => ({
     ...parameters,
     twig: (args) => build(args).twig,
     twigParity: (args) => {
-      const { html, twig, rendered, session } = build(args);
+      const { html, twig, rendered, session, fixture } = build(args);
 
-      return { twig, html: rendered ?? html, session: session ?? {} };
+      return { twig, html: rendered ?? html, session: session ?? {}, ...(fixture ? { fixture } : {}) };
     },
   },
 });

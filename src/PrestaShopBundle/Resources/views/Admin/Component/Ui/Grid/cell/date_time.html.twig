@@ -1,0 +1,11 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{%- set value = record[column.id] ?? null -%}
+{%- if value is empty or value == constant('PrestaShop\\PrestaShop\\Core\\Util\\DateTime\\DateTime::NULL_VALUE') -%}
+  {{- column.options.empty_data ?? '' -}}
+{%- else -%}
+  {#- The shop's local date and time, as shown: no time zone offset -#}
+  <time datetime="{{ value|date('Y-m-d\\TH:i:s') }}">{{ value|date(column.options.format) }}</time>
+{%- endif -%}
