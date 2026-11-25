@@ -68,6 +68,7 @@ All live in `ui/.ai/` and are linked for Claude Code (`.claude/skills`, `.claude
 | `ui-screen-review` | workflow | Full review of a page: every state captured, five reviewer lenses on the front end only (visual, UX writing, RGAA, code, Bootstrap 5.3), a skeptic, an HTML report (about 30 min). A page already reviewed gets a follow-up (earlier findings re-checked, only new blockers and majors added); `fresh: true` starts over |
 | `ui-component-review` | workflow | Full review of one or more `<twig:ui:*>` components, see below |
 | `ui-inventory` | workflow | Refresh the pattern inventory and the component backlog |
+| `ui-component-design` | workflow | Design a large component before building it: maps what exists, three proposals from different angles, three judges, one design with its build plan (`ui/.ai/designs/<name>.md`) |
 
 ### Subagents
 
@@ -121,6 +122,7 @@ Scripts:
 | [`.ai/INVENTORY.md`](.ai/INVENTORY.md) | Pattern inventory and component backlog | `ui-inventory` workflow; checkboxes ticked as components land |
 | [`.ai/PROGRESS.md`](.ai/PROGRESS.md) | Pages on the kit, component adoption, open findings | `progress.mjs`, never by hand |
 | [`.ai/CHANGELOG-UI.md`](.ai/CHANGELOG-UI.md) | Markup, hooks, behaviour and strings that changed for modules, tests and translators | Every rework |
+| `.ai/designs/<name>.md` | The design a large component is built from | `ui-component-design`, then kept by hand |
 | `.ai/reviews/<page>.json` | Last screen review of a page | `ui-screen-review` with `reviewsDir` |
 | `.ai/reviews/components/<name>.json` | Last review of a component | `ui-component-review` with `reviewsDir` |
 

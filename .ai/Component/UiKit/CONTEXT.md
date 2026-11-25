@@ -76,6 +76,7 @@ Owned by the kit in `ui/.ai/workflows/`, linked as `.claude/workflows/<name>.js`
 | Workflow | Does | Args |
 |----------|------|------|
 | `ui-screen-review` | Lists every state of each page from code + story (flashes, config-gated branches; no dark mode, no RTL), reaches the rare ones by reversible setup on the local shop or DOM emulation, screenshots every state × width in Chrome, axe + keyboard pass, reviews through visual / UX-content / a11y-conventions lenses, drops unsupported findings, writes `index.html` with a state coverage table | `{pages: [{name, url, story?, files?, scenarios?}], outDir, reviewsDir?, widths?, setup?}` (`setup: false` stays read-only; `reviewsDir` keeps `ui/.ai/reviews/<page>.json`) |
+| `ui-component-design` | Designs a large component before it is built: two read-only surveys (code, variants across pages), three proposals from different angles, three judges, one synthesis; writes `design.md` and `index.html` to `outDir`, kept as `ui/.ai/designs/<name>.md` | `{component, brief, outDir, angles?, date?}` |
 | `ui-inventory` | Lists every Symfony page template, audits them in batches (plus the shared layout, grid and form themes) for UI patterns, clusters them into ranked component candidates, screenshots the top ones, writes `ui/.ai/INVENTORY.md` | `{repo, outDir, baseUrl?, visual?}` |
 
 ## Canonical examples
