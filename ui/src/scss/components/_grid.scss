@@ -181,18 +181,10 @@ $component-name: ps-grid;
   }
 
   // The fields of the filter row (Bootstrap's small ones), wide enough to type in
+  // Its fields claim no width (size 1, grid.html.twig): a column is as wide as its heading and values, at least this
   &__filter {
     min-width: $ps-grid-filter-min-width;
     vertical-align: top;
-
-    &--narrow {
-      min-width: $ps-grid-filter-narrow-min-width;
-    }
-  }
-
-  // A column of short values (an id): no wider than its content and filter, the table's room left to the others
-  &__heading--narrow {
-    width: 1%;
   }
 
   &__filter-label {
@@ -209,6 +201,11 @@ $component-name: ps-grid;
     display: flex;
     gap: map-get($spacers, 1);
     align-items: center;
+
+    // Filter on one line: the actions column is as narrow as its content
+    .ps-button__label {
+      text-wrap: nowrap;
+    }
   }
 
   // The check columns: as narrow as their box, centred on the heading's line (Bootstrap sets thead cells at the bottom)

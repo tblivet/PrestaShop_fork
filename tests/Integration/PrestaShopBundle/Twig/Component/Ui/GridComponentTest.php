@@ -54,7 +54,7 @@ class GridComponentTest extends KernelTestCase
         $html = $this->render();
 
         $this->assertStringContainsString('<label class="visually-hidden form-label" for="order_reference">Reference</label>', $html);
-        $this->assertMatchesRegularExpression('#<input type="text" id="order_reference" name="order\[reference\]" class="form-control-sm form-control"\s*/?>#', $html);
+        $this->assertMatchesRegularExpression('#<input type="text" id="order_reference" name="order\[reference\]" class="form-control-sm form-control" size="1"\s*/?>#', $html);
         $this->assertStringContainsString('<fieldset class="ps-filter-range" id="order_date_add"><legend class="visually-hidden">Date</legend>', $html);
         $this->assertStringNotContainsString(' input"', $html);
         $this->assertStringContainsString('action="/sell/orders/filter#order_grid_results"', $html);
@@ -122,7 +122,7 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('grid-position', $html);
     }
 
-    public function testAFilterFieldHasNoPlaceholderAndAnIdColumnIsNarrow(): void
+    public function testAFilterFieldHasNoPlaceholderAndClaimsNoWidth(): void
     {
         $fixture = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/order-grid.json'), true, 512, JSON_THROW_ON_ERROR);
         $fixture['filters'][1]['options'] = ['attr' => ['placeholder' => 'Search reference']];
@@ -130,8 +130,7 @@ class GridComponentTest extends KernelTestCase
 
         $this->assertStringNotContainsString('placeholder="Search reference"', $html);
         $this->assertStringContainsString('<label class="visually-hidden form-label" for="order_reference">Reference</label>', $html);
-        $this->assertStringContainsString('<th scope="col" id="order_col_id_order" class="ps-grid__heading ps-grid__heading--narrow"', $html);
-        $this->assertStringContainsString('<td class="ps-grid__filter ps-grid__filter--narrow">', $html);
+        $this->assertMatchesRegularExpression('#<input type="text" id="order_reference" name="order\[reference\]" class="form-control-sm form-control" size="1"#', $html);
     }
 
     public function testAQuickFilterSubmitsItsChoiceAfterItsHiddenField(): void

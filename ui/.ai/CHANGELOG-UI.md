@@ -991,7 +991,7 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - Headings taller: `padding-block` .75rem (`$ps-grid-heading-padding-y`).
 - Row checks and the filter row's icon at 1rem (`$ps-grid-control-size`), not the table's .875rem.
 - Every kit menu (`dropdown-inside-click.js`): a click inside it closes it only on an item, link or button, no longer on its padding, a divider or a heading; a click outside still closes it.
-- The record's id column (`Grid::isNarrow()`: an identifier column, or a data column showing the bulk field or named `id_*`) is as narrow as its content and filter: `ps-grid__heading--narrow` (width 1%), `ps-grid__filter--narrow` (min 5rem).
+- Column widths follow their headings and values: a filter text field has `size="1"` and claims no width of its own (it filled the same ~200px in every column); a filter cell is at least `$ps-grid-filter-min-width` (5rem, was 7rem). Filter stays on one line.
 - Simple filter fields lose their placeholder ("Search ID" repeated the heading); their visually hidden label still names them. Ranges keep "Min" / "Max".
 - Row hover lighter: Bootstrap's `$table-hover-bg-factor` .075 → .04 (kit tables).
 - Sorting, pages and filters land on the title, read with its count ("Countries, 241 results").

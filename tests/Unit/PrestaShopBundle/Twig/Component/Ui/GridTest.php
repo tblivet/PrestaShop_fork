@@ -365,18 +365,6 @@ class GridTest extends TestCase
         $this->assertSame('order', $params['grid']['id']);
     }
 
-    public function testTheRecordsIdColumnIsNarrow(): void
-    {
-        $bulk = ['id' => 'bulk', 'type' => 'bulk_action', 'options' => ['bulk_field' => 'id_country']];
-        $grid = $this->grid(['columns' => [$bulk]] + self::presentedArray());
-
-        $this->assertTrue($grid->isNarrow(['id' => 'id_order', 'type' => 'identifier', 'options' => []]));
-        $this->assertTrue($grid->isNarrow(['id' => 'country_id', 'type' => 'data', 'options' => ['field' => 'id_country']]));
-        $this->assertTrue($grid->isNarrow(['id' => 'id_zone', 'type' => 'data', 'options' => ['field' => 'zone']]));
-        $this->assertFalse($grid->isNarrow(['id' => 'name', 'type' => 'data', 'options' => ['field' => 'name']]));
-        $this->assertFalse($grid->isNarrow(['id' => 'id_status', 'type' => 'toggle', 'options' => ['field' => 'active']]));
-    }
-
     private function grid(array $override = [], array $query = []): Grid
     {
         $grid = $this->component($query);

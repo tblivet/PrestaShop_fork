@@ -166,7 +166,7 @@
               {%- for column in grid.columns -%}
                 {%- set sort = 'list' == state ? this.sortState(column.id) : null -%}
                 {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
-                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ column.type in ['bulk_action', 'position_handle'] ? ' ps-grid__heading--select' }}{{ this.isNarrow(column) ? ' ps-grid__heading--narrow' }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
+                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ column.type in ['bulk_action', 'position_handle'] ? ' ps-grid__heading--select' }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
                   {%- if 'position_handle' == column.type -%}
                     <span class="visually-hidden">{{ 'Move'|trans({}, 'Admin.Actions') }}</span>
                   {%- elseif 'bulk_action' == column.type -%}
@@ -207,7 +207,7 @@
                       <span class="visually-hidden">{{ 'Filters'|trans({}, 'Admin.Global') }}</span>
                     </th>
                   {%- else -%}
-                  <td class="ps-grid__filter{{ this.isNarrow(column) ? ' ps-grid__filter--narrow' }}">
+                  <td class="ps-grid__filter">
                     {%- if column.id == filterColumnId -%}
                       {#- At the end of the fields it applies, after them for the keyboard. Its icon is the filter row's.
                           Clear filters next to it when the row has no label cell -#}
@@ -225,7 +225,9 @@
                       {%- else -%}
                         {%- set size = 'choice' in filter.vars.block_prefixes ? 'form-select-sm' : 'form-control-sm' -%}
                         {{- form_label(filter, column.name, {label_attr: {class: 'visually-hidden'}}) -}}
-                        {{- form_widget(filter, {attr: filter.vars.attr|merge({class: ((filter.vars.attr.class ?? '') ~ ' ' ~ size)|trim})}) -}}
+                        {#- size 1: a text field claims no width of its own, so the columns are as wide as their headings and
+                            values, the field filling its cell -#}
+                        {{- form_widget(filter, {attr: filter.vars.attr|merge({class: ((filter.vars.attr.class ?? '') ~ ' ' ~ size)|trim} + ('choice' in filter.vars.block_prefixes ? {} : {size: 1}))}) -}}
                       {%- endif -%}
                     {%- endfor -%}
                   </td>

@@ -52,10 +52,6 @@ const ALIGNMENTS = { right: 'end', center: 'center' };
 const ICONS = {
   arrow_downward: arrowDownward, arrow_upward: arrowUpward, cloud_download: cloudDownload, code, delete: deleteIcon, edit, filter_alt_off: filterAltOff, open_in_new: openInNew, print, refresh, search, settings, storage,
 };
-// Grid::isNarrow(): the record's id, as narrow as its content and filter
-const isNarrow = (grid, column) => column.type === 'identifier' || (column.type === 'data' && (
-  grid.columns.some((other) => other.type === 'bulk_action' && other.options.bulk_field === column.options.field)
-  || column.id.startsWith('id_')));
 const ICON_ALIASES = { zoom_in: 'search' };
 const kitIcon = (name) => (name ? ICON_ALIASES[name] ?? name : null);
 
@@ -125,7 +121,7 @@ const filterField = (grid, filter, column) => {
     })));
   }
 
-  return `<label class="visually-hidden form-label" for="${id}">${escape(column.name)}</label><input type="text" id="${id}" name="${name}"${value ? ` value="${escape(value)}"` : ''} class="form-control-sm form-control">`;
+  return `<label class="visually-hidden form-label" for="${id}">${escape(column.name)}</label><input type="text" id="${id}" name="${name}"${value ? ` value="${escape(value)}"` : ''} size="1" class="form-control-sm form-control">`;
 };
 
 // A <twig:ui:IconButton>: a link with href, else a button
@@ -497,7 +493,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         ? `<a class="ps-grid__sort" href="${escape(url(fixture, { orderBy: column.id, sortOrder: sort === 'ascending' ? 'desc' : 'asc' }))}">${escape(column.name)}${uiIcon(icon, { class: 'ps-grid__sort-icon' })}</a>`
         : escape(column.name);
 
-      return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${isNarrow(fixture, column) ? ' ps-grid__heading--narrow' : ''}${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
+      return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
     }).join('');
     const filters = hasFilters
       ? `<tr class="ps-grid__filters" data-ps-ref="grid-filter-row">${fixture.columns.map((column, index) => {
@@ -505,7 +501,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
 
         return index === 0 && filterLabel
           ? `<th scope="row" class="ps-grid__filter-label">${clearButton || uiIcon(filterAlt)}<span class="visually-hidden">Filters</span></th>`
-          : `<td class="ps-grid__filter${isNarrow(fixture, column) ? ' ps-grid__filter--narrow' : ''}">${column.id === filterColumnId ? `<div class="ps-grid__filter-actions">${filterButton('sm')}${filterLabel ? '' : clearButton}</div>` : ''}${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
+          : `<td class="ps-grid__filter">${column.id === filterColumnId ? `<div class="ps-grid__filter-actions">${filterButton('sm')}${filterLabel ? '' : clearButton}</div>` : ''}${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
       }).join('')}</tr>`
       : '';
 

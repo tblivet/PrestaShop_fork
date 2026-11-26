@@ -173,26 +173,6 @@ final class Grid
         return null;
     }
 
-    /**
-     * A column of short values, the record's id: an identifier column, or a data column showing the field the rows are
-     * checked by (bulk_field) or named id_*. As narrow as its content and filter, the table's room left to the others
-     */
-    public function isNarrow(array $column): bool
-    {
-        if ('identifier' === $column['type']) {
-            return true;
-        }
-        if ('data' !== $column['type']) {
-            return false;
-        }
-        $bulkFields = array_map(
-            fn (array $bulk): ?string => $bulk['options']['bulk_field'] ?? null,
-            array_filter($this->grid['columns'], fn (array $other): bool => 'bulk_action' === $other['type'])
-        );
-
-        return in_array($column['options']['field'] ?? null, $bulkFields, true) || str_starts_with($column['id'], 'id_');
-    }
-
     public function isSortable(array $column): bool
     {
         return ($column['options']['sortable'] ?? false) && 'position_handle' !== $column['type'] && 'list' === $this->getState();
