@@ -224,7 +224,7 @@ class GridTest extends TestCase
         $this->assertFalse($this->grid()->hasQueryModal());
     }
 
-    public function testARowsActionsInlineFirstTheRestInItsMenu(): void
+    public function testARowsActionsAreAllInItsMenuTheDangerousOnesLast(): void
     {
         $actions = (new RowActionCollection())
             ->add((new LinkRowAction('edit'))->setName('Edit')->setIcon('edit')->setOptions(['route' => 'admin_orders_edit', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order']))
@@ -236,15 +236,15 @@ class GridTest extends TestCase
             ]));
         $row = $this->grid()->rowActions(['id_order' => 7, 'reference' => 'XKB'], ['options' => ['actions' => $actions]]);
 
-        $this->assertSame([
-            ['icon' => 'edit', 'label' => 'Edit', 'props' => ['href' => '/orders?orderId=7']],
-            ['icon' => 'visibility', 'label' => 'View', 'props' => ['href' => '/orders?orderId=7', 'target' => '_blank']],
-        ], $row['buttons']);
-        $this->assertSame(['type' => 'link', 'label' => 'Print', 'icon' => null, 'href' => '/orders?orderId=7&ref=XKB', 'attr' => []], $row['menu'][0]);
+        $this->assertSame(['type' => 'link', 'href' => '/orders?orderId=7', 'label' => 'Edit', 'icon' => 'edit', 'attr' => []], $row[0]);
+        $this->assertSame(['type' => 'link', 'href' => '/orders?orderId=7', 'label' => 'View', 'icon' => 'visibility', 'attr' => ['target' => '_blank']], $row[1]);
+        $this->assertSame(['type' => 'link', 'href' => '/orders?orderId=7&ref=XKB', 'label' => 'Print', 'icon' => null, 'attr' => []], $row[2]);
+        $this->assertSame(['type' => 'divider'], $row[3]);
         $this->assertSame([
             'form' => 'order_grid_action_form', 'formaction' => '/orders?orderId=7', 'formmethod' => 'post', 'name' => '_method', 'value' => 'DELETE',
             'data-ps-confirm' => 'Delete?', 'data-ps-data-confirm-title' => 'Delete order?', 'data-ps-data-confirm-variant' => 'danger',
-        ], $row['menu'][1]['attr']);
+        ], $row[4]['attr']);
+        $this->assertCount(5, $row);
     }
 
     public function testAnUnnamedActionGetsTheUsualNameOfItsId(): void
@@ -254,8 +254,8 @@ class GridTest extends TestCase
             ->add((new LinkRowAction('show_rates'))->setOptions(['route' => 'a', 'route_param_name' => 'id', 'route_param_field' => 'id']));
         $row = $this->grid()->rowActions(['id' => 1], ['options' => ['actions' => $actions]]);
 
-        $this->assertSame('Edit', $row['buttons'][0]['label']);
-        $this->assertSame('Show rates', $row['menu'][0]['label']);
+        $this->assertSame('Edit', $row[0]['label']);
+        $this->assertSame('Show rates', $row[1]['label']);
     }
 
     public function testARowsActionThatDoesNotApplyIsLeftOut(): void
@@ -265,7 +265,7 @@ class GridTest extends TestCase
         $actions = (new RowActionCollection())
             ->add((new SubmitRowAction('delete'))->setName('Delete')->setIcon('delete')->setOptions(['route' => 'admin_orders_delete', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'accessibility_checker' => $checker]));
 
-        $this->assertSame(['buttons' => [], 'menu' => []], $this->grid()->rowActions(['id_order' => 7], ['options' => ['actions' => $actions]]));
+        $this->assertSame([], $this->grid()->rowActions(['id_order' => 7], ['options' => ['actions' => $actions]]));
     }
 
     public function testAClickableRowFollowsItsFirstClickableLinkUnlessItAsksFirst(): void

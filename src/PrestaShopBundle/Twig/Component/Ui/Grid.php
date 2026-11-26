@@ -524,26 +524,23 @@ final class Grid
     }
 
     /**
-     * A row's actions that apply to it, as the old grids split them: those with use_inline_display, then the first other
-     * one, as icon buttons (props for <twig:ui:IconButton>); the rest in its menu (<twig:ui:DropdownMenu> items). An
-     * action whose icon the kit has not goes to the menu. A link goes to its route; a submit sends the grid's action form
-     * with _method for a DELETE (method override); both ask first with their confirm message.
+     * A row's actions that apply to it, as <twig:ui:DropdownMenu> items for its one menu: in their order, the dangerous
+     * ones (a delete, or a danger confirm) last after a divider. A link goes to its route; a submit sends the grid's
+     * action form with _method for a DELETE (method override); both ask first with their confirm message.
      *
-     * @return array{buttons: list<array<string, mixed>>, menu: list<array<string, mixed>>}
+     * @return list<array<string, mixed>>
      */
     public function rowActions(array $record, array $column): array
     {
-        $buttons = [];
-        $menu = [];
-        $firstRegular = true;
+        $items = [];
+        $dangers = [];
 
         foreach ($column['options']['actions'] ?? [] as $action) {
             if (!$action->isApplicable($record) || !in_array($action->getType(), ['link', 'submit'], true)) {
                 continue;
             }
             $options = $action->getOptions();
-            $icon = $this->icon($action->getIcon());
-            $label = $this->actionLabel($action->getName(), (string) $action->getId());
+            $id = (string) $action->getId();
             $url = $this->actionUrl($options, $record);
             $confirm = $this->confirmAttributes([
                 'confirm_message' => 'dynamic' === ($options['confirm_message_type'] ?? null) && !empty($record[$options['dynamic_message_field'] ?? ''])
@@ -551,32 +548,32 @@ final class Grid
                     : ($options['confirm_message'] ?? null),
                 'modal_options' => $options['modal_options'] ?? null,
             ]);
+            $danger = str_contains($id, 'delete') || 'danger' === ($confirm['data-ps-data-confirm-variant'] ?? null);
 
             if ('link' === $action->getType()) {
                 $attributes = $confirm + (empty($options['target']) ? [] : ['target' => (string) $options['target']]);
-                $asButton = ['href' => $url] + $attributes;
-                $asItem = ['type' => 'link', 'label' => $label, 'icon' => $icon, 'href' => $url, 'attr' => $attributes];
+                $item = ['type' => 'link', 'href' => $url];
             } else {
                 $method = strtoupper($options['method'] ?? 'POST');
                 $attributes = ['form' => $this->grid['id'] . '_grid_action_form', 'formaction' => $url, 'formmethod' => 'GET' === $method ? 'get' : 'post']
                     + (in_array($method, ['GET', 'POST'], true) ? [] : ['name' => '_method', 'value' => $method])
                     + $confirm;
-                $asButton = ['type' => 'submit'] + $attributes;
-                $asItem = ['type' => 'submit', 'label' => $label, 'icon' => $icon, 'attr' => $attributes];
+                $item = ['type' => 'submit'];
             }
+            $item += [
+                'label' => $this->actionLabel($action->getName(), $id),
+                'icon' => $this->icon($action->getIcon()),
+                'attr' => $attributes,
+            ];
 
-            $shown = null !== $icon && (($options['use_inline_display'] ?? false) || $firstRegular);
-            if (!($options['use_inline_display'] ?? false)) {
-                $firstRegular = false;
-            }
-            if ($shown) {
-                $buttons[] = ['icon' => $icon, 'label' => $label, 'props' => $asButton];
+            if ($danger) {
+                $dangers[] = $item;
             } else {
-                $menu[] = $asItem;
+                $items[] = $item;
             }
         }
 
-        return ['buttons' => $buttons, 'menu' => $menu];
+        return [] === $items || [] === $dangers ? [...$items, ...$dangers] : [...$items, ['type' => 'divider'], ...$dangers];
     }
 
     /**

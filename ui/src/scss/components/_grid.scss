@@ -120,6 +120,8 @@ $component-name: ps-grid;
   &__scroll {
     position: relative;
     container-type: inline-size;
+    // The table's collapsed borders stick out half their width: room for the last row's, not cut by the overflow
+    padding-block-end: $table-border-width;
     overflow-y: hidden;
   }
 
@@ -388,17 +390,11 @@ $component-name: ps-grid;
     cursor: grab;
   }
 
-  // As narrow as its buttons
+  // As narrow as its button(s)
   &__cell--position-handle,
   &__cell--action {
     width: 1%;
     white-space: nowrap;
-  }
-
-  &__actions {
-    display: inline-flex;
-    gap: map-get($spacers, 1);
-    align-items: center;
   }
 
   &__query-text {

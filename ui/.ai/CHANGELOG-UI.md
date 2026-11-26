@@ -951,3 +951,26 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - A link cell with `target="_blank"` says it opens a new tab; severity words are translated where written; Clear filters announces a failure (`data-ps-data-error`); sort links show the kit focus ring; an embedded grid's footer has room above it.
 
 **Strings**: new (`Admin.Global`) "result", "%list% table"; (`Admin.Notifications.Error`) "The filters could not be cleared. Try again."
+
+## Grid: row actions in one menu, a clearer summary — 2026-11-26
+
+`Component/Ui/Grid/cell/action.html.twig`, `Grid::rowActions()`, `grid.html.twig`, `_dropdown-menu.scss`.
+
+**Markup**
+- A row's actions are all in one menu: one `more_vert` icon button labelled "Actions" (described by the row header) in `div.dropdown.ps-grid__actions`. No more inline icon buttons for the first action or `use_inline_display` ones; the "More actions" button is gone.
+- Dangerous actions (an id containing `delete`, or a danger confirm) come last, after a divider.
+- `Grid::rowActions()` returns a list of `<twig:ui:DropdownMenu>` items (was `{buttons, menu}`).
+- New hooks: `data-ps-action="grid-apply-filters"` on the Filter button, `data-ps-ref="grid-filter-row"` on the filter row.
+
+**Behaviour**
+- The main action is reached by clicking the row (as before) or as the menu's first item: one more click with the keyboard.
+- Filter (small, outlined) ends the filter row, in the actions column's filter cell (the definition's `search_and_reset`); it left the results line, where only Clear filters stays. A grid whose `search_and_reset` is on no column keeps it in the results line.
+- Clear filters has the close icon, like Clear selection.
+- The last row keeps its bottom border (it was cut by the scroll box).
+- Enter in a filter field sends Filter (`grid-filters.js`): the browser would otherwise send the first submit button of the filter form, a bulk action or a quick filter's choice, both earlier in the page.
+
+**Strings**
+- Admin.Global: "More actions" → "Actions" (row menu button).
+- Admin.Global: "%from%–%to% of %total%" → "%from%–%to% of %total% results"; with one record, "1 result".
+
+**Old theme**: not affected.

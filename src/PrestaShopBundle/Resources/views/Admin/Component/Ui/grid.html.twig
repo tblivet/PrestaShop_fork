@@ -15,6 +15,8 @@
 {%- set rowHeaderColumnId = this.rowHeaderColumnId -%}
 {%- set previewColumnId = this.previewColumnId -%}
 {%- set searchAndReset = this.searchAndReset -%}
+{#- The column whose filter cell holds Filter (the definition's search_and_reset, the actions column) -#}
+{%- set filterColumnId = searchAndReset ? grid.columns|map(c => c.id)|filter(c => searchAndReset.vars.name in (grid.column_filters[c] ?? []))|first : false -%}
 {%- set hasFilters = this.hasFilters -%}
 {%- set bulkItems = this.bulkItems -%}
 {%- set gridItems = this.gridItems -%}
@@ -37,6 +39,7 @@
 {#- Clear filters: grid-filters.js posts the reset and comes back to the results, or says it failed -#}
 {%- set clearFilters = searchAndReset and searchAndReset.vars.show_reset_button ? {
   variant: 'link',
+  icon: 'close',
   'data-ps-action': 'grid-reset-filters',
   'data-ps-data-url': searchAndReset.vars.reset_url,
   'data-ps-data-redirect': searchAndReset.vars.redirect_url,
@@ -102,22 +105,23 @@
         </div>
       {%- endif -%}
 
-      {#- The results line: the summary, then Filter and the quick filters, at the end just above the table they filter -#}
+      {#- The results line: the summary, then Clear filters and the quick filters, at the end just above the table they filter -#}
       <div class="ps-grid__results">
         {#- Where sorting, pages and filters land (#{id}_grid_results, load-focus.js); it describes the table -#}
         <p id="{{ resultsId }}" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">
-          {%- if 'no-match' == state -%}
+          {%- if 'no-match' == state or 1 == total -%}
             {{ total }} {{ resultsWord }}
           {%- else -%}
             {%- set range = this.range -%}
-            {{ '%from%–%to% of %total%'|trans({'%from%': range[0], '%to%': range[1], '%total%': total}, 'Admin.Global') }}
+            {{ '%from%–%to% of %total% results'|trans({'%from%': range[0], '%to%': range[1], '%total%': total}, 'Admin.Global') }}
           {%- endif -%}
         </p>
         {%- if searchAndReset -%}
           <twig:ui:Layout:Cluster class="ps-grid__search">
-            {#- Outside the form, named by it: Enter in a filter field submits with Filter, the form's first button. Its icon
-                is the filter row's (not the header search's magnifier) -#}
-            <twig:ui:Button type="submit" variant="outline-primary" icon="filter_alt" :form="formId">{{ 'Filter'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+            {%- if not filterColumnId -%}
+              {#- No column holds it: here, outside the form, named by it -#}
+              <twig:ui:Button type="submit" variant="outline-primary" icon="filter_alt" :form="formId" data-ps-action="grid-apply-filters">{{ 'Filter'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+            {%- endif -%}
             {%- if clearFilters -%}
               <twig:ui:Button {{ ...clearFilters }}>{{ 'Clear filters'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
             {%- endif -%}
@@ -193,13 +197,19 @@
               {%- endfor -%}
             </tr>
             {%- if hasFilters -%}
-              <tr class="ps-grid__filters">
+              {#- Enter in one of its fields sends Filter (grid-filters.js), not the bulk actions' or quick filters' submit
+                  buttons that come before it in the page -#}
+              <tr class="ps-grid__filters" data-ps-ref="grid-filter-row">
                 {%- for column in grid.columns -%}
                   {%- if loop.first and this.filtersFor(column.id) is empty -%}
                     {#- Names the row, with the icon Filter shows: the tie between the two -#}
                     <th scope="row" class="ps-grid__filter-label"><twig:ui:Icon name="filter_alt"/><span class="visually-hidden">{{ 'Filters'|trans({}, 'Admin.Global') }}</span></th>
                   {%- else -%}
                   <td class="ps-grid__filter">
+                    {%- if column.id == filterColumnId -%}
+                      {#- At the end of the fields it applies, after them for the keyboard. Its icon is the filter row's -#}
+                      <twig:ui:Button type="submit" variant="outline-primary" size="sm" icon="filter_alt" :form="formId" data-ps-action="grid-apply-filters">{{ 'Filter'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+                    {%- endif -%}
                     {%- for filter in this.filtersFor(column.id) -%}
                       {#- A range is a fieldset named by the column; a field gets its hidden label. Bootstrap's small fields -#}
                       {%- if filter.vars.compound -%}

@@ -148,51 +148,37 @@ const confirmAttributes = (message, modalOptions = {}) => (message ? Object.from
   'data-ps-data-confirm-variant': (modalOptions.confirm_button_class ?? '').includes('danger') ? 'danger' : '',
 }).filter(([, value]) => value !== '')) : {});
 
-// Grid::rowActions(): inline ones and the first other one as buttons, the rest in the menu (the fixture's url is what the
+// Grid::rowActions(): every action in one menu, the dangerous ones last after a divider (the fixture's url is what the
 // router gives the route, {field} the record's)
 const rowActions = (grid, record, column) => {
-  const buttons = [];
-  const menu = [];
-  let firstRegular = true;
+  const items = [];
+  const dangers = [];
 
   column.options.actions.forEach((action) => {
     const { options } = action;
-    const icon = kitIcon(action.icon);
     const href = action.url.replace(/\{(\w+)\}/g, (match, field) => record[field]);
     const confirm = confirmAttributes(options.confirm_message, options.modal_options);
-    let asButton;
-    let asItem;
+    const danger = action.id.includes('delete') || confirm['data-ps-data-confirm-variant'] === 'danger';
+    let item;
+    let attributes;
 
     if (action.type === 'link') {
-      const attributes = { ...confirm, ...(options.target ? { target: options.target } : {}) };
-      asButton = { href, ...attributes };
-      asItem = {
-        type: 'link', label: action.name, icon, href, attr: attributes,
-      };
+      attributes = { ...confirm, ...(options.target ? { target: options.target } : {}) };
+      item = { type: 'link', href };
     } else {
       const method = (options.method ?? 'POST').toUpperCase();
-      const attributes = {
+      attributes = {
         form: `${grid.id}_grid_action_form`, formaction: href, formmethod: method === 'GET' ? 'get' : 'post', ...(['GET', 'POST'].includes(method) ? {} : { name: '_method', value: method }), ...confirm,
       };
-      asButton = { type: 'submit', ...attributes };
-      asItem = {
-        type: 'submit', label: action.name, icon, attr: attributes,
-      };
+      item = { type: 'submit' };
     }
-
-    const inline = options.use_inline_display ?? false;
-    const shown = icon !== null && (inline || firstRegular);
-    if (!inline) {
-      firstRegular = false;
-    }
-    if (shown) {
-      buttons.push({ icon, label: action.name, props: asButton });
-    } else {
-      menu.push(asItem);
-    }
+    item = {
+      ...item, label: action.name, icon: kitIcon(action.icon), attr: attributes,
+    };
+    (danger ? dangers : items).push(item);
   });
 
-  return { buttons, menu };
+  return items.length && dangers.length ? [...items, { type: 'divider' }, ...dangers] : [...items, ...dangers];
 };
 
 // Grid::rowLink(): the first link action with clickable_row, unless it asks first
@@ -343,19 +329,14 @@ const cell = (grid, column, record, rowHeaderId) => {
       return value ? `<time datetime="${date(value, 'Y-m-d\\TH:i:s')}">${date(value, options.format)}</time>` : escape(options.empty_data ?? '');
     }
     case 'action': {
-      const { buttons, menu } = rowActions(grid, record, column);
-      if (!buttons.length && !menu.length) {
+      const items = rowActions(grid, record, column);
+      if (!items.length) {
         return '';
       }
-      const more = menu.length
-        ? `<div class="dropdown">${iconButton({
-          icon: 'more_vert', label: 'More actions', size: 'sm', attributes: { 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false', 'data-bs-popper-config': '{&quot;strategy&quot;:&quot;fixed&quot;}', 'aria-describedby': rowHeaderId },
-        })}${dropdownMenu({ items: menu, align: 'end' }, ICONS)}</div>`
-        : '';
 
-      return `<div class="ps-grid__actions">${buttons.map((action) => iconButton({
-        icon: action.icon, label: action.label, size: 'sm', tooltip: true, attributes: { ...action.props, 'aria-describedby': rowHeaderId },
-      })).join('')}${more}</div>`;
+      return `<div class="dropdown ps-grid__actions">${iconButton({
+        icon: 'more_vert', label: 'Actions', size: 'sm', attributes: { 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false', 'aria-describedby': rowHeaderId },
+      })}${dropdownMenu({ items, align: 'end' }, ICONS)}</div>`;
     }
     default:
       return escape(record[options.field] ?? '');
@@ -391,12 +372,12 @@ const bulkItems = (fixture) => (fixture.bulk_actions ?? []).map((action) => {
 
 // A <twig:ui:Button> of the grid: Search, Clear filters
 const button = ({
-  label, variant, type = 'button', icon = null, attributes = {},
+  label, variant, size = null, type = 'button', icon = null, attributes = {},
 }) => {
   const extra = Object.entries(attributes).map(([name, value]) => ` ${name}="${escape(value)}"`).join('');
   const content = icon ? `${uiIcon(icon, { size: 'lg' })}<span class="ps-button__label">${label}</span>` : label;
 
-  return `<button class="btn btn-${variant} ps-button" type="${type}" data-ps-data-busy-label="Loading..."${extra}>${content}</button>`;
+  return `<button class="btn btn-${variant}${size ? ` btn-${size}` : ''} ps-button" type="${type}" data-ps-data-busy-label="Loading..."${extra}>${content}</button>`;
 };
 
 /**
@@ -413,6 +394,11 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
   const { offset, limit } = fixture.pagination;
   const filterNames = fixture.filters.map((filter) => filter.name);
   const hasFilters = fixture.filters.length > 0;
+  // GridFixture puts search_and_reset on the actions column: Filter goes in its filter cell
+  const filterColumnId = hasFilters && fixture.columns.some((column) => column.id === 'actions') ? 'actions' : null;
+  const filterButton = (size) => button({
+    label: 'Filter', variant: 'outline-primary', size, type: 'submit', icon: filterAlt, attributes: { form: `${fixture.id}_filter_form`, 'data-ps-action': 'grid-apply-filters' },
+  });
   const showReset = hasFilters && Object.keys(fixture.filter_data).some((name) => filterNames.includes(name));
   const reset = {
     'data-ps-action': 'grid-reset-filters',
@@ -442,9 +428,9 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     body = block('empty') || emptyState({ title: 'No records found', icon: 'inbox', headingLevel: subLevel }, { inbox }).html;
   } else {
     const searchCluster = hasFilters
-      ? `<div class="${clusterClasses({})} ps-grid__search">${button({
-        label: 'Filter', variant: 'outline-primary', type: 'submit', icon: filterAlt, attributes: { form: `${id}_filter_form` },
-      })}${showReset ? button({ label: 'Clear filters', variant: 'link', attributes: reset }) : ''}</div>`
+      ? `<div class="${clusterClasses({})} ps-grid__search">${filterColumnId ? '' : filterButton()}${showReset ? button({
+        label: 'Clear filters', variant: 'link', icon: closeIcon, attributes: reset,
+      }) : ''}</div>`
       : '';
     const items = state === 'list' ? bulkItems(fixture) : [];
     // The bulk bar, over the headings and filters while rows are checked (grid-selection.js)
@@ -479,7 +465,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     }).join('');
     const toolbar = reorder || block('toolbar') ? `<div class="ps-grid__toolbar">${block('toolbar')}${reorder}</div>` : '';
     const [from, to] = [Math.min(offset + 1, total), Math.min(offset + limit, total)];
-    const summary = `<div class="ps-grid__results"><p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' ? `${total} ${resultsWord}` : `${from}–${to} of ${total}`}</p>${searchCluster}${quick}</div>`;
+    const summary = `<div class="ps-grid__results"><p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' || total === 1 ? `${total} ${resultsWord}` : `${from}–${to} of ${total} results`}</p>${searchCluster}${quick}</div>`;
 
     const headings = fixture.columns.map((column) => {
       const sort = state === 'list' && fixture.sorting.order_by === column.id ? (fixture.sorting.order_way.toLowerCase() === 'desc' ? 'descending' : 'ascending') : null;
@@ -503,12 +489,12 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
     }).join('');
     const filters = hasFilters
-      ? `<tr class="ps-grid__filters">${fixture.columns.map((column, index) => {
+      ? `<tr class="ps-grid__filters" data-ps-ref="grid-filter-row">${fixture.columns.map((column, index) => {
         const fields = fixture.filters.filter((filter) => filter.column === column.id && filter.type !== 'reorder');
 
         return index === 0 && !fields.length
           ? `<th scope="row" class="ps-grid__filter-label">${uiIcon(filterAlt)}<span class="visually-hidden">Filters</span></th>`
-          : `<td class="ps-grid__filter">${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
+          : `<td class="ps-grid__filter">${column.id === filterColumnId ? filterButton('sm') : ''}${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
       }).join('')}</tr>`
       : '';
 
@@ -516,7 +502,9 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     let rows = '';
 
     if (state === 'no-match') {
-      const actions = showReset ? [{ html: button({ label: 'Clear filters', variant: 'outline-secondary', attributes: reset }), twig: '' }] : [];
+      const actions = showReset ? [{ html: button({
+        label: 'Clear filters', variant: 'outline-secondary', icon: closeIcon, attributes: reset,
+      }), twig: '' }] : [];
 
       noMatch = emptyState({
         title: 'No results match these filters', icon: 'search_off', size: 'sm', headingLevel: subLevel, actions, class: 'ps-grid__no-match',

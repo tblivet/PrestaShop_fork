@@ -11,6 +11,17 @@ import { setButtonBusy } from './busy-button';
 // button stays busy meanwhile; if the reset fails, it is back as it was and the page's Announcer says so
 // (data-ps-data-error).
 export default function initGridFilters() {
+  // Enter in a filter field sends Filter. The browser would send the form's first submit button: a bulk action or a
+  // quick filter's choice, both before the filter row in the page
+  document.addEventListener('keydown', (event) => {
+    const field = event.target instanceof HTMLInputElement && event.key === 'Enter' && !event.isComposing ? event.target : null;
+    const filter = field?.closest(selectors.gridFilterRow)?.querySelector(selectors.gridApplyFilters);
+
+    if (filter && field.form) {
+      event.preventDefault();
+      field.form.requestSubmit(filter);
+    }
+  });
   document.addEventListener('click', async (event) => {
     const button = event.target instanceof Element ? event.target.closest(selectors.gridResetFilters) : null;
 

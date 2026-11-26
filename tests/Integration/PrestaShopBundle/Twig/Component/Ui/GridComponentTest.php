@@ -161,6 +161,8 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringContainsString('0 results</p>', $html);
         $this->assertStringNotContainsString('ps-grid__sort', $html);
         $this->assertStringContainsString('data-ps-action="grid-reset-filters" data-ps-data-url="/common/reset_search/order" data-ps-data-redirect="/sell/orders" data-ps-data-fragment="order_grid_results" data-ps-data-error="The filters could not be cleared. Try again."', $html);
+        // Its cross, like Clear selection's
+        $this->assertMatchesRegularExpression('#data-ps-action="grid-reset-filters"[^>]*><svg[^>]*>.*?</svg><span class="ps-button__label">Clear filters</span>#s', $html);
         $this->assertStringNotContainsString('ps-grid__footer', $html);
     }
 
@@ -298,13 +300,30 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('ps-grid__list-actions', $html);
     }
 
-    public function testARowShowsItsFirstActionsAsButtonsAndTheRestInAMenu(): void
+    public function testFilterEndsTheFilterRowInTheActionsColumn(): void
     {
         $html = $this->render();
 
-        $this->assertStringContainsString('<a class="btn btn-link btn-sm ps-button ps-icon-button" href="/sell/orders/1024/view" aria-label="View" data-bs-toggle="tooltip" data-bs-title="View" aria-describedby="order_grid_rowhead_1">', $html);
-        $this->assertStringContainsString('<a class="btn btn-link btn-sm ps-button ps-icon-button" href="/sell/orders/?orderId=1024" aria-label="Download the invoice"', $html);
-        $this->assertStringContainsString('aria-label="More actions" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="order_grid_rowhead_1"', $html);
+        $this->assertMatchesRegularExpression('#<td class="ps-grid__filter">\s*<button class="btn btn-outline-primary btn-sm ps-button" type="submit"[^>]* form="order_filter_form" data-ps-action="grid-apply-filters">.*?Filter</span>\s*</button>\s*</td>\s*</tr>#s', $html);
+        $this->assertSame(1, substr_count($html, 'data-ps-action="grid-apply-filters"'));
+        $this->assertStringContainsString('<tr class="ps-grid__filters" data-ps-ref="grid-filter-row">', $html);
+    }
+
+    public function testTheSummarySaysWhatItCounts(): void
+    {
+        $this->assertMatchesRegularExpression('#data-ps-ref="grid-results">\s*51–100 of 1234 results\s*</p>#', $this->render());
+        $this->assertMatchesRegularExpression('#data-ps-ref="grid-results">\s*1 result\s*</p>#', $this->render(['records_total' => 1, 'pagination' => ['offset' => 0, 'limit' => 50]], boot: false));
+    }
+
+    public function testARowShowsItsActionsInOneMenu(): void
+    {
+        $html = $this->render();
+
+        $this->assertMatchesRegularExpression('#<div class="dropdown ps-grid__actions">\s*<button class="btn btn-link btn-sm ps-button ps-icon-button" type="button"#', $html);
+        $this->assertStringContainsString('aria-label="Actions" data-bs-toggle="dropdown" aria-expanded="false" aria-describedby="order_grid_rowhead_1"', $html);
+        $this->assertStringContainsString('<a class="dropdown-item ps-dropdown-menu__item" href="/sell/orders/1024/view"', $html);
+        $this->assertStringContainsString('<li><hr class="dropdown-divider"></li><li><button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_grid_action_form"', $html);
+        $this->assertStringNotContainsString('More actions', $html);
     }
 
     public function testARowSubmitActionSendsTheActionFormWithItsMethod(): void

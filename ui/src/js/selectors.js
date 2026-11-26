@@ -17,6 +17,8 @@ export default {
   paginationJump: '[data-ps-action~="pagination-jump"]',
   // A <twig:ui:Grid>: its Clear filters, and the results summary its links land on
   gridResetFilters: '[data-ps-action~="grid-reset-filters"]',
+  gridApplyFilters: '[data-ps-action~="grid-apply-filters"]',
+  gridFilterRow: '[data-ps-ref="grid-filter-row"]',
   grid: '[data-ps-ref="grid"]',
   gridSelectAll: '[data-ps-action~="grid-select-all"]',
   gridSelectRow: '[data-ps-action~="grid-select-row"]',
