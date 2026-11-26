@@ -248,3 +248,9 @@ Left aside: a transparent outline on each focus ring.
 The sorted column's arrow (up or down) sits in a small round badge with the oceanblue badge's colours (the side menu's version: `oceanblue-bg-subtle`, `oceanblue-800` ink, about 6:1); the other sortable columns keep a muted both-ways arrow. The grid also marks the rest of its state in the brand blue: the count badge in the header, the line of a checked row (`oceanblue-500`, the side menu's accent).
 Why: an arrow in the text colour, or a light blue arrow alone, read as a glitch rather than "sorted here"; the badge shows the active column at a glance and its direction is still the arrow's shape and `aria-sort`.
 Exception: it is round in a kit without rounded corners, as the employee's picture and the pill badges are, because the shape is what is asked for.
+
+## 46. Menus open in the browser's top layer (Popover API) — 2026-11-26
+
+Every Bootstrap menu of the kit (`<twig:ui:DropdownMenu>`, the notifications panel) carries `popover="manual"`; `dropdown-top-layer.js` calls `showPopover()` when Bootstrap shows it and `hidePopover()` when it hides it, and makes Popper place it against the viewport (`strategy: fixed`). Bootstrap still opens, places, closes and drives it from the keyboard; `.dropdown-menu[popover]` undoes the browser's popover box.
+Why: a menu inside a grid's scrolling table was cut by its `overflow`, its fade mask and its size container. In the top layer nothing around it can cut it, now or when a later style adds such a box; Shopify's admin menus do the same. Without the Popover API (before Chrome 114, Safari 17, Firefox 125) the attribute is ignored and the menu is as before.
+Left aside: Bootstrap's own `popperConfig` on each toggle (`data-bs-popper-config`), now redundant where present.

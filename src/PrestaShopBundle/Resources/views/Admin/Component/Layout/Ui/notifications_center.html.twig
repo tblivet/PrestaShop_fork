@@ -33,7 +33,7 @@
       <twig:ui:Badge variant="danger" counter class="ps-notifications__total" hidden data-ps-ref="notifications-total">0</twig:ui:Badge>
     </button>
 
-    <div class="dropdown-menu dropdown-menu-end ps-notifications__panel">
+    <div class="dropdown-menu dropdown-menu-end ps-notifications__panel" popover="manual">
       {#- Filters: All, then one per kind, as tabs of the list below (arrows move between them, Tab goes into the list).
        # They scroll sideways when there are many -#}
       <div class="ps-notifications__filters ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="tablist" aria-label="{{ 'Filter notifications'|trans({}, 'Admin.Navigation.Notification') }}">

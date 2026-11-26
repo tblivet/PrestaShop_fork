@@ -10,6 +10,7 @@ $component-name: ps-dropdown-menu;
   width: max-content;
   max-width: min(20rem, calc(100vw - 2rem));
 
+
   &__item {
     display: flex;
     gap: .5rem;
@@ -54,4 +55,11 @@ $component-name: ps-dropdown-menu;
 
     min-width: 16rem;
   }
+}
+
+// Any Bootstrap menu shown as a popover (the top layer, dropdown-top-layer.js): the browser's own popover box undone,
+// Popper places it
+.dropdown-menu[popover] {
+  inset: auto;
+  overflow: visible;
 }

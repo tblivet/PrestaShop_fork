@@ -115,7 +115,8 @@ $component-name: ps-grid;
   // The box the table scrolls in holds what is positioned in it too: the hidden labels of the filter row would widen the
   // page otherwise
   // A container: a preview row keeps to the width it shows (cqi), not the table's. It scrolls sideways only: the table
-  // is never cut to a height (overflow-x makes overflow-y auto, and a pixel over showed a vertical bar)
+  // is never cut to a height (overflow-x makes overflow-y auto, and a pixel over showed a vertical bar). Its menus open
+  // in the top layer, so neither cuts them
   &__scroll {
     position: relative;
     container-type: inline-size;

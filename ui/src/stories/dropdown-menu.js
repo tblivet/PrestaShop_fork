@@ -48,8 +48,8 @@ export default function dropdownMenu({ items = null, content = '', align = 'star
   const extra = Object.entries(attributes).filter(([name]) => name !== 'class').map(([name, value]) => ` ${name}="${value}"`).join('');
 
   if (items === null) {
-    return `<div class="${classes}"${extra}>${content}</div>`;
+    return `<div class="${classes}" popover="manual"${extra}>${content}</div>`;
   }
 
-  return `<ul class="${classes}"${extra}>${items.map((entry) => item(entry, icons)).join('')}</ul>`;
+  return `<ul class="${classes}" popover="manual"${extra}>${items.map((entry) => item(entry, icons)).join('')}</ul>`;
 }

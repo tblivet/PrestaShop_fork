@@ -4,6 +4,7 @@
  */
 import '../src/scss/main.scss';
 import * as bootstrap from 'bootstrap';
+import initDropdownTopLayer from '../src/js/components/dropdown-top-layer';
 import initAlertDismissFocus from '../src/js/components/alert-dismiss-focus';
 import initAnnouncer from '../src/js/components/announcer';
 import initBusyButtons from '../src/js/components/busy-button';
@@ -43,6 +44,7 @@ initHeaderSearch();
 initQuickAccess(bootstrap.Modal);
 initPaginationJump();
 initConfirmDialog(bootstrap.Modal, bootstrap.Dropdown);
+initDropdownTopLayer(bootstrap.Dropdown);
 initGridBulk();
 initGridPosition();
 initGridPreview();

@@ -3,14 +3,15 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
 {%- set classes = 'dropdown-menu ps-dropdown-menu' ~ ('end' == align ? ' dropdown-menu-end') -%}
+{#- popover: shown in the top layer, never cut by a box around it (dropdown-top-layer.js) -#}
 
 {%- if items is null -%}
   {#- Any markup (a form, text): a div, as a list may only hold items -#}
-  <div{{ attributes.defaults({class: classes ~ ' ps-dropdown-menu--content'}) }}>
+  <div{{ attributes.defaults({class: classes ~ ' ps-dropdown-menu--content', popover: 'manual'}) }}>
     {%- block content %}{% endblock -%}
   </div>
 {%- else -%}
-  <ul{{ attributes.defaults({class: classes}) }}>
+  <ul{{ attributes.defaults({class: classes, popover: 'manual'}) }}>
     {%- for item in items -%}
       <li>
         {%- if 'divider' == item.type -%}

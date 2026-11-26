@@ -102,7 +102,7 @@ class HeaderComponentTest extends KernelTestCase
         $html = $this->render("<twig:ui:HeaderAction icon=\"bookmarks\" label=\"Quick access\" :items=\"[{label: 'Orders', href: '/orders'}]\"/>");
 
         $this->assertMatchesRegularExpression('#<button type="button" class="ps-header-action" data-bs-toggle="dropdown" aria-expanded="false"><svg [^>]*class="ps-icon ps-icon--xl ps-header-action__icon"[^>]*>.*</svg>\s*<span class="ps-header-action__label">Quick access</span>#s', $html);
-        $this->assertStringContainsString('<ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end">', $html);
+        $this->assertStringContainsString('<ul class="dropdown-menu ps-dropdown-menu dropdown-menu-end" popover="manual">', $html);
     }
 
     public function testRendersAnIconOnlyMenuWithoutArrowWithItsLabelInATooltip(): void

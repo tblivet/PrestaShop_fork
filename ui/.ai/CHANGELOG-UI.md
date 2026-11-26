@@ -752,6 +752,14 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## Menus in the top layer — 2026-11-26
+
+**Markup**: `<twig:ui:DropdownMenu>`'s `ul` (or `div` with content) and the notifications panel get `popover="manual"`.
+
+**Behaviour**: `dropdown-top-layer.js` shows a menu in the browser's top layer while Bootstrap shows it (DECISIONS #46): a grid row's actions, the Orders status menu, the bulk menu, rows per page and the header's menus are no longer cut by the box around them (the grid's scrolling table, its fade mask). Keyboard, Escape and an outside click close it as before.
+
+**Look**: `.dropdown-menu[popover]` resets the browser's popover box (`inset`, `overflow`).
+
 ## `<twig:ui:Grid>`: the bulk bar, 14px tables, no vertical scroll — 2026-11-26
 
 Second review pass on Countries.
