@@ -8,7 +8,6 @@
 
 {%- set id = grid.id -%}
 {%- set state = this.state -%}
-{%- set titleId = id ~ '_grid_title' -%}
 {%- set captionId = id ~ '_grid_caption' -%}
 {%- set resultsId = id ~ '_grid_results' -%}
 {%- set formId = id ~ '_filter_form' -%}
@@ -46,21 +45,25 @@
   'data-ps-data-fragment': resultsId,
   'data-ps-data-error': 'The filters could not be cleared. Try again.'|trans({}, 'Admin.Notifications.Error'),
 } : null -%}
+{#- In the filter row: an icon button, its tooltip naming it; in the label cell when the first column has no filter -#}
+{%- set clearFiltersButton = clearFilters ? clearFilters|merge({variant: 'outline-primary', icon: 'filter_alt_off', label: 'Clear filters'|trans({}, 'Admin.Actions'), size: 'sm', tooltip: true}) : null -%}
+{%- set filterLabel = grid.columns is not empty and this.filtersFor((grid.columns|first).id) is empty -%}
 
 <section{{ attributes.defaults({
   id: id ~ '_grid_panel',
   class: 'ps-grid' ~ (embedded ? ' ps-grid--embedded' : ' card'),
   'data-ps-ref': 'grid',
   'data-ps-data-grid-id': id,
-  'aria-labelledby': titleId,
+  'aria-labelledby': resultsId,
 }) }}>
-  {#- The title names the section; embedded or display_name false, for screen readers only. The header band holds the
-      title and the list's actions (export, refresh, SQL query): none without either -#}
+  {#- The title names the section, with its count; embedded or display_name false, for screen readers only. Sorting,
+      pages and filters land on it (#{id}_grid_results, load-focus.js). The header band holds the title and the list's
+      actions (export, refresh, SQL query): none without either -#}
   {%- if embedded or (showName is same as(false) and gridItems is empty) -%}
-    <h{{ headingLevel }} id="{{ titleId }}" class="visually-hidden">{{ grid.name }}</h{{ headingLevel }}>
+    <h{{ headingLevel }} id="{{ resultsId }}" class="visually-hidden" tabindex="-1" data-ps-ref="grid-results">{{ grid.name }}</h{{ headingLevel }}>
   {%- else -%}
     <header class="ps-grid__header card-header">
-      <h{{ headingLevel }} id="{{ titleId }}" class="ps-grid__title{{ showName is same as(false) ? ' visually-hidden' }}">
+      <h{{ headingLevel }} id="{{ resultsId }}" class="ps-grid__title{{ showName is same as(false) ? ' visually-hidden' }}" tabindex="-1" data-ps-ref="grid-results">
         {{- grid.name }} <twig:ui:Badge variant="oceanblue" pill>{{ total }}<span class="visually-hidden"> {{ resultsWord }}</span></twig:ui:Badge>
       </h{{ headingLevel }}>
       {%- if gridItems is not empty -%}
@@ -105,23 +108,13 @@
         </div>
       {%- endif -%}
 
-      {#- The results line: the summary, then Clear filters and the quick filters, at the end just above the table they filter -#}
+      {#- Over the table: the quick filters, and Filter and Clear filters when no column of the filter row holds them -#}
+      {%- if quickFilters is not empty or (searchAndReset and not filterColumnId) -%}
       <div class="ps-grid__results">
-        {#- Where sorting, pages and filters land (#{id}_grid_results, load-focus.js); it describes the table -#}
-        <p id="{{ resultsId }}" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">
-          {%- if 'no-match' == state or 1 == total -%}
-            {{ total }} {{ resultsWord }}
-          {%- else -%}
-            {%- set range = this.range -%}
-            {{ '%from%–%to% of %total% results'|trans({'%from%': range[0], '%to%': range[1], '%total%': total}, 'Admin.Global') }}
-          {%- endif -%}
-        </p>
-        {%- if searchAndReset -%}
+        {%- if searchAndReset and not filterColumnId -%}
           <twig:ui:Layout:Cluster class="ps-grid__search">
-            {%- if not filterColumnId -%}
-              {#- No column holds it: here, outside the form, named by it -#}
-              <twig:ui:Button type="submit" variant="outline-primary" icon="filter_alt" :form="formId" data-ps-action="grid-apply-filters">{{ 'Filter'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
-            {%- endif -%}
+            {#- Outside the form, named by it -#}
+            <twig:ui:Button type="submit" variant="outline-primary" icon="filter_alt" :form="formId" data-ps-action="grid-apply-filters">{{ 'Filter'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
             {%- if clearFilters -%}
               <twig:ui:Button {{ ...clearFilters }}>{{ 'Clear filters'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
             {%- endif -%}
@@ -142,6 +135,7 @@
           </div>
         {%- endfor -%}
       </div>
+      {%- endif -%}
 
       {{- form_start(grid.filter_form, {action: grid.filter_form.vars.action ~ '#' ~ resultsId, attr: {id: formId, class: 'ps-grid__form'}}) -}}
       {%- if searchAndReset -%}{%- do searchAndReset.setRendered -%}{%- endif -%}
@@ -160,19 +154,19 @@
             data-ps-action="grid-select-all"
           />
           <p class="ps-grid__selection" data-ps-ref="grid-selection-count" data-ps-data-none="{{ 'No rows selected'|trans({}, 'Admin.Global') }}" data-ps-data-some="{{ '%count% selected'|trans({}, 'Admin.Global') }}">{{ 'No rows selected'|trans({}, 'Admin.Global') }}</p>
-          <twig:ui:Dropdown :label="'Bulk actions'|trans({}, 'Admin.Global')" :items="bulkItems" variant="secondary" data-ps-ref="grid-bulk-actions"/>
-          <twig:ui:Button variant="link" icon="close" class="ps-grid__clear-selection" data-ps-action="grid-clear-selection">{{ 'Clear selection'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+          <twig:ui:Dropdown :label="'Bulk actions'|trans({}, 'Admin.Global')" :items="bulkItems" variant="secondary" size="sm" data-ps-ref="grid-bulk-actions"/>
+          <twig:ui:Button variant="link" size="sm" icon="close" class="ps-grid__clear-selection" data-ps-action="grid-clear-selection">{{ 'Clear selection'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
         </div>
       {%- endif -%}
       <div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="{{ '%list% table'|trans({'%list%': grid.name}, 'Admin.Global') }}">
-        <table id="{{ id }}_grid_table" class="ps-grid__table table table-hover" aria-describedby="{{ resultsId }}">
+        <table id="{{ id }}_grid_table" class="ps-grid__table table table-hover">
           <caption id="{{ captionId }}" class="visually-hidden">{{ grid.name }}</caption>
           <thead>
             <tr class="ps-grid__headings">
               {%- for column in grid.columns -%}
                 {%- set sort = 'list' == state ? this.sortState(column.id) : null -%}
                 {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
-                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ column.type in ['bulk_action', 'position_handle'] ? ' ps-grid__heading--select' }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
+                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ column.type in ['bulk_action', 'position_handle'] ? ' ps-grid__heading--select' }}{{ this.isNarrow(column) ? ' ps-grid__heading--narrow' }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
                   {%- if 'position_handle' == column.type -%}
                     <span class="visually-hidden">{{ 'Move'|trans({}, 'Admin.Actions') }}</span>
                   {%- elseif 'bulk_action' == column.type -%}
@@ -201,14 +195,28 @@
                   buttons that come before it in the page -#}
               <tr class="ps-grid__filters" data-ps-ref="grid-filter-row">
                 {%- for column in grid.columns -%}
-                  {%- if loop.first and this.filtersFor(column.id) is empty -%}
-                    {#- Names the row, with the icon Filter shows: the tie between the two -#}
-                    <th scope="row" class="ps-grid__filter-label"><twig:ui:Icon name="filter_alt"/><span class="visually-hidden">{{ 'Filters'|trans({}, 'Admin.Global') }}</span></th>
+                  {%- if loop.first and filterLabel -%}
+                    {#- Names the row, with the icon Filter shows: the tie between the two. Filters applied, the icon is
+                        Clear filters -#}
+                    <th scope="row" class="ps-grid__filter-label">
+                      {%- if clearFiltersButton -%}
+                        <twig:ui:IconButton {{ ...clearFiltersButton }}/>
+                      {%- else -%}
+                        <twig:ui:Icon name="filter_alt"/>
+                      {%- endif -%}
+                      <span class="visually-hidden">{{ 'Filters'|trans({}, 'Admin.Global') }}</span>
+                    </th>
                   {%- else -%}
-                  <td class="ps-grid__filter">
+                  <td class="ps-grid__filter{{ this.isNarrow(column) ? ' ps-grid__filter--narrow' }}">
                     {%- if column.id == filterColumnId -%}
-                      {#- At the end of the fields it applies, after them for the keyboard. Its icon is the filter row's -#}
-                      <twig:ui:Button type="submit" variant="outline-primary" size="sm" icon="filter_alt" :form="formId" data-ps-action="grid-apply-filters">{{ 'Filter'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+                      {#- At the end of the fields it applies, after them for the keyboard. Its icon is the filter row's.
+                          Clear filters next to it when the row has no label cell -#}
+                      <div class="ps-grid__filter-actions">
+                        <twig:ui:Button type="submit" variant="outline-primary" size="sm" icon="filter_alt" :form="formId" data-ps-action="grid-apply-filters">{{ 'Filter'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+                        {%- if clearFiltersButton and not filterLabel -%}
+                          <twig:ui:IconButton {{ ...clearFiltersButton }}/>
+                        {%- endif -%}
+                      </div>
                     {%- endif -%}
                     {%- for filter in this.filtersFor(column.id) -%}
                       {#- A range is a fieldset named by the column; a field gets its hidden label. Bootstrap's small fields -#}

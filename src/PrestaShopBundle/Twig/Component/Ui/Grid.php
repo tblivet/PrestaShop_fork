@@ -173,6 +173,26 @@ final class Grid
         return null;
     }
 
+    /**
+     * A column of short values, the record's id: an identifier column, or a data column showing the field the rows are
+     * checked by (bulk_field) or named id_*. As narrow as its content and filter, the table's room left to the others
+     */
+    public function isNarrow(array $column): bool
+    {
+        if ('identifier' === $column['type']) {
+            return true;
+        }
+        if ('data' !== $column['type']) {
+            return false;
+        }
+        $bulkFields = array_map(
+            fn (array $bulk): ?string => $bulk['options']['bulk_field'] ?? null,
+            array_filter($this->grid['columns'], fn (array $other): bool => 'bulk_action' === $other['type'])
+        );
+
+        return in_array($column['options']['field'] ?? null, $bulkFields, true) || str_starts_with($column['id'], 'id_');
+    }
+
     public function isSortable(array $column): bool
     {
         return ($column['options']['sortable'] ?? false) && 'position_handle' !== $column['type'] && 'list' === $this->getState();
@@ -264,19 +284,6 @@ final class Grid
     }
 
     /**
-     * The rows shown, from 1: [51, 100]
-     *
-     * @return array{int, int}
-     */
-    public function getRange(): array
-    {
-        $total = (int) $this->grid['data']['records_total'];
-        $offset = (int) $this->grid['pagination']['offset'];
-
-        return [min($offset + 1, $total), min($offset + $this->getLimit(), $total)];
-    }
-
-    /**
      * The filter fields of a column, but search and reset (the actions column's) and rearrange (the position column's):
      * the toolbar renders them
      *
@@ -285,11 +292,20 @@ final class Grid
     public function filtersFor(string $columnId): array
     {
         $form = $this->grid['filter_form'];
-
-        return array_values(array_filter(array_map(
+        $fields = array_values(array_filter(array_map(
             fn (string $name): ?FormView => $form->children[$name] ?? null,
             $this->grid['column_filters'][$columnId] ?? []
         ), fn (?FormView $field): bool => null !== $field && [] === array_intersect(['search_and_reset', 'reorder_positions_button'], $field->vars['block_prefixes'] ?? [])));
+
+        // A field's placeholder ("Search ID") repeats the heading above it; its hidden label names it. A range keeps its
+        // "Min" and "Max", its fields' labels. Removed here: form_widget() merges the attributes it is given with these
+        foreach ($fields as $field) {
+            if (!($field->vars['compound'] ?? false)) {
+                unset($field->vars['attr']['placeholder']);
+            }
+        }
+
+        return $fields;
     }
 
     public function hasFilters(): bool

@@ -108,7 +108,6 @@ class GridTest extends TestCase
         $this->assertSame([1, 10, 11, 12, 25], array_keys($grid->getPageLinks()));
         $this->assertSame('/orders?order[offset]=450&order[limit]=50#order_grid_results', urldecode($grid->getPageLinks()[10]));
         $this->assertSame('/orders?order[offset]={offset}&order[limit]=50#order_grid_results', urldecode($grid->getJumpUrl()));
-        $this->assertSame([501, 550], $grid->getRange());
     }
 
     public function testTheLastPageAndASinglePage(): void
@@ -116,7 +115,6 @@ class GridTest extends TestCase
         $last = $this->grid(['pagination' => ['offset' => 1200, 'limit' => 50], 'data' => ['records' => [], 'records_total' => 1234, 'query' => '']]);
 
         $this->assertSame([1, 24, 25], array_keys($last->getPageLinks()));
-        $this->assertSame([1201, 1234], $last->getRange());
         $this->assertSame([1], array_keys($this->grid()->getPageLinks()));
     }
 
@@ -365,6 +363,18 @@ class GridTest extends TestCase
 
         $this->assertSame('AdminOrders', $params['legacy_controller']);
         $this->assertSame('order', $params['grid']['id']);
+    }
+
+    public function testTheRecordsIdColumnIsNarrow(): void
+    {
+        $bulk = ['id' => 'bulk', 'type' => 'bulk_action', 'options' => ['bulk_field' => 'id_country']];
+        $grid = $this->grid(['columns' => [$bulk]] + self::presentedArray());
+
+        $this->assertTrue($grid->isNarrow(['id' => 'id_order', 'type' => 'identifier', 'options' => []]));
+        $this->assertTrue($grid->isNarrow(['id' => 'country_id', 'type' => 'data', 'options' => ['field' => 'id_country']]));
+        $this->assertTrue($grid->isNarrow(['id' => 'id_zone', 'type' => 'data', 'options' => ['field' => 'zone']]));
+        $this->assertFalse($grid->isNarrow(['id' => 'name', 'type' => 'data', 'options' => ['field' => 'name']]));
+        $this->assertFalse($grid->isNarrow(['id' => 'id_status', 'type' => 'toggle', 'options' => ['field' => 'active']]));
     }
 
     private function grid(array $override = [], array $query = []): Grid

@@ -32,6 +32,12 @@ $component-name: ps-grid;
     align-items: center;
     margin: 0;
     font-size: $ps-grid-title-font-size;
+
+    // Where sorting, pages and filters land: focused after the reload (load-focus.js), with Bootstrap's ring
+    &:focus-visible {
+      outline: 0;
+      box-shadow: $focus-ring-box-shadow;
+    }
   }
 
   &__body {
@@ -48,9 +54,9 @@ $component-name: ps-grid;
     justify-content: flex-end;
   }
 
-  // The table, and the bulk bar over its headings and filters while rows are checked (grid-selection.js gives it their
-  // height): a block on the page's background, edged in grey, a blue line under it between it and the rows; the same
-  // look whether it lies over them or follows the list down
+  // The table, and the bulk bar over its headings while rows are checked (grid-selection.js gives it their row's height),
+  // the filters left in view: tinted like the count and sort badges (oceanblue), edged in its blue; the same look
+  // whether it lies over them or follows the list down
   &__table-area {
     position: relative;
   }
@@ -66,11 +72,11 @@ $component-name: ps-grid;
     gap: map-get($spacers, 3);
     align-items: center;
     min-height: var(--#{$component-name}-head-height, auto);
-    padding: map-get($spacers, 2) $table-cell-padding-x;
+    padding: 0 $table-cell-padding-x;
     margin-block-end: calc(-1 * var(--#{$component-name}-head-height, 0px));
-    background-color: var(--#{$prefix}body-bg);
-    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
-    border-block-end: $ps-grid-selected-line-width solid var(--#{$prefix}oceanblue-500);
+    color: var(--#{$prefix}oceanblue-800);
+    background-color: var(--#{$prefix}oceanblue-bg-subtle);
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}oceanblue-500);
 
     &[hidden] {
       display: none;
@@ -87,25 +93,12 @@ $component-name: ps-grid;
     font-weight: $font-weight-semibold;
   }
 
-  // Where the links land: focused after a reload (load-focus.js), so it shows Bootstrap's ring
-  // The summary at the start, Filter and the quick filters at the end, just above the table
+  // The quick filters (and Filter when no column holds it), just above the table
   &__results {
     display: flex;
     flex-wrap: wrap;
     gap: map-get($spacers, 2);
     align-items: center;
-    justify-content: space-between;
-  }
-
-  &__summary {
-    margin: 0;
-    font-size: $font-size-sm;
-    color: var(--#{$prefix}secondary-color);
-
-    &:focus-visible {
-      outline: 0;
-      box-shadow: $focus-ring-box-shadow;
-    }
   }
 
   &__form {
@@ -129,6 +122,11 @@ $component-name: ps-grid;
   &__table {
     margin-block-end: 0;
     font-size: $ps-grid-font-size;
+  }
+
+  // The headings a little taller than Bootstrap's cells: room for the bulk bar that covers them
+  &__table &__heading {
+    padding-block: $ps-grid-heading-padding-y;
   }
 
   &__heading {
@@ -186,11 +184,31 @@ $component-name: ps-grid;
   &__filter {
     min-width: $ps-grid-filter-min-width;
     vertical-align: top;
+
+    &--narrow {
+      min-width: $ps-grid-filter-narrow-min-width;
+    }
+  }
+
+  // A column of short values (an id): no wider than its content and filter, the table's room left to the others
+  &__heading--narrow {
+    width: 1%;
   }
 
   &__filter-label {
     color: var(--#{$prefix}secondary-color);
     vertical-align: middle;
+
+    > .ps-icon {
+      --ps-icon-size: #{$ps-grid-control-size};
+    }
+  }
+
+  // Filter, and Clear filters when the row has no label cell
+  &__filter-actions {
+    display: flex;
+    gap: map-get($spacers, 1);
+    align-items: center;
   }
 
   // The check columns: as narrow as their box, centred on the heading's line (Bootstrap sets thead cells at the bottom)
@@ -203,6 +221,11 @@ $component-name: ps-grid;
   &__heading--select .ps-check,
   &__cell--bulk-action .ps-check {
     display: flex;
+  }
+
+  // The checks at the page's size, not the table's smaller text (Bootstrap sizes them in em)
+  &__check {
+    font-size: $ps-grid-control-size;
   }
 
   // A row whose check has the keyboard focus: Bootstrap's hover tint (table-hover), so the row being chosen shows

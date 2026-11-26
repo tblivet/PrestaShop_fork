@@ -7,20 +7,20 @@ import { announce } from './announcer';
 
 // A <twig:ui:Grid>'s selection (grid.html.twig): a select-all box (in the headings, and in the bulk bar) checks or
 // clears the page's rows and shows "some" (indeterminate) when only some are. While a row is checked, the bulk bar
-// lies over the headings and filters, as tall as they are: what is checked, the bulk menu, Clear selection; the
+// lies over the headings' row, as tall as it is, the filters left in view: what is checked, the bulk menu, Clear selection; the
 // controls it covers leave the tab order (the headings stay for screen readers). The count is announced as it changes.
 // Per grid, so a page with several grids keeps them apart; run again on load, as a browser may restore the boxes.
 
 const rowsOf = (grid) => [...grid.querySelectorAll(selectors.gridSelectRow)].filter((box) => !box.disabled);
 
-// The headings' and filters' controls under the bar: out of the tab order while it shows
+// The headings' controls under the bar: out of the tab order while it shows
 const cover = (grid, covered) => {
-  const head = grid.querySelector('thead');
+  const headings = grid.querySelector('thead tr');
 
-  if (!head) {
+  if (!headings) {
     return;
   }
-  head.querySelectorAll('a, button, input, select, textarea').forEach((control) => {
+  headings.querySelectorAll('a, button, input, select, textarea').forEach((control) => {
     if (covered) {
       control.setAttribute('tabindex', '-1');
     } else {
@@ -52,15 +52,15 @@ const update = (grid, { speak = false } = {}) => {
   }
 };
 
-// The bar is as tall as the headings and filters it lies over
+// The bar is as tall as the headings' row it lies over
 const fitBar = (grid) => {
-  const head = grid.querySelector('thead');
+  const headings = grid.querySelector('thead tr');
   const area = grid.querySelector(selectors.gridBulk)?.parentElement;
 
-  if (!head || !area) {
+  if (!headings || !area) {
     return;
   }
-  new ResizeObserver(() => area.style.setProperty('--ps-grid-head-height', `${head.offsetHeight}px`)).observe(head);
+  new ResizeObserver(() => area.style.setProperty('--ps-grid-head-height', `${headings.offsetHeight}px`)).observe(headings);
 };
 
 export default function initGridSelection() {

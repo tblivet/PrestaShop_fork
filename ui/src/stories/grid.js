@@ -15,6 +15,7 @@ import deleteIcon from '../../icons/material-symbols/delete.svg?raw';
 import dragIndicator from '../../icons/material-symbols/drag-indicator.svg?raw';
 import edit from '../../icons/material-symbols/edit.svg?raw';
 import filterAlt from '../../icons/material-symbols/filter-alt.svg?raw';
+import filterAltOff from '../../icons/material-symbols/filter-alt-off.svg?raw';
 import keyboardArrowDown from '../../icons/material-symbols/keyboard-arrow-down.svg?raw';
 import openInNew from '../../icons/material-symbols/open-in-new.svg?raw';
 import checkCircle from '../../icons/material-symbols/check-circle.svg?raw';
@@ -49,8 +50,12 @@ const ALIGNMENTS = { right: 'end', center: 'center' };
 
 // The icons of the fixtures' actions, by their kit name (Grid::icon(): zoom_in is search)
 const ICONS = {
-  arrow_downward: arrowDownward, arrow_upward: arrowUpward, cloud_download: cloudDownload, code, delete: deleteIcon, edit, open_in_new: openInNew, print, refresh, search, settings, storage,
+  arrow_downward: arrowDownward, arrow_upward: arrowUpward, cloud_download: cloudDownload, code, delete: deleteIcon, edit, filter_alt_off: filterAltOff, open_in_new: openInNew, print, refresh, search, settings, storage,
 };
+// Grid::isNarrow(): the record's id, as narrow as its content and filter
+const isNarrow = (grid, column) => column.type === 'identifier' || (column.type === 'data' && (
+  grid.columns.some((other) => other.type === 'bulk_action' && other.options.bulk_field === column.options.field)
+  || column.id.startsWith('id_')));
 const ICON_ALIASES = { zoom_in: 'search' };
 const kitIcon = (name) => (name ? ICON_ALIASES[name] ?? name : null);
 
@@ -125,12 +130,12 @@ const filterField = (grid, filter, column) => {
 
 // A <twig:ui:IconButton>: a link with href, else a button
 const iconButton = ({
-  icon, label, size = null, tooltip = false, class: own = '', attributes = {},
+  icon, label, variant = 'link', size = null, tooltip = false, class: own = '', attributes = {},
 }) => {
   const {
     href, type = 'button', disabled, ...rest
   } = attributes;
-  const classes = `btn btn-link${size ? ` btn-${size}` : ''} ps-button ps-icon-button${own ? ` ${own}` : ''}`;
+  const classes = `btn btn-${variant}${size ? ` btn-${size}` : ''} ps-button ps-icon-button${own ? ` ${own}` : ''}`;
   const tip = tooltip ? ` data-bs-toggle="tooltip" data-bs-title="${escape(label)}"` : '';
   const extra = Object.entries(rest).map(([name, value]) => ` ${name}="${value}"`).join('');
   const svg = uiIcon({ more_vert: moreVert, keyboard_arrow_down: keyboardArrowDown }[icon] ?? ICONS[icon], { size: 'lg' });
@@ -335,7 +340,7 @@ const cell = (grid, column, record, rowHeaderId) => {
       }
 
       return `<div class="dropdown ps-grid__actions">${iconButton({
-        icon: 'more_vert', label: 'Actions', size: 'sm', attributes: { 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false', 'aria-describedby': rowHeaderId },
+        icon: 'more_vert', label: 'Actions', variant: 'outline-secondary', size: 'sm', attributes: { 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false', 'aria-describedby': rowHeaderId },
       })}${dropdownMenu({ items, align: 'end' }, ICONS)}</div>`;
     }
     default:
@@ -411,6 +416,8 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
   const subLevel = Math.min(headingLevel + 1, 6);
 
   const resultsWord = total === 1 ? 'result' : 'results';
+  // The title is where sorting, pages and filters land (#{id}_grid_results)
+  const titleAttributes = `id="${id}_grid_results" tabindex="-1" data-ps-ref="grid-results"`;
   const listItems = gridItems(fixture);
   const hideName = fixture.view_options.display_name === false;
   const listActions = listItems.length
@@ -419,16 +426,16 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     })}${dropdownMenu({ items: listItems, align: 'end' }, ICONS)}</div>`
     : '';
   const header = embedded || (hideName && !listItems.length)
-    ? `<h${headingLevel} id="${id}_grid_title" class="visually-hidden">${escape(fixture.name)}</h${headingLevel}>`
-    : `<header class="ps-grid__header card-header"><h${headingLevel} id="${id}_grid_title" class="ps-grid__title${hideName ? ' visually-hidden' : ''}">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'oceanblue', pill: true }).html}</h${headingLevel}>${listActions}</header>`;
+    ? `<h${headingLevel} ${titleAttributes} class="visually-hidden">${escape(fixture.name)}</h${headingLevel}>`
+    : `<header class="ps-grid__header card-header"><h${headingLevel} id="${id}_grid_results" class="ps-grid__title${hideName ? ' visually-hidden' : ''}" tabindex="-1" data-ps-ref="grid-results">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'oceanblue', pill: true }).html}</h${headingLevel}>${listActions}</header>`;
 
   let body;
 
   if (state === 'empty') {
     body = block('empty') || emptyState({ title: 'No records found', icon: 'inbox', headingLevel: subLevel }, { inbox }).html;
   } else {
-    const searchCluster = hasFilters
-      ? `<div class="${clusterClasses({})} ps-grid__search">${filterColumnId ? '' : filterButton()}${showReset ? button({
+    const searchCluster = hasFilters && !filterColumnId
+      ? `<div class="${clusterClasses({})} ps-grid__search">${filterButton()}${showReset ? button({
         label: 'Clear filters', variant: 'link', icon: closeIcon, attributes: reset,
       }) : ''}</div>`
       : '';
@@ -438,9 +445,9 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       ? `<div class="ps-grid__bulk" role="group" aria-label="Bulk actions" data-ps-ref="grid-bulk" hidden>${check({
         label: `Select all ${fixture.records.length} rows on this page`, hideLabel: true, id: `${id}_grid_bulk_select_all`, class: 'ps-grid__check', 'data-ps-action': 'grid-select-all',
       }).html}<p class="ps-grid__selection" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p>`
-        + '<div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-secondary ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-toggle="dropdown" aria-expanded="false">'
+        + '<div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-secondary btn-sm ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-toggle="dropdown" aria-expanded="false">'
         + `<span class="ps-button__label">Bulk actions</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items }, ICONS)}</div>`
-        + `<button class="btn btn-link ps-button ps-grid__clear-selection" type="button" data-ps-data-busy-label="Loading..." data-ps-action="grid-clear-selection">${uiIcon(closeIcon, { size: 'lg' })}<span class="ps-button__label">Clear selection</span></button></div>`
+        + `<button class="btn btn-link btn-sm ps-button ps-grid__clear-selection" type="button" data-ps-data-busy-label="Loading..." data-ps-action="grid-clear-selection">${uiIcon(closeIcon, { size: 'lg' })}<span class="ps-button__label">Clear selection</span></button></div>`
       : '';
     // Grid::getReorder()
     const positionColumn = fixture.columns.find((column) => column.type === 'position');
@@ -464,8 +471,12 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         + '</div>';
     }).join('');
     const toolbar = reorder || block('toolbar') ? `<div class="ps-grid__toolbar">${block('toolbar')}${reorder}</div>` : '';
-    const [from, to] = [Math.min(offset + 1, total), Math.min(offset + limit, total)];
-    const summary = `<div class="ps-grid__results"><p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' || total === 1 ? `${total} ${resultsWord}` : `${from}–${to} of ${total} results`}</p>${searchCluster}${quick}</div>`;
+    const summary = quick || searchCluster ? `<div class="ps-grid__results">${searchCluster}${quick}</div>` : '';
+    // Clear filters in the filter row: in its label cell, or next to Filter when the first column has a filter
+    const clearButton = showReset ? iconButton({
+      icon: 'filter_alt_off', label: 'Clear filters', variant: 'outline-primary', size: 'sm', tooltip: true, attributes: reset,
+    }) : '';
+    const filterLabel = !fixture.filters.some((filter) => filter.column === fixture.columns[0]?.id && filter.type !== 'reorder');
 
     const headings = fixture.columns.map((column) => {
       const sort = state === 'list' && fixture.sorting.order_by === column.id ? (fixture.sorting.order_way.toLowerCase() === 'desc' ? 'descending' : 'ascending') : null;
@@ -486,15 +497,15 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         ? `<a class="ps-grid__sort" href="${escape(url(fixture, { orderBy: column.id, sortOrder: sort === 'ascending' ? 'desc' : 'asc' }))}">${escape(column.name)}${uiIcon(icon, { class: 'ps-grid__sort-icon' })}</a>`
         : escape(column.name);
 
-      return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
+      return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${isNarrow(fixture, column) ? ' ps-grid__heading--narrow' : ''}${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
     }).join('');
     const filters = hasFilters
       ? `<tr class="ps-grid__filters" data-ps-ref="grid-filter-row">${fixture.columns.map((column, index) => {
         const fields = fixture.filters.filter((filter) => filter.column === column.id && filter.type !== 'reorder');
 
-        return index === 0 && !fields.length
-          ? `<th scope="row" class="ps-grid__filter-label">${uiIcon(filterAlt)}<span class="visually-hidden">Filters</span></th>`
-          : `<td class="ps-grid__filter">${column.id === filterColumnId ? filterButton('sm') : ''}${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
+        return index === 0 && filterLabel
+          ? `<th scope="row" class="ps-grid__filter-label">${clearButton || uiIcon(filterAlt)}<span class="visually-hidden">Filters</span></th>`
+          : `<td class="ps-grid__filter${isNarrow(fixture, column) ? ' ps-grid__filter--narrow' : ''}">${column.id === filterColumnId ? `<div class="ps-grid__filter-actions">${filterButton('sm')}${filterLabel ? '' : clearButton}</div>` : ''}${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
       }).join('')}</tr>`
       : '';
 
@@ -531,7 +542,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
 
     body = `${toolbar}${summary}<form name="${id}" method="post" action="${fixture.action}#${id}_grid_results" id="${id}_filter_form" class="ps-grid__form" novalidate="novalidate" data-ps-action="validate">`
       + `<div class="ps-grid__table-area">${bulk}<div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="${escape(fixture.name)} table">`
-      + `<table id="${id}_grid_table" class="ps-grid__table table table-hover" aria-describedby="${id}_grid_results"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
+      + `<table id="${id}_grid_table" class="ps-grid__table table table-hover"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
       + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`
       + `<form id="${id}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>`;
   }
@@ -583,7 +594,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     : '';
 
   return {
-    html: `<section id="${id}_grid_panel" class="ps-grid ${embedded ? 'ps-grid--embedded' : 'card'}" data-ps-ref="grid" data-ps-data-grid-id="${id}" aria-labelledby="${id}_grid_title">${header}<div id="${id}_grid" class="ps-grid__body${embedded ? '' : ' card-body'}">${block('before')}${body}</div>${footer}${queryModal}</section>`,
+    html: `<section id="${id}_grid_panel" class="ps-grid ${embedded ? 'ps-grid--embedded' : 'card'}" data-ps-ref="grid" data-ps-data-grid-id="${id}" aria-labelledby="${id}_grid_results">${header}<div id="${id}_grid" class="ps-grid__body${embedded ? '' : ' card-body'}">${block('before')}${body}</div>${footer}${queryModal}</section>`,
     twig: blockTwig.length
       ? `<twig:ui:Grid :grid="${fixture.variable}"${props}>\n${blockTwig.join('\n')}\n</twig:ui:Grid>`
       : `<twig:ui:Grid :grid="${fixture.variable}"${props}/>`,

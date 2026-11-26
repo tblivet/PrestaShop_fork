@@ -517,12 +517,19 @@ $ps-pagination-jump-input-width: 4rem;
 // <twig:ui:Grid>: a filter field wide enough to type in, the title, the table's text, the list actions' icon, the sorted column's badge,
 // an image cell's thumbnail
 $ps-grid-filter-min-width: 7rem;
+$ps-grid-filter-narrow-min-width: 5rem;
 $ps-grid-title-font-size: 1.125rem;
 $ps-grid-font-size: .875rem;
 $ps-grid-list-actions-icon-size: 1.5em;
 $ps-grid-sort-badge-icon-size: .75em;
 $ps-grid-sort-badge-padding: .1875em;
 $ps-grid-image-size: 3rem;
+$ps-grid-heading-padding-y: .75rem;
+// The row checks and the filter row's icon: 16px, not the table's 14px
+$ps-grid-control-size: 1rem;
+// Bootstrap's table hover, lighter (7.5% black by default): a hovered row stays quiet, a bit darker than a checked one
+// (tertiary-bg)
+$table-hover-bg-factor: .04;
 // The line on the start edge of a checked row
 $ps-grid-selected-line-width: .1875rem;
 // A grid's range filter (forms/_filter-range.scss): narrower than this, its two fields go one under the other

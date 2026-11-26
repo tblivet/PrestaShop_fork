@@ -7,7 +7,7 @@
 {%- set actions = component.rowActions(record, column) -%}
 {%- if actions is not empty -%}
   <div class="dropdown ps-grid__actions">
-    <twig:ui:IconButton icon="more_vert" :label="'Actions'|trans({}, 'Admin.Global')" variant="link" size="sm" data-bs-toggle="dropdown" aria-expanded="false" :aria-describedby="rowHeaderId"/>
+    <twig:ui:IconButton icon="more_vert" :label="'Actions'|trans({}, 'Admin.Global')" variant="outline-secondary" size="sm" data-bs-toggle="dropdown" aria-expanded="false" :aria-describedby="rowHeaderId"/>
     <twig:ui:DropdownMenu align="end" :items="actions"/>
   </div>
 {%- endif -%}

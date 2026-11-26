@@ -974,3 +974,27 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - Admin.Global: "%from%–%to% of %total%" → "%from%–%to% of %total% results"; with one record, "1 result".
 
 **Old theme**: not affected.
+
+## Grid: no results line, Clear filters in the filter row — 2026-11-26
+
+`grid.html.twig`, `Grid::getRange()` (removed), `_grid.scss`.
+
+**Markup**
+- The results line is gone: `p.ps-grid__summary` removed; `div.ps-grid__results` only renders for quick filters, or for Filter and Clear filters when no column holds `search_and_reset`.
+- `#{id}_grid_results` (with `tabindex="-1"` and `data-ps-ref="grid-results"`) is now the grid's title heading; `#{id}_grid_title` is removed and the section is labelled by `#{id}_grid_results`. The table loses `aria-describedby` (its caption names it).
+- Filters applied, Clear filters is an outlined icon button like Filter (`btn-outline-primary`, `filter_alt_off`, tooltip "Clear filters", `data-ps-action="grid-reset-filters"`) in the filter row's label cell, in place of the filter icon; when the first column has a filter, next to Filter in `div.ps-grid__filter-actions`.
+
+- Row actions' ⋮ button: `btn-outline-secondary` (was `btn-link`), the fields' light border.
+
+**Behaviour**
+- Bulk bar: over the headings' row only (the filters stay in view and in the tab order), oceanblue-bg-subtle edged in oceanblue-500 (was white, grey edges, a thick blue line); its menu and Clear selection small (`btn-sm`).
+- Headings taller: `padding-block` .75rem (`$ps-grid-heading-padding-y`).
+- Row checks and the filter row's icon at 1rem (`$ps-grid-control-size`), not the table's .875rem.
+- Every kit menu (`dropdown-inside-click.js`): a click inside it closes it only on an item, link or button, no longer on its padding, a divider or a heading; a click outside still closes it.
+- The record's id column (`Grid::isNarrow()`: an identifier column, or a data column showing the bulk field or named `id_*`) is as narrow as its content and filter: `ps-grid__heading--narrow` (width 1%), `ps-grid__filter--narrow` (min 5rem).
+- Simple filter fields lose their placeholder ("Search ID" repeated the heading); their visually hidden label still names them. Ranges keep "Min" / "Max".
+- Row hover lighter: Bootstrap's `$table-hover-bg-factor` .075 → .04 (kit tables).
+- Sorting, pages and filters land on the title, read with its count ("Countries, 241 results").
+
+**Strings**
+- Admin.Global: "%from%–%to% of %total% results" no longer used.
