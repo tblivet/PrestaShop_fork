@@ -195,14 +195,24 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringContainsString('ps-grid__header', $html);
     }
 
-    public function testThePagesAndRowsPerPage(): void
+    public function testThePagesRowsShownAndRowsPerPageUnderTheTable(): void
     {
         $html = $this->render();
 
-        $this->assertStringContainsString('<nav class="ps-pagination ps-pagination--jump ps-grid__pagination" aria-label="Pages of Orders">', $html);
+        $this->assertMatchesRegularExpression('#<div class="ps-grid__pager">\s*<div class="ps-grid__pager-bar">\s*<p id="order_grid_range" class="ps-grid__range">\s*51–100 of 1234 results\s*</p>\s*<nav class="ps-pagination ps-grid__pagination" aria-label="Pages of Orders" aria-describedby="order_grid_range">#', $html);
         $this->assertStringContainsString('data-ps-data-url="?order%5Boffset%5D={offset}&amp;order%5Blimit%5D=50#order_grid_results"', $html);
-        $this->assertStringContainsString('<span class="ps-button__label">50 per page</span>', $html);
-        $this->assertStringNotContainsString('ps-pagination', $this->render(['records_total' => 3, 'pagination' => ['offset' => 0, 'limit' => 50]]));
+        $this->assertMatchesRegularExpression('#<div class="(dropup ps-grid__per-page|ps-grid__per-page dropup)">\s*<button[^>]*>\s*<span class="ps-button__label">50 per page</span>#', $html);
+        $this->assertStringNotContainsString('ps-grid__footer', $html);
+
+        // Two pages: still the field to go to a page, as on every grid
+        $twoPages = $this->render(['records_total' => 70, 'records' => [], 'pagination' => ['offset' => 0, 'limit' => 50]], boot: false);
+        $this->assertStringContainsString('class="ps-pagination__jump"', $twoPages);
+
+        $onePage = $this->render(['records_total' => 30, 'records' => [], 'pagination' => ['offset' => 0, 'limit' => 50]], boot: false);
+        $this->assertMatchesRegularExpression('#<p id="order_grid_range" class="ps-grid__range">\s*30 results\s*</p>#', $onePage);
+        $this->assertStringNotContainsString('<nav class="ps-pagination', $onePage);
+
+        $this->assertStringNotContainsString('ps-grid__pager', $this->render(['records_total' => 3, 'pagination' => ['offset' => 0, 'limit' => 50]], boot: false));
     }
 
     public function testALinkCellAndAColumnTypeOfAModule(): void

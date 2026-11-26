@@ -19,9 +19,9 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  * ui/src/stories/components/Pagination.stories.js:
  * <twig:ui:Pagination :current="3" :links="{1: '/orders?offset=0', 2: '…', 3: '…', 4: '…', 25: '…'}" label="{{ 'Pages of the Orders list'|trans(…) }}"/>
  * The caller builds the links (page number to URL): the first, the last, the current one and its neighbours at least
- * (checked: the last is the highest given). It shows those, a gap where pages are left out, Previous and Next to the
- * neighbours. One page: nothing. With jumpUrl, a field goes to any page: the URL with {page}, or with {offset} and
- * perPage for a list that pages by offset (a grid); pagination-jump.js builds it.
+ * (checked: the last is the highest given). It shows Previous, the page shown and Next, the arrow that leads nowhere
+ * disabled. One page: nothing. With jumpUrl, the page shown is a field to go to any page: the URL with {page}, or with
+ * {offset} and perPage for a list that pages by offset (a grid); pagination-jump.js builds it.
  */
 #[AsTwigComponent('ui:Pagination', template: '@PrestaShop/Admin/Component/Ui/pagination.html.twig')]
 final class Pagination
@@ -90,29 +90,5 @@ final class Pagination
     public function getLast(): int
     {
         return array_key_last($this->links);
-    }
-
-    /**
-     * The pages shown, in order: the first, the last, the current one and its neighbours, among the links; null where
-     * pages are left out.
-     *
-     * @return array<int|null>
-     */
-    public function getItems(): array
-    {
-        $shown = array_values(array_filter(
-            array_keys($this->links),
-            fn (int $page): bool => 1 === $page || $this->getLast() === $page || abs($page - $this->current) <= 1
-        ));
-        $items = [];
-
-        foreach ($shown as $index => $page) {
-            if ($index > 0 && $page - $shown[$index - 1] > 1) {
-                $items[] = null;
-            }
-            $items[] = $page;
-        }
-
-        return $items;
     }
 }

@@ -543,9 +543,9 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       + `<form id="${id}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>`;
   }
 
-  const paginated = state !== 'empty' && (total > 10 || offset > 0);
-  let footer = '';
-  let pages = '';
+  // Under the table, in the card: the rows shown, the pages (Previous, a field to go to a page, Next), the rows per page
+  const paginated = state === 'list' && (total > 10 || offset > 0);
+  let pager = '';
 
   if (paginated) {
     const current = Math.floor(offset / limit) + 1;
@@ -553,19 +553,18 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     const links = Object.fromEntries([...new Set([1, current - 1, current, current + 1, last])]
       .filter((page) => page >= 1 && page <= last).sort((a, b) => a - b)
       .map((page) => [page, url(fixture, { offset: (page - 1) * limit, limit })]));
-    const jump = last > 5;
     const limits = LIMITS.includes(limit) ? LIMITS : [...LIMITS, limit].sort((a, b) => a - b);
     const menu = dropdownMenu({ items: limits.map((choice) => ({ label: String(choice), href: url(fixture, { offset: 0, limit: choice }), active: choice === limit })), align: 'end' });
+    const range = last > 1 ? `${Math.min(offset + 1, total)}–${Math.min(offset + limit, total)} of ${total} results` : `${total} ${resultsWord}`;
 
-    pages = `<div class="${clusterClasses({ justify: 'between' })}">${pagination({
+    pager = `<div class="ps-grid__pager"><div class="ps-grid__pager-bar"><p id="${id}_grid_range" class="ps-grid__range">${range}</p>${pagination({
       class: 'ps-grid__pagination',
-      current, links, label: `Pages of ${fixture.name}`, jumpUrl: jump ? url(fixture, { offset: '{offset}', limit }).replace(encodeURIComponent('{offset}'), '{offset}') : null, perPage: jump ? limit : null,
-    }).html}<div class="dropup"><button class="btn btn-outline-secondary btn-sm ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-toggle="dropdown" aria-expanded="false"><span class="ps-button__label">${limit} per page</span>${uiIcon(keyboardArrowUp, { size: 'lg' })}</button>${menu}</div></div>`;
+      current, links, label: `Pages of ${fixture.name}`, jumpUrl: url(fixture, { offset: '{offset}', limit }).replace(encodeURIComponent('{offset}'), '{offset}'), perPage: limit, 'aria-describedby': `${id}_grid_range`,
+    }).html}`
+      + `<div class="dropup ps-grid__per-page"><button class="btn btn-outline-secondary btn-sm ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-toggle="dropdown" aria-expanded="false"><span class="ps-button__label">${limit} per page</span>${uiIcon(keyboardArrowUp, { size: 'lg' })}</button>${menu}</div></div></div>`;
   }
 
-  if (pages || block('footer')) {
-    footer = `<footer class="ps-grid__footer${embedded ? '' : ' card-footer'}">${pages}${block('footer')}</footer>`;
-  }
+  const footer = block('footer') ? `<footer class="ps-grid__footer${embedded ? '' : ' card-footer'}">${block('footer')}</footer>` : '';
 
   const blockTwig = ['before', 'toolbar', 'empty', 'footer'].filter((name) => blocks[name])
     .map((name) => `  <twig:block name="${name}">\n${blocks[name].twig.split('\n').map((line) => `    ${line}`).join('\n')}\n  </twig:block>`);
@@ -590,7 +589,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     : '';
 
   return {
-    html: `<section id="${id}_grid_panel" class="ps-grid ${embedded ? 'ps-grid--embedded' : 'card'}" data-ps-ref="grid" data-ps-data-grid-id="${id}" aria-labelledby="${id}_grid_results">${header}<div id="${id}_grid" class="ps-grid__body${embedded ? '' : ' card-body'}">${block('before')}${body}</div>${footer}${queryModal}</section>`,
+    html: `<section id="${id}_grid_panel" class="ps-grid ${embedded ? 'ps-grid--embedded' : 'card'}" data-ps-ref="grid" data-ps-data-grid-id="${id}" aria-labelledby="${id}_grid_results">${header}<div id="${id}_grid" class="ps-grid__body${embedded ? '' : ' card-body'}">${block('before')}${body}${pager}</div>${footer}${queryModal}</section>`,
     twig: blockTwig.length
       ? `<twig:ui:Grid :grid="${fixture.variable}"${props}>\n${blockTwig.join('\n')}\n</twig:ui:Grid>`
       : `<twig:ui:Grid :grid="${fixture.variable}"${props}/>`,

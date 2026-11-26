@@ -4,35 +4,27 @@
  */
 
 // <twig:ui:Pagination> (Admin/Component/Ui/pagination.html.twig): Bootstrap's pagination, set by its Sass variables
-// (_variables.scss, "Pagination"). Round items of one size, the arrows outlined, the current page outlined in the brand.
-// The nav is a container: narrower than $ps-pagination-full-min-width (a phone, a narrow card) only Previous, the
-// current page as "Page 3 of 25" and Next show; wider, every page shown, the current one as its number, its position
-// for screen readers only. With a field to go to a page (--jump), the field replaces "Page 3 of 25" in a narrow nav.
+// (_variables.scss, "Pagination"). Previous, the page shown, Next: round outlined arrows of one size, the arrow that
+// leads nowhere disabled in place; between them "Page 3 of 25", or the field to go to a page (--jump).
 $component-name: ps-pagination;
 
 .#{$component-name} {
-  container: #{$component-name} / inline-size;
-  display: flex;
-  flex-wrap: wrap;
-  gap: map-get($spacers, 2) map-get($spacers, 3);
-  align-items: center;
-
   .pagination {
-    gap: map-get($spacers, 1);
+    gap: map-get($spacers, 3);
+    align-items: center;
     margin-block-end: 0;
   }
 
   &__link {
     display: inline-flex;
-    gap: map-get($spacers, 1);
     align-items: center;
     justify-content: center;
-    min-width: $ps-pagination-item-size;
+    width: $ps-pagination-item-size;
     height: $ps-pagination-item-size;
-    padding-inline: $ps-pagination-item-padding-x;
-    font-weight: $font-weight-bold;
+    padding: 0;
+    font-size: $font-size-base;
     line-height: 1;
-    border-color: transparent;
+    border-color: var(--#{$prefix}pagination-border-color);
     border-radius: $border-radius-pill;
 
     // Bootstrap rings a page link on :focus, a mouse click too; the kit, as its buttons, only on :focus-visible
@@ -43,25 +35,9 @@ $component-name: ps-pagination;
     }
   }
 
-  &__item--step &__link {
-    font-size: $font-size-base;
-    border-color: var(--#{$prefix}pagination-border-color);
-  }
-
-  &__item--current &__link {
-    padding-inline: map-get($spacers, 3);
-    border-color: var(--#{$prefix}pagination-active-border-color);
-  }
-
-  // Bootstrap gives a disabled item a border: the gap has none
-  &__item--gap &__link {
-    border-color: transparent;
-  }
-
-  &__item--far,
-  &__number,
-  &--jump &__item--current {
-    display: none;
+  &__position {
+    font-size: $font-size-sm;
+    white-space: nowrap;
   }
 
   &__jump {
@@ -82,25 +58,5 @@ $component-name: ps-pagination;
   &__jump-input {
     width: $ps-pagination-jump-input-width;
     text-align: center;
-  }
-
-  @container #{$component-name} (min-width: #{$ps-pagination-full-min-width}) {
-    &__item--far,
-    &--jump &__item--current {
-      display: block;
-    }
-
-    &__number {
-      display: inline;
-    }
-
-    &__position {
-      @include visually-hidden();
-    }
-
-    // A circle, a pill for a long number (1000)
-    &__item--current &__link {
-      padding-inline: $ps-pagination-item-padding-x;
-    }
   }
 }

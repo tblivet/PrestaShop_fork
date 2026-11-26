@@ -1008,3 +1008,18 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - Countries: ID, ISO code and Call prefix have `width: sm`.
 
 **Old theme**: the option is ignored.
+
+## Pagination and the grid's pages: arrows and a field, under the table — 2026-11-26
+
+`pagination.html.twig`, `Pagination::getItems()` (removed), `_pagination.scss`, `grid.html.twig`, `Grid::getRange()` (back), `_grid.scss`, `load-focus.js`.
+
+**Markup**
+- `<twig:ui:Pagination>`: `ul.pagination` holds Previous, `li.ps-pagination__item--position` and Next. No page numbers: `ps-pagination__item--far`, `--current`, `--gap`, `ps-pagination__number` and the `ps-pagination--jump` modifier are gone. The position is `span.ps-pagination__position[aria-current="page"]` ("Page 3 of 25") or, with `jumpUrl`, the `form.ps-pagination__jump` (now inside the list). The arrow that leads nowhere is `li.page-item.disabled[aria-hidden="true"] > span.page-link`. No container query any more (`$ps-pagination-full-min-width`, `$ps-pagination-item-padding-x` removed).
+- Grid: the pages left `footer.ps-grid__footer.card-footer`; `div.ps-grid__pager > div.ps-grid__pager-bar` closes the card body: `p#{id}_grid_range.ps-grid__range`, `<twig:ui:Pagination class="ps-grid__pagination" aria-describedby="{id}_grid_range">` (always with `jumpUrl`), the rows per page `div.dropup.ps-grid__per-page`. `footer.ps-grid__footer` only renders for a page's `footer` block.
+- Landing focus (`load-focus.js`): after a page left by a click, the focused title or message gets `data-ps-state="quiet-focus"` until it loses focus, and shows no ring; after a key, the ring shows. The last input is kept in `sessionStorage` (`ps-last-input`).
+
+**Behaviour**
+- Every grid: "1–50 of 241 results" at the start, "‹ Page [1] of 5 Go ›" in the middle, "50 per page" at the end; narrow, one under the other, centred (DECISIONS #48). One page: the count and the rows per page only.
+
+**Strings**
+- Admin.Global: "%from%–%to% of %total% results" used again (bottom bar); one page: "%total% results" / "1 result".

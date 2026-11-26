@@ -264,6 +264,19 @@ final class Grid
     }
 
     /**
+     * The rows shown, from 1: [51, 100]
+     *
+     * @return array{int, int}
+     */
+    public function getRange(): array
+    {
+        $total = (int) $this->grid['data']['records_total'];
+        $offset = (int) $this->grid['pagination']['offset'];
+
+        return [min($offset + 1, $total), min($offset + $this->getLimit(), $total)];
+    }
+
+    /**
      * The filter fields of a column, but search and reset (the actions column's) and rearrange (the position column's):
      * the toolbar renders them
      *

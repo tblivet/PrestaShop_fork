@@ -288,38 +288,54 @@
       {#- What a row's submit action, a choice and a move send (form, formaction, _method; positions[] from
           grid-position.js): outside the filter form, so its fields do not go -#}
       <form id="{{ id }}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>
+
+      {%- if 'list' == state and paginated -%}
+        {#- Under the table, in the card: the rows shown at the start, the pages in the middle (Previous, a field to go
+            to a page, Next), the rows per page at the end; narrow, one under the other, centred. Read here: inside the
+            components below, this is theirs -#}
+        {%- set pageCount = this.pageCount -%}
+        {%- set pages = {current: this.currentPage, links: this.pageLinks, jumpUrl: this.jumpUrl, perPage: this.limit} -%}
+        {%- set limit = this.limit -%}
+        {%- set limitItems = this.limitItems -%}
+        {%- set rangeId = id ~ '_grid_range' -%}
+        <div class="ps-grid__pager">
+          <div class="ps-grid__pager-bar">
+            <p id="{{ rangeId }}" class="ps-grid__range">
+              {%- if pageCount > 1 -%}
+                {%- set range = this.range -%}
+                {{ '%from%–%to% of %total% results'|trans({'%from%': range[0], '%to%': range[1], '%total%': total}, 'Admin.Global') }}
+              {%- else -%}
+                {{ total }} {{ resultsWord }}
+              {%- endif -%}
+            </p>
+            <twig:ui:Pagination
+              class="ps-grid__pagination"
+              :current="pages.current"
+              :links="pages.links"
+              :label="'Pages of %list%'|trans({'%list%': grid.name}, 'Admin.Global')"
+              :jumpUrl="pages.jumpUrl"
+              :perPage="pages.perPage"
+              :aria-describedby="rangeId"
+            />
+            <twig:ui:Dropdown
+              class="ps-grid__per-page"
+              :label="'%limit% per page'|trans({'%limit%': limit}, 'Admin.Global')"
+              :items="limitItems"
+              variant="outline-secondary"
+              size="sm"
+              direction="up"
+              align="end"
+            />
+          </div>
+        </div>
+      {%- endif -%}
     {%- endif -%}
 
     {{- renderhook('displayAdminGridTableAfter', this.hookParams) -}}
   </div>
 
-  {%- if ('empty' != state and paginated) or footer|trim is not empty -%}
+  {%- if footer|trim is not empty -%}
     <footer class="ps-grid__footer{{ embedded ? '' : ' card-footer' }}">
-      {%- if 'empty' != state and paginated -%}
-        {#- Read here: inside the layout below, this is the layout. A field to go to a page past five pages: for the first
-            ones the links do -#}
-        {%- set pages = {current: this.currentPage, links: this.pageLinks, jumpUrl: this.pageCount > 5 ? this.jumpUrl : null, perPage: this.pageCount > 5 ? this.limit : null} -%}
-        {%- set limit = this.limit -%}
-        {%- set limitItems = this.limitItems -%}
-        <twig:ui:Layout:Cluster justify="between">
-          <twig:ui:Pagination
-            class="ps-grid__pagination"
-            :current="pages.current"
-            :links="pages.links"
-            :label="'Pages of %list%'|trans({'%list%': grid.name}, 'Admin.Global')"
-            :jumpUrl="pages.jumpUrl"
-            :perPage="pages.perPage"
-          />
-          <twig:ui:Dropdown
-            :label="'%limit% per page'|trans({'%limit%': limit}, 'Admin.Global')"
-            :items="limitItems"
-            variant="outline-secondary"
-            size="sm"
-            direction="up"
-            align="end"
-          />
-        </twig:ui:Layout:Cluster>
-      {%- endif -%}
       {{- footer -}}
     </footer>
   {%- endif -%}

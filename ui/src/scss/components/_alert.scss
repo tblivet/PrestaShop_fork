@@ -43,6 +43,12 @@ $component-name: ps-alert;
     outline: $focus-ring-width solid transparent;
     box-shadow: $focus-ring-box-shadow;
   }
+
+  // No ring when the page was left by a click (load-focus.js)
+  &[tabindex="-1"][data-ps-state="quiet-focus"]:focus {
+    box-shadow: none;
+  }
+
   // The icon beside the text. Not the .d-flex utility: its !important display beats Bootstrap's [hidden], and a hidden
   // alert (an error slot a script fills) must stay hidden
   &--icon {

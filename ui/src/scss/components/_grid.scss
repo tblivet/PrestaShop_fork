@@ -5,7 +5,7 @@
 
 // <twig:ui:Grid> (Admin/Component/Ui/grid.html.twig, its cells in Component/Ui/Grid/cell): Bootstrap's card and table.
 // The header's title and count, the toolbar, the results summary, the table scrolling in its own box (ps-scroll-fade)
-// with its sort links and its row of filters, small fields there; the pages and rows per page in the footer. The list's
+// with its sort links and its row of filters, small fields there; the pages and rows per page under it. The list's
 // actions in the header, a row's in its actions cell; the SQL query modal.
 $component-name: ps-grid;
 
@@ -33,10 +33,15 @@ $component-name: ps-grid;
     margin: 0;
     font-size: $ps-grid-title-font-size;
 
-    // Where sorting, pages and filters land: focused after the reload (load-focus.js), with Bootstrap's ring
+    // Where sorting, pages and filters land: focused after the reload (load-focus.js), with Bootstrap's ring; none when
+    // the page was left by a click
     &:focus-visible {
       outline: 0;
       box-shadow: $focus-ring-box-shadow;
+    }
+
+    &[data-ps-state="quiet-focus"]:focus-visible {
+      box-shadow: none;
     }
   }
 
@@ -396,10 +401,42 @@ $component-name: ps-grid;
     margin-block-start: map-get($spacers, 3);
   }
 
-  // The pagination is a container (its narrow form follows its own width): the footer gives it the room rows per page
-  // leaves
-  &__pagination {
-    flex: 1 1 auto;
+  // Under the table: a container, so the bar follows the card's width, not the screen's
+  &__pager {
+    container: #{$component-name}-pager / inline-size;
+  }
+
+  // Narrow: the rows shown, the pages, the rows per page, one under the other, centred
+  &__pager-bar {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacers, 2);
+    align-items: center;
+  }
+
+  &__range {
+    margin: 0;
+    font-size: $font-size-sm;
+    font-variant-numeric: tabular-nums;
+    color: var(--#{$prefix}secondary-color);
+    white-space: nowrap;
+  }
+
+  // Wide: three columns, the outer two of one width, so the pages sit in the middle of the card
+  @container #{$component-name}-pager (min-width: #{$ps-grid-pager-wide-min-width}) {
+    &__pager-bar {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: map-get($spacers, 3);
+    }
+
+    &__range {
+      justify-self: start;
+    }
+
+    &__per-page {
+      justify-self: end;
+    }
   }
 
   &__links {

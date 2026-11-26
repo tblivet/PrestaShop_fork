@@ -370,8 +370,8 @@ $focus-ring-width: .25rem;
 $input-focus-border-color: var(--#{$prefix}border-color);
 
 // ── Pagination ────────────────────────────────────────────────────────────────
-// Round items with no border, the arrows outlined, the current page outlined in the brand (components/_pagination.scss);
-// the focus ring of the buttons (DECISIONS.md #29); the gap a muted grey, readable
+// Round outlined arrows (components/_pagination.scss), the one that leads nowhere disabled in a lighter grey; the focus
+// ring of the buttons (DECISIONS.md #29)
 $pagination-padding-y: 0;
 $pagination-font-size: .75rem;
 $pagination-color: $primary;
@@ -509,14 +509,14 @@ $ps-page-head-title-min-width: 10rem;
 $ps-kpi-line-width: 3;
 $ps-kpi-icon-size: 2.5rem;
 $ps-kpi-placeholder-width: 5rem;
-// <twig:ui:Pagination>: the size of an item; under the full width, only Previous, "Page 3 of 25" and Next show
+// <twig:ui:Pagination>: the size of an arrow, the width of the field to go to a page
 $ps-pagination-item-size: 2.25rem;
-$ps-pagination-item-padding-x: .375rem;
-$ps-pagination-full-min-width: 24rem;
 $ps-pagination-jump-input-width: 4rem;
 // <twig:ui:Grid>: a filter field wide enough to type in, the title, the table's text, the list actions' icon, the sorted column's badge,
 // an image cell's thumbnail
 $ps-grid-filter-min-width: 5rem;
+// The bar under the table: wider than this, the rows shown, the pages and the rows per page on one line
+$ps-grid-pager-wide-min-width: 40rem;
 // A column's width hint (its definition's width option): sm as narrow as its content, at least the first; md and lg
 // at least the others
 $ps-grid-column-sm-min-width: 3rem;

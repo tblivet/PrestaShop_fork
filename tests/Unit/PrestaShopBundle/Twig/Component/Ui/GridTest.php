@@ -108,6 +108,7 @@ class GridTest extends TestCase
         $this->assertSame([1, 10, 11, 12, 25], array_keys($grid->getPageLinks()));
         $this->assertSame('/orders?order[offset]=450&order[limit]=50#order_grid_results', urldecode($grid->getPageLinks()[10]));
         $this->assertSame('/orders?order[offset]={offset}&order[limit]=50#order_grid_results', urldecode($grid->getJumpUrl()));
+        $this->assertSame([501, 550], $grid->getRange());
     }
 
     public function testTheLastPageAndASinglePage(): void
@@ -115,6 +116,7 @@ class GridTest extends TestCase
         $last = $this->grid(['pagination' => ['offset' => 1200, 'limit' => 50], 'data' => ['records' => [], 'records_total' => 1234, 'query' => '']]);
 
         $this->assertSame([1, 24, 25], array_keys($last->getPageLinks()));
+        $this->assertSame([1201, 1234], $last->getRange());
         $this->assertSame([1], array_keys($this->grid()->getPageLinks()));
     }
 

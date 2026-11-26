@@ -16,22 +16,6 @@ use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 
 class PaginationTest extends TestCase
 {
-    #[DataProvider('provideItems')]
-    public function testShowsTheEndsTheCurrentPageAndItsNeighbours(int $current, array $pages, array $items): void
-    {
-        $this->assertSame($items, $this->pagination($current, $pages)->getItems());
-    }
-
-    public static function provideItems(): iterable
-    {
-        yield 'three pages' => [2, [1, 2, 3], [1, 2, 3]];
-        yield 'the first of many' => [1, [1, 2, 1000], [1, 2, null, 1000]];
-        yield 'the middle of many' => [500, [1, 499, 500, 501, 1000], [1, null, 499, 500, 501, null, 1000]];
-        yield 'the last of many' => [1000, [1, 999, 1000], [1, null, 999, 1000]];
-        yield 'next to the first' => [2, [1, 2, 3, 25], [1, 2, 3, null, 25]];
-        yield 'every page given' => [5, range(1, 9), [1, null, 4, 5, 6, null, 9]];
-    }
-
     public function testSortsTheLinksAndKnowsTheLastPage(): void
     {
         $props = (new Pagination())->preMount(['current' => 1, 'links' => [25 => '/25', 1 => '/1', 2 => '/2'], 'label' => 'Pages']);
