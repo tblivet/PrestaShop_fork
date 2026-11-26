@@ -998,3 +998,13 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 
 **Strings**
 - Admin.Global: "%from%–%to% of %total% results" no longer used.
+
+## Grid: a column width hint — 2026-11-26
+
+`Core/Grid/Column/AbstractColumn.php`, `grid.html.twig`, `_grid.scss`, `CountryGridDefinitionFactory`.
+
+**Markup**
+- Every column type takes an optional `width` option (`sm`, `md`, `lg`; unset by default, so existing definitions and their options are unchanged). The kit adds `ps-grid__heading--width-{sm|md|lg}` to its heading and `ps-grid__filter--width-*` to its filter cell: `sm` as narrow as its content (at least 3rem, its filter field too), `md` / `lg` at least 10rem / 16rem (DECISIONS #47).
+- Countries: ID, ISO code and Call prefix have `width: sm`.
+
+**Old theme**: the option is ignored.

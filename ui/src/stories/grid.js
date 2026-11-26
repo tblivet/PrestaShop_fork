@@ -493,7 +493,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         ? `<a class="ps-grid__sort" href="${escape(url(fixture, { orderBy: column.id, sortOrder: sort === 'ascending' ? 'desc' : 'asc' }))}">${escape(column.name)}${uiIcon(icon, { class: 'ps-grid__sort-icon' })}</a>`
         : escape(column.name);
 
-      return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
+      return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${column.options.width ? ` ps-grid__heading--width-${column.options.width}` : ''}${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
     }).join('');
     const filters = hasFilters
       ? `<tr class="ps-grid__filters" data-ps-ref="grid-filter-row">${fixture.columns.map((column, index) => {
@@ -501,7 +501,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
 
         return index === 0 && filterLabel
           ? `<th scope="row" class="ps-grid__filter-label">${clearButton || uiIcon(filterAlt)}<span class="visually-hidden">Filters</span></th>`
-          : `<td class="ps-grid__filter">${column.id === filterColumnId ? `<div class="ps-grid__filter-actions">${filterButton('sm')}${filterLabel ? '' : clearButton}</div>` : ''}${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
+          : `<td class="ps-grid__filter${column.options.width ? ` ps-grid__filter--width-${column.options.width}` : ''}">${column.id === filterColumnId ? `<div class="ps-grid__filter-actions">${filterButton('sm')}${filterLabel ? '' : clearButton}</div>` : ''}${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
       }).join('')}</tr>`
       : '';
 

@@ -24,6 +24,7 @@
       "options": {
         "identifier_field": "id_order",
         "sortable": true,
+        "width": "sm",
         "preview": {
           "icon_expand": "keyboard_arrow_down",
           "icon_collapse": "keyboard_arrow_up",

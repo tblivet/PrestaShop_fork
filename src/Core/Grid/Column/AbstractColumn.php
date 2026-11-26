@@ -129,6 +129,11 @@ abstract class AbstractColumn implements ColumnInterface
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
+        // Every column type, its own options or not: an optional width hint for the list's layout. sm: as narrow as its
+        // content; md, lg: at least a medium or large width. Unset, the column is as wide as its heading and values
+        $resolver
+            ->setDefined('width')
+            ->setAllowedValues('width', ['sm', 'md', 'lg']);
 
         $this->options = $resolver->resolve($options);
     }

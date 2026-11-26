@@ -181,10 +181,29 @@ $component-name: ps-grid;
   }
 
   // The fields of the filter row (Bootstrap's small ones), wide enough to type in
+  // A column's width hint, its definition's width option; without it, a column is as wide as its heading and values
+  &__heading--width-sm {
+    width: 1%;
+    min-width: $ps-grid-column-sm-min-width;
+  }
+
+  &__heading--width-md {
+    min-width: $ps-grid-column-md-min-width;
+  }
+
+  &__heading--width-lg {
+    min-width: $ps-grid-column-lg-min-width;
+  }
+
   // Its fields claim no width (size 1, grid.html.twig): a column is as wide as its heading and values, at least this
   &__filter {
     min-width: $ps-grid-filter-min-width;
     vertical-align: top;
+
+    // A narrow column's field, as narrow as the column
+    &--width-sm {
+      min-width: $ps-grid-column-sm-min-width;
+    }
   }
 
   &__filter-label {

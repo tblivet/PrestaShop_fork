@@ -517,6 +517,11 @@ $ps-pagination-jump-input-width: 4rem;
 // <twig:ui:Grid>: a filter field wide enough to type in, the title, the table's text, the list actions' icon, the sorted column's badge,
 // an image cell's thumbnail
 $ps-grid-filter-min-width: 5rem;
+// A column's width hint (its definition's width option): sm as narrow as its content, at least the first; md and lg
+// at least the others
+$ps-grid-column-sm-min-width: 3rem;
+$ps-grid-column-md-min-width: 10rem;
+$ps-grid-column-lg-min-width: 16rem;
 $ps-grid-title-font-size: 1.125rem;
 $ps-grid-font-size: .875rem;
 $ps-grid-list-actions-icon-size: 1.5em;

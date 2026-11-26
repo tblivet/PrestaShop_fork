@@ -133,6 +133,15 @@ class GridComponentTest extends KernelTestCase
         $this->assertMatchesRegularExpression('#<input type="text" id="order_reference" name="order\[reference\]" class="form-control-sm form-control" size="1"#', $html);
     }
 
+    public function testAColumnsWidthHintIsAClassOnItsHeading(): void
+    {
+        $html = $this->render();
+
+        $this->assertMatchesRegularExpression('#<th scope="col" id="order_col_id_order" class="ps-grid__heading ps-grid__heading--width-sm"#', $html);
+        $this->assertMatchesRegularExpression('#<th scope="col" id="order_col_reference" class="ps-grid__heading"#', $html);
+        $this->assertSame(1, substr_count($html, '<td class="ps-grid__filter ps-grid__filter--width-sm">'));
+    }
+
     public function testAQuickFilterSubmitsItsChoiceAfterItsHiddenField(): void
     {
         $fixture = json_decode(file_get_contents(__DIR__ . '/../../../../../../ui/src/stories/fixtures/order-grid.json'), true, 512, JSON_THROW_ON_ERROR);
