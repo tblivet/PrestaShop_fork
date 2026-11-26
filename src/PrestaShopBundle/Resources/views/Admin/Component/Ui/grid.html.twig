@@ -249,7 +249,7 @@
                     {%- set tag = isRowHeader ? 'th' : 'td' -%}
                     {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
                     {#- With the preview toggle in it, the row's name is its value only: the cell names it -#}
-                    <{{ tag }}{% if isRowHeader %} scope="row"{% if column.id != previewColumnId %} id="{{ rowHeaderId }}"{% endif %}{% endif %} class="ps-grid__cell ps-grid__cell--{{ column.type|replace({'_': '-'}) }}{{ align ? ' ps-grid__cell--' ~ align }}{{ rowLink and (column.options.clickable ?? false) ? ' ps-grid__cell--clickable' }}">
+                    <{{ tag }}{% if isRowHeader %} scope="row"{% if column.id != previewColumnId %} id="{{ rowHeaderId }}"{% endif %}{% endif %} class="ps-grid__cell ps-grid__cell--{{ column.type|replace({'_': '-'}) }}{{ align ? ' ps-grid__cell--' ~ align }}{{ rowLink and (column.options.clickable ?? false) ? ' ps-grid__cell--clickable' }}"{% if rowLink and (column.options.clickable ?? false) %} data-ps-ref="grid-clickable-cell"{% endif %}>
                       {{- include([
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.id ~ '_' ~ column.type ~ '.html.twig',
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.type ~ '.html.twig',
@@ -274,6 +274,14 @@
       {#- With a row's header, names its check: "Select 1024" -#}
       <span id="{{ id }}_grid_select_label" hidden>{{ 'Select'|trans({}, 'Admin.Actions') }}</span>
       {#- Under the table, not in it: a row of a table that scrolls sideways would put it out of sight on a phone -#}
+      {%- set lastPageUrl = this.lastPageUrl -%}
+      {%- if lastPageUrl -%}
+        <twig:ui:EmptyState class="ps-grid__no-match" size="sm" icon="last_page" :title="'This page is empty'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)">
+          <twig:block name="actions">
+            <twig:ui:Button variant="outline-secondary" :href="lastPageUrl">{{ 'Go to the last page'|trans({}, 'Admin.Global') }}</twig:ui:Button>
+          </twig:block>
+        </twig:ui:EmptyState>
+      {%- endif -%}
       {%- if 'no-match' == state -%}
         {%- set clearFiltersHere = clearFilters ? clearFilters|merge({variant: 'outline-secondary'}) : null -%}
         <twig:ui:EmptyState class="ps-grid__no-match" size="sm" icon="search_off" :title="'No results match these filters'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)">
@@ -289,7 +297,7 @@
           grid-position.js): outside the filter form, so its fields do not go -#}
       <form id="{{ id }}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>
 
-      {%- if 'list' == state and paginated -%}
+      {%- if 'list' == state and paginated and not lastPageUrl -%}
         {#- Under the table, in the card: the rows shown at the start, the pages in the middle (Previous, a field to go
             to a page, Next), the rows per page at the end; narrow, one under the other, centred. Read here: inside the
             components below, this is theirs -#}

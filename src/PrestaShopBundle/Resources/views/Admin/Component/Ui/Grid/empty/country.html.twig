@@ -1,0 +1,11 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- The Countries grid with no country at all (a new store, a store of a multistore group without any) -#}
+<twig:ui:EmptyState icon="public" :title="'No countries yet'|trans({}, 'Admin.International.Feature')" :headingLevel="headingLevel">
+  {{ 'Add the countries you sell to: customers pick one in their address, and taxes and carriers follow it.'|trans({}, 'Admin.International.Feature') }}
+  <twig:block name="actions">
+    <twig:ui:Button icon="add" :href="path('admin_countries_create')">{{ 'Add new country'|trans({}, 'Admin.International.Feature') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:EmptyState>

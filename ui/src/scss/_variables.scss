@@ -373,7 +373,9 @@ $input-focus-border-color: var(--#{$prefix}border-color);
 // Round outlined arrows (components/_pagination.scss), the one that leads nowhere disabled in a lighter grey; the focus
 // ring of the buttons (DECISIONS.md #29)
 $pagination-padding-y: 0;
-$pagination-font-size: .75rem;
+$pagination-padding-x: 0;
+// The arrows' chevrons at the body size ($font-size-base is not set yet here)
+$pagination-font-size: 1rem;
 $pagination-color: $primary;
 $pagination-bg: transparent;
 $pagination-margin-start: 0;
@@ -517,6 +519,8 @@ $ps-pagination-jump-input-width: 4rem;
 $ps-grid-filter-min-width: 5rem;
 // The bar under the table: wider than this, the rows shown, the pages and the rows per page on one line
 $ps-grid-pager-wide-min-width: 40rem;
+// The bulk bar: narrower than this (a phone), its count smaller and Clear selection its cross alone
+$ps-grid-bulk-narrow-max-width: 30rem;
 // A column's width hint (its definition's width option): sm as narrow as its content, at least the first; md and lg
 // at least the others
 $ps-grid-column-sm-min-width: 3rem;

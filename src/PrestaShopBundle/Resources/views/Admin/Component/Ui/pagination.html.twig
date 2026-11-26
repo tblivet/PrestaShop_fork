@@ -23,7 +23,10 @@
               the current one back and announces the invalid message (novalidate: the pattern only says digits are
               expected) -#}
           <form class="ps-pagination__jump" data-ps-action="pagination-jump" data-ps-data-url="{{ jumpUrl }}" data-ps-data-last="{{ last }}" data-ps-data-invalid-message="{{ 'Enter a page number from 1 to %last%'|trans({'%last%': last}, 'Admin.Global') }}"{% if perPage %} data-ps-data-per-page="{{ perPage }}"{% endif %} novalidate>
-            <label class="ps-pagination__jump-field">{{ 'Page'|trans({}, 'Admin.Global') }} <input class="form-control form-control-sm ps-pagination__jump-input" type="text" inputmode="numeric" pattern="[0-9]*" name="page" value="{{ current }}" autocomplete="off"> {{ 'of %total%'|trans({'%total%': last}, 'Admin.Global') }}</label>
+            {#- One string for the whole label, so a language can put the field where it reads: the field goes where
+                %current% is -#}
+            {%- set around = 'Page %current% of %total%'|trans({'%current%': '%field%', '%total%': last}, 'Admin.Global')|split('%field%', 2) -%}
+            <label class="ps-pagination__jump-field">{{ around[0] }}<input class="form-control form-control-sm ps-pagination__jump-input" type="text" inputmode="numeric" pattern="[0-9]*" name="page" value="{{ current }}" autocomplete="off">{{ around[1] ?? '' }}</label>
             <twig:ui:Button type="submit" variant="outline-secondary" size="sm">{{ 'Go'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
           </form>
         {%- else -%}

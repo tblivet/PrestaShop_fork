@@ -195,6 +195,29 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringContainsString('ps-grid__header', $html);
     }
 
+    public function testPastTheLastPageItOffersTheLastPage(): void
+    {
+        $html = $this->render(['records' => [], 'records_total' => 241, 'pagination' => ['offset' => 1000, 'limit' => 50]]);
+
+        $this->assertStringContainsString('This page is empty', $html);
+        $this->assertStringContainsString('href="?order%5Boffset%5D=200&amp;order%5Blimit%5D=50#order_grid_results"', $html);
+        $this->assertStringNotContainsString('ps-grid__pager', $html);
+        $this->assertStringNotContainsString('This page is empty', $this->render(boot: false));
+    }
+
+    public function testCountriesHaveTheirOwnEmptyState(): void
+    {
+        $html = $this->render(['id' => 'country', 'is_empty_state' => true, 'records' => [], 'records_total' => 0, 'pagination' => ['offset' => 0, 'limit' => 50]]);
+
+        $this->assertStringContainsString('No countries yet', $html);
+        $this->assertMatchesRegularExpression('#<a class="btn btn-primary ps-button" href="[^"]*/improve/international/countries/new[^"]*"#', $html);
+    }
+
+    public function testAClickableCellCarriesItsHook(): void
+    {
+        $this->assertMatchesRegularExpression('#class="ps-grid__cell ps-grid__cell--[a-z-]+ ps-grid__cell--clickable" data-ps-ref="grid-clickable-cell"#', $this->render());
+    }
+
     public function testThePagesRowsShownAndRowsPerPageUnderTheTable(): void
     {
         $html = $this->render();

@@ -21,10 +21,8 @@ $component-name: ps-pagination;
     justify-content: center;
     width: $ps-pagination-item-size;
     height: $ps-pagination-item-size;
-    padding: 0;
-    font-size: $font-size-base;
     line-height: 1;
-    border-color: var(--#{$prefix}pagination-border-color);
+    // Round: Bootstrap only rounds the outer corners of the first and the last item
     border-radius: $border-radius-pill;
 
     // Bootstrap rings a page link on :focus, a mouse click too; the kit, as its buttons, only on :focus-visible

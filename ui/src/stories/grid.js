@@ -526,7 +526,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
           const align = ALIGNMENTS[column.options.alignment ?? ''];
           const clickable = link && column.options.clickable ? ' ps-grid__cell--clickable' : '';
 
-          return `<${tag}${head ? ` scope="row"${column.id !== previewColumn ? ` id="${id}_grid_rowhead_${index + 1}"` : ''}` : ''} class="ps-grid__cell ps-grid__cell--${column.type.replaceAll('_', '-')}${align ? ` ps-grid__cell--${align}` : ''}${clickable}">${cell(fixture, column, record, `${id}_grid_rowhead_${index + 1}`)}</${tag}>`;
+          return `<${tag}${head ? ` scope="row"${column.id !== previewColumn ? ` id="${id}_grid_rowhead_${index + 1}"` : ''}` : ''} class="ps-grid__cell ps-grid__cell--${column.type.replaceAll('_', '-')}${align ? ` ps-grid__cell--${align}` : ''}${clickable}"${clickable ? ' data-ps-ref="grid-clickable-cell"' : ''}>${cell(fixture, column, record, `${id}_grid_rowhead_${index + 1}`)}</${tag}>`;
         }).join('');
         const preview = previewColumn
           ? `<tr id="${id}_grid_preview_${index + 1}" class="ps-grid__preview" hidden data-ps-ref="grid-preview"><td colspan="${fixture.columns.length}"><div class="ps-grid__preview-content" data-ps-target="grid-preview-content"></div></td></tr>`

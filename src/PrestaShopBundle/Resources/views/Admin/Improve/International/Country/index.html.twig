@@ -22,6 +22,9 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/country.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  {#- The old grid's scripts; the kit's grid has its own (ui.js) -#}
+  {% if not ui_kit %}
+    <script src="{{ asset('themes/new-theme/public/country.bundle.js') }}"></script>
+    <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  {% endif %}
 {% endblock %}

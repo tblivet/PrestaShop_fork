@@ -1036,3 +1036,24 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - Clear filters on a list URL without a query string reloads the page (the redirect only changed the fragment, so the button stayed busy); the reload still lands on the grid's title (`reloadTo()`, load-focus.js).
 - A toggle that fails announces the route's message or "The change could not be saved. Try again.", never a network error's text ("Failed to fetch").
 - A modal opened from a menu item (list actions, bulk actions) gives focus back to the menu's toggle when it closes, instead of the page.
+
+## Countries grid: review minor fixes — 2026-11-26
+
+`grid.html.twig`, `Grid::getLastPageUrl()` (new), `Grid/empty/country.html.twig` (new), `pagination.html.twig`, `Country/index.html.twig`, `DeleteActionTrait`, `_grid.scss`, `_buttons.scss`, `_pagination.scss`, `_variables.scss`, `selectors.js`. Decided one by one with the product owner from the Countries review.
+
+**Markup**
+- Past the last page (an offset beyond the rows), the grid shows an empty state "This page is empty" with "Go to the last page" instead of an empty table and a pager.
+- Countries' own empty state (`Grid/empty/country.html.twig`): "No countries yet", a line on what countries are for, "Add new country".
+- A clickable cell carries `data-ps-ref="grid-clickable-cell"` (grid-row-link.js no longer reads the class).
+- The pagination field's label is one string, "Page %current% of %total%", the field where `%current%` is (was "Page" and "of %total%" around it).
+- Button: `.ps-button__label` wraps by `--ps-button-label-wrap` (balance by default); the grid sets it to `nowrap` instead of styling the label.
+
+**Behaviour**
+- One page: the rows per page stay at the end of the bar.
+- Narrow grid (≤ 30rem, a phone): the bulk bar's count is smaller and Clear selection is its cross alone (its label kept for screen readers), the bar on one line.
+- Countries with PS_UI_KIT on no longer loads the old grid scripts (`country.bundle.js`, the default theme's `pagination.js`).
+
+**Strings**
+- Every grid's row Delete (`DeleteActionTrait`): "Are you sure you want to delete the selected item(s)?" / "Delete selection" (Admin.Global, Admin.Actions) → "Are you sure you want to delete this item?" / "Delete item" (Admin.Notifications.Warning, existing strings). Also in the old theme; Playwright campaigns that read the old text need the new one.
+- New: Admin.Global "This page is empty", "Go to the last page"; Admin.International.Feature "No countries yet", "Add the countries you sell to: customers pick one in their address, and taxes and carriers follow it."
+- No longer used by the pagination: Admin.Global "Page", "of %total%".

@@ -30,7 +30,7 @@ export default {
   gridBulkModal: '[data-ps-action~="grid-bulk-modal"]',
   gridResults: '[data-ps-ref="grid-results"]',
   gridRowLink: '[data-ps-action~="grid-row-link"]',
-  gridClickableCell: '.ps-grid__cell--clickable',
+  gridClickableCell: '[data-ps-ref="grid-clickable-cell"]',
   gridPreview: '[data-ps-action~="grid-preview"]',
   gridToggle: '[data-ps-action~="grid-toggle"]',
   gridPosition: '[data-ps-ref="grid-position"]',

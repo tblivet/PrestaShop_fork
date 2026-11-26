@@ -79,11 +79,12 @@ $component-name: ps-button;
 
 .#{$component-name} {
   // The label beside an icon: when it wraps, its lines stay against the icon instead of centring away from it, and are
-  // balanced, so the room the box keeps on their side is even rather than under one short line
+  // balanced, so the room the box keeps on their side is even rather than under one short line. A context that needs
+  // one line sets --ps-button-label-wrap: nowrap on the button or around it
   &__label {
     min-width: 0;
     text-align: start;
-    text-wrap: balance;
+    text-wrap: var(--ps-button-label-wrap, balance);
 
     &:has(+ .ps-icon) {
       text-align: end;

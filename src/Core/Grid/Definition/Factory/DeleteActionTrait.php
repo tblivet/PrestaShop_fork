@@ -33,7 +33,8 @@ trait DeleteActionTrait
                 'route_param_name' => $deleteRouteParamName,
                 'route_param_field' => $deleteRouteParamField,
                 'extra_route_params' => $extraRouteParams,
-                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                // One row's action: about this item, not "the selected item(s)" of a bulk action
+                'confirm_message' => $this->trans('Are you sure you want to delete this item?', [], 'Admin.Notifications.Warning'),
                 'method' => $method,
                 'modal_options' => [],
             ],
@@ -41,7 +42,7 @@ trait DeleteActionTrait
         );
         $options['modal_options'] = new ModalOptions(array_merge(
             [
-                'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                'title' => $this->trans('Delete item', [], 'Admin.Notifications.Warning'),
                 'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
                 'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
                 'confirm_button_class' => 'btn-danger',

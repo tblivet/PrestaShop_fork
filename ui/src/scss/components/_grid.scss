@@ -62,8 +62,10 @@ $component-name: ps-grid;
   // The table, and the bulk bar over its headings while rows are checked (grid-selection.js gives it their row's height),
   // the filters left in view: tinted like the count and sort badges (oceanblue), edged in its blue; the same look
   // whether it lies over them or follows the list down
+  // A container: the bulk bar follows the grid's width, not the screen's
   &__table-area {
     position: relative;
+    container: #{$component-name}-area / inline-size;
   }
 
   // Sticky in the page's scrolling content, so it follows a long list down to its end; pulled up over the headings by
@@ -96,6 +98,18 @@ $component-name: ps-grid;
   &__selection {
     margin: 0;
     font-weight: $font-weight-semibold;
+  }
+
+  // A narrow grid (a phone): the bar on one line, the count smaller and Clear selection as its cross alone, its label
+  // kept for screen readers (Button's label, _buttons.scss)
+  @container #{$component-name}-area (max-width: #{$ps-grid-bulk-narrow-max-width}) {
+    &__selection {
+      font-size: $font-size-sm;
+    }
+
+    &__clear-selection .ps-button__label {
+      @include visually-hidden();
+    }
   }
 
   // The quick filters (and Filter when no column holds it), just above the table
@@ -226,10 +240,8 @@ $component-name: ps-grid;
     gap: map-get($spacers, 1);
     align-items: center;
 
-    // Filter on one line: the actions column is as narrow as its content
-    .ps-button__label {
-      text-wrap: nowrap;
-    }
+    // Filter on one line: the actions column is as narrow as its content (the button's own property, _buttons.scss)
+    --ps-button-label-wrap: nowrap;
   }
 
   // The check columns: as narrow as their box, centred on the heading's line (Bootstrap sets thead cells at the bottom)
@@ -250,18 +262,18 @@ $component-name: ps-grid;
   }
 
   // A row whose check has the keyboard focus: Bootstrap's hover tint (table-hover), so the row being chosen shows
-  &__row:has(.#{$component-name}__check:focus-visible) > * {
+  &__row:has(#{&}__check:focus-visible) > * {
     --#{$prefix}table-bg-state: var(--#{$prefix}table-hover-bg);
   }
 
   // A checked row: Bootstrap's state tint, a very light grey, and a line on its start edge in the side menu's blue, which
   // says it most, so it is not told by colour only. Set on the cells, as Bootstrap's
   // hover is, so it keeps its tint under the pointer
-  &__row:has(.#{$component-name}__check:checked) > * {
+  &__row:has(#{&}__check:checked) > * {
     --#{$prefix}table-bg-state: var(--#{$prefix}tertiary-bg);
   }
 
-  &__row:has(.#{$component-name}__check:checked) > :first-child {
+  &__row:has(#{&}__check:checked) > :first-child {
     box-shadow: inset $ps-grid-selected-line-width 0 0 var(--#{$prefix}oceanblue-500), inset 0 0 0 9999px var(--#{$prefix}table-bg-state);
   }
 
@@ -308,9 +320,7 @@ $component-name: ps-grid;
   // A choice (Orders' status) in the record's colour, as its badge; an outline button otherwise
   // On one line: the button label's balanced wrapping (_buttons.scss) would break a long status
   &__choice {
-    .ps-button__label {
-      text-wrap: nowrap;
-    }
+    --ps-button-label-wrap: nowrap;
 
     &--ink-dark,
     &--ink-light {
@@ -434,7 +444,9 @@ $component-name: ps-grid;
       justify-self: start;
     }
 
+    // Always the last column, even with no pages in the middle (one page)
     &__per-page {
+      grid-column: 3;
       justify-self: end;
     }
   }

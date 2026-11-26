@@ -234,6 +234,19 @@ final class Grid
     }
 
     /**
+     * Past the last page (an offset beyond the rows: an edited URL, the last row of a page deleted): the last page's URL,
+     * for the grid to offer instead of an empty table; null on any page that has rows
+     */
+    public function getLastPageUrl(): ?string
+    {
+        if ('list' !== $this->getState() || $this->getCurrentPage() <= $this->getPageCount()) {
+            return null;
+        }
+
+        return $this->url(['offset' => ($this->getPageCount() - 1) * $this->getLimit(), 'limit' => $this->getLimit()]);
+    }
+
+    /**
      * Any page, for the pagination's field: {offset} is the first row of the page typed
      */
     public function getJumpUrl(): string
