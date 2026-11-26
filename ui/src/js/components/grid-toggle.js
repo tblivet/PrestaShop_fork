@@ -13,6 +13,9 @@ import { announce } from './announcer';
 const save = async (box) => {
   box.dataset.psState = 'loading';
   box.disabled = true;
+  // What is announced when the switch flips back: the route's own message, else the page's (never a network error's
+  // text, "Failed to fetch")
+  let failure = null;
 
   try {
     const response = await fetch(box.dataset.psDataUrl, {
@@ -29,17 +32,19 @@ const save = async (box) => {
     const body = response.headers.get('Content-Type')?.includes('json') ? await response.json() : null;
 
     if (!response.ok || !body?.status) {
-      throw new Error(body?.message ?? '');
-    }
-    if (body.message) {
+      failure = body?.message || box.dataset.psDataError;
+    } else if (body.message) {
       announce(body.message);
     }
-  } catch (error) {
-    box.checked = !box.checked;
-    announce(error.message || box.dataset.psDataError);
+  } catch {
+    failure = box.dataset.psDataError;
   } finally {
     delete box.dataset.psState;
     box.disabled = false;
+  }
+  if (failure) {
+    box.checked = !box.checked;
+    announce(failure);
   }
 };
 

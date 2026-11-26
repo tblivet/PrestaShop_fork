@@ -5,6 +5,7 @@
 import selectors from '../selectors';
 import { announce } from './announcer';
 import { setButtonBusy } from './busy-button';
+import { reloadTo } from './load-focus';
 
 // A <twig:ui:Grid>'s Clear filters (grid.html.twig): posts the reset (data-ps-data-url), as the old grids did, then goes
 // to the list (data-ps-data-redirect) on its results summary (data-ps-data-fragment), which load-focus.js focuses. The
@@ -41,7 +42,12 @@ export default function initGridFilters() {
       const redirect = new URL(button.dataset.psDataRedirect, window.location.href);
 
       redirect.hash = button.dataset.psDataFragment ?? '';
-      window.location.assign(redirect.toString());
+      // The list's own URL (no query string): going there would only scroll to the fragment
+      if (redirect.href.split('#')[0] === window.location.href.split('#')[0]) {
+        reloadTo(redirect.toString());
+      } else {
+        window.location.assign(redirect.toString());
+      }
     } catch {
       setButtonBusy(button, false);
       announce(button.dataset.psDataError);

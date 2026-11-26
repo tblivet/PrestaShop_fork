@@ -5,7 +5,12 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {{ include('@PrestaShop/Admin/Improve/International/Country/Blocks/change_countries_zone_modal.html.twig') }}
+  {#- With PS_UI_KIT on, the kit's modal for the grid's "Assign to a new zone" bulk action -#}
+  {% if ui_kit %}
+    {{ include('@PrestaShop/Admin/Improve/International/Country/Blocks/Ui/change_countries_zone_modal.html.twig') }}
+  {% else %}
+    {{ include('@PrestaShop/Admin/Improve/International/Country/Blocks/change_countries_zone_modal.html.twig') }}
+  {% endif %}
 
   {{ include('@PrestaShop/Admin/Common/Grid/Ui/grid_panel.html.twig', {grid: countryGrid}) }}
 

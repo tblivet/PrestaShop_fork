@@ -40,7 +40,9 @@ $component-name: ps-pagination;
     white-space: nowrap;
   }
 
+  // The field's error (pagination-jump.js) is Bootstrap's invalid tooltip, under the field
   &__jump {
+    position: relative;
     display: flex;
     gap: map-get($spacers, 2);
     align-items: center;
@@ -58,5 +60,18 @@ $component-name: ps-pagination;
   &__jump-input {
     width: $ps-pagination-jump-input-width;
     text-align: center;
+  }
+
+  // Invalid (aria-invalid, the kit's forms), the red border only: the icon would leave no room for the number
+  .#{$component-name}__jump-input[aria-invalid="true"] {
+    padding-inline-end: $input-padding-x-sm;
+    background-image: none;
+  }
+
+  // Wider than the form if it needs: Bootstrap caps a tooltip at its parent's width
+  &__error {
+    display: block;
+    max-width: none;
+    white-space: nowrap;
   }
 }

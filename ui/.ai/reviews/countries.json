@@ -1,0 +1,119 @@
+{
+  "page": "countries",
+  "url": "http://localhost:8001/admin-dev/index.php/improve/international/countries/",
+  "date": "2026-11-26",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/countries-review/index.html",
+  "states": {
+    "total": 35,
+    "captured": 27,
+    "emulated": 5,
+    "missing": [
+      "read-only-employee",
+      "access-denied",
+      "long-translations-fr"
+    ]
+  },
+  "findings": {
+    "blocker": 2,
+    "major": 4,
+    "minor": 10,
+    "suggestion": 2
+  },
+  "open": [
+    {
+      "severity": "blocker",
+      "title": "Country options card still uses the old form theme: 'settings' as text, radios run together as 'NoYes'",
+      "where": "Every state with the options card, at 1280, 768 and 375 — Country/Blocks/options.html.twig:7,12,21"
+    },
+    {
+      "severity": "blocker",
+      "title": "'Assign to a new zone' cannot be submitted: legacy modal with a type=button 'Update zone'",
+      "where": "Country/Blocks/change_countries_zone_modal.html.twig:6-14; Helpers/bootstrap_popup.html.twig:49; ui/src/js/components/grid-bulk.js:36"
+    },
+    {
+      "severity": "major",
+      "title": "Clear filters stays busy forever when the list URL has no query string",
+      "where": "ui/src/js/components/grid-filters.js:41-44 — clear-filters-busy, 1280"
+    },
+    {
+      "severity": "major",
+      "title": "Page field error has no visible text and is not linked to the field",
+      "where": "Component/Ui/pagination.html.twig:25-27; ui/src/js/components/pagination-jump.js:34-38 — jump-invalid"
+    },
+    {
+      "severity": "major",
+      "title": "Enabled switch failure announces the raw exception ('Failed to fetch')",
+      "where": "ui/src/js/components/grid-toggle.js:37-39 — toggle-failed"
+    },
+    {
+      "severity": "major",
+      "title": "Focus is lost to <body> when a modal opened from a dropdown item closes",
+      "where": "sql-query-modal (Cancel) and zone-modal-open (Esc), 1280"
+    },
+    {
+      "severity": "minor",
+      "title": "An offset past the last row shows an empty table with 'Page 21 of 21' and '241–241 of 241 results'",
+      "where": "offset-beyond-total, 1280/768/375 — Twig/Component/Ui/Grid.php:224,276"
+    },
+    {
+      "severity": "minor",
+      "title": "With one page, the rows-per-page menu jumps to the middle of the pager",
+      "where": "single-page-all-rows, 1280 and 768 — ui/src/scss/components/_grid.scss:426-440"
+    },
+    {
+      "severity": "minor",
+      "title": "At 375 the bulk bar wraps, leaving 'Clear selection' alone on a second blue line",
+      "where": "rows-selected-bulk-bar and all-rows-selected, 375 — ui/src/scss/components/_grid.scss:71-94"
+    },
+    {
+      "severity": "minor",
+      "title": "Invalid page field: Bootstrap's error icon crowds the 4rem field",
+      "where": "jump-invalid, 1280/768/375 — ui/src/scss/_variables.scss:514; _pagination.scss:58-61"
+    },
+    {
+      "severity": "minor",
+      "title": "Single-row Delete asks about 'the selected item(s)'",
+      "where": "src/Core/Grid/Definition/Factory/DeleteActionTrait.php:36,44 via Grid.php:553-558 — delete-confirm-dialog, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Page field label is split into fragments a translator cannot reorder",
+      "where": "Component/Ui/pagination.html.twig:26"
+    },
+    {
+      "severity": "minor",
+      "title": "Empty state says 'No records found' with no next step",
+      "where": "Component/Ui/grid.html.twig:96; Country/index.html.twig (no empty block) — multistore / nothing-yet-empty, all widths"
+    },
+    {
+      "severity": "minor",
+      "title": "Kit page still loads the old grid bundle and the default theme's pagination.js",
+      "where": "Improve/International/Country/index.html.twig:20-21"
+    },
+    {
+      "severity": "minor",
+      "title": "Class selectors in kit JS: clickable cell, dropdown menu and items",
+      "where": "ui/src/js/selectors.js:33; dropdown-inside-click.js:9,14; dropdown-top-layer.js:11"
+    },
+    {
+      "severity": "minor",
+      "title": "Grid partial styles other blocks and spells its own element in full",
+      "where": "ui/src/scss/components/_grid.scss:23,230,253,260,264,311,339"
+    },
+    {
+      "severity": "suggestion",
+      "title": "'Export to SQL manager' and 'Export to SQL Manager' on the same page",
+      "where": "CountryGridDefinitionFactory.php:250 vs Component/Ui/grid.html.twig:356 — list-actions-menu, sql-query-modal"
+    },
+    {
+      "severity": "suggestion",
+      "title": "Pagination link restyles in the partial what Bootstrap's pagination variables already set",
+      "where": "ui/src/scss/components/_pagination.scss:24-28; ui/src/scss/_variables.scss:375-376"
+    }
+  ],
+  "outOfScope": [
+    "Saving Country options unchanged writes NULL instead of 0 to PS_RESTRICT_DELIVERED_COUNTRIES (CountryOptionsConfiguration / form data provider).",
+    "Read-only employees still see switches, bulk actions, Delete and Save; the controller only refuses after the click, with three different messages for one cause. Hide the actions by permission and align the wording.",
+    "Bulk zone update without ids maps 'You must select at least one country.' to the generic 'An unexpected error occurred.' flash (CountryController::bulkUpdateZone); give it its own message."
+  ]
+}

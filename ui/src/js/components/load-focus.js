@@ -23,6 +23,30 @@ const leftByPointer = () => {
   }
 };
 
+// Go to a URL that differs from this page's only by its fragment (#order_grid_results): the browser would only scroll,
+// so the page reloads there, marked as a landing so the reload still focuses it
+const LANDING = 'ps-landing-reload';
+export const reloadTo = (url) => {
+  try {
+    window.sessionStorage.setItem(LANDING, '1');
+  } catch {
+    // no storage: the reload lands at the top
+  }
+  window.history.replaceState(window.history.state, '', url);
+  window.location.reload();
+};
+const landingReload = () => {
+  try {
+    const landing = window.sessionStorage.getItem(LANDING) === '1';
+
+    window.sessionStorage.removeItem(LANDING);
+
+    return landing;
+  } catch {
+    return false;
+  }
+};
+
 // Focus where reading resumes; after a click, without the focus ring (data-ps-state="quiet-focus", until it leaves):
 // the ring tells keyboard users where they are, a mouse user would read it as a selection
 const land = (target) => {
@@ -39,6 +63,8 @@ const land = (target) => {
 // otherwise the results summary of a grid the address names (#order_grid_results: its sorting, pages and filters land
 // there), not on a reload, the fragment then dropped. A message takes focus without joining the tab order.
 export default function focusOnLoad() {
+  const landing = landingReload();
+
   document.addEventListener('pointerdown', () => remember('pointer'), true);
   document.addEventListener('keydown', () => remember('keyboard'), true);
 
@@ -66,7 +92,7 @@ export default function focusOnLoad() {
   }
   // Once: the address drops the fragment, so a reload or a later visit starts at the top like any page
   window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
-  if (performance.getEntriesByType('navigation')[0]?.type !== 'reload') {
+  if (landing || performance.getEntriesByType('navigation')[0]?.type !== 'reload') {
     land(results);
   }
 }

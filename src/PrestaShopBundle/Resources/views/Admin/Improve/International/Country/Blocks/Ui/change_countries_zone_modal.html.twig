@@ -1,0 +1,22 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ -#}
+{#- The modal the Countries grid's "Assign to a new zone" bulk action opens, on the kit (index.html.twig includes it
+    with PS_UI_KIT on). The checked countries go with the form (grid-bulk.js), one country_ids input each from its
+    prototype. Set here: inside the modal, id is the modal's -#}
+{%- form_theme changeCountriesZoneForm '@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig' -%}
+{%- set zoneFormId = 'change_countries_zone_form' -%}
+<twig:ui:Modal id="changeCountriesZoneModal" :title="'Choose a zone'|trans({}, 'Admin.International.Feature')">
+  {{ form_start(changeCountriesZoneForm, {
+    action: path('admin_countries_bulk_update_zone'),
+    attr: {id: zoneFormId, 'data-bulk-inputs-id': changeCountriesZoneForm.country_ids.vars.id},
+  }) }}
+    {{ form_row(changeCountriesZoneForm.new_zone_id, {label: 'Zone'|trans({}, 'Admin.Global')}) }}
+    <div hidden>{{ form_widget(changeCountriesZoneForm.country_ids) }}</div>
+  {{ form_end(changeCountriesZoneForm) }}
+  <twig:block name="footer">
+    <twig:ui:Button variant="link" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'Admin.Actions') }}</twig:ui:Button>
+    <twig:ui:Button type="submit" :form="zoneFormId">{{ 'Update zone'|trans({}, 'Admin.International.Feature') }}</twig:ui:Button>
+  </twig:block>
+</twig:ui:Modal>

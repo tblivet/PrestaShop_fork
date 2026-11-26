@@ -1023,3 +1023,16 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 
 **Strings**
 - Admin.Global: "%from%–%to% of %total% results" used again (bottom bar); one page: "%total% results" / "1 result".
+
+## Countries grid: review fixes — 2026-11-26
+
+`Country/index.html.twig`, `Country/Blocks/Ui/change_countries_zone_modal.html.twig` (new), `grid-filters.js`, `load-focus.js`, `pagination-jump.js`, `grid-toggle.js`, `modal-return-focus.js` (new), `_pagination.scss`. From the ui-screen-review of Countries (ui/.ai/reviews/countries.json); the Country options card is left for its own rework.
+
+**Markup**
+- Countries, with PS_UI_KIT on: the "Assign to a new zone" bulk action opens a `<twig:ui:Modal id="changeCountriesZoneModal">` with `form#change_countries_zone_form` (kit form theme, "Zone" label) and a real submit "Update zone"; the old `bootstrap_popup` modal (a `type="button"` that only the old theme's JS sent) stays for PS_UI_KIT off.
+- Pagination field: when invalid, a `span.invalid-tooltip.ps-pagination__error` (made by pagination-jump.js) shows "Enter a page number from 1 to N" under it, the field `aria-invalid` and `aria-describedby` it, until the next key.
+
+**Behaviour**
+- Clear filters on a list URL without a query string reloads the page (the redirect only changed the fragment, so the button stayed busy); the reload still lands on the grid's title (`reloadTo()`, load-focus.js).
+- A toggle that fails announces the route's message or "The change could not be saved. Try again.", never a network error's text ("Failed to fetch").
+- A modal opened from a menu item (list actions, bulk actions) gives focus back to the menu's toggle when it closes, instead of the page.
