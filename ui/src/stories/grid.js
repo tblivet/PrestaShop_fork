@@ -13,6 +13,7 @@ import code from '../../icons/material-symbols/code.svg?raw';
 import deleteIcon from '../../icons/material-symbols/delete.svg?raw';
 import dragIndicator from '../../icons/material-symbols/drag-indicator.svg?raw';
 import edit from '../../icons/material-symbols/edit.svg?raw';
+import filterAlt from '../../icons/material-symbols/filter-alt.svg?raw';
 import keyboardArrowDown from '../../icons/material-symbols/keyboard-arrow-down.svg?raw';
 import openInNew from '../../icons/material-symbols/open-in-new.svg?raw';
 import checkCircle from '../../icons/material-symbols/check-circle.svg?raw';
@@ -432,7 +433,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     : '';
   const header = embedded || (hideName && !listItems.length)
     ? `<h${headingLevel} id="${id}_grid_title" class="visually-hidden">${escape(fixture.name)}</h${headingLevel}>`
-    : `<header class="ps-grid__header card-header"><h${headingLevel} id="${id}_grid_title" class="ps-grid__title${hideName ? ' visually-hidden' : ''}">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'secondary', pill: true }).html}</h${headingLevel}>${listActions}</header>`;
+    : `<header class="ps-grid__header card-header"><h${headingLevel} id="${id}_grid_title" class="ps-grid__title${hideName ? ' visually-hidden' : ''}">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'oceanblue', pill: true }).html}</h${headingLevel}>${listActions}</header>`;
 
   let body;
 
@@ -441,7 +442,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
   } else {
     const searchCluster = hasFilters
       ? `<div class="${clusterClasses({})} ps-grid__search">${button({
-        label: 'Search', variant: 'outline-primary', type: 'submit', icon: search, attributes: { form: `${id}_filter_form` },
+        label: 'Filter', variant: 'outline-primary', type: 'submit', icon: filterAlt, attributes: { form: `${id}_filter_form` },
       })}${showReset ? button({ label: 'Clear filters', variant: 'link', attributes: reset }) : ''}</div>`
       : '';
     const items = state === 'list' ? bulkItems(fixture) : [];
@@ -471,9 +472,9 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         }).join('')
         + '</div>';
     }).join('');
-    const toolbar = searchCluster || bulk || reorder || quick || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${reorder}${searchCluster}${quick}</div>` : '';
+    const toolbar = bulk || reorder || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${reorder}</div>` : '';
     const [from, to] = [Math.min(offset + 1, total), Math.min(offset + limit, total)];
-    const summary = `<p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' ? `${total} ${resultsWord}` : `${from}–${to} of ${total}`}</p>`;
+    const summary = `<div class="ps-grid__results"><p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' ? `${total} ${resultsWord}` : `${from}–${to} of ${total}`}</p>${searchCluster}${quick}</div>`;
 
     const headings = fixture.columns.map((column) => {
       const sort = state === 'list' && fixture.sorting.order_by === column.id ? (fixture.sorting.order_way.toLowerCase() === 'desc' ? 'descending' : 'ascending') : null;
@@ -497,7 +498,13 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       return `<th scope="col" id="${id}_col_${column.id}" class="ps-grid__heading${align ? ` ps-grid__heading--${align}` : ''}"${sort ? ` aria-sort="${sort}"` : ''}>${content}</th>`;
     }).join('');
     const filters = hasFilters
-      ? `<tr class="ps-grid__filters">${fixture.columns.map((column) => `<td class="ps-grid__filter">${fixture.filters.filter((filter) => filter.column === column.id && filter.type !== 'reorder').map((filter) => filterField(fixture, filter, column)).join('')}</td>`).join('')}</tr>`
+      ? `<tr class="ps-grid__filters">${fixture.columns.map((column, index) => {
+        const fields = fixture.filters.filter((filter) => filter.column === column.id && filter.type !== 'reorder');
+
+        return index === 0 && !fields.length
+          ? `<th scope="row" class="ps-grid__filter-label">${uiIcon(filterAlt)}<span class="visually-hidden">Filters</span></th>`
+          : `<td class="ps-grid__filter">${fields.map((filter) => filterField(fixture, filter, column)).join('')}</td>`;
+      }).join('')}</tr>`
       : '';
 
     let noMatch = '';
@@ -531,7 +538,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
 
     body = `${toolbar}${summary}<form name="${id}" method="post" action="${fixture.action}#${id}_grid_results" id="${id}_filter_form" class="ps-grid__form" novalidate="novalidate" data-ps-action="validate">`
       + `<div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="${escape(fixture.name)} table">`
-      + `<table id="${id}_grid_table" class="ps-grid__table table" aria-describedby="${id}_grid_results"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
+      + `<table id="${id}_grid_table" class="ps-grid__table table table-hover" aria-describedby="${id}_grid_results"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
       + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`
       + `<form id="${id}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>`;
   }

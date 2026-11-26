@@ -193,6 +193,8 @@ class GridTest extends TestCase
         $this->assertCount(3, $items);
         $this->assertSame('submit', $items[0]['type']);
         $this->assertSame('Delete selected', $items[0]['label']);
+        $this->assertSame('delete', $items[0]['icon'], 'a definition\'s icon (setIcon()) shows in the menu');
+        $this->assertNull($items[1]['icon'], 'no icon is made up for an action that has none');
         $this->assertSame(['form' => 'order_filter_form', 'formaction' => '/orders?', 'formmethod' => 'post', 'data-ps-confirm' => 'Delete?'], $items[0]['attr']);
         $this->assertSame(['data-route' => 'admin_orders_view', 'class' => 'open_tabs', 'data-ps-action' => 'grid-bulk-button', 'data-ps-data-action-id' => 'open_tabs'], $items[1]['attr']);
         $this->assertSame('#statusModal', $items[2]['attr']['data-bs-target']);

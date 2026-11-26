@@ -242,3 +242,9 @@ Check review (2026-11-25): accepted, the unchecked box's `#ddd` border (about 1.
 Reviews do not report what forced colours mode changes (a focus ring drawn only with `box-shadow` disappearing, colours replaced by the system's). The kit follows Bootstrap there, as its buttons already do.
 Why: too much for the value now; it would be handled once for the whole kit (a transparent `outline` beside every ring), not component by component.
 Left aside: a transparent outline on each focus ring.
+
+## 45. The grid's sorted column: its arrow in a round oceanblue badge — 2026-11-26
+
+The sorted column's arrow (up or down) sits in a small round badge with the oceanblue badge's colours (the side menu's version: `oceanblue-bg-subtle`, `oceanblue-800` ink, about 6:1); the other sortable columns keep a muted both-ways arrow. The grid also marks the rest of its state in the brand blue: the count badge in the header, the line of a checked row (`oceanblue-500`, the side menu's accent).
+Why: an arrow in the text colour, or a light blue arrow alone, read as a glitch rather than "sorted here"; the badge shows the active column at a glance and its direction is still the arrow's shape and `aria-sort`.
+Exception: it is round in a kit without rounded corners, as the employee's picture and the pill badges are, because the shape is what is asked for.

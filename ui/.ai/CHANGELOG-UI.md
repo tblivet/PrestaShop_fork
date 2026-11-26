@@ -752,6 +752,29 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: first review pass on Countries — 2026-11-26
+
+Adjustments asked while reviewing Countries, the reference list page; every kit grid gets them.
+
+**Markup**
+- The header's count badge is `oceanblue` (was `secondary`).
+- Search moved from the toolbar to the results line, after "1–50 of 241", just above the table; it is now "Filter" with the `filter_alt` icon (not the header search's magnifier). The toolbar holds the bulk actions, the `toolbar` block and Rearrange only, and is not rendered when empty.
+- The filter row's first cell, when it has no filter (the select column), is a `th scope="row"` with the same `filter_alt` icon and "Filters" for screen readers.
+- The table has Bootstrap's `table-hover`.
+
+**Look**
+- The title is a step smaller (`$ps-grid-title-font-size`, 1.125rem); the list actions' icon larger (`$ps-grid-list-actions-icon-size`, 1.5em); more room between Bulk actions and the selection line.
+- The filter row on the tertiary background, read as one zone.
+- The sorted column's arrow in a small round oceanblue badge (DECISIONS #45).
+- A checked row's start line is `oceanblue-500` (was primary); a row is tinted under the pointer and while its check has the keyboard focus; a checked row keeps its own tint.
+- The select column's checks are flex blocks, centred on the row's text (they sat 1.5–2px low), the heading's check centred in its cell.
+
+**Behaviour**
+- The results summary takes the focus after sorting, paging or filtering, not on a reload; the `#…_grid_results` fragment is dropped from the address once used.
+- A bulk action shows its definition's icon (`setIcon()`) in the menu; none is made up for the others.
+
+**Strings**: new "Filter" (`Admin.Actions`), "Filters" (`Admin.Global`).
+
 ## `<twig:ui:Grid>`: quick filters — 2026-11-25
 
 Part of step 14. `Grid::getQuickFilters()`; a QuickFilter story.

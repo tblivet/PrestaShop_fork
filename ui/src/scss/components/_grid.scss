@@ -16,9 +16,13 @@ $component-name: ps-grid;
     align-items: center;
   }
 
-  // At the end even when the title is for screen readers only
+  // At the end even when the title is for screen readers only; its icon larger than a button's, alone in the band
   &__list-actions {
     margin-inline-start: auto;
+
+    .ps-icon {
+      --ps-icon-size: #{$ps-grid-list-actions-icon-size};
+    }
   }
 
   &__title {
@@ -27,7 +31,7 @@ $component-name: ps-grid;
     gap: map-get($spacers, 2);
     align-items: center;
     margin: 0;
-    font-size: $h5-font-size;
+    font-size: $ps-grid-title-font-size;
   }
 
   &__body {
@@ -44,7 +48,7 @@ $component-name: ps-grid;
     justify-content: flex-end;
   }
 
-  // The bulk menu and what is checked, at the start; Search goes to the end
+  // The bulk menu and what is checked, at the start
   // The pressed quick filter shows a check as well as its state
   &__quick-filters .btn {
     display: inline-flex;
@@ -55,7 +59,7 @@ $component-name: ps-grid;
   &__bulk {
     display: flex;
     flex-wrap: wrap;
-    gap: map-get($spacers, 2);
+    gap: map-get($spacers, 3);
     align-items: center;
     margin-inline-end: auto;
   }
@@ -67,6 +71,15 @@ $component-name: ps-grid;
   }
 
   // Where the links land: focused after a reload (load-focus.js), so it shows Bootstrap's ring
+  // The summary at the start, Filter and the quick filters at the end, just above the table
+  &__results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: map-get($spacers, 2);
+    align-items: center;
+    justify-content: space-between;
+  }
+
   &__summary {
     margin: 0;
     font-size: $font-size-sm;
@@ -128,8 +141,21 @@ $component-name: ps-grid;
     color: var(--#{$prefix}secondary-color);
   }
 
+  // The sorted column's arrow in a small round badge, the oceanblue badge's colours (the side menu's version): it shows
+  // which column sorts; its direction is also its shape and aria-sort
   &__heading[aria-sort] &__sort-icon {
-    color: inherit;
+    --ps-icon-size: #{$ps-grid-sort-badge-icon-size};
+
+    box-sizing: content-box;
+    padding: $ps-grid-sort-badge-padding;
+    color: var(--#{$prefix}oceanblue-800);
+    background-color: var(--#{$prefix}oceanblue-bg-subtle);
+    border-radius: 50%;
+  }
+
+  // The filter row reads as one zone, named by its icon, the one Filter shows
+  &__filters {
+    --#{$prefix}table-bg: var(--#{$prefix}tertiary-bg);
   }
 
   // The fields of the filter row (Bootstrap's small ones), wide enough to type in
@@ -138,19 +164,37 @@ $component-name: ps-grid;
     vertical-align: top;
   }
 
-  // The check columns: as narrow as their box
-  &__heading--select {
-    width: 1%;
+  &__filter-label {
+    color: var(--#{$prefix}secondary-color);
+    vertical-align: middle;
   }
 
-  // A checked row: Bootstrap's state tint of a table row, in the light brand blue of what is chosen (the side menu's
-  // current entry), and a line on its start edge, so it is not told by colour only
-  &__row:has(.#{$component-name}__check:checked) {
-    --#{$prefix}table-bg-state: var(--#{$prefix}oceanblue-bg-subtle);
+  // The check columns: as narrow as their box, centred on the heading's line (Bootstrap sets thead cells at the bottom)
+  &__heading--select {
+    width: 1%;
+    vertical-align: middle;
+  }
 
-    > :first-child {
-      box-shadow: inset $ps-grid-selected-line-width 0 0 var(--#{$prefix}primary), inset 0 0 0 9999px var(--#{$prefix}table-bg-state);
-    }
+  // A check alone in its cell: a block of its own, centred like the cell's text, not sitting on a line of text
+  &__heading--select .ps-check,
+  &__cell--bulk-action .ps-check {
+    display: flex;
+  }
+
+  // A row whose check has the keyboard focus: Bootstrap's hover tint (table-hover), so the row being chosen shows
+  &__row:has(.#{$component-name}__check:focus-visible) > * {
+    --#{$prefix}table-bg-state: var(--#{$prefix}table-hover-bg);
+  }
+
+  // A checked row: Bootstrap's state tint, in the light brand blue of what is chosen (the side menu's current entry), and
+  // a line on its start edge in the side menu's blue, so it is not told by colour only. Set on the cells, as Bootstrap's
+  // hover is, so it keeps its tint under the pointer
+  &__row:has(.#{$component-name}__check:checked) > * {
+    --#{$prefix}table-bg-state: var(--#{$prefix}oceanblue-bg-subtle);
+  }
+
+  &__row:has(.#{$component-name}__check:checked) > :first-child {
+    box-shadow: inset $ps-grid-selected-line-width 0 0 var(--#{$prefix}oceanblue-500), inset 0 0 0 9999px var(--#{$prefix}table-bg-state);
   }
 
   &__cell {
@@ -228,8 +272,9 @@ $component-name: ps-grid;
     transform: rotate(180deg);
   }
 
-  &__preview > td {
-    background-color: var(--#{$prefix}tertiary-bg);
+  // Bootstrap's state tint, so the hover of table-hover leaves it alone
+  &__table > tbody > &__preview > td {
+    --#{$prefix}table-bg-state: var(--#{$prefix}tertiary-bg);
   }
 
   // In view while the table scrolls sideways, as wide as the scrolling box

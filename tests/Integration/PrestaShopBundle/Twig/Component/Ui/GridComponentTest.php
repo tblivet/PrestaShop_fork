@@ -65,7 +65,8 @@ class GridComponentTest extends KernelTestCase
         $html = $this->render();
 
         $this->assertStringContainsString('<th scope="row" class="ps-grid__cell ps-grid__cell--identifier"><span id="order_grid_rowhead_1">1024</span>', $html);
-        $this->assertSame(3, substr_count($html, 'scope="row"'));
+        $this->assertSame(3, substr_count($html, 'id="order_grid_rowhead_'));
+        $this->assertStringContainsString('<th scope="row" class="ps-grid__filter-label">', $html);
 
         $html = $this->render(['columns' => $this->columns(fn (array $column): array => 'id_order' === $column['id'] ? ['options' => ['preview' => null] + $column['options']] + $column : $column)]);
         $this->assertStringContainsString('<th scope="row" id="order_grid_rowhead_1" class="ps-grid__cell ps-grid__cell--identifier">1024</th>', $html);

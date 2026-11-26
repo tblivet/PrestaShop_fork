@@ -514,8 +514,13 @@ $ps-pagination-item-size: 2.25rem;
 $ps-pagination-item-padding-x: .375rem;
 $ps-pagination-full-min-width: 24rem;
 $ps-pagination-jump-input-width: 4rem;
-// <twig:ui:Grid>: a filter field wide enough to type in, an image cell's thumbnail
+// <twig:ui:Grid>: a filter field wide enough to type in, the title, the list actions' icon, the sorted column's badge,
+// an image cell's thumbnail
 $ps-grid-filter-min-width: 7rem;
+$ps-grid-title-font-size: 1.125rem;
+$ps-grid-list-actions-icon-size: 1.5em;
+$ps-grid-sort-badge-icon-size: .75em;
+$ps-grid-sort-badge-padding: .1875em;
 $ps-grid-image-size: 3rem;
 // The line on the start edge of a checked row
 $ps-grid-selected-line-width: .1875rem;
