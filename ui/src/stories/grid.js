@@ -8,6 +8,7 @@
 import arrowDownward from '../../icons/material-symbols/arrow-downward.svg?raw';
 import arrowUpward from '../../icons/material-symbols/arrow-upward.svg?raw';
 import cancel from '../../icons/material-symbols/cancel.svg?raw';
+import closeIcon from '../../icons/material-symbols/close.svg?raw';
 import cloudDownload from '../../icons/material-symbols/cloud-download.svg?raw';
 import code from '../../icons/material-symbols/code.svg?raw';
 import deleteIcon from '../../icons/material-symbols/delete.svg?raw';
@@ -446,10 +447,14 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       })}${showReset ? button({ label: 'Clear filters', variant: 'link', attributes: reset }) : ''}</div>`
       : '';
     const items = state === 'list' ? bulkItems(fixture) : [];
+    // The bulk bar, over the headings and filters while rows are checked (grid-selection.js)
     const bulk = items.length
-      ? '<div class="ps-grid__bulk"><div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-outline-secondary ps-button" type="button" data-ps-data-busy-label="Loading..." disabled data-bs-toggle="dropdown" aria-expanded="false">'
+      ? `<div class="ps-grid__bulk" role="group" aria-label="Bulk actions" data-ps-ref="grid-bulk" hidden>${check({
+        label: `Select all ${fixture.records.length} rows on this page`, hideLabel: true, id: `${id}_grid_bulk_select_all`, class: 'ps-grid__check', 'data-ps-action': 'grid-select-all',
+      }).html}<p class="ps-grid__selection" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p>`
+        + '<div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-secondary ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-toggle="dropdown" aria-expanded="false">'
         + `<span class="ps-button__label">Bulk actions</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items }, ICONS)}</div>`
-        + '<p class="ps-grid__selection" role="status" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p></div>'
+        + `<button class="btn btn-link ps-button ps-grid__clear-selection" type="button" data-ps-data-busy-label="Loading..." data-ps-action="grid-clear-selection">${uiIcon(closeIcon, { size: 'lg' })}<span class="ps-button__label">Clear selection</span></button></div>`
       : '';
     // Grid::getReorder()
     const positionColumn = fixture.columns.find((column) => column.type === 'position');
@@ -472,7 +477,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
         }).join('')
         + '</div>';
     }).join('');
-    const toolbar = bulk || reorder || block('toolbar') ? `<div class="ps-grid__toolbar">${bulk}${block('toolbar')}${reorder}</div>` : '';
+    const toolbar = reorder || block('toolbar') ? `<div class="ps-grid__toolbar">${block('toolbar')}${reorder}</div>` : '';
     const [from, to] = [Math.min(offset + 1, total), Math.min(offset + limit, total)];
     const summary = `<div class="ps-grid__results"><p id="${id}_grid_results" class="ps-grid__summary" tabindex="-1" data-ps-ref="grid-results">${state === 'no-match' ? `${total} ${resultsWord}` : `${from}–${to} of ${total}`}</p>${searchCluster}${quick}</div>`;
 
@@ -537,9 +542,9 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     }
 
     body = `${toolbar}${summary}<form name="${id}" method="post" action="${fixture.action}#${id}_grid_results" id="${id}_filter_form" class="ps-grid__form" novalidate="novalidate" data-ps-action="validate">`
-      + `<div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="${escape(fixture.name)} table">`
+      + `<div class="ps-grid__table-area">${bulk}<div class="ps-grid__scroll table-responsive ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="${escape(fixture.name)} table">`
       + `<table id="${id}_grid_table" class="ps-grid__table table table-hover" aria-describedby="${id}_grid_results"><caption id="${id}_grid_caption" class="visually-hidden">${escape(fixture.name)}</caption>`
-      + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`
+      + `<thead><tr class="ps-grid__headings">${headings}</tr>${filters}</thead><tbody>${rows}</tbody></table></div></div><span id="${id}_grid_select_label" hidden>Select</span>${noMatch}</form>`
       + `<form id="${id}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>`;
   }
 

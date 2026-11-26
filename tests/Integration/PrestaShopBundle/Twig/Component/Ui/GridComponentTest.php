@@ -336,12 +336,16 @@ class GridComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('id="order_grid_select_1023"', $html);
     }
 
-    public function testTheBulkMenuIsOffUntilARowIsChecked(): void
+    public function testTheBulkBarWaitsOverTheHeadingsUntilARowIsChecked(): void
     {
         $html = $this->render();
 
-        $this->assertMatchesRegularExpression('#<div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-outline-secondary ps-button" type="button"[^>]* disabled data-bs-toggle="dropdown"#', $html);
-        $this->assertStringContainsString('<p class="ps-grid__selection" role="status" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p>', $html);
+        $this->assertMatchesRegularExpression('#<div class="ps-grid__table-area"><div class="ps-grid__bulk" role="group" aria-label="Bulk actions" data-ps-ref="grid-bulk" hidden>#', $html);
+        $this->assertStringContainsString('id="order_grid_bulk_select_all" data-ps-action="grid-select-all"', $html);
+        $this->assertMatchesRegularExpression('#<div class="dropdown" data-ps-ref="grid-bulk-actions"><button class="btn btn-secondary ps-button" type="button" data-ps-data-busy-label="Loading..." data-bs-toggle="dropdown"#', $html);
+        $this->assertStringContainsString('<p class="ps-grid__selection" data-ps-ref="grid-selection-count" data-ps-data-none="No rows selected" data-ps-data-some="%count% selected">No rows selected</p>', $html);
+        $this->assertMatchesRegularExpression('#class="btn btn-link ps-button ps-grid__clear-selection" type="button"[^>]* data-ps-action="grid-clear-selection">.*?Clear selection#s', $html);
+        $this->assertStringNotContainsString('ps-grid__toolbar', $html);
         $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_filter_form" formaction="/sell/orders/" formmethod="post" data-ps-confirm="Delete the selected orders? This cannot be undone." data-ps-data-confirm-title="Delete orders?" data-ps-data-confirm-label="Delete" data-ps-data-confirm-variant="danger">', $html);
         $this->assertStringContainsString('data-ps-action="grid-bulk-button" data-ps-data-action-id="open_tabs"', $html);
         $this->assertStringContainsString('data-ps-action="grid-bulk-modal" data-bs-toggle="modal" data-bs-target="#changeOrdersStatusModal"', $html);

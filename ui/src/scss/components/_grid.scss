@@ -48,26 +48,43 @@ $component-name: ps-grid;
     justify-content: flex-end;
   }
 
-  // The bulk menu and what is checked, at the start
-  // The pressed quick filter shows a check as well as its state
-  &__quick-filters .btn {
-    display: inline-flex;
-    gap: map-get($spacers, 1);
-    align-items: center;
+  // The table, and the bulk bar over its headings and filters while rows are checked (grid-selection.js gives it their
+  // height): a block on the page's background, edged in grey, a blue line under it between it and the rows; the same
+  // look whether it lies over them or follows the list down
+  &__table-area {
+    position: relative;
   }
 
+  // Sticky in the page's scrolling content, so it follows a long list down to its end; pulled up over the headings by
+  // their height, its own, so the table never moves when it shows
   &__bulk {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 3;
     display: flex;
     flex-wrap: wrap;
     gap: map-get($spacers, 3);
     align-items: center;
-    margin-inline-end: auto;
+    min-height: var(--#{$component-name}-head-height, auto);
+    padding: map-get($spacers, 2) $table-cell-padding-x;
+    margin-block-end: calc(-1 * var(--#{$component-name}-head-height, 0px));
+    background-color: var(--#{$prefix}body-bg);
+    border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
+    border-block-end: $ps-grid-selected-line-width solid var(--#{$prefix}oceanblue-500);
+
+    &[hidden] {
+      display: none;
+    }
   }
 
+  &__clear-selection {
+    margin-inline-start: auto;
+  }
+
+  // What is checked, read first in the bar
   &__selection {
     margin: 0;
-    font-size: $font-size-sm;
-    color: var(--#{$prefix}secondary-color);
+    font-weight: $font-weight-semibold;
   }
 
   // Where the links land: focused after a reload (load-focus.js), so it shows Bootstrap's ring
@@ -97,14 +114,18 @@ $component-name: ps-grid;
 
   // The box the table scrolls in holds what is positioned in it too: the hidden labels of the filter row would widen the
   // page otherwise
-  // A container: a preview row keeps to the width it shows (cqi), not the table's
+  // A container: a preview row keeps to the width it shows (cqi), not the table's. It scrolls sideways only: the table
+  // is never cut to a height (overflow-x makes overflow-y auto, and a pixel over showed a vertical bar)
   &__scroll {
     position: relative;
     container-type: inline-size;
+    overflow-y: hidden;
   }
 
+  // Dense: the table's text, headings and filters included, at the small size (14px), as in most admin tables
   &__table {
     margin-block-end: 0;
+    font-size: $ps-grid-font-size;
   }
 
   &__heading {
@@ -186,11 +207,11 @@ $component-name: ps-grid;
     --#{$prefix}table-bg-state: var(--#{$prefix}table-hover-bg);
   }
 
-  // A checked row: Bootstrap's state tint, in the light brand blue of what is chosen (the side menu's current entry), and
-  // a line on its start edge in the side menu's blue, so it is not told by colour only. Set on the cells, as Bootstrap's
+  // A checked row: Bootstrap's state tint, a very light grey, and a line on its start edge in the side menu's blue, which
+  // says it most, so it is not told by colour only. Set on the cells, as Bootstrap's
   // hover is, so it keeps its tint under the pointer
   &__row:has(.#{$component-name}__check:checked) > * {
-    --#{$prefix}table-bg-state: var(--#{$prefix}oceanblue-bg-subtle);
+    --#{$prefix}table-bg-state: var(--#{$prefix}tertiary-bg);
   }
 
   &__row:has(.#{$component-name}__check:checked) > :first-child {

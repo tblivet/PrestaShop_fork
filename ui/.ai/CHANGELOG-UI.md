@@ -752,6 +752,26 @@ Step 5 of the grid's build plan. `ui_kit_layout.html.twig` (the kit pages' form 
 **Look**
 - The two fields of a range share the line, as wide as each other; narrower than 6rem each (`$ps-filter-range-field-min-width`), they go one under the other.
 
+## `<twig:ui:Grid>`: the bulk bar, 14px tables, no vertical scroll — 2026-11-26
+
+Second review pass on Countries.
+
+**Markup**
+- The bulk actions left the toolbar: `div.ps-grid__bulk[role=group][data-ps-ref="grid-bulk"][hidden]`, first in a new `.ps-grid__table-area` before the table, holds a second select-all `<twig:ui:Check>` (`#{id}_grid_bulk_select_all`), the count `p.ps-grid__selection` (no longer `role=status`), the "Bulk actions" `<twig:ui:Dropdown>` (now `secondary`, always enabled) and "Clear selection" (`data-ps-action="grid-clear-selection"`). The toolbar keeps the `toolbar` block and Rearrange only.
+- A checked row's tint is the tertiary grey (was the light oceanblue); its blue line stays.
+
+**Look**
+- While a row is checked, the bar lies over the headings and filters, as tall as they are, edged in grey with a blue line under it; it is sticky in the scrolling content, so it follows a long list down to its end, the same look stuck or not.
+- The table's text (headings, filters, cells) is 14px (`$ps-grid-font-size`).
+- The table scrolls sideways only: no vertical scroll (`overflow-y: hidden` on `.ps-grid__scroll`), no height limit.
+
+**Behaviour** (`grid-selection.js`)
+- The bar shows while a row is checked; the headings' and filters' controls it covers leave the tab order (the headings stay for screen readers); the count is announced through the page's announcer on each change.
+- Clear selection, or clearing from the bar's select-all, unchecks the rows and moves the focus to the headings' select-all.
+- The bar's height follows the headings' (`--ps-grid-head-height`, a ResizeObserver).
+
+**Strings**: new "Clear selection" (`Admin.Actions`).
+
 ## `<twig:ui:Grid>`: first review pass on Countries — 2026-11-26
 
 Adjustments asked while reviewing Countries, the reference list page; every kit grid gets them.
