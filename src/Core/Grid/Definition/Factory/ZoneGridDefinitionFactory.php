@@ -192,7 +192,7 @@ final class ZoneGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new SimpleGridAction('common_export_sql_manager'))
-                    ->setName($this->trans('Export to SQL manager', [], 'Admin.Actions'))
+                    ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                     ->setIcon('storage')
             );
     }

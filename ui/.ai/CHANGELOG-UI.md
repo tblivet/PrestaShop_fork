@@ -1057,3 +1057,4 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - Every grid's row Delete (`DeleteActionTrait`): "Are you sure you want to delete the selected item(s)?" / "Delete selection" (Admin.Global, Admin.Actions) → "Are you sure you want to delete this item?" / "Delete item" (Admin.Notifications.Warning, existing strings). Also in the old theme; Playwright campaigns that read the old text need the new one.
 - New: Admin.Global "This page is empty", "Go to the last page"; Admin.International.Feature "No countries yet", "Add the countries you sell to: customers pick one in their address, and taxes and carriers follow it."
 - No longer used by the pagination: Admin.Global "Page", "of %total%".
+- Countries, Zones and Customer service grids: "Export to SQL manager" → "Export to SQL Manager" (Admin.Actions, the existing string of the other grids and the kit).
