@@ -563,7 +563,17 @@ $border-radius-lg: 0;
 $border-radius-xl: 0;
 $border-radius-xxl: 0;
 
-// <twig:ui:Toast>: opaque, so the message reads over any page; <twig:ui:ToastStack>: its gap from the screen's edges
+// <twig:ui:Toast>: white and opaque over any page, at the page's text size, lifted by a large shadow, no border (its
+// status line on its start edge says its type, _toasts.scss), closer together; <twig:ui:ToastStack>: its gap from the
+// screen's edges
 $toast-background-color: var(--#{$prefix}body-bg);
+$toast-font-size: 1rem;
+$toast-padding-x: 1rem;
+$toast-padding-y: .75rem;
+$toast-max-width: 25rem;
+$toast-spacing: .5rem;
+$toast-border-width: 0;
+$toast-box-shadow: var(--#{$prefix}box-shadow-lg);
 $ps-toast-stack-offset: 1rem;
+$ps-toast-status-line-width: .25rem;
 

@@ -3,7 +3,8 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // <twig:ui:Toast> over Bootstrap's toast — https://getbootstrap.com/docs/5.3/components/toasts/
-// The status icon in its color (the type is never told by color alone: the icon says it), the message, the close button
+// A line in the status colour on its start edge, the status icon in that colour (the type is never told by colour alone:
+// the icon says it), the message, the close button; the icon and the button centred on the message's first line
 $component-name: ps-toast;
 
 .#{$component-name} {
@@ -22,13 +23,19 @@ $component-name: ps-toast;
 
   &__icon {
     flex-shrink: 0;
+    margin-block: calc((1lh - var(--ps-icon-size)) / 2);
   }
 
   &__close {
     flex-shrink: 0;
+    margin-block: calc((1lh - #{$btn-close-height} - 2 * #{$btn-close-padding-y}) / 2);
   }
 
   @each $type in (success, info, warning, danger) {
+    &--#{$type} {
+      border-inline-start: $ps-toast-status-line-width solid var(--#{$prefix}#{$type});
+    }
+
     &--#{$type} &__icon {
       color: var(--#{$prefix}#{$type});
     }
