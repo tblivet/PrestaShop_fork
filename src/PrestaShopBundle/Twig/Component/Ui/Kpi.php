@@ -17,7 +17,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  * A key figure in a card, mirrors ui/src/stories/components/Kpi.stories.js:
  * <twig:ui:Kpi title="Conversion rate" value="1.8%" subtitle="30 days" icon="percent" color="oceanblue"/>
  * Its colour tells it from the others of its row (a line on top, the icon's tint). With an href the card is a link;
- * with a refreshUrl, kpi.js fetches a fresh value when the page loads.
+ * with a refreshUrl, kpi.ts fetches a fresh value when the page loads.
  */
 #[AsTwigComponent('ui:Kpi', template: '@PrestaShop/Admin/Component/Ui/kpi.html.twig')]
 final class Kpi
@@ -44,7 +44,7 @@ final class Kpi
     /** The page the figure comes from: the card is a link to it */
     public ?string $href = null;
 
-    /** The URL kpi.js fetches a fresh value from (JSON: value) */
+    /** The URL kpi.ts fetches a fresh value from (JSON: value) */
     public ?string $refreshUrl = null;
 
     #[PreMount]

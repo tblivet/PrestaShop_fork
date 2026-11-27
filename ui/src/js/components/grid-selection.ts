@@ -11,10 +11,11 @@ import { announce } from './announcer';
 // controls it covers leave the tab order (the headings stay for screen readers). The count is announced as it changes.
 // Per grid, so a page with several grids keeps them apart; run again on load, as a browser may restore the boxes.
 
-const rowsOf = (grid) => [...grid.querySelectorAll(selectors.gridSelectRow)].filter((box) => !box.disabled);
+const rowsOf = (grid: Element): HTMLInputElement[] =>
+  [...grid.querySelectorAll<HTMLInputElement>(selectors.gridSelectRow)].filter((box) => !box.disabled);
 
 // The headings' controls under the bar: out of the tab order while it shows
-const cover = (grid, covered) => {
+const cover = (grid: Element, covered: boolean): void => {
   const headings = grid.querySelector('thead tr');
 
   if (!headings) {
@@ -29,14 +30,18 @@ const cover = (grid, covered) => {
   });
 };
 
-const update = (grid, { speak = false } = {}) => {
+const update = (grid: Element, { speak = false }: { speak?: boolean } = {}): void => {
   const rows = rowsOf(grid);
   const checked = rows.filter((box) => box.checked).length;
-  const count = grid.querySelector(selectors.gridSelectionCount);
-  const bar = grid.querySelector(selectors.gridBulk);
-  const text = count && (checked > 0 ? count.dataset.psDataSome.replace('%count%', String(checked)) : count.dataset.psDataNone);
+  const count = grid.querySelector<HTMLElement>(selectors.gridSelectionCount);
+  const bar = grid.querySelector<HTMLElement>(selectors.gridBulk);
+  const text =
+    count &&
+    (checked > 0
+      ? (count.dataset.psDataSome ?? '').replace('%count%', String(checked))
+      : (count.dataset.psDataNone ?? ''));
 
-  grid.querySelectorAll(selectors.gridSelectAll).forEach((all) => {
+  grid.querySelectorAll<HTMLInputElement>(selectors.gridSelectAll).forEach((all) => {
     all.checked = rows.length > 0 && checked === rows.length;
     all.indeterminate = checked > 0 && checked < rows.length;
   });
@@ -53,22 +58,24 @@ const update = (grid, { speak = false } = {}) => {
 };
 
 // The bar is as tall as the headings' row it lies over
-const fitBar = (grid) => {
-  const headings = grid.querySelector('thead tr');
-  const area = grid.querySelector(selectors.gridBulk)?.parentElement;
+const fitBar = (grid: Element): void => {
+  const headings = grid.querySelector<HTMLTableRowElement>('thead tr');
+  const area = grid.querySelector<HTMLElement>(selectors.gridBulk)?.parentElement;
 
   if (!headings || !area) {
     return;
   }
-  new ResizeObserver(() => area.style.setProperty('--ps-grid-head-height', `${headings.offsetHeight}px`)).observe(headings);
+  new ResizeObserver(() => area.style.setProperty('--ps-grid-head-height', `${headings.offsetHeight}px`)).observe(
+    headings
+  );
 };
 
-export default function initGridSelection() {
+export default function initGridSelection(): void {
   document.addEventListener('change', (event) => {
     const box = event.target;
     const grid = box instanceof HTMLInputElement ? box.closest(selectors.grid) : null;
 
-    if (!grid) {
+    if (!grid || !(box instanceof HTMLInputElement)) {
       return;
     }
     if (box.matches(selectors.gridSelectAll)) {
@@ -80,8 +87,8 @@ export default function initGridSelection() {
     }
     update(grid, { speak: true });
     // Cleared from the bar, which goes: the focus goes to the headings' select-all it uncovers
-    if (box.closest(selectors.gridBulk)?.hidden) {
-      grid.querySelector(`thead ${selectors.gridSelectAll}`)?.focus();
+    if (box.closest<HTMLElement>(selectors.gridBulk)?.hidden) {
+      grid.querySelector<HTMLInputElement>(`thead ${selectors.gridSelectAll}`)?.focus();
     }
   });
 
@@ -97,7 +104,7 @@ export default function initGridSelection() {
       row.checked = false;
     });
     update(grid, { speak: true });
-    grid.querySelector(`thead ${selectors.gridSelectAll}`)?.focus();
+    grid.querySelector<HTMLInputElement>(`thead ${selectors.gridSelectAll}`)?.focus();
   });
 
   document.querySelectorAll(selectors.grid).forEach((grid) => {

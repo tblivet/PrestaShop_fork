@@ -40,7 +40,7 @@ export default {
   gridActionForm: '[data-ps-ref="grid-action-form"]',
   gridPreviewContent: '[data-ps-target="grid-preview-content"]',
   gridPreviewRetry: '[data-ps-action~="grid-preview-retry"]',
-  // A button or a link that asks first (confirm-dialog.js), and the page's one <twig:ui:ConfirmDialog>
+  // A button or a link that asks first (confirm-dialog.ts), and the page's one <twig:ui:ConfirmDialog>
   confirmTrigger: '[data-ps-confirm]',
   confirmDialog: '[data-ps-ref="confirm-dialog"]',
   confirmMessage: '[data-ps-target="confirm-message"]',
@@ -48,18 +48,19 @@ export default {
   confirmCancel: '[data-ps-ref="confirm-cancel"]',
   // A <twig:ui:Modal>'s title, a script can rename it
   modalTitle: '[data-ps-ref="modal-title"]',
-  // The page's live region (<twig:ui:Announcer>, announcer.js)
+  // The page's live region (<twig:ui:Announcer>, announcer.ts)
   announcer: '[data-ps-target="announcer"]',
   flashAlert: '[data-ps-ref="flash-alert"]',
   // A form-level error (ui_kit_layout.html.twig, form_errors): an expired token, a constraint on the whole form
   formError: '[data-ps-ref="form-error"]',
-  // A field the server or the client marked invalid: its ARIA state, which form-validation.js and the form theme set
+  // A field the server or the client marked invalid: its ARIA state, which form-validation.ts and the form theme set
   invalidField: 'form [aria-invalid="true"]',
   // What the keyboard can reach
-  focusable: 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+  focusable:
+    'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
   submitSpinner: '[data-ps-ref="submit-spinner"]',
   busyText: '[data-ps-ref="busy-text"]',
-  // A button waiting for the server (busy-button.js); a form being sent has data-ps-state="loading" too, not aria-disabled
+  // A button waiting for the server (busy-button.ts); a form being sent has data-ps-state="loading" too, not aria-disabled
   busyButton: '[data-ps-state="loading"][aria-disabled="true"]',
   headerSearch: '[data-ps-ref="header-search"]',
   headerSearchInput: '[data-ps-ref="header-search-input"]',
@@ -99,4 +100,4 @@ export default {
   scrollFade: '[data-ps-action~="scroll-fade"]',
   openDropdownToggle: '[data-bs-toggle="dropdown"][aria-expanded="true"]',
   dropdownToggle: '[data-bs-toggle="dropdown"]',
-};
+} as const;

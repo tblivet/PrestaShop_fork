@@ -9,18 +9,25 @@ import selectors from '../selectors';
 // failure an alert with Try again, the toggle keeping focus. Once loaded, ps:grid-preview-loaded on the grid
 // ({gridId, row, previewRow}): Orders' products toggler listens to it.
 
-const escape = (text) => String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const escape = (text: unknown): string =>
+  String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-const load = async (toggle, previewRow) => {
+const load = async (toggle: HTMLElement, previewRow: HTMLElement): Promise<void> => {
   const content = previewRow.querySelector(selectors.gridPreviewContent);
-  const grid = toggle.closest(selectors.grid);
+  const grid = toggle.closest<HTMLElement>(selectors.grid);
+
+  if (!content) {
+    return;
+  }
 
   previewRow.dataset.psState = 'loading';
   previewRow.setAttribute('aria-busy', 'true');
   content.innerHTML = `<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">${escape(toggle.dataset.psDataLoading ?? 'Loading...')}</span></div>`;
 
   try {
-    const response = await fetch(toggle.dataset.psDataUrl, { headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } });
+    const response = await fetch(String(toggle.dataset.psDataUrl), {
+      headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+    });
     if (!response.ok) {
       throw new Error(String(response.status));
     }
@@ -28,31 +35,35 @@ const load = async (toggle, previewRow) => {
 
     content.innerHTML = preview;
     previewRow.dataset.psState = 'loaded';
-    grid?.dispatchEvent(new CustomEvent('ps:grid-preview-loaded', {
-      bubbles: true,
-      detail: { gridId: grid.dataset.psDataGridId, row: toggle.closest('tr'), previewRow },
-    }));
+    grid?.dispatchEvent(
+      new CustomEvent('ps:grid-preview-loaded', {
+        bubbles: true,
+        detail: { gridId: grid.dataset.psDataGridId, row: toggle.closest('tr'), previewRow },
+      })
+    );
   } catch {
     previewRow.dataset.psState = 'error';
-    content.innerHTML = `<div class="ps-alert alert alert-danger ps-grid__preview-error" role="alert"><div class="ps-alert__content">${escape(toggle.dataset.psDataError)} `
-      + `<button type="button" class="btn btn-link ps-button" data-ps-action="grid-preview-retry">${escape(toggle.dataset.psDataRetry)}</button></div></div>`;
+    content.innerHTML =
+      `<div class="ps-alert alert alert-danger ps-grid__preview-error" role="alert"><div class="ps-alert__content">${escape(toggle.dataset.psDataError)} ` +
+      `<button type="button" class="btn btn-link ps-button" data-ps-action="grid-preview-retry">${escape(toggle.dataset.psDataRetry)}</button></div></div>`;
   } finally {
     previewRow.removeAttribute('aria-busy');
   }
 };
 
-const toggleFor = (element) => element.closest('tr').previousElementSibling?.querySelector(selectors.gridPreview);
+const toggleFor = (element: Element): HTMLElement | null | undefined =>
+  element.closest('tr')?.previousElementSibling?.querySelector<HTMLElement>(selectors.gridPreview);
 
-export default function initGridPreview() {
+export default function initGridPreview(): void {
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null;
     const retry = target?.closest(selectors.gridPreviewRetry);
-    const toggle = retry ? toggleFor(retry) : target?.closest(selectors.gridPreview);
+    const toggle = retry ? toggleFor(retry) : target?.closest<HTMLElement>(selectors.gridPreview);
 
     if (!toggle) {
       return;
     }
-    const previewRow = document.getElementById(toggle.getAttribute('aria-controls'));
+    const previewRow = document.getElementById(String(toggle.getAttribute('aria-controls')));
     if (!previewRow) {
       return;
     }
@@ -66,7 +77,7 @@ export default function initGridPreview() {
     const open = toggle.getAttribute('aria-expanded') !== 'true';
     toggle.setAttribute('aria-expanded', String(open));
     previewRow.hidden = !open;
-    if (open && !['loaded', 'loading'].includes(previewRow.dataset.psState)) {
+    if (open && !['loaded', 'loading'].includes(previewRow.dataset.psState ?? '')) {
       load(toggle, previewRow);
     }
   });

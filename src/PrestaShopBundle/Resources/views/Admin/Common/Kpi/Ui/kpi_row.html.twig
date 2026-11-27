@@ -4,7 +4,7 @@
  #}
 {# A page's key figures (CommonController::renderKpiRowAction): one <twig:ui:Kpi> each, up to four a line; on a phone
    two or more scroll sideways, the edge that hides more fading (_kpi-row.scss), a lone one takes the whole width.
-   A module's KPI without data keeps its own HTML. A named region: scroll-fade.js makes it a tab stop while it scrolls #}
+   A module's KPI without data keeps its own HTML. A named region: scroll-fade.ts makes it a tab stop while it scrolls #}
 {% set columns = min(kpis|length, 4) %}
 <div class="ps-kpi-row ps-kpi-row--{{ columns }} ps-scroll-fade ps-scroll-fade--x" data-ps-action="scroll-fade" role="region" aria-label="{{ 'Key figures'|trans({}, 'Admin.Global') }}">
   {% for kpi in kpis %}

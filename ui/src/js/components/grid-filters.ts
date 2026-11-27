@@ -8,23 +8,25 @@ import { setButtonBusy } from './busy-button';
 import { reloadTo } from './load-focus';
 
 // A <twig:ui:Grid>'s Clear filters (grid.html.twig): posts the reset (data-ps-data-url), as the old grids did, then goes
-// to the list (data-ps-data-redirect) on its results summary (data-ps-data-fragment), which load-focus.js focuses. The
+// to the list (data-ps-data-redirect) on its results summary (data-ps-data-fragment), which load-focus.ts focuses. The
 // button stays busy meanwhile; if the reset fails, it is back as it was and the page's Announcer says so
 // (data-ps-data-error).
-export default function initGridFilters() {
+export default function initGridFilters(): void {
   // Enter in a filter field sends Filter. The browser would send the form's first submit button: a bulk action or a
   // quick filter's choice, both before the filter row in the page
   document.addEventListener('keydown', (event) => {
-    const field = event.target instanceof HTMLInputElement && event.key === 'Enter' && !event.isComposing ? event.target : null;
-    const filter = field?.closest(selectors.gridFilterRow)?.querySelector(selectors.gridApplyFilters);
+    const field =
+      event.target instanceof HTMLInputElement && event.key === 'Enter' && !event.isComposing ? event.target : null;
+    const filter = field?.closest(selectors.gridFilterRow)?.querySelector<HTMLElement>(selectors.gridApplyFilters);
 
-    if (filter && field.form) {
+    if (filter && field?.form) {
       event.preventDefault();
       field.form.requestSubmit(filter);
     }
   });
   document.addEventListener('click', async (event) => {
-    const button = event.target instanceof Element ? event.target.closest(selectors.gridResetFilters) : null;
+    const button =
+      event.target instanceof Element ? event.target.closest<HTMLElement>(selectors.gridResetFilters) : null;
 
     if (!button) {
       return;
@@ -34,12 +36,15 @@ export default function initGridFilters() {
     setButtonBusy(button, true);
 
     try {
-      const response = await fetch(button.dataset.psDataUrl, { method: 'POST', headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const response = await fetch(String(button.dataset.psDataUrl), {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      });
 
       if (!response.ok) {
         throw new Error(String(response.status));
       }
-      const redirect = new URL(button.dataset.psDataRedirect, window.location.href);
+      const redirect = new URL(String(button.dataset.psDataRedirect), window.location.href);
 
       redirect.hash = button.dataset.psDataFragment ?? '';
       // The list's own URL (no query string): going there would only scroll to the fragment
@@ -50,7 +55,7 @@ export default function initGridFilters() {
       }
     } catch {
       setButtonBusy(button, false);
-      announce(button.dataset.psDataError);
+      announce(button.dataset.psDataError ?? '');
     }
   });
 }

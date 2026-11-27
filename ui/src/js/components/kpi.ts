@@ -10,10 +10,15 @@ import selectors from '../selectors';
 // (root).
 
 // The value comes as HTML text ("&infin;%"): its text, never its markup
-const decode = (html) => new DOMParser().parseFromString(html, 'text/html').body.textContent.trim();
+const decode = (html: string): string =>
+  (new DOMParser().parseFromString(html, 'text/html').body.textContent ?? '').trim();
 
-const show = (kpi, text) => {
-  const value = kpi.querySelector(selectors.kpiValue);
+const show = (kpi: Element, text: string): void => {
+  const value = kpi.querySelector<HTMLElement>(selectors.kpiValue);
+
+  if (!value) {
+    return;
+  }
 
   if (text) {
     value.textContent = text;
@@ -24,16 +29,18 @@ const show = (kpi, text) => {
     dash.setAttribute('aria-hidden', 'true');
     dash.textContent = '—';
     name.className = 'visually-hidden';
-    name.textContent = value.dataset.psDataNoValue;
+    name.textContent = value.dataset.psDataNoValue ?? '';
     value.replaceChildren(dash, name);
   }
   value.removeAttribute('aria-busy');
 };
 
-export default function initKpis(root = document) {
-  root.querySelectorAll(selectors.kpiToRefresh).forEach(async (kpi) => {
+export default function initKpis(root: ParentNode = document): void {
+  root.querySelectorAll<HTMLElement>(selectors.kpiToRefresh).forEach(async (kpi) => {
     try {
-      const response = await fetch(kpi.dataset.psDataRefreshUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+      const response = await fetch(String(kpi.dataset.psDataRefreshUrl), {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      });
       const data = await response.json();
 
       show(kpi, data.has_errors || data.value === undefined || data.value === null ? '' : decode(String(data.value)));

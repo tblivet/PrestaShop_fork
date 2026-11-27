@@ -437,7 +437,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
       }) : ''}</div>`
       : '';
     const items = state === 'list' ? bulkItems(fixture) : [];
-    // The bulk bar, over the headings and filters while rows are checked (grid-selection.js)
+    // The bulk bar, over the headings and filters while rows are checked (grid-selection.ts)
     const bulk = items.length
       ? `<div class="ps-grid__bulk" role="group" aria-label="Bulk actions" data-ps-ref="grid-bulk" hidden>${check({
         label: `Select all ${fixture.records.length} rows on this page`, hideLabel: true, id: `${id}_grid_bulk_select_all`, class: 'ps-grid__check', 'data-ps-action': 'grid-select-all',

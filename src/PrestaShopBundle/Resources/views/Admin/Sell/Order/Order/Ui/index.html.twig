@@ -19,7 +19,7 @@
   </twig:block>
 </twig:ui:Grid>
 
-{#- The checked orders go with the form (grid-bulk.js), one order_ids input each from its prototype. Set here: inside the
+{#- The checked orders go with the form (grid-bulk.ts), one order_ids input each from its prototype. Set here: inside the
     modal, id is the modal's -#}
 {%- set statusFormId = 'change_orders_status_form' -%}
 <twig:ui:Modal id="changeOrdersStatusModal" :title="'Choose an order status'|trans({}, 'Admin.Orderscustomers.Feature')">

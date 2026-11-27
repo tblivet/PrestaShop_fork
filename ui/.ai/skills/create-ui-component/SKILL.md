@@ -52,7 +52,7 @@ New icons: commit the SVG in `ui/icons/` (never the Iconify fallback).
 
 ## 5. Behaviour (interactive components only)
 
-Generic behaviour goes to `ui/src/js/components/{name}.js`, its hooks to `ui/src/js/selectors.js`, initialised from `ui/src/js/main.js`; see `password-toggle.js`. Page-specific logic stays in new-theme.
+Generic behaviour goes to `ui/src/js/components/{name}.ts` (strict TypeScript), its hooks to `ui/src/js/selectors.ts`, initialised from `ui/src/js/main.ts`; see `password-toggle.ts`. Page-specific logic stays in new-theme.
 
 ## 6. Tests
 

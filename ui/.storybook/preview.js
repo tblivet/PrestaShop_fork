@@ -34,7 +34,7 @@ import announcer from '../src/stories/announcer';
 
 const SNIPPET_RENDERED = 'storybook/docs/snippet-rendered';
 
-// As main.js does in the back office: one Bootstrap the stories' play functions reach too
+// As main.ts does in the back office: one Bootstrap the stories' play functions reach too
 window.bootstrap = bootstrap;
 
 // The page's live region, outside the story root so it stays across stories, as the kit layouts place it
@@ -144,7 +144,7 @@ const preview = {
           .forEach((node) => bootstrap.Popover.getOrCreateInstance(node));
         root.querySelectorAll('.toast:not(.hide)').forEach((node) => bootstrap.Toast.getOrCreateInstance(node));
         root.querySelectorAll('.carousel').forEach((node) => bootstrap.Carousel.getOrCreateInstance(node));
-        // As main.js on DOMContentLoaded: the out-of-date KPIs fetch their value
+        // As main.ts on DOMContentLoaded: the out-of-date KPIs fetch their value
         initKpis(root);
       });
 

@@ -7,7 +7,7 @@ import selectors from '../selectors';
 // Tells screen readers what changed, without moving the focus, through the page's <twig:ui:Announcer> (announcer.html.twig,
 // placed by the kit layouts): a polite status, for progress and results. A blocking error is a visible danger alert instead.
 
-const region = () => {
+const region = (): Element => {
   let element = document.querySelector(selectors.announcer);
 
   // A page without a kit layout: a region added now may miss this first message, the next ones are announced
@@ -26,7 +26,7 @@ const region = () => {
 /**
  * @param {string} message translated text, read once
  */
-export const announce = (message) => {
+export const announce = (message: string): void => {
   const element = region();
 
   // Emptied, then filled on the next frame: the same message twice in a row is read again
@@ -38,9 +38,9 @@ export const announce = (message) => {
 
 // For scripts outside the kit bundle (new-theme pages, modules):
 // document.dispatchEvent(new CustomEvent('ps:announce', {detail: {message}}))
-export default function initAnnouncer() {
+export default function initAnnouncer(): void {
   document.addEventListener('ps:announce', (event) => {
-    if (typeof event.detail?.message === 'string') {
+    if (event instanceof CustomEvent && typeof event.detail?.message === 'string') {
       announce(event.detail.message);
     }
   });

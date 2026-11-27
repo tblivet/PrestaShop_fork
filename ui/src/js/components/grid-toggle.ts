@@ -10,15 +10,15 @@ import { announce } from './announcer';
 // status it flips back and the message is announced) or a redirect with a flash (the page reloads on the list, the
 // flash shown). While saving the switch is busy and off; any failure flips it back and says so.
 
-const save = async (box) => {
+const save = async (box: HTMLInputElement): Promise<void> => {
   box.dataset.psState = 'loading';
   box.disabled = true;
   // What is announced when the switch flips back: the route's own message, else the page's (never a network error's
   // text, "Failed to fetch")
-  let failure = null;
+  let failure: string | null | undefined = null;
 
   try {
-    const response = await fetch(box.dataset.psDataUrl, {
+    const response = await fetch(String(box.dataset.psDataUrl), {
       method: 'POST',
       redirect: 'manual',
       headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
@@ -48,7 +48,7 @@ const save = async (box) => {
   }
 };
 
-export default function initGridToggle() {
+export default function initGridToggle(): void {
   document.addEventListener('change', (event) => {
     const box = event.target;
 

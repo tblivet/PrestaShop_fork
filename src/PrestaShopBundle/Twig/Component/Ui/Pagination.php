@@ -21,7 +21,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  * The caller builds the links (page number to URL): the first, the last, the current one and its neighbours at least
  * (checked: the last is the highest given). It shows Previous, the page shown and Next, the arrow that leads nowhere
  * disabled. One page: nothing. With jumpUrl, the page shown is a field to go to any page: the URL with {page}, or with
- * {offset} and perPage for a list that pages by offset (a grid); pagination-jump.js builds it.
+ * {offset} and perPage for a list that pages by offset (a grid); pagination-jump.ts builds it.
  */
 #[AsTwigComponent('ui:Pagination', template: '@PrestaShop/Admin/Component/Ui/pagination.html.twig')]
 final class Pagination

@@ -44,7 +44,7 @@ export default defineConfig(({ mode }) => ({
     cssCodeSplit: false,
     // Stable file names: the back-office links them directly.
     rollupOptions: {
-      input: resolve(root, 'src/js/main.js'),
+      input: resolve(root, 'src/js/main.ts'),
       output: {
         // Classic script exposing window.bootstrap, loaded before the back-office bundles.
         format: 'iife',

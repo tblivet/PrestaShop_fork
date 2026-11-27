@@ -94,7 +94,8 @@ Same vocabulary as the Hummingbird front theme.
 
 - **Values are kebab-case nouns** naming what the element is (`password-strength-bar`), not what it looks like (`red-bar`).
 - **JS never selects a class or an id**, so renaming a class never breaks a script. SCSS never selects `ref`, `action`, `target` or `data`, so moving a hook never changes the look.
-- **Selectors live in one map per scope**: `ui/src/js/selectors.js` for kit behaviour, a `*-map.ts` or a map constant at the top of the file for new-theme page logic. No selector strings inline in the code.
+- **TypeScript, strict**: kit behaviour is written in TypeScript (`ui/src/js/**/*.ts`, `ui/tsconfig.json` strict), as new-theme is. No `any`, no `@ts-ignore`; narrow DOM lookups (`querySelector<HTMLInputElement>`, `instanceof`) instead of `!`. `npm run typecheck` in `ui/` must pass; Vite and Storybook compile the files as they are.
+- **Selectors live in one map per scope**: `ui/src/js/selectors.ts` for kit behaviour, a `*-map.ts` or a map constant at the top of the file for new-theme page logic. No selector strings inline in the code.
 
 ## Runtime state
 
@@ -121,13 +122,13 @@ The reference is the RGAA in force (`DECISIONS.md` #39): reviews cite its criter
 - **Native first**: `<button>` for actions, `<a href>` for navigation, real `<label for>` on every field. ARIA only fills a gap HTML cannot.
 - **Icons**: always `<twig:ui:Icon>`, never an icon font or a hand-written `<svg>`. It is hidden from screen readers unless given a `label`: give one only when the icon is the only thing saying what it means. An icon-only control gets an `aria-label` (translated), and the icon inside stays hidden. An icon whose state changes (a toggle, a requirement met) is one icon per state, picked by the ARIA state or `data-ps-state` in CSS, not a script rewriting it.
 - **Never color alone**: a state also changes shape or text (`radio_button_unchecked` → `check_circle`, not grey → green only). Text contrast ≥ 4.5:1, large text and UI parts ≥ 3:1.
-- **Dynamic messages**: updates appear in a live region that exists before the update — `role="status"` (polite) for progress and hints, `role="alert"` only for blocking errors. Debounce what changes while typing. A message with no place of its own on screen (the result of an action, a busy button) goes through the page's `<twig:ui:Announcer>`, placed by the kit layouts: `announce(message)` from `ui/src/js/components/announcer.js`, or the `ps:announce` event from outside the kit bundle. Never a region created at the moment it should speak, nor a second one for the same purpose.
+- **Dynamic messages**: updates appear in a live region that exists before the update — `role="status"` (polite) for progress and hints, `role="alert"` only for blocking errors. Debounce what changes while typing. A message with no place of its own on screen (the result of an action, a busy button) goes through the page's `<twig:ui:Announcer>`, placed by the kit layouts: `announce(message)` from `ui/src/js/components/announcer.ts`, or the `ps:announce` event from outside the kit bundle. Never a region created at the moment it should speak, nor a second one for the same purpose.
 - **Help and errors**: link them to their field with `aria-describedby`; set `aria-invalid="true"` on a field in error.
 - **Hidden text for screen readers**: `visually-hidden` (kit) or `sr-only` (Bootstrap 4). Never hide visible information with `aria-hidden`.
 - **Keyboard**: everything reachable and usable with the keyboard, in a logical order, with a visible focus ring; no keyboard trap outside modals; `Escape` closes overlays.
 - **Targets and motion**: touch targets ≥ 24×24 px; transitions and animations stop under `prefers-reduced-motion: reduce`.
 - **Text**: every visible or announced string is translatable (`|trans` with a domain); no text baked into images or CSS `content`. Rewording is welcome; list the new strings with `node ui/.ai/bin/missing-translations.mjs`.
-- **Validation**: the kit form theme gives every form `novalidate` and every email and password field a client error slot; `form-validation.js` checks them on submit. Give a field its words with `data-required-message` / `data-invalid-message`, the same as its server constraints (`DECISIONS.md` #30). No browser bubble, no page-level copy of these checks.
+- **Validation**: the kit form theme gives every form `novalidate` and every email and password field a client error slot; `form-validation.ts` checks them on submit. Give a field its words with `data-required-message` / `data-invalid-message`, the same as its server constraints (`DECISIONS.md` #30). No browser bubble, no page-level copy of these checks.
 - **After a redirect**: focus goes to the first field in error, otherwise to the first flash message, whatever its type (`DECISIONS.md` #31).
 - **Page title**: `<title>` is the page's `h1` text, then the shop name; updated when a script switches panels (`DECISIONS.md` #32).
 - **Forms**: render kit forms with `@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig`, so errors and help are linked to their field even when widgets are rendered one by one. A field type's markup lives in a kit component; the form theme block only maps the field to it (`DECISIONS.md` #25), never Bootstrap 4 or prestakit classes. Field state is `aria-invalid`, which the kit styles like `.is-invalid`.
@@ -150,5 +151,5 @@ Add a page's scripts to `uiKitFiles` when it moves to the kit. Not linted, check
 
 - `src/PrestaShopBundle/Resources/views/Admin/Helpers/password_feedback.html.twig` + `admin-dev/themes/new-theme/js/components/change-password-handler.ts` + `ui/src/scss/components/_password.scss` — BEM + hooks, `data-ps-state`, shape-changing icon, debounced live region, `aria-describedby`, shared by both themes
 - `ui/src/scss/pages/_login.scss` — page block with elements and a modifier
-- `ui/src/js/components/password-toggle.js` — `data-ps-action` behaviour with `aria-pressed` and a translated `aria-label`
+- `ui/src/js/components/password-toggle.ts` — `data-ps-action` behaviour with `aria-pressed` and a translated `aria-label`
 - `themes/hummingbird/templates/components/password-policy-template.tpl` — the same widget in the front theme

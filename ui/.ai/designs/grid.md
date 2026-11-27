@@ -17,7 +17,7 @@ Why bootstrap-first: it adds the fewest new parts, keeps the most legacy ids and
 **Grafted from the other proposals and the judges:**
 - From accessibility-first:
   - one `<th scope="row">` per row, and every row control named with its row through `aria-labelledby`;
-  - a focusable results summary that gets focus after a reload, through a URL fragment and `load-focus.js`;
+  - a focusable results summary that gets focus after a reload, through a URL fragment and `load-focus.ts`;
   - the generic `data-ps-confirm` + `<twig:ui:ConfirmDialog>` (INVENTORY #23) in place of a confirm modal private to the grid;
   - toggles through `fetch` with `redirect: 'manual'`;
   - a positions payload built in JS, exactly as PositionExtension builds it today.
@@ -69,7 +69,7 @@ Why bootstrap-first: it adds the fewest new parts, keeps the most legacy ids and
 | Focus after reload | Results summary `#{id}_grid_results` (`tabindex=-1`) | It also replaces the footer "range" text, so it adds no second part. |
 | Sticky columns and header | Not in v1 | Two judges rejected them. Open question 3 covers the sticky row header column at 375. |
 | Switch | `ui:Check type="switch"`, not a separate `ui:Switch` | Bootstrap treats a switch as a form-check variant. Open question 1 asks you to confirm this. |
-| Preview row | A hidden `<tr>` per record, toggled by `grid-preview.js` | Bootstrap Collapse cannot animate a `<tr>`. `aria-controls` needs the row to exist already. The module fetches the content anyway. |
+| Preview row | A hidden `<tr>` per record, toggled by `grid-preview.ts` | Bootstrap Collapse cannot animate a `<tr>`. `aria-controls` needs the row to exist already. The module fetches the content anyway. |
 | Icon not in the registry | `icon()` returns null, and that action goes to the overflow menu as a text item | `more_horiz` as a stand-in would mislead. An icon-only button needs an icon. |
 
 ## API
@@ -420,7 +420,7 @@ The BEM block is `ps-grid` (`ui/src/scss/components/_grid.scss`). Bootstrap appe
 - **Selection none**: the bulk toggle is natively `disabled`, and the status reads "No rows selected".
 - **Selection some**: the bulk toggle is enabled. The status reads "3 selected". Select-all is `indeterminate` (announced as mixed). Selected rows get a tint and an inline-start border through `.ps-grid__row:has(.ps-grid__check:checked)`, with no JS and no `aria-selected`.
 - **Selection all on the page**: select-all is checked, and its label says "on this page". There is no across-pages selection.
-- **Bulk submit**: posts the filter form with `formaction`. With `confirm_message`, ConfirmDialog opens first. The button shows busy through `busy-button.js`.
+- **Bulk submit**: posts the filter form with `formaction`. With `confirm_message`, ConfirmDialog opens first. The button shows busy through `busy-button.ts`.
 - **Bulk modal form** (Orders change status, Countries, States): the page's modal opens, and on its submit the checked ids are added through `data-prototype`.
 - **Bulk button** (Orders open tabs): `ps:grid-bulk-action` fires and the page acts.
 - **Bulk ajax** (Products only, later): ConfirmDialog, then a ui:Modal with ui:Progress and a status line, an error list and Stop.
@@ -458,20 +458,20 @@ Native first. These need no JS:
 - the SQL modal and Export to SQL Manager (a form rendered with the query and `grid.name`, which fixes today's empty name on kit pages);
 - dropdowns and modals (Bootstrap `data-bs-*`).
 
-Modules live in `ui/src/js/components/grid/`, are registered once in `ui/src/js/main.js`, with their selectors in `ui/src/js/selectors.js`. Each is delegated on `document`, so grids inserted later and pages with several grids work. Nothing is chosen per page.
+Modules live in `ui/src/js/components/grid/`, are registered once in `ui/src/js/main.ts`, with their selectors in `ui/src/js/selectors.ts`. Each is delegated on `document`, so grids inserted later and pages with several grids work. Nothing is chosen per page.
 
 | Module | Hooks | Does | Replaces |
 |---|---|---|---|
-| `confirm-dialog.js` (generic kit) | `[data-ps-confirm]` on submit buttons and links; `data-ps-data-confirm-title`, `-confirm-label`, `-confirm-variant` (from `confirm_message`, `modal_options`, `dynamic_message_field`) | Stops the click and opens the single `<twig:ui:ConfirmDialog>`. On confirm: `form.requestSubmit(trigger)`, or follows the href. Escape or Cancel returns focus. | `window.confirm` in LinkRowAction, ConfirmModal in SubmitRowAction, SubmitBulk and SubmitGridAction |
-| `grid-selection.js` | `grid-select-all`, `grid-select-row`, `grid-selection-count`, `grid-bulk-actions` | Checks the page's rows; sets select-all to checked or indeterminate; writes the count into the status line; enables or disables the bulk toggle | BulkActionCheckboxExtension |
-| `grid-filters.js` | `grid-reset-filters` | `fetch(url, {method: 'POST'})` with a busy state, then `location.assign(redirect + '#{id}_grid_results')` | FiltersResetExtension. FiltersSubmitButtonEnablerExtension is dropped: Search is always enabled. FilterLinkGroup is replaced by native submits. |
-| `grid-toggle.js` | `change` on `grid-toggle` | `fetch(url, {method: 'POST', redirect: 'manual', headers: {Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest'}})`. JSON: keep or revert the switch, then `announce(message)`. `opaqueredirect`: `location.reload()` so the real flash shows. Anything else: revert and announce a generic error. | ColumnTogglingExtension and AsyncToggleColumnExtension, merged into one behaviour |
-| `grid-preview.js` | `click` on `grid-preview` | Fetches once, fills `grid-preview-content`, toggles `hidden` and `aria-expanded`, manages `aria-busy` and the error Alert with Retry. Dispatches `ps:grid-preview-loaded`. Scoped to its own table. | PreviewExtension (and its document-wide binding bug) |
-| `grid-row-link.js` | `click` on `grid-open-row` | Ignores clicks on a link, button or input, or when text is selected. Otherwise clicks the row's `grid-row-link`. Ctrl/Cmd opens a new tab. | LinkRowActionExtension |
-| `grid-bulk.js` | `grid-bulk-modal`, `grid-bulk-button` | Modal: on the target modal form's `submit`, appends one input per checked id from its `[data-prototype]`. Button: dispatches `ps:grid-bulk-action`. | ModalFormSubmitExtension, BulkOpenTabsExtension (its logic moves to `order_ui`) |
-| `grid-position.js` | `grid-drag-row` (pointer events), `grid-move` | Reorders the page's rows (by drag, or one step with the buttons), then builds the same `positions[i][rowId|oldPosition|newPosition]` form PositionExtension posts (offset-aware) and submits it to the handle's update URL. The drag animation is off under reduced motion. | PositionExtension and tableDnD. CategoryPosition moves with Categories. |
-| `load-focus.js` (extended) | `[data-ps-ref="grid-results"]` | After the #31 error and flash checks: when `location.hash` names a results summary, focus it | the scroll-only `#table-id` hash of TableSorting |
-| reused | `scroll-fade.js`, `tooltips.js`, `busy-button.js`, `announcer.js` | | |
+| `confirm-dialog.ts` (generic kit) | `[data-ps-confirm]` on submit buttons and links; `data-ps-data-confirm-title`, `-confirm-label`, `-confirm-variant` (from `confirm_message`, `modal_options`, `dynamic_message_field`) | Stops the click and opens the single `<twig:ui:ConfirmDialog>`. On confirm: `form.requestSubmit(trigger)`, or follows the href. Escape or Cancel returns focus. | `window.confirm` in LinkRowAction, ConfirmModal in SubmitRowAction, SubmitBulk and SubmitGridAction |
+| `grid-selection.ts` | `grid-select-all`, `grid-select-row`, `grid-selection-count`, `grid-bulk-actions` | Checks the page's rows; sets select-all to checked or indeterminate; writes the count into the status line; enables or disables the bulk toggle | BulkActionCheckboxExtension |
+| `grid-filters.ts` | `grid-reset-filters` | `fetch(url, {method: 'POST'})` with a busy state, then `location.assign(redirect + '#{id}_grid_results')` | FiltersResetExtension. FiltersSubmitButtonEnablerExtension is dropped: Search is always enabled. FilterLinkGroup is replaced by native submits. |
+| `grid-toggle.ts` | `change` on `grid-toggle` | `fetch(url, {method: 'POST', redirect: 'manual', headers: {Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest'}})`. JSON: keep or revert the switch, then `announce(message)`. `opaqueredirect`: `location.reload()` so the real flash shows. Anything else: revert and announce a generic error. | ColumnTogglingExtension and AsyncToggleColumnExtension, merged into one behaviour |
+| `grid-preview.ts` | `click` on `grid-preview` | Fetches once, fills `grid-preview-content`, toggles `hidden` and `aria-expanded`, manages `aria-busy` and the error Alert with Retry. Dispatches `ps:grid-preview-loaded`. Scoped to its own table. | PreviewExtension (and its document-wide binding bug) |
+| `grid-row-link.ts` | `click` on `grid-open-row` | Ignores clicks on a link, button or input, or when text is selected. Otherwise clicks the row's `grid-row-link`. Ctrl/Cmd opens a new tab. | LinkRowActionExtension |
+| `grid-bulk.ts` | `grid-bulk-modal`, `grid-bulk-button` | Modal: on the target modal form's `submit`, appends one input per checked id from its `[data-prototype]`. Button: dispatches `ps:grid-bulk-action`. | ModalFormSubmitExtension, BulkOpenTabsExtension (its logic moves to `order_ui`) |
+| `grid-position.ts` | `grid-drag-row` (pointer events), `grid-move` | Reorders the page's rows (by drag, or one step with the buttons), then builds the same `positions[i][rowId|oldPosition|newPosition]` form PositionExtension posts (offset-aware) and submits it to the handle's update URL. The drag animation is off under reduced motion. | PositionExtension and tableDnD. CategoryPosition moves with Categories. |
+| `load-focus.ts` (extended) | `[data-ps-ref="grid-results"]` | After the #31 error and flash checks: when `location.hash` names a results summary, focus it | the scroll-only `#table-id` hash of TableSorting |
+| reused | `scroll-fade.ts`, `tooltips.ts`, `busy-button.ts`, `announcer.ts` | | |
 
 Later, with Products: `grid-bulk-ajax.js` (chunked POSTs with `request_param_name` and `bulk_chunk_size`, ui:Progress), which replaces AjaxBulkActionExtension.
 
@@ -511,7 +511,7 @@ The Orders kit entry `admin-dev/themes/new-theme/js/pages/order/index-ui.ts` (we
   - confirmations go through ConfirmDialog (focus trap, Escape, focus back to the trigger);
   - menus are Bootstrap dropdowns with arrow keys.
 - **Focus after a round trip**:
-  - search, clear, sort, page and rows per page land on the results summary (fragment kept across the redirect, then `load-focus.js`);
+  - search, clear, sort, page and rows per page land on the results summary (fragment kept across the redirect, then `load-focus.ts`);
   - actions with a flash land on the flash (#31);
   - a reorder reloads with the flash, or with the summary.
 - **Async results**: toggle, preview and reset go through the page's single Announcer. Errors restore the control.
@@ -539,7 +539,7 @@ The Orders kit entry `admin-dev/themes/new-theme/js/pages/order/index-ui.ts` (we
 - The table scrolls inside `.table-responsive`, a named focusable region with scroll fade. The filter row scrolls with its columns. Search stays in the toolbar, reachable without scrolling.
 - Menus inside the table use `data-bs-popper-config='{"strategy":"fixed"}'`, so they are not clipped.
 - Pagination below `sm`: Previous, "Page 3 of 25" and Next. The far pages are hidden by the `ps-pagination__item--far` modifier in `_pagination.scss`. Rows per page opens upward.
-- Targets are at least 24px. Tooltips are skipped on touch (tooltips.js), and names are carried by labels.
+- Targets are at least 24px. Tooltips are skipped on touch (tooltips.ts), and names are carried by labels.
 - The preview row spans every column and scrolls with the table.
 - Drag does not run on touch; Move up and Move down cover it.
 - Long modals (SQL, change status) use the ui:Modal `fullscreen` size below `sm`.
@@ -580,7 +580,7 @@ In this order:
    - Props: `current`, `links` (`array<int,string>`), `label`.
    - Renders `<nav aria-label>` with Bootstrap `.pagination`, `aria-current="page"`, ellipses with hidden text, Previous/Next absent at the ends, and the compact mode below `sm` in `_pagination.scss`.
    - Generic: callers compute the links.
-4. **`<twig:ui:ConfirmDialog>` + `confirm-dialog.js`** (INVENTORY #23).
+4. **`<twig:ui:ConfirmDialog>` + `confirm-dialog.ts`** (INVENTORY #23).
    - One `ui:Modal`-based dialog, placed once by the kit layouts next to the Announcer.
    - Driven by `data-ps-confirm`. Focus starts on Cancel for the danger variant.
 5. **`DropdownMenu` `submit` item type**, with a story state and a test.
@@ -597,7 +597,7 @@ Reused unchanged:
 - `ui:Icon`, `ui:Link` (back links in the footer slot)
 - `ui:Announcer`
 - `ui:Layout:Stack`, `ui:Layout:Cluster`
-- `scroll-fade.js`, `tooltips.js`, `busy-button.js`
+- `scroll-fade.ts`, `tooltips.ts`, `busy-button.ts`
 
 Not used:
 - `ui:Card`: the grid owns its card regions, and `embedded` drops them.
@@ -616,7 +616,7 @@ Each step ships on its own and ends with its checks green. A component step mean
 2. **ui:EmptyState and ui:Pagination**.
    - Stories: long title, sm size, with and without actions; 1 page, 3 pages, 1000 pages, current at each end, compact at 375.
    - Tests: ellipsis placement, `aria-current`, Previous/Next absent at the ends.
-3. **ui:ConfirmDialog + `confirm-dialog.js`**, placed in the kit layouts.
+3. **ui:ConfirmDialog + `confirm-dialog.ts`**, placed in the kit layouts.
    - Story: a submit button with `formaction` and `name/value`, and a link.
    - Tests: render.
    - Check: a keyboard pass (confirm, cancel, Escape, focus return), and `requestSubmit` keeps the submitter's name/value.
@@ -632,23 +632,23 @@ Each step ships on its own and ends with its checks green. A component step mean
      - `Grid.php` (state, sort, page links, limits, range, filter pickers, rowActions, icon, hookParams);
      - `grid.html.twig` with header, embedded, toolbar Search/Clear filters, filter row, summary, the typed cells `data`, `identifier`, `link`, `disableable_link`, `boolean`, `status`, `badge`, `color`, `date_time`, `order_price`, `image`, `html`, `link_group`, `severity_level` and `_fallback`;
      - sorting, pagination, rows per page, empty and no-match, both hooks;
-     - `query_modal`, `_grid.scss`, `grid-filters.js`, the `load-focus.js` extension, the `_layout.scss` rule.
+     - `query_modal`, `_grid.scss`, `grid-filters.ts`, the `load-focus.ts` extension, the `_layout.scss` rule.
    - Story: `Grid.stories.js` fed by a presented-grid fixture, with the states list, list, empty, no match, filtered, embedded, display_name false, module type fallback, several grids.
    - Tests: PHP unit tests for `sortHref`/`pageLinks` (`{prefix}[…]`, empty prefix, fragment), `rowActions`, `icon` (alias, registry miss → null) and `LIMITS` equal to CommonController's default. GridComponentTest: aria-sort, `column_content` fallback, both hooks outside the form, kept ids.
    - Check: `ui-component-review` at 375/768/1280, axe, keyboard pass.
 7. **Selection and bulk**.
-   - Scope: the `bulk_action` cell, select-all, the status line, bulk items `submit` / `modal_form_submit` / `button`, `grid-selection.js`, `grid-bulk.js`, the selected-row style.
+   - Scope: the `bulk_action` cell, select-all, the status line, bulk items `submit` / `modal_form_submit` / `button`, `grid-selection.ts`, `grid-bulk.ts`, the selected-row style.
    - Story states: none, some, all.
    - Check: a bulk action posts a body identical to today's (filter fields, `_token`, `{gridId}_{col}[]`), compared in the network panel. Indeterminate is announced. The keyboard pass works.
 8. **Row actions and clickable rows**.
-   - Scope: the `action` cell (inline, primary, overflow with the fixed popper), kit `link` and `submit` templates through `{id}_grid_action_form` with `_method`, `data-ps-confirm` mapping (static and `dynamic_message_field`), `grid-row-link.js`, list actions (link, refresh, show query, export to SQL Manager, submit with confirm).
+   - Scope: the `action` cell (inline, primary, overflow with the fixed popper), kit `link` and `submit` templates through `{id}_grid_action_form` with `_method`, `data-ps-confirm` mapping (static and `dynamic_message_field`), `grid-row-link.ts`, list actions (link, refresh, show query, export to SQL Manager, submit with confirm).
    - Check:
      - a DELETE row action reaches its controller;
      - names include the row;
      - the menu is not clipped at 375;
      - Export to SQL Manager opens RequestSql pre-filled with the grid name and query.
 9. **Orders cells and playground** (checkpoint 2 of migrate-page-to-ui).
-   - Scope: the `choice` cell (submit items posting `value`), the `preview` cell, the preview row, `grid-preview.js`.
+   - Scope: the `choice` cell (submit items posting `value`), the `preview` cell, the preview row, `grid-preview.ts`.
    - Story: `ui/src/playground/pages/orders/orders.stories.js` shows the real grid under the KPI row, with a status choice, preview and bulk.
    - Check: approval of the mockup.
 10. **Orders page on the kit**.
@@ -661,10 +661,10 @@ Each step ships on its own and ends with its checks green. A component step mean
       - `ui-review` at 375/768/1280 with the `ui-seed` full listing, then `ui-screen-review` (done gates #18);
       - Orders with PS_UI_KIT=0 unchanged;
       - the Orders Playwright campaign green.
-11. **Toggle cell + `grid-toggle.js`**.
+11. **Toggle cell + `grid-toggle.ts`**.
     - Check: Customers (JSON) toggles in place and announces success and failure. Zones (redirect) reloads with its flash focused. An error response reverts the switch.
 12. **Position**.
-    - Scope: the handle cell, Move up/down, `grid-position.js`.
+    - Scope: the handle cell, Move up/down, `grid-position.ts`.
     - Check: a Behat or Playwright test on Attribute groups shows that drag and the Move buttons post a `positions[]` body identical to PositionExtension's, page 2 (offset) included. Move is disabled at the page edges.
 13. **Plain grid pages (V1)** one by one with `migrate-page-to-ui`. Each is a template switch plus removing the page's grid JS init.
     - Check per page: a quick `ui-review` and its UI tests.

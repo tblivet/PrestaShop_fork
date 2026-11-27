@@ -9,17 +9,17 @@ import selectors from '../selectors';
 // [oldPosition], [newPosition], in the rows' new order, each row taking the position its new place had), through the
 // grid's action form, and the page reloads with its message. Moves stay within the page.
 
-const handles = (grid) => [...grid.querySelectorAll(selectors.gridPosition)];
+const handles = (grid: Element): HTMLElement[] => [...grid.querySelectorAll<HTMLElement>(selectors.gridPosition)];
 
-const send = (grid) => {
+const send = (grid: HTMLElement): void => {
   const all = handles(grid);
-  const form = grid.querySelector(selectors.gridActionForm);
+  const form = grid.querySelector<HTMLFormElement>(selectors.gridActionForm);
 
   if (!all.length || !form) {
     return;
   }
   const places = all.map((handle) => Number(handle.dataset.psDataPosition)).sort((a, b) => a - b);
-  const field = (name, value) => {
+  const field = (name: string, value: string | number | undefined): void => {
     const input = document.createElement('input');
 
     input.type = 'hidden';
@@ -38,14 +38,14 @@ const send = (grid) => {
   if (!['GET', 'POST'].includes(method)) {
     field('_method', method);
   }
-  form.action = all[0].dataset.psDataUrl;
+  form.action = all[0].dataset.psDataUrl ?? '';
   form.method = method === 'GET' ? 'get' : 'post';
   grid.dataset.psState = 'loading';
   form.submit();
 };
 
 // The row next to this one that can move, the preview rows skipped
-const neighbour = (row, direction) => {
+const neighbour = (row: Element, direction: string | undefined): Element | null => {
   let next = direction === 'up' ? row.previousElementSibling : row.nextElementSibling;
 
   while (next && !next.querySelector(selectors.gridPosition)) {
@@ -56,19 +56,19 @@ const neighbour = (row, direction) => {
 };
 
 // A row with the preview row that belongs to it, as moved together
-const withPreview = (row) => {
+const withPreview = (row: Element): Element[] => {
   const preview = row.nextElementSibling?.matches(selectors.gridPreviewRow) ? row.nextElementSibling : null;
 
   return preview ? [row, preview] : [row];
 };
 
-export default function initGridPosition() {
+export default function initGridPosition(): void {
   document.addEventListener('click', (event) => {
-    const button = event.target instanceof Element ? event.target.closest(selectors.gridMove) : null;
+    const button = event.target instanceof Element ? event.target.closest<HTMLElement>(selectors.gridMove) : null;
     const row = button?.closest('tr');
-    const grid = row?.closest(selectors.grid);
+    const grid = row?.closest<HTMLElement>(selectors.grid);
 
-    if (!grid || grid.dataset.psState === 'loading') {
+    if (!button || !row || !grid || grid.dataset.psState === 'loading') {
       return;
     }
     const direction = button.dataset.psDataDirection;
@@ -80,13 +80,15 @@ export default function initGridPosition() {
     if (direction === 'up') {
       other.before(...withPreview(row));
     } else {
-      withPreview(other).at(-1).after(...withPreview(row));
+      withPreview(other)
+        .at(-1)
+        ?.after(...withPreview(row));
     }
     send(grid);
   });
 
   // Drag: only from the handle, the row follows the pointer over the others
-  let dragged = null;
+  let dragged: HTMLTableRowElement | null = null;
   let moved = false;
 
   document.addEventListener('pointerdown', (event) => {
@@ -106,13 +108,21 @@ export default function initGridPosition() {
     dragged = row;
     moved = false;
     row.dataset.psState = 'dragging';
-    event.dataTransfer.effectAllowed = 'move';
-    event.dataTransfer.setData('text/plain', '');
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', '');
+    }
   });
   document.addEventListener('dragover', (event) => {
     const over = dragged && event.target instanceof Element ? event.target.closest('tr') : null;
 
-    if (!over || over === dragged || over.parentElement !== dragged.parentElement || !over.querySelector(selectors.gridPosition)) {
+    if (
+      !over ||
+      !dragged ||
+      over === dragged ||
+      over.parentElement !== dragged.parentElement ||
+      !over.querySelector(selectors.gridPosition)
+    ) {
       if (dragged && event.target instanceof Element && event.target.closest('tbody') === dragged.parentElement) {
         event.preventDefault();
       }
@@ -125,7 +135,9 @@ export default function initGridPosition() {
     if (event.clientY < top + height / 2) {
       over.before(...withPreview(dragged));
     } else {
-      withPreview(over).at(-1).after(...withPreview(dragged));
+      withPreview(over)
+        .at(-1)
+        ?.after(...withPreview(dragged));
     }
     moved = true;
   });
@@ -139,7 +151,7 @@ export default function initGridPosition() {
       return;
     }
     const row = dragged;
-    const grid = row.closest(selectors.grid);
+    const grid = row.closest<HTMLElement>(selectors.grid);
 
     dragged = null;
     row.draggable = false;

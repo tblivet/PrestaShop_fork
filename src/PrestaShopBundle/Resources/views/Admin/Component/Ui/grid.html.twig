@@ -35,7 +35,7 @@
 {%- set empty -%}{%- block empty %}{% endblock -%}{%- endset -%}
 {%- set footer -%}{%- block footer %}{% endblock -%}{%- endset -%}
 
-{#- Clear filters: grid-filters.js posts the reset and comes back to the results, or says it failed -#}
+{#- Clear filters: grid-filters.ts posts the reset and comes back to the results, or says it failed -#}
 {%- set clearFilters = searchAndReset and searchAndReset.vars.show_reset_button ? {
   variant: 'link',
   icon: 'close',
@@ -57,7 +57,7 @@
   'aria-labelledby': resultsId,
 }) }}>
   {#- The title names the section, with its count; embedded or display_name false, for screen readers only. Sorting,
-      pages and filters land on it (#{id}_grid_results, load-focus.js). The header band holds the title and the list's
+      pages and filters land on it (#{id}_grid_results, load-focus.ts). The header band holds the title and the list's
       actions (export, refresh, SQL query): none without either -#}
   {%- if embedded or (showName is same as(false) and gridItems is empty) -%}
     <h{{ headingLevel }} id="{{ resultsId }}" class="visually-hidden" tabindex="-1" data-ps-ref="grid-results">{{ grid.name }}</h{{ headingLevel }}>
@@ -141,7 +141,7 @@
       {%- if searchAndReset -%}{%- do searchAndReset.setRendered -%}{%- endif -%}
       {%- if reorderField -%}{%- do reorderField.setRendered -%}{%- endif -%}
       {%- for quick in quickFilters -%}{%- do quick.field.setRendered -%}{%- endfor -%}
-      {#- The table and, over its headings and filters while rows are checked, the bulk bar (grid-selection.js): what
+      {#- The table and, over its headings and filters while rows are checked, the bulk bar (grid-selection.ts): what
           is checked and what to do with it, next to the checks. The headings stay in the table for screen readers -#}
       <div class="ps-grid__table-area">
       {%- if bulkItems is not empty and 'list' == state -%}
@@ -191,7 +191,7 @@
               {%- endfor -%}
             </tr>
             {%- if hasFilters -%}
-              {#- Enter in one of its fields sends Filter (grid-filters.js), not the bulk actions' or quick filters' submit
+              {#- Enter in one of its fields sends Filter (grid-filters.ts), not the bulk actions' or quick filters' submit
                   buttons that come before it in the page -#}
               <tr class="ps-grid__filters" data-ps-ref="grid-filter-row">
                 {%- for column in grid.columns -%}
@@ -241,7 +241,7 @@
               {%- for record in grid.data.records -%}
                 {%- set rowIndex = loop.index -%}
                 {%- set rowHeaderId = id ~ '_grid_rowhead_' ~ rowIndex -%}
-                {#- A click on a clickable cell follows the row's link (grid-row-link.js); the keyboard has the link itself -#}
+                {#- A click on a clickable cell follows the row's link (grid-row-link.ts); the keyboard has the link itself -#}
                 {%- set rowLink = this.rowLink(record) -%}
                 <tr class="ps-grid__row"{% if rowLink %} data-ps-action="grid-row-link" data-ps-data-href="{{ rowLink }}"{% endif %}>
                   {%- for column in grid.columns -%}
@@ -260,7 +260,7 @@
                   {%- endfor -%}
                 </tr>
                 {%- if previewColumnId -%}
-                  {#- Filled on the first open (grid-preview.js) -#}
+                  {#- Filled on the first open (grid-preview.ts) -#}
                   <tr id="{{ id }}_grid_preview_{{ loop.index }}" class="ps-grid__preview" hidden data-ps-ref="grid-preview">
                     <td colspan="{{ grid.columns|length }}"><div class="ps-grid__preview-content" data-ps-target="grid-preview-content"></div></td>
                   </tr>
@@ -294,7 +294,7 @@
       {%- endif -%}
       {{- form_end(grid.filter_form) -}}
       {#- What a row's submit action, a choice and a move send (form, formaction, _method; positions[] from
-          grid-position.js): outside the filter form, so its fields do not go -#}
+          grid-position.ts): outside the filter form, so its fields do not go -#}
       <form id="{{ id }}_grid_action_form" method="post" hidden data-ps-ref="grid-action-form"></form>
 
       {%- if 'list' == state and paginated and not lastPageUrl -%}

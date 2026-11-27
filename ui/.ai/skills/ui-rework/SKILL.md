@@ -53,7 +53,7 @@ While working, check with a quick `ui-review` (a few states, inline).
 
 | Gate | How |
 |------|-----|
-| Builds and lints | `make admin-ui`, `make admin-new-theme`; `npm run lint:scss` in `ui/`, `npm run lint` in `admin-dev/themes/new-theme` |
+| Builds and lints | `make admin-ui`, `make admin-new-theme`; `npm run lint:scss` and `npm run typecheck` in `ui/`, `npm run lint` in `admin-dev/themes/new-theme` |
 | Tests | Twig component unit and render tests for touched components; PHP integration tests for changed form types and controllers; Behat untouched. Without the test database, say so instead of skipping silently |
 | Storybook parity | The story or mockup matches the page in every reviewed state, and every prop of a component touched is in its story, and its stories show what it renders (`node ui/.ai/bin/story-markup.mjs`, then `story-parity.mjs` and `StoryMarkupTest` pass) |
 | Screen review clean | The `ui-screen-review` workflow once on the page with its seed scenarios: no blocker or major finding left, or each one accepted with a reason in `DECISIONS.md` |

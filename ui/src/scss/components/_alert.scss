@@ -37,14 +37,14 @@ $component-name: ps-alert;
     color: inherit;
   }
 
-  // Focused by the kit when the page loads (load-focus.js): Bootstrap's focus ring; the transparent outline is what
+  // Focused by the kit when the page loads (load-focus.ts): Bootstrap's focus ring; the transparent outline is what
   // forced-colors mode draws, since it does not draw shadows
   &[tabindex="-1"]:focus {
     outline: $focus-ring-width solid transparent;
     box-shadow: $focus-ring-box-shadow;
   }
 
-  // No ring when the page was left by a click (load-focus.js)
+  // No ring when the page was left by a click (load-focus.ts)
   &[tabindex="-1"][data-ps-state="quiet-focus"]:focus {
     box-shadow: none;
   }

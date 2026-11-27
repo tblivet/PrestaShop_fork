@@ -8,12 +8,16 @@
 // itself. A click outside still closes it.
 const ACTS = 'a, button, [role="menuitem"], .dropdown-item';
 
-export default function initDropdownInsideClick() {
-  document.addEventListener('hide.bs.dropdown', (event) => {
-    const click = event.clickEvent;
-    const menu = event.target.parentElement?.querySelector(':scope > .dropdown-menu');
+// Bootstrap's hide.bs.dropdown carries the click that closes the menu, if any
+type DropdownHideEvent = Event & { clickEvent?: MouseEvent };
 
-    if (click && menu?.contains(click.target) && !click.target.closest(ACTS)) {
+export default function initDropdownInsideClick(): void {
+  document.addEventListener('hide.bs.dropdown', (event) => {
+    const click = (event as DropdownHideEvent).clickEvent;
+    const menu =
+      event.target instanceof Element ? event.target.parentElement?.querySelector(':scope > .dropdown-menu') : null;
+
+    if (click && click.target instanceof Element && menu?.contains(click.target) && !click.target.closest(ACTS)) {
       event.preventDefault();
     }
   });

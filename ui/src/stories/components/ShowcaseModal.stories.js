@@ -37,7 +37,7 @@ const inPlace = (node) => ({
   rendered: node.html,
 });
 
-// The page opens it when it loads (showcase-modal.js); here the story does
+// The page opens it when it loads (showcase-modal.ts); here the story does
 const open = ({ canvasElement }) => {
   window.bootstrap.Modal.getOrCreateInstance(canvasElement.querySelector('.modal')).show();
 };
@@ -51,7 +51,7 @@ export default {
           '**Twig usage**: the introduction of a page (what attributes are, how categories work), rendered while its card is not closed. The content block is its text.',
           '```twig\n{% if not isShowcaseCardClosed %}\n  <twig:ui:ShowcaseModal\n    name="attributes_card"\n    title="{{ \'Create attributes\'|trans({}, \'Admin.Catalog.Feature\') }}"\n    image="{{ asset(\'themes/new-theme/public/helper-card/attributes@3x.svg\') }}"\n    learnMore="{{ documentation_link(\'attribute\') }}"\n  >\n    <p>…</p>\n  </twig:ui:ShowcaseModal>\n{% endif %}\n```',
           '**Props**: `name` (required: the showcase card, one of `ShowcaseCard::SUPPORTED_NAMES`, the key its closing is stored under), `title` (required), `image` (required: the illustration\'s URL, decorative), `learnMore` (default none: the documentation, opened in a new tab). Other attributes go on the modal. Content: the text. Block `actions`: a secondary button to where to start, before "Got it".',
-          '**Behaviour**: `showcase-modal.js` opens it when the page loads. It is static: a click outside does not close it; its close button, "Got it" or Escape do, and record it closed for the shop (`admin_close_showcase_card`), so the page renders it no more, for any employee.',
+          '**Behaviour**: `showcase-modal.ts` opens it when the page loads. It is static: a click outside does not close it; its close button, "Got it" or Escape do, and record it closed for the shop (`admin_close_showcase_card`), so the page renders it no more, for any employee.',
           '**Do**: one per page, rendered only while the card is open (`isShowcaseCardClosed`); at most one secondary button to where to start, in the `actions` block, before "Got it" (SEO & URLs: "Configure index page"). **Don\'t**: a form or a link to an action in the text; repeat the page title as its title.',
         ].join('\n\n'),
       },

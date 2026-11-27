@@ -33,7 +33,7 @@ $component-name: ps-grid;
     margin: 0;
     font-size: $ps-grid-title-font-size;
 
-    // Where sorting, pages and filters land: focused after the reload (load-focus.js), with Bootstrap's ring; none when
+    // Where sorting, pages and filters land: focused after the reload (load-focus.ts), with Bootstrap's ring; none when
     // the page was left by a click
     &:focus-visible {
       outline: 0;
@@ -59,7 +59,7 @@ $component-name: ps-grid;
     justify-content: flex-end;
   }
 
-  // The table, and the bulk bar over its headings while rows are checked (grid-selection.js gives it their row's height),
+  // The table, and the bulk bar over its headings while rows are checked (grid-selection.ts gives it their row's height),
   // the filters left in view: tinted like the count and sort badges (oceanblue), edged in its blue; the same look
   // whether it lies over them or follows the list down
   // A container: the bulk bar follows the grid's width, not the screen's
@@ -454,12 +454,12 @@ $component-name: ps-grid;
     gap: map-get($spacers, 1);
   }
 
-  // A row with a link: its clickable cells follow it (grid-row-link.js)
+  // A row with a link: its clickable cells follow it (grid-row-link.ts)
   &__cell--clickable {
     cursor: pointer;
   }
 
-  // A row being dragged by its handle (grid-position.js)
+  // A row being dragged by its handle (grid-position.ts)
   &__row[data-ps-state="dragging"] {
     opacity: .5;
   }

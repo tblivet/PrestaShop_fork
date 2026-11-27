@@ -14,7 +14,7 @@ The new back office design system: Bootstrap 5.3 customised for PrestaShop, buil
 | Build the kit (CSS, JS, fonts, icons) | `make admin-ui` |
 | Build page scripts and the Bootstrap 4 theme | `make admin-new-theme` |
 | Storybook, the reference | `npm run storybook` in `ui/` (port 6006) |
-| Lint | `npm run lint:scss` in `ui/`, `npm run lint` in `admin-dev/themes/new-theme` |
+| Lint | `npm run lint:scss` and `npm run typecheck` in `ui/`, `npm run lint` in `admin-dev/themes/new-theme` |
 | Emails (password reset…) | MailDev on http://localhost:1080 |
 
 Build through `make` (it runs in Docker): the host's `node_modules` are Linux builds. Asset URLs only carry `?<version>`, so hard-reload after a build. Clear the Symfony cache as the web user (`docker exec -u www-data …`), never as root.

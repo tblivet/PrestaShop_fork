@@ -8,11 +8,15 @@ import selectors from '../selectors';
 // clickable cells follows it, Ctrl/Cmd or the middle button in a new tab. Not on a control, not when the click ends a
 // text selection or a drag. The keyboard has the action's own link, so the row is not focusable.
 
-const followed = (event) => {
+const followed = (event: MouseEvent): string | null | undefined => {
   const cell = event.target instanceof Element ? event.target.closest(selectors.gridClickableCell) : null;
-  const row = cell?.closest(selectors.gridRowLink);
+  const row = cell?.closest<HTMLElement>(selectors.gridRowLink);
 
-  if (!row || event.target.closest('a, button, input, select, textarea, label, [tabindex]')) {
+  if (
+    !row ||
+    !(event.target instanceof Element) ||
+    event.target.closest('a, button, input, select, textarea, label, [tabindex]')
+  ) {
     return null;
   }
   if (String(window.getSelection() ?? '') !== '') {
@@ -22,7 +26,7 @@ const followed = (event) => {
   return row.dataset.psDataHref;
 };
 
-export default function initGridRowLink() {
+export default function initGridRowLink(): void {
   document.addEventListener('click', (event) => {
     const href = event.button === 0 ? followed(event) : null;
 

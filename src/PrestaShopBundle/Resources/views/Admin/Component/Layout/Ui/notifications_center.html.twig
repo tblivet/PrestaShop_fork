@@ -3,7 +3,7 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
 {#- Notifications of the kit header: a bell opening one list of what is new (orders, customers, messages), with a
- # filter per kind, filled by notifications.js from admin_common_notifications. Kinds are described here once; the list,
+ # filter per kind, filled by notifications.ts from admin_common_notifications. Kinds are described here once; the list,
  # the counts and the empty state are generic (ui/.ai/DECISIONS.md #36 for kinds added later by modules).
  # Its id is kept from the old header: modules place their header button before it. -#}
 {%- set kinds = [] -%}
@@ -59,7 +59,7 @@
       </template>
 
       <div id="ps-notifications-panel" role="tabpanel" aria-labelledby="ps-notifications-filter-all" data-ps-ref="notifications-panel">
-        {#- Filled by notifications.js: a list per kind, each under its heading when all kinds show -#}
+        {#- Filled by notifications.ts: a list per kind, each under its heading when all kinds show -#}
         <div class="ps-notifications__list ps-scroll-fade ps-scroll-fade--y" data-ps-action="scroll-fade" data-ps-ref="notifications-list"></div>
 
         {#- One empty state for every filter: its sentence comes from the selected filter, a kind may add a tip -#}

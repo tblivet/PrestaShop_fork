@@ -423,7 +423,7 @@ final class Grid
     }
 
     /**
-     * What a position handle sends (positions[] through the action form, grid-position.js), as the old grids
+     * What a position handle sends (positions[] through the action form, grid-position.ts), as the old grids
      */
     public function positionUpdateUrl(array $record, array $column): string
     {
@@ -459,7 +459,7 @@ final class Grid
 
     /**
      * The bulk actions as <twig:ui:DropdownMenu> items: a submit sends the filter form (the checked rows are in it) to its
-     * route, asking first with confirm_message; a button tells the page (grid-bulk.js, ps:grid-bulk-action); a modal
+     * route, asking first with confirm_message; a button tells the page (grid-bulk.ts, ps:grid-bulk-action); a modal
      * form opens the page's modal, which gets the checked rows. Other types (ajax, a module's) are not on kit grids yet.
      *
      * @return list<array{type: string, label: string, icon: ?string, attr: array<string, string>}>
@@ -599,7 +599,7 @@ final class Grid
     }
 
     /**
-     * Where a row goes when clicked: its first link action with clickable_row, unless it asks first (grid-row-link.js)
+     * Where a row goes when clicked: its first link action with clickable_row, unless it asks first (grid-row-link.ts)
      */
     public function rowLink(array $record): ?string
     {
@@ -722,7 +722,7 @@ final class Grid
     }
 
     /**
-     * What the page's ConfirmDialog asks with (confirm-dialog.js), from an action's confirm_message and modal_options
+     * What the page's ConfirmDialog asks with (confirm-dialog.ts), from an action's confirm_message and modal_options
      *
      * @return array<string, string>
      */

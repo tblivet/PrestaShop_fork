@@ -41,9 +41,9 @@ export default {
       description: {
         component: [
           '**Twig usage**: `<twig:ui:Announcer/>`, placed once by the kit layouts (the back office shell and the sign-in pages), never by a page or a component. It is the page\'s polite live region (`role="status"`), hidden, empty until a script writes in it, and in the page from the start, so screen readers announce what is written in it.',
-          '**JS**: `import { announce } from \'./announcer\'` then `announce(message)` in the kit scripts (`ui/src/js/components/announcer.js`); from a script outside the kit bundle (a new-theme page, a module): `document.dispatchEvent(new CustomEvent(\'ps:announce\', {detail: {message}}))`. The message is translated text, said once; the same message twice in a row is said again.',
+          '**JS**: `import { announce } from \'./announcer\'` then `announce(message)` in the kit scripts (`ui/src/js/components/announcer.ts`); from a script outside the kit bundle (a new-theme page, a module): `document.dispatchEvent(new CustomEvent(\'ps:announce\', {detail: {message}}))`. The message is translated text, said once; the same message twice in a row is said again.',
           '**Props**: none. Other attributes (`id`, `data-*`) go on the `<div>`.',
-          '**Do**: say the result of an action that changes the page without moving the focus ("This page is now in your quick access."), a progress ("Loading..." when a script makes a button busy, `busy-button.js`), a count after filtering. **Don\'t**: a second live region for the same purpose, a blocking error (show a danger `<twig:ui:Alert>`, `role="alert"`), a message that is also shown and read where the focus goes, a stream of messages while typing (debounce).',
+          '**Do**: say the result of an action that changes the page without moving the focus ("This page is now in your quick access."), a progress ("Loading..." when a script makes a button busy, `busy-button.ts`), a count after filtering. **Don\'t**: a second live region for the same purpose, a blocking error (show a danger `<twig:ui:Alert>`, `role="alert"`), a message that is also shown and read where the focus goes, a stream of messages while typing (debounce).',
           '**States**: the region, empty; the demo writes in the region of the page, the one Storybook keeps like the layouts do.',
         ].join('\n\n'),
       },

@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  * A password input with its own show/hide button (not a generic icon button: it belongs to the field), mirrors ui/src/stories/components/PasswordField.stories.js.
  * The kit form theme renders every PasswordType through it; by hand:
  * <twig:ui:PasswordField inputId="employee_password"><input type="password" id="employee_password" …></twig:ui:PasswordField>
- * The button behaviour is ui/src/js/components/password-toggle.js.
+ * The button behaviour is ui/src/js/components/password-toggle.ts.
  */
 #[AsTwigComponent('ui:PasswordField', template: '@PrestaShop/Admin/Component/Ui/password_field.html.twig')]
 final class PasswordField

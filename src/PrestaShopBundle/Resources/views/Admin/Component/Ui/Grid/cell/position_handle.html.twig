@@ -2,7 +2,7 @@
  # For the full copyright and license information, please view the
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
-{#- Moves the row (grid-position.js): drag the handle, or Move up and Move down, named with the row ("Move up 2"). Each
+{#- Moves the row (grid-position.ts): drag the handle, or Move up and Move down, named with the row ("Move up 2"). Each
     sends the page's positions as the old grids (positions[], through the grid's action form); not past the page -#}
 {%- set rows = grid.data.records|length -%}
 <div class="ps-grid__position" data-ps-ref="grid-position" data-ps-data-id="{{ record[column.options.id_field] }}" data-ps-data-position="{{ record[column.options.position_field] }}" data-ps-data-url="{{ component.positionUpdateUrl(record, column) }}" data-ps-data-method="{{ column.options.update_method|upper }}">

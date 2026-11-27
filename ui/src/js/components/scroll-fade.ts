@@ -13,12 +13,14 @@ import selectors from '../selectors';
 // Below a pixel is rounding, not content
 const EDGE = 1;
 
-const update = (box) => {
+const update = (box: Element): void => {
   const sideways = box.scrollWidth - box.clientWidth > EDGE;
   // Sideways in RTL, scrollLeft runs from 0 to negative values
   const position = sideways ? Math.abs(box.scrollLeft) : box.scrollTop;
   const hidden = sideways ? box.scrollWidth - box.clientWidth : box.scrollHeight - box.clientHeight;
-  const states = (box.getAttribute('data-ps-state') ?? '').split(' ').filter((state) => state && !state.startsWith('more-'));
+  const states = (box.getAttribute('data-ps-state') ?? '')
+    .split(' ')
+    .filter((state) => state && !state.startsWith('more-'));
 
   if (position > EDGE) {
     states.push('more-before');
@@ -42,33 +44,43 @@ const update = (box) => {
   }
 };
 
-export default function initScrollFade() {
-  const watched = new WeakSet();
+export default function initScrollFade(): void {
+  const watched = new WeakSet<Element>();
   const resized = new ResizeObserver((entries) => entries.forEach((entry) => update(entry.target)));
-  const changed = new MutationObserver((records) => records.forEach((record) => {
-    const box = record.target instanceof Element ? record.target.closest(selectors.scrollFade) : null;
+  const changed = new MutationObserver((records) =>
+    records.forEach((record) => {
+      const box = record.target instanceof Element ? record.target.closest(selectors.scrollFade) : null;
 
-    if (box) {
-      update(box);
-    }
-  }));
+      if (box) {
+        update(box);
+      }
+    })
+  );
 
-  const watch = (root) => {
-    const boxes = root.matches?.(selectors.scrollFade) ? [root] : [];
+  const watch = (root: Node): void => {
+    const boxes: Element[] = root instanceof Element && root.matches(selectors.scrollFade) ? [root] : [];
 
-    boxes.push(...(root.querySelectorAll?.(selectors.scrollFade) ?? []));
-    boxes.filter((box) => !watched.has(box)).forEach((box) => {
-      watched.add(box);
-      resized.observe(box);
-      changed.observe(box, { childList: true, subtree: true });
-      update(box);
-    });
+    boxes.push(
+      ...(root instanceof Element || root instanceof Document || root instanceof DocumentFragment
+        ? root.querySelectorAll(selectors.scrollFade)
+        : [])
+    );
+    boxes
+      .filter((box) => !watched.has(box))
+      .forEach((box) => {
+        watched.add(box);
+        resized.observe(box);
+        changed.observe(box, { childList: true, subtree: true });
+        update(box);
+      });
   };
 
   watch(document);
   // Boxes added later (a modal, a refreshed list, a story) are watched too
-  new MutationObserver((records) => records.forEach((record) => record.addedNodes.forEach(watch)))
-    .observe(document.body, { childList: true, subtree: true });
+  new MutationObserver((records) => records.forEach((record) => record.addedNodes.forEach(watch))).observe(
+    document.body,
+    { childList: true, subtree: true }
+  );
 
   document.addEventListener('focusin', (event) => {
     const box = event.target instanceof Element && event.target.parentElement?.closest(selectors.scrollFade);
@@ -79,9 +91,13 @@ export default function initScrollFade() {
   });
 
   // Scroll events do not bubble: caught on the way down
-  document.addEventListener('scroll', (event) => {
-    if (event.target instanceof Element && event.target.matches(selectors.scrollFade)) {
-      update(event.target);
-    }
-  }, { capture: true, passive: true });
+  document.addEventListener(
+    'scroll',
+    (event) => {
+      if (event.target instanceof Element && event.target.matches(selectors.scrollFade)) {
+        update(event.target);
+      }
+    },
+    { capture: true, passive: true }
+  );
 }

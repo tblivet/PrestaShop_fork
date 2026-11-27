@@ -35,7 +35,7 @@
   <a{{ attributes.defaults(defaults) }}>{{ content }}</a>
 {%- else -%}
   {#- A button: it opens the menu, it does not go anywhere. Icon only, its label shows in a tooltip, never while the menu is
-   # open (tooltips.js); the tooltip is on the box, as Bootstrap allows one component per element -#}
+   # open (tooltips.ts); the tooltip is on the box, as Bootstrap allows one component per element -#}
   {%- set defaults = {class: 'dropdown'} -%}
 
   {%- if iconOnly -%}

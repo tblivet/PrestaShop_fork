@@ -14,7 +14,7 @@ The process (checkpoints, done gates, records) is in [`ui/README.md`](../../../u
 |-------|------|
 | Design tokens, Bootstrap overrides, components | `ui/src/scss/` (`_variables.scss`, `components/`, `forms/`) |
 | Back-office frame and page styles (`ps-` classes) | `ui/src/scss/layout/`, `ui/src/scss/pages/` |
-| Generic UI JS, `data-ps-*` hooks | `ui/src/js/` (`components/`, `selectors.js`, `compat/`) |
+| Generic UI behaviour (TypeScript, strict), `data-ps-*` hooks | `ui/src/js/` (`components/`, `selectors.ts`, `compat/`, `globals.d.ts`) |
 | Storybook stories and page mockups | `ui/src/stories/`, `ui/src/playground/` |
 | Icons for `<twig:ui:Icon>` and stories (read by PHP, ship in the release): Material Symbols, brand logos | `ui/icons/` |
 | Twig components (`<twig:ui:*>`) | `src/PrestaShopBundle/Twig/Component/Ui/`, templates in `src/PrestaShopBundle/Resources/views/Admin/Component/Ui/` |
@@ -41,8 +41,8 @@ Storybook is the reference for the markup. Every change goes to both sides in th
 - **Icons**: `<twig:ui:Icon name="arrow_back"/>` renders an inline SVG from `ui/icons/` (DECISIONS.md #35): every Material Symbol is committed in `ui/icons/material-symbols/` (`ui/.ai/bin/sync-icons.mjs`), logos in `ui/icons/brand/` (`brand:github`). Iconify is off, so a missing icon fails the render. Stories render the same markup with `ui/src/stories/ui-icon.js`; Content/Icons searches the whole set. No icon font in kit markup.
 - **Actions and links**: `<twig:ui:Button>` for an action (or a link that looks like a button), `<twig:ui:IconButton>` when only the icon shows (a required `label`), `<twig:ui:Link>` to go somewhere (`back`, `external`). IconButton is a square Button: their props and rules are Button's. `<twig:ui:Dropdown>` opens a menu from a button; `<twig:ui:DropdownMenu>` is that menu for any other trigger.
 - **Shell**: on `ui_kit`, `default_layout.html.twig` places `<twig:ui:Header>` (fed by the `Header` component, `Component/Layout/Ui/header.html.twig`) and `<twig:ui:SideMenu>` (fed by `NavBar::getSections()`) in the `ps-layout` grid. Legacy pages render `legacy_layout.html.twig`, which keeps the old shell.
-- **JS ownership**: if Storybook or a module could use it without a PrestaShop back end, it goes to `ui/src/js` (hooks in `selectors.js`). Otherwise it stays in new-theme. Both bind to `data-ps-*` attributes only.
-- **`ui.js` is a classic IIFE script**: it sets `window.bootstrap` and registers Bootstrap's jQuery plugins at once (`compat/jquery-plugins.js`, temporary until pages call `bootstrap.Modal`… directly). jQuery comes from core `js/jquery`, loaded before it.
+- **JS ownership**: if Storybook or a module could use it without a PrestaShop back end, it goes to `ui/src/js` (hooks in `selectors.ts`). Otherwise it stays in new-theme. Both bind to `data-ps-*` attributes only.
+- **`ui.js` is a classic IIFE script**: it sets `window.bootstrap` and registers Bootstrap's jQuery plugins at once (`compat/jquery-plugins.ts`, temporary until pages call `bootstrap.Modal`… directly). jQuery comes from core `js/jquery`, loaded before it.
 - **Webpack entries** in `admin-dev/themes/new-theme/.webpack/common.js` are grouped: entries loaded only with the toggle off (Bootstrap 4 + prestakit) first, then their `_ui` replacements, then the rest.
 - **Forms**: the kit pages render fields with `@PrestaShop/Admin/TwigTemplateForm/ui_kit_layout.html.twig` (Bootstrap 5 plus errors and help linked to their field). Fields rendered one by one rely on `form_end()` to output fields added by modules. Form buttons render `<twig:ui:Button>` (`button_widget`): pass `variant` to `form_widget`, never `btn-*` classes.
 - **Build**: `make admin-ui` / `./tools/assets/build.sh admin-ui`. File names are fixed (no hash) because the layouts link them. Watch mode does not empty `dist/`, and Storybook has its own Vite config, so neither wipes the build. Only `ui/dist` ships in a release.
@@ -85,7 +85,7 @@ Owned by the kit in `ui/.ai/workflows/`, linked as `.claude/workflows/<name>.js`
 - `src/PrestaShopBundle/Twig/Component/Ui/FlashMessages.php` — component composing another (`ui:Alert`), reading the session, rendering nothing when empty
 - `Twig/Component/Ui/PasswordField.php` + `password_widget` in `TwigTemplateForm/ui_kit_layout.html.twig` — a form theme block mapping a field type to a component; its toggle state is ARIA only (`aria-pressed` picks the icon in CSS)
 - `src/PrestaShopBundle/Resources/views/Admin/Login/Ui/login.html.twig` + `ui/src/playground/pages/login/login.html` — page and its mockup
-- `ui/src/js/components/password-toggle.js` — generic behaviour bound to `data-ps-action`
+- `ui/src/js/components/password-toggle.ts` — generic behaviour bound to `data-ps-action`
 
 ## Related
 

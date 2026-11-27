@@ -4,18 +4,18 @@
  */
 import selectors from '../selectors';
 
-const isShown = (element) => element.getClientRects().length > 0;
+const isShown = (element: Element): boolean => element.getClientRects().length > 0;
 
 // How the last page was left, a click or a key, for this tab only (the storage may be refused: then a key)
 const INPUT = 'ps-last-input';
-const remember = (input) => {
+const remember = (input: string): void => {
   try {
     window.sessionStorage.setItem(INPUT, input);
   } catch {
     // no storage: the landing focus shows its ring
   }
 };
-const leftByPointer = () => {
+const leftByPointer = (): boolean => {
   try {
     return window.sessionStorage.getItem(INPUT) === 'pointer';
   } catch {
@@ -26,7 +26,7 @@ const leftByPointer = () => {
 // Go to a URL that differs from this page's only by its fragment (#order_grid_results): the browser would only scroll,
 // so the page reloads there, marked as a landing so the reload still focuses it
 const LANDING = 'ps-landing-reload';
-export const reloadTo = (url) => {
+export const reloadTo = (url: string): void => {
   try {
     window.sessionStorage.setItem(LANDING, '1');
   } catch {
@@ -35,7 +35,7 @@ export const reloadTo = (url) => {
   window.history.replaceState(window.history.state, '', url);
   window.location.reload();
 };
-const landingReload = () => {
+const landingReload = (): boolean => {
   try {
     const landing = window.sessionStorage.getItem(LANDING) === '1';
 
@@ -49,7 +49,7 @@ const landingReload = () => {
 
 // Focus where reading resumes; after a click, without the focus ring (data-ps-state="quiet-focus", until it leaves):
 // the ring tells keyboard users where they are, a mouse user would read it as a selection
-const land = (target) => {
+const land = (target: HTMLElement): void => {
   if (leftByPointer()) {
     target.setAttribute('data-ps-state', 'quiet-focus');
     target.addEventListener('blur', () => target.removeAttribute('data-ps-state'), { once: true });
@@ -62,13 +62,13 @@ const land = (target) => {
 // the first field marked aria-invalid in a form, otherwise the first flash message of any type, or a form-level error,
 // otherwise the results summary of a grid the address names (#order_grid_results: its sorting, pages and filters land
 // there), not on a reload, the fragment then dropped. A message takes focus without joining the tab order.
-export default function focusOnLoad() {
+export default function focusOnLoad(): void {
   const landing = landingReload();
 
   document.addEventListener('pointerdown', () => remember('pointer'), true);
   document.addEventListener('keydown', () => remember('keyboard'), true);
 
-  const field = Array.from(document.querySelectorAll(selectors.invalidField)).find(isShown);
+  const field = Array.from(document.querySelectorAll<HTMLElement>(selectors.invalidField)).find(isShown);
 
   if (field) {
     field.focus();
@@ -76,7 +76,9 @@ export default function focusOnLoad() {
     return;
   }
 
-  const message = Array.from(document.querySelectorAll(`${selectors.flashAlert}, ${selectors.formError}`)).find(isShown);
+  const message = Array.from(
+    document.querySelectorAll<HTMLElement>(`${selectors.flashAlert}, ${selectors.formError}`)
+  ).find(isShown);
 
   if (message) {
     message.setAttribute('tabindex', '-1');
@@ -85,14 +87,18 @@ export default function focusOnLoad() {
     return;
   }
 
-  const results = window.location.hash.length > 1 ? document.getElementById(decodeURIComponent(window.location.hash.slice(1))) : null;
+  const results =
+    window.location.hash.length > 1 ? document.getElementById(decodeURIComponent(window.location.hash.slice(1))) : null;
 
   if (!results?.matches(selectors.gridResults)) {
     return;
   }
   // Once: the address drops the fragment, so a reload or a later visit starts at the top like any page
   window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
-  if (landing || performance.getEntriesByType('navigation')[0]?.type !== 'reload') {
+  if (
+    landing ||
+    (performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined)?.type !== 'reload'
+  ) {
     land(results);
   }
 }

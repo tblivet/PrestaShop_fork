@@ -18,14 +18,14 @@
 
 {%- if href is null -%}
   {%- set tag = 'button' -%}
-  {#- What busy-button.js announces when a script makes the button busy -#}
+  {#- What busy-button.ts announces when a script makes the button busy -#}
   {%- set defaults = defaults|merge({type: type, 'data-ps-data-busy-label': busyText}) -%}
 
   {%- if disabled -%}
     {%- set defaults = defaults|merge({disabled: true}) -%}
   {%- endif -%}
 
-  {#- Same state as busy-button.js sets (a kit form being sent, a dialog saving); it ignores the clicks and keys of a busy button -#}
+  {#- Same state as busy-button.ts sets (a kit form being sent, a dialog saving); it ignores the clicks and keys of a busy button -#}
   {%- if loading -%}
     {%- set defaults = defaults|merge({'data-ps-state': 'loading', 'aria-disabled': 'true'}) -%}
   {%- endif -%}

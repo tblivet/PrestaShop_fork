@@ -19,7 +19,7 @@
 
       <li class="ps-pagination__item ps-pagination__item--position">
         {%- if jumpUrl -%}
-          {#- The field inside its label: its name reads "Page 12 of 25"; pagination-jump.js goes to the page typed, or puts
+          {#- The field inside its label: its name reads "Page 12 of 25"; pagination-jump.ts goes to the page typed, or puts
               the current one back and announces the invalid message (novalidate: the pattern only says digits are
               expected) -#}
           <form class="ps-pagination__jump" data-ps-action="pagination-jump" data-ps-data-url="{{ jumpUrl }}" data-ps-data-last="{{ last }}" data-ps-data-invalid-message="{{ 'Enter a page number from 1 to %last%'|trans({'%last%': last}, 'Admin.Global') }}"{% if perPage %} data-ps-data-per-page="{{ perPage }}"{% endif %} novalidate>

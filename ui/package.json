@@ -12,6 +12,7 @@
     "build": "vite build",
     "watch": "vite build --watch --mode development",
     "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "format": "prettier --check .",
@@ -30,11 +31,13 @@
     "@storybook/addon-essentials": "^8.6.18",
     "@storybook/addon-links": "^8.6.18",
     "@storybook/html-vite": "^8.6.18",
+    "@types/bootstrap": "^5.2.10",
     "prettier": "^3.8.3",
     "sass": "^1.99.0",
     "storybook": "^8.6.18",
     "stylelint": "^16.26.1",
     "stylelint-config-twbs-bootstrap": "^16.1.0",
+    "typescript": "^5.9.3",
     "vite": "^8.0.10"
   }
 }

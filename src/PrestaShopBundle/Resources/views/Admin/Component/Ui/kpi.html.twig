@@ -14,7 +14,7 @@
     {%- endif -%}
     <div class="ps-kpi__text">
       <p class="ps-kpi__title">{{ title }}</p>
-      {#- A value to refresh shows a placeholder, named for screen readers, until kpi.js sets it (a cached one may be out
+      {#- A value to refresh shows a placeholder, named for screen readers, until kpi.ts sets it (a cached one may be out
           of date); none or blank, a long dash, named too -#}
       {%- set noValue = 'No value'|trans({}, 'Admin.Global') -%}
       {%- if refreshUrl -%}

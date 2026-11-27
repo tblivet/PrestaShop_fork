@@ -5,12 +5,12 @@
 import selectors from '../selectors';
 
 // <button data-ps-action="toggle-password" aria-controls="{input id}"> (the <twig:ui:PasswordField> button) shows or hides that input's value.
-export default function initPasswordToggle() {
+export default function initPasswordToggle(): void {
   document.addEventListener('click', (event) => {
-    const button = event.target.closest(selectors.passwordToggle);
-    const input = button && document.getElementById(button.getAttribute('aria-controls'));
+    const button = event.target instanceof Element ? event.target.closest(selectors.passwordToggle) : null;
+    const input = button && document.getElementById(String(button.getAttribute('aria-controls')));
 
-    if (!input) {
+    if (!button || !(input instanceof HTMLInputElement)) {
       return;
     }
 

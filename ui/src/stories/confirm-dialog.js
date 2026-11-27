@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // The markup <twig:ui:ConfirmDialog> renders (confirm_dialog.html.twig, a <twig:ui:Modal>) and its Twig call, for the
-// ConfirmDialog story. The kit layout places one per page; confirm-dialog.js fills it from the button or link clicked.
+// ConfirmDialog story. The kit layout places one per page; confirm-dialog.ts fills it from the button or link clicked.
 import modal, { modalButton } from './modal';
 import { markup, twigCall } from './twig-snippet';
 

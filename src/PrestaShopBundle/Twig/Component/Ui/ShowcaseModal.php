@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 /**
  * The introduction of a page, mirrors ui/src/stories/components/ShowcaseModal.stories.js:
  * {% if not isShowcaseCardClosed %}<twig:ui:ShowcaseModal name="attributes_card" title="…" image="…" learnMore="…">text</twig:ui:ShowcaseModal>{% endif %}
- * A static <twig:ui:Modal> that showcase-modal.js opens when the page loads: the illustration, the text (content
+ * A static <twig:ui:Modal> that showcase-modal.ts opens when the page loads: the illustration, the text (content
  * block) and a link to the documentation. Closing it, by its close button, "Got it" or Escape, records it closed for
  * the shop (admin_close_showcase_card), and the page renders it no more; a click outside does not close it.
  */

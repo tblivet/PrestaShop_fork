@@ -38,7 +38,7 @@ $component-name: ps-pagination;
     white-space: nowrap;
   }
 
-  // The field's error (pagination-jump.js) is Bootstrap's invalid tooltip, under the field
+  // The field's error (pagination-jump.ts) is Bootstrap's invalid tooltip, under the field
   &__jump {
     position: relative;
     display: flex;

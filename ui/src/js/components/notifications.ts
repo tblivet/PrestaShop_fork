@@ -11,7 +11,22 @@ import selectors from '../selectors';
 
 const REFRESH_DELAY = 120000;
 
-const node = (tag, className, text) => {
+// One item of a kind, as the server lists it (the fields each kind's line reads)
+type NotificationItem = Record<string, string>;
+
+type NotificationsData = Record<string, { total: string | number; results: NotificationItem[] }>;
+
+interface Line {
+  url: string;
+  title: string;
+  details: string[];
+}
+
+const node = <K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  className?: string,
+  text?: string
+): HTMLElementTagNameMap[K] => {
   const element = document.createElement(tag);
 
   if (className) {
@@ -25,20 +40,19 @@ const node = (tag, className, text) => {
 };
 
 // The thread status as the Customer service page names it (pending1 → "Pending 1"); an unknown one as it comes
-const statusLabel = (root, status) => {
+const statusLabel = (root: HTMLElement, status: string): string => {
   try {
-    return JSON.parse(root.dataset.psDataStatuses ?? '{}')[status] ?? status;
+    return (JSON.parse(root.dataset.psDataStatuses ?? '{}') as Record<string, string>)[status] ?? status;
   } catch {
     return status;
   }
 };
 
-const named = (notification) => (notification.company
-  ? `${notification.customer_name} (${notification.company})`
-  : notification.customer_name);
+const named = (notification: NotificationItem): string =>
+  notification.company ? `${notification.customer_name} (${notification.company})` : notification.customer_name;
 
 // Each kind's line: where it goes, its title (who) and its details (what). Values are set as text, never HTML.
-const LINES = {
+const LINES: Record<string, (notification: NotificationItem, root: HTMLElement) => Line> = {
   order: (notification) => ({
     url: notification.order_view_url,
     title: `#${notification.id_order} ${notification.customer_name}`,
@@ -56,10 +70,13 @@ const LINES = {
   }),
 };
 
-const kindIcon = (root, type) => root.querySelector(selectors.notificationsIcons)
-  ?.content.querySelector(`[data-ps-data-type="${type}"]`)?.cloneNode(true);
+const kindIcon = (root: HTMLElement, type: string): Node | undefined =>
+  root
+    .querySelector<HTMLTemplateElement>(selectors.notificationsIcons)
+    ?.content.querySelector(`[data-ps-data-type="${type}"]`)
+    ?.cloneNode(true);
 
-const line = (root, type, notification) => {
+const line = (root: HTMLElement, type: string, notification: NotificationItem): HTMLLIElement => {
   const { url, title, details } = LINES[type](notification, root);
   const item = node('li');
   const link = node('a', 'ps-notifications__item');
@@ -67,17 +84,21 @@ const line = (root, type, notification) => {
   const icon = kindIcon(root, type);
 
   link.href = url;
-  text.append(node('span', 'ps-notifications__title', title), node('span', 'ps-notifications__details', details.filter(Boolean).join(' · ')));
+  text.append(
+    node('span', 'ps-notifications__title', title),
+    node('span', 'ps-notifications__details', details.filter(Boolean).join(' · '))
+  );
   link.append(...(icon ? [icon] : []), text);
   item.append(link);
 
   return item;
 };
 
-const selectedFilter = (root) => root.querySelector(`${selectors.filterNotifications}[aria-selected="true"]`);
-const selectedType = (root) => selectedFilter(root)?.dataset.psDataType ?? '';
+const selectedFilter = (root: HTMLElement): HTMLElement | null =>
+  root.querySelector<HTMLElement>(`${selectors.filterNotifications}[aria-selected="true"]`);
+const selectedType = (root: HTMLElement): string => selectedFilter(root)?.dataset.psDataType ?? '';
 
-const setCount = (badge, count) => {
+const setCount = (badge: HTMLElement | null, count: number): void => {
   if (badge) {
     badge.textContent = count > 99 ? '99+' : String(count);
     badge.hidden = count === 0;
@@ -85,11 +106,11 @@ const setCount = (badge, count) => {
 };
 
 // The list for the selected filter; "All" shows each kind with new items under its name
-const show = (root, data) => {
+const show = (root: HTMLElement, data: NotificationsData): void => {
   const type = selectedType(root);
-  const list = root.querySelector(selectors.notificationsList);
+  const list = root.querySelector<HTMLElement>(selectors.notificationsList);
   const kinds = Object.keys(data).filter((kind) => LINES[kind] && (type === '' || kind === type));
-  const groups = [];
+  const groups: HTMLElement[] = [];
 
   // A list per kind; under All, each is named by its heading
   kinds.forEach((kind) => {
@@ -104,7 +125,7 @@ const show = (root, data) => {
     items.append(...results.map((notification) => line(root, kind, notification)));
 
     if (type === '') {
-      const filter = root.querySelector(`${selectors.filterNotifications}[data-ps-data-type="${kind}"]`);
+      const filter = root.querySelector<HTMLElement>(`${selectors.filterNotifications}[data-ps-data-type="${kind}"]`);
       const heading = node('p', 'ps-notifications__heading', filter?.dataset.psDataLabel ?? '');
 
       heading.id = `ps-notifications-heading-${kind}`;
@@ -114,61 +135,75 @@ const show = (root, data) => {
     groups.push(items);
   });
 
+  if (!list) {
+    return;
+  }
   list.replaceChildren(...groups);
   list.hidden = groups.length === 0;
 
   // The generic empty state: the selected filter's sentence, and the kind's tip when there is one
-  const empty = root.querySelector(selectors.notificationsEmpty);
+  const empty = root.querySelector<HTMLElement>(selectors.notificationsEmpty);
+  const emptyTitle = empty?.querySelector(selectors.notificationsEmptyTitle);
+  if (!empty || !emptyTitle) {
+    return;
+  }
   empty.hidden = groups.length > 0;
-  empty.querySelector(selectors.notificationsEmptyTitle).textContent = selectedFilter(root)?.dataset.psDataEmpty ?? '';
+  emptyTitle.textContent = selectedFilter(root)?.dataset.psDataEmpty ?? '';
 
   // The panel takes the focus itself only when it holds no link to Tab to
   const panel = root.querySelector(selectors.notificationsPanel);
+  if (!panel) {
+    return;
+  }
   panel.setAttribute('aria-labelledby', selectedFilter(root)?.id ?? '');
   if (groups.length === 0) {
     panel.setAttribute('tabindex', '0');
   } else {
     panel.removeAttribute('tabindex');
   }
-  empty.querySelectorAll(selectors.notificationsEmptyTip).forEach((tip) => {
+  empty.querySelectorAll<HTMLElement>(selectors.notificationsEmptyTip).forEach((tip) => {
     tip.hidden = tip.dataset.psDataType !== type;
   });
 };
 
-const count = (root, data) => {
+const count = (root: HTMLElement, data: NotificationsData): void => {
   let total = 0;
 
   Object.entries(data).forEach(([kind, { total: kindTotal }]) => {
     if (LINES[kind]) {
       total += Number(kindTotal);
-      setCount(root.querySelector(`${selectors.notificationsCount}[data-ps-data-type="${kind}"]`), Number(kindTotal));
+      setCount(
+        root.querySelector<HTMLElement>(`${selectors.notificationsCount}[data-ps-data-type="${kind}"]`),
+        Number(kindTotal)
+      );
     }
   });
-  setCount(root.querySelector(`${selectors.notificationsCount}[data-ps-data-type=""]`), total);
-  setCount(root.querySelector(selectors.notificationsTotal), total);
+  setCount(root.querySelector<HTMLElement>(`${selectors.notificationsCount}[data-ps-data-type=""]`), total);
+  setCount(root.querySelector<HTMLElement>(selectors.notificationsTotal), total);
 };
 
-const post = (url, fields = {}) => fetch(url, {
-  method: 'POST',
-  body: new URLSearchParams(fields),
-  headers: { 'X-Requested-With': 'XMLHttpRequest' },
-});
+const post = (url: string, fields: Record<string, string> = {}): Promise<Response> =>
+  fetch(url, {
+    method: 'POST',
+    body: new URLSearchParams(fields),
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+  });
 
-export default function initNotifications() {
-  const root = document.querySelector(selectors.notifications);
+export default function initNotifications(): void {
+  const root = document.querySelector<HTMLElement>(selectors.notifications);
 
   if (!root) {
     return;
   }
 
-  let data = {};
-  let timer = null;
-  const seen = new Set();
+  let data: NotificationsData = {};
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const seen = new Set<string>();
 
   const refresh = () => {
     clearTimeout(timer);
-    post(root.dataset.psDataUrl)
-      .then((response) => (response.ok ? response.json() : {}))
+    post(root.dataset.psDataUrl ?? '')
+      .then((response): Promise<NotificationsData> | NotificationsData => (response.ok ? response.json() : {}))
       .then((json) => {
         data = json;
         count(root, data);
@@ -183,12 +218,14 @@ export default function initNotifications() {
   const markShown = () => {
     const type = selectedType(root);
 
-    Object.keys(data).filter((kind) => type === '' || kind === type).forEach((kind) => seen.add(kind));
+    Object.keys(data)
+      .filter((kind) => type === '' || kind === type)
+      .forEach((kind) => seen.add(kind));
   };
 
   // Tabs: the selected filter is the only one in the Tab order; showing it fills the panel
-  const select = (filter, focus = false) => {
-    root.querySelectorAll(selectors.filterNotifications).forEach((button) => {
+  const select = (filter: HTMLElement, focus = false): void => {
+    root.querySelectorAll<HTMLElement>(selectors.filterNotifications).forEach((button) => {
       button.setAttribute('aria-selected', String(button === filter));
       button.tabIndex = button === filter ? 0 : -1;
     });
@@ -201,7 +238,8 @@ export default function initNotifications() {
   };
 
   root.addEventListener('click', (event) => {
-    const filter = event.target instanceof Element ? event.target.closest(selectors.filterNotifications) : null;
+    const filter =
+      event.target instanceof Element ? event.target.closest<HTMLElement>(selectors.filterNotifications) : null;
 
     if (filter) {
       select(filter);
@@ -210,15 +248,16 @@ export default function initNotifications() {
 
   // Arrows move to the previous or next filter and show it (reversed right to left), Home and End to the first and last
   root.addEventListener('keydown', (event) => {
-    const current = event.target instanceof Element ? event.target.closest(selectors.filterNotifications) : null;
+    const current =
+      event.target instanceof Element ? event.target.closest<HTMLElement>(selectors.filterNotifications) : null;
 
     if (!current) {
       return;
     }
-    const filters = [...root.querySelectorAll(selectors.filterNotifications)];
+    const filters = [...root.querySelectorAll<HTMLElement>(selectors.filterNotifications)];
     const index = filters.indexOf(current);
     const step = document.dir === 'rtl' || getComputedStyle(current).direction === 'rtl' ? -1 : 1;
-    const targets = {
+    const targets: Record<string, HTMLElement> = {
       ArrowRight: filters[(index + step + filters.length) % filters.length],
       ArrowLeft: filters[(index - step + filters.length) % filters.length],
       Home: filters[0],
@@ -237,13 +276,15 @@ export default function initNotifications() {
 
   // Closed: what was shown is seen, the next opening starts on All, then the counts are loaded again
   root.addEventListener('hidden.bs.dropdown', () => {
-    root.querySelectorAll(selectors.filterNotifications).forEach((button) => {
+    root.querySelectorAll<HTMLElement>(selectors.filterNotifications).forEach((button) => {
       button.setAttribute('aria-selected', String(button.dataset.psDataType === ''));
       button.tabIndex = button.dataset.psDataType === '' ? 0 : -1;
     });
-    Promise.all([...seen].filter((kind) => Number(data[kind]?.total) > 0)
-      .map((type) => post(root.dataset.psDataAckUrl, { type }).catch(() => {})))
-      .finally(refresh);
+    Promise.all(
+      [...seen]
+        .filter((kind) => Number(data[kind]?.total) > 0)
+        .map((type) => post(root.dataset.psDataAckUrl ?? '', { type }).catch(() => {}))
+    ).finally(refresh);
     seen.clear();
   });
 

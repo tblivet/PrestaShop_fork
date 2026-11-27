@@ -3,7 +3,7 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 // A box that scrolls (ps-scroll-fade--x sideways, --y up and down): an edge fades out where more content is hidden
-// and fades back in once scrolled to that end, so nothing stays covered. scroll-fade.js says which ends hide content
+// and fades back in once scrolled to that end, so nothing stays covered. scroll-fade.ts says which ends hide content
 // (data-ps-state "more-before", "more-after"). A mask, not a coloured layer: it works on any background.
 $component-name: ps-scroll-fade;
 
@@ -63,7 +63,7 @@ $component-name: ps-scroll-fade;
     scroll-padding-block: var(--#{$prefix}scroll-fade-size);
   }
 
-  // A named region the keyboard scrolls (scroll-fade.js makes it a tab stop while it overflows): focused, its content
+  // A named region the keyboard scrolls (scroll-fade.ts makes it a tab stop while it overflows): focused, its content
   // shows whole, unmasked, and Bootstrap's focus ring goes inside its edge
   &:focus-visible {
     outline: 0;

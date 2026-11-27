@@ -17,7 +17,7 @@
   {% set forgotEmail = requestPasswordResetForm.email_forgot %}
   {% set forgotIntroId = forgotEmail.vars.id ~ '_intro' %}
 
-  {# submit-once: the kit marks the button busy and ignores a second submit (ui/src/js/components/submit-once.js) #}
+  {# submit-once: the kit marks the button busy and ignores a second submit (ui/src/js/components/submit-once.ts) #}
   {{ form_start(loginForm, {action: path('admin_login'), attr: loginForm.vars.attr|merge({class: 'ps-login__form' ~ (showRequestPasswordResetForm ? ' d-none' : ''), 'data-ps-action': 'submit-once'})}) }}
     {# The panel header (title, messages), then the fields #}
     <twig:ui:Layout:Stack gap="lg">

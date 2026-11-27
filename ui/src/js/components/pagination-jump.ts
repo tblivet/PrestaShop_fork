@@ -11,15 +11,14 @@ import { announce } from './announcer';
 // expected under it (data-ps-data-invalid-message, Bootstrap's invalid tooltip, the field described by it, aria-invalid
 // styled by the kit's forms) and the
 // page's Announcer says it.
-export const jumpUrl = (template, page, perPage) => template
-  .replaceAll('{page}', String(page))
-  .replaceAll('{offset}', String((page - 1) * (perPage ?? 1)));
+export const jumpUrl = (template: string, page: number, perPage?: number | null): string =>
+  template.replaceAll('{page}', String(page)).replaceAll('{offset}', String((page - 1) * (perPage ?? 1)));
 
 let errors = 0;
 
 // The message under the field, made once per form
-const errorOf = (form) => {
-  let error = form.querySelector('.ps-pagination__error');
+const errorOf = (form: HTMLFormElement): HTMLElement => {
+  let error = form.querySelector<HTMLElement>('.ps-pagination__error');
 
   if (!error) {
     errors += 1;
@@ -27,14 +26,17 @@ const errorOf = (form) => {
     error.id = `ps-pagination-error-${errors}`;
     error.className = 'invalid-tooltip ps-pagination__error';
     error.hidden = true;
-    error.textContent = form.dataset.psDataInvalidMessage;
+    error.textContent = form.dataset.psDataInvalidMessage ?? '';
     form.append(error);
   }
 
   return error;
 };
 
-const setInvalid = (input, invalid) => {
+const setInvalid = (input: HTMLInputElement, invalid: boolean): void => {
+  if (!input.form) {
+    return;
+  }
   const error = errorOf(input.form);
 
   error.hidden = !invalid;
@@ -47,7 +49,7 @@ const setInvalid = (input, invalid) => {
   }
 };
 
-export default function initPaginationJump() {
+export default function initPaginationJump(): void {
   document.addEventListener('input', (event) => {
     if (event.target instanceof HTMLInputElement && event.target.form?.matches(selectors.paginationJump)) {
       setInvalid(event.target, false);
@@ -63,13 +65,17 @@ export default function initPaginationJump() {
 
     event.preventDefault();
     const input = form.elements.namedItem('page');
+
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
     const typed = Number.parseInt(input.value.trim(), 10);
 
     if (Number.isNaN(typed)) {
       input.value = input.defaultValue;
       setInvalid(input, true);
       input.select();
-      announce(form.dataset.psDataInvalidMessage);
+      announce(form.dataset.psDataInvalidMessage ?? '');
 
       return;
     }
@@ -77,6 +83,6 @@ export default function initPaginationJump() {
     const page = Math.min(Math.max(typed, 1), Number(form.dataset.psDataLast));
     const perPage = form.dataset.psDataPerPage ? Number(form.dataset.psDataPerPage) : null;
 
-    window.location.assign(jumpUrl(form.dataset.psDataUrl, page, perPage));
+    window.location.assign(jumpUrl(form.dataset.psDataUrl ?? '', page, perPage));
   });
 }

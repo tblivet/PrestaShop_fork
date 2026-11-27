@@ -5,7 +5,7 @@
 import selectors from '../selectors';
 import { setButtonBusy } from './busy-button';
 
-const setBusy = (form, button, busy) => {
+const setBusy = (form: HTMLFormElement, button: HTMLElement | null, busy: boolean): void => {
   if (busy) {
     form.setAttribute('data-ps-state', 'loading');
     if (button) {
@@ -16,13 +16,13 @@ const setBusy = (form, button, busy) => {
   }
 
   form.removeAttribute('data-ps-state');
-  form.querySelectorAll(selectors.busyButton).forEach((busyButton) => setButtonBusy(busyButton, false));
+  form.querySelectorAll<HTMLElement>(selectors.busyButton).forEach((busyButton) => setButtonBusy(busyButton, false));
 };
 
 // <form data-ps-action="submit-once">: once a submit goes through (no page script blocked it), its button shows it is busy and
 // further submits are ignored, so a slow server does not get the form twice. Listening on document runs after the form's own
 // checks, which block an invalid submit with preventDefault.
-export default function initSubmitOnce() {
+export default function initSubmitOnce(): void {
   document.addEventListener('submit', (event) => {
     const form = event.target;
 
@@ -37,14 +37,14 @@ export default function initSubmitOnce() {
     }
 
     if (!event.defaultPrevented) {
-      setBusy(form, event.submitter ?? form.querySelector('[type="submit"]'), true);
+      setBusy(form, event.submitter ?? form.querySelector<HTMLElement>('[type="submit"]'), true);
     }
   });
 
   // Back to the page from the browser history: the form is usable again
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-      document.querySelectorAll(selectors.submitOnce).forEach((form) => setBusy(form, null, false));
+      document.querySelectorAll<HTMLFormElement>(selectors.submitOnce).forEach((form) => setBusy(form, null, false));
     }
   });
 }

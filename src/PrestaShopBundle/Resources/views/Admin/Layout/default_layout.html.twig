@@ -173,9 +173,9 @@
 
 {% if ui_kit %}</div></main></div>
   {{ include('@PrestaShop/Admin/Component/Layout/Ui/quick_access_modals.html.twig') }}
-  {# What scripts tell screen readers (announcer.js), in the page from the start so it is announced #}
+  {# What scripts tell screen readers (announcer.ts), in the page from the start so it is announced #}
   <twig:ui:Announcer/>
-  {# The one dialog every data-ps-confirm button or link asks through (confirm-dialog.js) #}
+  {# The one dialog every data-ps-confirm button or link asks through (confirm-dialog.ts) #}
   <twig:ui:ConfirmDialog/>
 {% else %}
   <div class="mobile-layer"></div>

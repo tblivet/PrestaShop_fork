@@ -22,7 +22,7 @@ For each state say how to reach it: `interact` (browser steps only), `setup` (a 
 
 ## For a component
 
-Read its PHP class (`src/PrestaShopBundle/Twig/Component/Ui/`), its template (`Admin/Component/Ui/`), its SCSS (`ui/src/scss`), its JS (`ui/src/js`, `selectors.js`), its story (`ui/src/stories`) and its tests. List:
+Read its PHP class (`src/PrestaShopBundle/Twig/Component/Ui/`), its template (`Admin/Component/Ui/`), its SCSS (`ui/src/scss`), its JS (`ui/src/js`, `selectors.ts`), its story (`ui/src/stories`) and its tests. List:
 - every prop with its type, PHP default and allowed values or validation (`PreMount`, enums);
 - its Storybook story ids (from `<storybook>/index.json`) and what each shows;
 - the cases to look at: every story as it is, plus what no story shows, reached through Storybook URL args (`args=key:value;key2:value2`, values limited to letters, digits, spaces, `-` and `_`): very long text in each text prop (one without spaces), each optional prop left out, each enum value not shown, extreme numbers, icon with and without label, combinations that collide.

@@ -3,7 +3,7 @@
  # docs/licenses/LICENSE.txt file that was distributed with this source code.
  -#}
 {#- With a preview (Orders), the value names the row in its own element, the toggle beside it opens the preview row
-    (grid-preview.js) -#}
+    (grid-preview.ts) -#}
 {%- set previewUrl = component.previewUrl(record, column) -%}
 {%- if previewUrl -%}
   <span id="{{ rowHeaderId }}">{{ record[column.options.identifier_field] }}</span>

@@ -12,7 +12,7 @@ Check:
 - **Props**: typed, validated (`PreMount`, enums), sensible defaults, no unused or dead prop, names consistent with the other kit components.
 - **Markup**: semantic elements, the right Bootstrap component structure, no raw markup a kit component already covers.
 - **Styles**: Bootstrap first (#38), every style in the component's BEM partial, written with Bootstrap values (`var(--#{$prefix}…)`, `$spacers`, `media-breakpoint-*`, mixins); no layout or spacing utilities in markup, only Bootstrap behaviour ones (`visually-hidden`, a `d-{bp}-none` following an `offcanvas-{bp}`); BEM modifiers generated from props; logical properties; no `data-ps-*` in SCSS except `data-ps-state`; no rounded corners.
-- **JS**: hooks through `data-ps-*` and `ui/src/js/selectors.js`, never classes or ids; runtime state in `data-ps-state`; listeners cleaned up; works when the element is added later.
+- **JS**: hooks through `data-ps-*` and `ui/src/js/selectors.ts`, never classes or ids; runtime state in `data-ps-state`; listeners cleaned up; works when the element is added later.
 - **Strings**: every visible or announced string is translatable, with the right domain.
 - **Tests**: every prop and template branch has a unit or render test.
 

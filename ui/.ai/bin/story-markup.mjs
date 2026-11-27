@@ -18,17 +18,27 @@ const storiesDir = join(repo, 'ui/src/stories');
 
 export const SNAPSHOT = join(repo, 'tests/Integration/PrestaShopBundle/Twig/Component/Ui/story-markup.json');
 
-// Load stories the way Vite does: imports without extension, "?raw" files as text, JSON files as their data
+// Load stories the way Vite does: imports without extension (.js, else the kit's .ts), "?raw" files as text, JSON
+// files as their data, TypeScript stripped of its types
+const typescript = pathToFileURL(join(repo, 'ui/node_modules/typescript/lib/typescript.js')).href;
 register(`data:text/javascript,${encodeURIComponent(`
-  import {readFileSync} from 'node:fs';
+  import {existsSync, readFileSync} from 'node:fs';
   import {fileURLToPath} from 'node:url';
+  import ts from '${typescript}';
   export async function resolve(specifier, context, next) {
     if (specifier.startsWith('.') && !/\\.\\w+(\\?raw)?$/.test(specifier)) {
-      return next(specifier + '.js', context);
+      const js = new URL(specifier + '.js', context.parentURL);
+      return next(specifier + (existsSync(fileURLToPath(js)) ? '.js' : '.ts'), context);
     }
     return next(specifier, context);
   }
   export async function load(url, context, next) {
+    if (url.endsWith('.ts')) {
+      const {outputText} = ts.transpileModule(readFileSync(fileURLToPath(url), 'utf8'), {
+        compilerOptions: {module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022},
+      });
+      return {format: 'module', source: outputText, shortCircuit: true};
+    }
     if (url.endsWith('?raw')) {
       const text = readFileSync(fileURLToPath(url.slice(0, -4)), 'utf8');
       return {format: 'module', source: 'export default ' + JSON.stringify(text), shortCircuit: true};

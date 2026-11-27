@@ -5,7 +5,7 @@
 {# Form theme of the /ui kit pages, which render widgets one by one rather than with form_row #}
 {% extends 'bootstrap_5_layout.html.twig' %}
 
-{# Kit forms report their own errors, never the browser's bubbles (DECISIONS.md #30): ui/src/js/components/form-validation.js
+{# Kit forms report their own errors, never the browser's bubbles (DECISIONS.md #30): ui/src/js/components/form-validation.ts
  # checks the fields that have a client error slot on submit #}
 {%- block form_start -%}
   {%- set attr = attr|merge({

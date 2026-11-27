@@ -57,7 +57,7 @@ $component-name: ps-dropdown-menu;
   }
 }
 
-// Any Bootstrap menu shown as a popover (the top layer, dropdown-top-layer.js): the browser's own popover box undone,
+// Any Bootstrap menu shown as a popover (the top layer, dropdown-top-layer.ts): the browser's own popover box undone,
 // Popper places it
 .dropdown-menu[popover] {
   inset: auto;

@@ -3,20 +3,28 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 
+interface PluginComponent {
+  NAME: string;
+  jQueryInterface: JQueryPlugin;
+}
+
 // TEMPORARY: remove once back-office code calls Bootstrap's API (bootstrap.Modal…)
 // instead of the jQuery plugins ($(…).modal()…).
 //
 // Bootstrap waits for DOMContentLoaded to register its jQuery plugins, which is
 // too late for back-office scripts calling $(…).modal() in their ready handlers.
-export default function registerJqueryPlugins(bootstrap) {
+export default function registerJqueryPlugins(bootstrap: typeof import('bootstrap')) {
   const { jQuery } = window;
 
   if (!jQuery) {
     return;
   }
 
-  Object.values(bootstrap)
-    .filter((Component) => typeof Component.jQueryInterface === 'function')
+  Object.values<object>(bootstrap)
+    .filter(
+      (Component): Component is PluginComponent =>
+        'jQueryInterface' in Component && typeof Component.jQueryInterface === 'function'
+    )
     .forEach((Component) => {
       const { NAME } = Component;
       const previous = jQuery.fn[NAME];
