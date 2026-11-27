@@ -28,6 +28,7 @@ use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -260,17 +261,29 @@ class WebserviceController extends PrestaShopAdminController
     /**
      * Toggles webservice account status.
      *
+     * @param Request $request
      * @param int $webserviceKeyId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_webservice_keys_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message: 'You do not have permission to edit this.')]
     public function toggleStatusAction(
+        Request $request,
         int $webserviceKeyId,
         WebserviceKeyStatusModifier $statusModifier,
-    ): RedirectResponse {
+    ): RedirectResponse|JsonResponse {
         $errors = $statusModifier->toggleStatus($webserviceKeyId);
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json([
+                'status' => empty($errors),
+                'message' => empty($errors)
+                    ? $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
+                    : reset($errors),
+            ]);
+        }
 
         if (!empty($errors)) {
             $this->addFlashErrors($errors);

@@ -32,6 +32,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\BulkActionsTrait;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -175,18 +176,23 @@ class StoreController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))")]
-    public function toggleStatusAction(int $storeId): RedirectResponse
+    public function toggleStatusAction(Request $request, int $storeId): RedirectResponse|JsonResponse
     {
         try {
             $this->dispatchCommand(new ToggleStoreStatusCommand($storeId));
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_stores_index');
     }

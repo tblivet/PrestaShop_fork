@@ -36,6 +36,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -200,24 +201,30 @@ class CarrierController extends PrestaShopAdminController
     /**
      * Toggles carrier status.
      *
+     * @param Request $request
      * @param int $carrierId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_carriers_index', message: 'You need permission to edit this.')]
-    public function toggleStatusAction(int $carrierId): RedirectResponse
+    public function toggleStatusAction(Request $request, int $carrierId): RedirectResponse|JsonResponse
     {
         try {
             $this->dispatchCommand(new ToggleCarrierStatusCommand($carrierId));
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (CarrierException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_carriers_index');
     }
@@ -225,24 +232,30 @@ class CarrierController extends PrestaShopAdminController
     /**
      * Toggles carrier is-free status
      *
+     * @param Request $request
      * @param int $carrierId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_carriers_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_carriers_index', message: 'You need permission to edit this.')]
-    public function toggleIsFreeAction(int $carrierId): RedirectResponse
+    public function toggleIsFreeAction(Request $request, int $carrierId): RedirectResponse|JsonResponse
     {
         try {
             $this->dispatchCommand(new ToggleCarrierIsFreeCommand($carrierId));
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (CarrierException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_carriers_index');
     }

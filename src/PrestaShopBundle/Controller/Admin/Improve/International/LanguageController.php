@@ -32,6 +32,7 @@ use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -228,13 +229,14 @@ class LanguageController extends PrestaShopAdminController
     /**
      * Toggles language status
      *
+     * @param Request $request
      * @param int $languageId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_languages_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_languages_index')]
-    public function toggleStatusAction(int $languageId): RedirectResponse
+    public function toggleStatusAction(Request $request, int $languageId): RedirectResponse|JsonResponse
     {
         try {
             /** @var EditableLanguage $editableLanguage */
@@ -245,13 +247,18 @@ class LanguageController extends PrestaShopAdminController
                 !$editableLanguage->isActive()
             ));
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (LanguageException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_languages_index');
     }

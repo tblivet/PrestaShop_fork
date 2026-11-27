@@ -474,12 +474,13 @@ class TaxRulesGroupController extends PrestaShopAdminController
     /**
      * Toggles status.
      *
+     * @param Request $request
      * @param int $taxRulesGroupId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_tax_rules_groups_index')]
-    public function toggleStatusAction(int $taxRulesGroupId): RedirectResponse
+    public function toggleStatusAction(Request $request, int $taxRulesGroupId): RedirectResponse|JsonResponse
     {
         try {
             /** @var EditableTaxRulesGroup $editableTaxRulesGroup */
@@ -491,13 +492,18 @@ class TaxRulesGroupController extends PrestaShopAdminController
                 new SetTaxRulesGroupStatusCommand($taxRulesGroupId, !$editableTaxRulesGroup->isActive())
             );
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_tax_rules_groups_index');
     }

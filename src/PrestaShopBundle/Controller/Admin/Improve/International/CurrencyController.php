@@ -304,26 +304,29 @@ class CurrencyController extends PrestaShopAdminController
     /**
      * Toggles status.
      *
+     * @param Request $request
      * @param int $currencyId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_currencies_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_currencies_index', message: 'You need permission to edit this.')]
-    public function toggleStatusAction(int $currencyId): RedirectResponse
+    public function toggleStatusAction(Request $request, int $currencyId): RedirectResponse|JsonResponse
     {
         try {
             $this->dispatchCommand(new ToggleCurrencyStatusCommand((int) $currencyId));
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (CurrencyException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_currencies_index');
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
         }
 
-        $this->addFlash(
-            'success',
-            $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-        );
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_currencies_index');
     }

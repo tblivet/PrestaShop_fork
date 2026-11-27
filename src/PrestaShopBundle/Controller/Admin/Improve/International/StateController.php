@@ -270,25 +270,31 @@ class StateController extends PrestaShopAdminController
     /**
      * Toggles state status
      *
+     * @param Request $request
      * @param int $stateId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_states_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_states_index')]
-    public function toggleStatusAction(int $stateId): RedirectResponse
+    public function toggleStatusAction(Request $request, int $stateId): RedirectResponse|JsonResponse
     {
         try {
             $this->dispatchCommand(
                 new ToggleStateStatusCommand((int) $stateId)
             );
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (StateException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_states_index');
     }

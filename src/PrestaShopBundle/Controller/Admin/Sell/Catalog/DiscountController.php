@@ -228,13 +228,14 @@ class DiscountController extends PrestaShopAdminController
     /**
      * Toggles discount status
      *
+     * @param Request $request
      * @param int $discountId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_discounts_index')]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_discounts_index')]
-    public function toggleStatusAction(int $discountId): RedirectResponse
+    public function toggleStatusAction(Request $request, int $discountId): RedirectResponse|JsonResponse
     {
         try {
             /** @var DiscountForEditing $editableDiscount */
@@ -243,13 +244,18 @@ class DiscountController extends PrestaShopAdminController
             $updateCommand->setActive(!$editableDiscount->isActive());
 
             $this->dispatchCommand($updateCommand);
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (DiscountException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_discounts_index');
     }

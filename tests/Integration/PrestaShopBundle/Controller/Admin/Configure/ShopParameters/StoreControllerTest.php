@@ -163,6 +163,18 @@ class StoreControllerTest extends GridControllerTestCase
         /** @var TestEntityDTO $firstFoundStore */
         $firstFoundStore = $enabledStores->first();
 
+        // The kit's switch: saved in place, a JSON answer
+        $url = $this->router->generate('admin_stores_toggle_status', ['storeId' => $firstFoundStore->getId()]);
+        $this->client->xmlHttpRequest('POST', $url);
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(
+            ['status' => true, 'message' => 'The status has been successfully updated.'],
+            json_decode((string) $this->client->getResponse()->getContent(), true)
+        );
+        // Toggled back so the plain POST below disables it again
+        $this->toggleStatus('admin_stores_toggle_status', ['storeId' => $firstFoundStore->getId()]);
+
+        // A form posted without script: back to the list, the store disabled
         $this->toggleStatus('admin_stores_toggle_status', ['storeId' => $firstFoundStore->getId()]);
 
         Assert::assertSame(

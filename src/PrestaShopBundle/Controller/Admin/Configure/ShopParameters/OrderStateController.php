@@ -34,6 +34,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Controller\Attribute\AllShopContext;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -319,7 +320,7 @@ class OrderStateController extends PrestaShopAdminController
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
-    public function toggleDeliveryAction(int $orderStateId): RedirectResponse
+    public function toggleDeliveryAction(Request $request, int $orderStateId): RedirectResponse|JsonResponse
     {
         try {
             /** @var EditableOrderState $editableOrderState */
@@ -330,19 +331,24 @@ class OrderStateController extends PrestaShopAdminController
 
             $this->dispatchCommand($editOrderStateCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (OrderStateException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_order_states');
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
-    public function toggleInvoiceAction(int $orderStateId): RedirectResponse
+    public function toggleInvoiceAction(Request $request, int $orderStateId): RedirectResponse|JsonResponse
     {
         try {
             /** @var EditableOrderState $editableOrderState */
@@ -353,19 +359,24 @@ class OrderStateController extends PrestaShopAdminController
 
             $this->dispatchCommand($editOrderStateCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (OrderStateException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_order_states');
     }
 
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_order_states', message: 'You do not have permission to edit this.')]
-    public function toggleSendEmailAction(int $orderStateId): RedirectResponse
+    public function toggleSendEmailAction(Request $request, int $orderStateId): RedirectResponse|JsonResponse
     {
         try {
             /** @var EditableOrderState $editableOrderState */
@@ -376,13 +387,18 @@ class OrderStateController extends PrestaShopAdminController
 
             $this->dispatchCommand($editOrderStateCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (OrderStateException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $status = false;
+            $message = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToRoute('admin_order_states');
     }

@@ -1123,3 +1123,13 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 **Old theme**
 - Nothing.
 
+## Every grid switch saves in place — 2026-11-27
+
+The toggle actions of Discounts, Suppliers, Brands (Manufacturers), Employees, Webservice keys, Order states (delivery, invoice, send email), Stores, Tax rules groups, Taxes, CMS pages and categories, States, Currencies, Carriers (status, free shipping), Zones and Languages, as Countries.
+
+**Behaviour**
+- Their routes answer `{status, message}` JSON to an `X-Requested-With: XMLHttpRequest` request (the kit's switch: no reload, a toast); a plain POST still redirects with the same flash, to the same page. Webservice: the JSON message is the first error of the list the redirect shows one flash each.
+
+**Old theme**
+- Nothing: its switches post a form.
+

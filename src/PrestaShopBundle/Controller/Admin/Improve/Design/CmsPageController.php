@@ -52,6 +52,7 @@ use PrestaShopBundle\Controller\Admin\PrestaShopAdminController;
 use PrestaShopBundle\Security\Attribute\AdminSecurity;
 use PrestaShopBundle\Security\Attribute\DemoRestricted;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -556,29 +557,32 @@ class CmsPageController extends PrestaShopAdminController
     /**
      * Toggles cms page category status.
      *
+     * @param Request $request
      * @param int $cmsCategoryId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
-    public function toggleCmsCategoryAction($cmsCategoryId): RedirectResponse
+    public function toggleCmsCategoryAction(Request $request, $cmsCategoryId): RedirectResponse|JsonResponse
     {
         try {
             $this->dispatchCommand(
                 new ToggleCmsPageCategoryStatusCommand((int) $cmsCategoryId)
             );
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (Exception $exception) {
-            $this->addFlash(
-                'error',
-                $this->getErrorMessageForException($exception, $this->getErrorMessages())
-            );
+            $status = false;
+            $message = $this->getErrorMessageForException($exception, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToParentIndexPage((int) $cmsCategoryId);
     }
@@ -656,27 +660,30 @@ class CmsPageController extends PrestaShopAdminController
     /**
      * Toggles cms page listing status.
      *
+     * @param Request $request
      * @param int $cmsId
      *
-     * @return RedirectResponse
+     * @return RedirectResponse|JsonResponse
      */
     #[DemoRestricted(redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'])]
     #[AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute: 'admin_cms_pages_index', redirectQueryParamsToKeep: ['id_cms_category'], message: 'You do not have permission to edit this.')]
-    public function toggleCmsAction($cmsId): RedirectResponse
+    public function toggleCmsAction(Request $request, $cmsId): RedirectResponse|JsonResponse
     {
         try {
             $this->dispatchCommand(new ToggleCmsPageStatusCommand((int) $cmsId));
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success')
-            );
+            $status = true;
+            $message = $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success');
         } catch (Exception $exception) {
-            $this->addFlash(
-                'error',
-                $this->getErrorMessageForException($exception, $this->getErrorMessages())
-            );
+            $status = false;
+            $message = $this->getErrorMessageForException($exception, $this->getErrorMessages());
         }
+
+        // The kit's switch saves in place (grid-toggle.ts); a form posted without script reloads the list with a flash
+        if ($request->isXmlHttpRequest()) {
+            return $this->json(['status' => $status, 'message' => $message]);
+        }
+        $this->addFlash($status ? 'success' : 'error', $message);
 
         return $this->redirectToParentIndexPageByCmsPageId($cmsId);
     }
