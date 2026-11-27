@@ -2,4 +2,52 @@
  * For the full copyright and license information, please view the
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
-// Override Bootstrap toasts — https://getbootstrap.com/docs/5.3/components/toasts/
+// <twig:ui:Toast> over Bootstrap's toast — https://getbootstrap.com/docs/5.3/components/toasts/
+// The status icon in its color (the type is never told by color alone: the icon says it), the message, the close button
+$component-name: ps-toast;
+
+.#{$component-name} {
+  display: flex;
+  gap: map-get($spacers, 2);
+  align-items: flex-start;
+  padding: $toast-padding-y $toast-padding-x;
+
+  // The message's own padding is the toast's
+  .toast-body {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    overflow-wrap: anywhere;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__close {
+    flex-shrink: 0;
+  }
+
+  @each $type in (success, info, warning, danger) {
+    &--#{$type} &__icon {
+      color: var(--#{$prefix}#{$type});
+    }
+  }
+}
+
+// <twig:ui:ToastStack>: fixed at the bottom end of the screen, over the page, the newest last; on a phone, the screen's
+// width
+.#{$component-name}-stack {
+  position: fixed;
+  inset-block-end: $ps-toast-stack-offset;
+  inset-inline-end: $ps-toast-stack-offset;
+
+  @include media-breakpoint-down(sm) {
+    inset-inline-start: $ps-toast-stack-offset;
+    width: auto;
+
+    .toast {
+      width: 100%;
+    }
+  }
+}

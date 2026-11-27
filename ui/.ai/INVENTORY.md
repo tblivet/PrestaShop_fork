@@ -68,7 +68,7 @@ Every visible form block gets a Bootstrap 5 version in `src/PrestaShopBundle/Res
 | 14 | - [ ] | [`<twig:ui:Breadcrumb>`](#14-twiguibreadcrumb) | navigation | 150 | 2 | S | `<twig:ui:Icon>` | no |
 | 15 | - [ ] | [`<twig:ui:Tabs>`](#15-twiguitabs) | navigation | 160 | 6 | M | `<twig:ui:Badge>`, `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
 | 16 | - [ ] | [`<twig:ui:Offcanvas>`](#16-twiguioffcanvas) | overlay | 150 | 2 | S | `<twig:ui:IconButton>`, `<twig:ui:Spinner>` | no |
-| 17 | - [ ] | [`<twig:ui:Toast>`](#17-twiguitoast) | feedback | 40 | 4 | S | `<twig:ui:Icon>`, `<twig:ui:IconButton>` | no |
+| 17 | - [x] | [`<twig:ui:Toast>`](#17-twiguitoast) | feedback | 40 | 4 | S | `<twig:ui:Icon>`, `<twig:ui:IconButton>` | no |
 | 18 | - [ ] | [`<twig:ui:Header>`](#18-twiguiheader) | navigation | 150 | 1 | L | `<twig:ui:IconButton>`, `<twig:ui:Dropdown>`, `<twig:ui:Modal>`, `<twig:ui:Badge>`, `<twig:ui:Tabs>` | yes |
 | 19 | - [x] | [`<twig:ui:SideMenu>`](#19-twiguisidemenu) | navigation | 150 | 1 | M | `<twig:ui:IconButton>`, `<twig:ui:Icon>` | no |
 | 22 | - [x] | [`<twig:ui:Modal>`](#22-twiguimodal) | overlay | 30 | 7 | M | `<twig:ui:IconButton>`, `<twig:ui:Button>`, `<twig:ui:Spinner>`, `<twig:ui:Layout:Cluster>` | no |

@@ -1,0 +1,18 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# The icon says the type to screen readers too, as an alert's does #}
+{% set statusLabels = {
+  danger: 'Error'|trans({}, 'Admin.Global'),
+  info: 'Information'|trans({}, 'Admin.Global'),
+  success: 'Success'|trans({}, 'Admin.Global'),
+  warning: 'Warning'|trans({}, 'Admin.Global'),
+} %}
+
+{# Not a live region: toast.ts says the message through the page's <twig:ui:Announcer> #}
+<div{{ attributes.defaults({class: 'toast ps-toast ps-toast--' ~ type, 'data-bs-autohide': autohide ? 'true' : 'false', 'data-bs-delay': delay, 'data-ps-ref': 'toast'}) }}>
+  <twig:ui:Icon :name="this.icon" filled size="lg" class="ps-toast__icon" :label="statusLabels[type]"/>
+  <div class="toast-body ps-toast__message" data-ps-ref="toast-message">{% block content %}{% endblock %}</div>
+  <button type="button" class="btn-close ps-toast__close" data-bs-dismiss="toast" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}"></button>
+</div>

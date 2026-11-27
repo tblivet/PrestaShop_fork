@@ -30,9 +30,11 @@ export default {
   gridBulkModal: '[data-ps-action~="grid-bulk-modal"]',
   gridResults: '[data-ps-ref="grid-results"]',
   gridRowLink: '[data-ps-action~="grid-row-link"]',
-  gridClickableCell: '[data-ps-ref="grid-clickable-cell"]',
+  gridClickableCell: '[data-ps-ref~="grid-clickable-cell"]',
   gridPreview: '[data-ps-action~="grid-preview"]',
   gridToggle: '[data-ps-action~="grid-toggle"]',
+  // The cell of a toggle column: its spinner while the switch saves
+  gridToggleCell: '[data-ps-ref~="grid-toggle-cell"]',
   gridPosition: '[data-ps-ref="grid-position"]',
   gridMove: '[data-ps-action~="grid-move"]',
   gridDrag: '[data-ps-action~="grid-drag"]',
@@ -50,6 +52,10 @@ export default {
   modalTitle: '[data-ps-ref="modal-title"]',
   // The page's live region (<twig:ui:Announcer>, announcer.ts)
   announcer: '[data-ps-target="announcer"]',
+  // The page's <twig:ui:ToastStack>, its template of each type and a toast's message (toast.ts)
+  toastStack: '[data-ps-target="toast-stack"]',
+  toastTemplate: '[data-ps-ref="toast-template"]',
+  toastMessage: '[data-ps-ref="toast-message"]',
   flashAlert: '[data-ps-ref="flash-alert"]',
   // A form-level error (ui_kit_layout.html.twig, form_errors): an expired token, a constraint on the whole form
   formError: '[data-ps-ref="form-error"]',

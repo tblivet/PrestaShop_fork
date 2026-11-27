@@ -10,6 +10,7 @@ namespace Tests\Unit\Core\Grid\Column;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 
@@ -44,6 +45,14 @@ class ColumnLayoutOptionsTest extends TestCase
     {
         $this->assertSame('end', (new ActionColumn('actions'))->setOptions([])->getOptions()['alignment']);
         $this->assertSame('start', (new ActionColumn('actions'))->setOptions(['alignment' => 'start'])->getOptions()['alignment']);
+    }
+
+    public function testSwitchesCentred(): void
+    {
+        $options = ['field' => 'active', 'primary_field' => 'id_country', 'route' => 'admin_countries_toggle_status', 'route_param_name' => 'countryId'];
+
+        $this->assertSame('center', (new ToggleColumn('active'))->setOptions($options)->getOptions()['alignment']);
+        $this->assertSame('end', (new ToggleColumn('active'))->setOptions($options + ['alignment' => 'end'])->getOptions()['alignment']);
     }
 
     public function testFormerAlignmentNamesStillAccepted(): void

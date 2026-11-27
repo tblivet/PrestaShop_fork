@@ -1075,3 +1075,21 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 **Old theme**
 - Nothing visible: the Bootstrap 4 templates turn `start`/`end` into `text-left`/`text-right`; the action column's cell gets `text-right`, as its content already had.
 
+## Toasts, and the Countries switch saved in place — 2026-11-27
+
+`<twig:ui:Toast>`, `<twig:ui:ToastStack>` (new), `default_layout.html.twig`, `grid.html.twig`, `grid-toggle.ts`, `toast.ts` (new), `ToggleColumn`, `CountryController::toggleStatusAction`.
+
+**Markup**
+- Kit back office layout: `<div class="toast-container ps-toast-stack" data-ps-target="toast-stack">` at the end of the page, with a `<template data-ps-ref="toast-template" data-ps-data-type="…">` per type; a shown toast is `.toast.ps-toast.ps-toast--{type}[data-ps-ref="toast"]`, its message `[data-ps-ref="toast-message"]`.
+- Kit grid: a toggle column's cells have `data-ps-ref="grid-toggle-cell"` and `data-ps-state="loading"` while their switch saves. `data-ps-ref` on a grid cell can hold several hooks: match it with `~=` (`[data-ps-ref~="grid-clickable-cell"]`).
+- Kit grid: the switch being saved has `aria-disabled="true"` (no more `disabled`, no more `data-ps-state` on the switch itself).
+
+**Behaviour**
+- Kit Countries: flipping a switch no longer reloads the page; a toast says the result ("The status has been successfully updated."), or the switch flips back and a danger toast says why. Clicks on a switch being saved, or on any switch while a page reload is pending, do nothing.
+- `admin_countries_toggle_status` answers `{status, message}` JSON to an `X-Requested-With: XMLHttpRequest` request; a plain POST still redirects with a flash.
+- `ToggleColumn`: new `alignment` option, default `center`.
+- Scripts can show a toast: `document.dispatchEvent(new CustomEvent('ps:toast', {detail: {type, message}}))`.
+
+**Old theme**
+- Nothing: the Bootstrap 4 toggle posts a form and still gets the redirect; its cell was already centred.
+

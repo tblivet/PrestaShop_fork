@@ -17,11 +17,13 @@ const fakePreviews = () => {
   const fake = (input, init) => {
     const url = String(input);
 
-    // A toggle: Carrier 3's free shipping fails, the others are saved
+    // A toggle, after a short wait so its spinner shows: Carrier 3's free shipping fails, the others are saved
     if (/\/toggle-/.test(url)) {
-      return Promise.resolve(url.includes('/3/toggle-is-free')
-        ? new Response(JSON.stringify({ status: false, message: 'Free shipping could not be changed for this carrier.' }), { headers: { 'Content-Type': 'application/json' } })
-        : new Response(JSON.stringify({ status: true, message: 'The status has been successfully updated.' }), { headers: { 'Content-Type': 'application/json' } }));
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(url.includes('/3/toggle-is-free')
+          ? new Response(JSON.stringify({ status: false, message: 'Free shipping could not be changed for this carrier.' }), { headers: { 'Content-Type': 'application/json' } })
+          : new Response(JSON.stringify({ status: true, message: 'The status has been successfully updated.' }), { headers: { 'Content-Type': 'application/json' } })), 800);
+      });
     }
     if (!/\/sell\/orders\/\d+\/preview/.test(url)) {
       return realFetch(input, init);

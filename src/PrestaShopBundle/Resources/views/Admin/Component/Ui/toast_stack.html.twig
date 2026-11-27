@@ -1,0 +1,10 @@
+{#
+ # For the full copyright and license information, please view the
+ # docs/licenses/LICENSE.txt file that was distributed with this source code.
+ #}
+{# toast.ts copies the template of the type asked, puts the message in it and shows it here #}
+<div{{ attributes.defaults({class: 'toast-container ps-toast-stack', 'data-ps-target': 'toast-stack'}) }}>
+  {%- for type in this.types %}
+    <template data-ps-ref="toast-template" data-ps-data-type="{{ type }}"><twig:ui:Toast :type="type"/></template>
+  {%- endfor %}
+</div>

@@ -147,6 +147,28 @@ class CountryControllerTest extends FormGridControllerTestCase
 
     /**
      * @depends testFilters
+     */
+    public function testToggleStatus(int $countryId): int
+    {
+        $this->client->disableReboot();
+        $url = $this->router->generate('admin_countries_toggle_status', ['countryId' => $countryId]);
+
+        // The kit's switch: saved in place, a JSON answer
+        $this->client->xmlHttpRequest('POST', $url);
+        $this->assertResponseIsSuccessful();
+        $this->assertSame(
+            ['status' => true, 'message' => 'The status has been successfully updated.'],
+            json_decode((string) $this->client->getResponse()->getContent(), true)
+        );
+
+        // A form posted without script: back to the list, the status toggled back
+        $this->toggleStatus('admin_countries_toggle_status', ['countryId' => $countryId]);
+
+        return $countryId;
+    }
+
+    /**
+     * @depends testToggleStatus
      *
      * @param int $countryId
      */

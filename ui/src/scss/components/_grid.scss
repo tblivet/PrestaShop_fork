@@ -483,6 +483,30 @@ $component-name: ps-grid;
     white-space: nowrap;
   }
 
+  // A toggle cell while its switch saves (grid-toggle.ts): Bootstrap's small spinner in the middle of the cell, over the
+  // switch, which stays focusable and named but is not shown
+  &__cell--toggle {
+    position: relative;
+
+    // Not hidden: it keeps the keyboard focus
+    &[data-ps-state="loading"] .ps-check {
+      opacity: 0;
+    }
+
+    &[data-ps-state="loading"]::after {
+      position: absolute;
+      inset: 0;
+      width: $spinner-width-sm;
+      height: $spinner-height-sm;
+      margin: auto;
+      content: "";
+      border: $spinner-border-width-sm solid currentcolor;
+      border-inline-end-color: transparent;
+      border-radius: 50%;
+      animation: $spinner-animation-speed linear infinite spinner-border;
+    }
+  }
+
   &__query-text {
     font-family: $font-family-monospace;
     font-size: $font-size-sm;

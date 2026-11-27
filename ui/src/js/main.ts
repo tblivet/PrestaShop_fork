@@ -29,6 +29,7 @@ import initScrollFade from './components/scroll-fade';
 import initShowcaseModals from './components/showcase-modal';
 import focusOnLoad from './components/load-focus';
 import initSubmitOnce from './components/submit-once';
+import initToasts from './components/toast';
 import initTooltips from './components/tooltips';
 import registerJqueryPlugins from './compat/jquery-plugins';
 
@@ -37,6 +38,7 @@ window.bootstrap = bootstrap;
 
 registerJqueryPlugins(bootstrap);
 initAnnouncer();
+initToasts(bootstrap.Toast);
 initPasswordToggle();
 initFormValidation();
 initHeaderSearch();

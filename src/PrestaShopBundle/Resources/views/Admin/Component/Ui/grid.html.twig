@@ -248,8 +248,10 @@
                     {%- set isRowHeader = column.id == rowHeaderColumnId -%}
                     {%- set tag = isRowHeader ? 'th' : 'td' -%}
                     {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
+                    {#- A clickable cell follows the row's link; a toggle cell shows a spinner while its switch saves (grid-toggle.ts) -#}
+                    {%- set cellRefs = (rowLink and (column.options.clickable ?? false) ? ['grid-clickable-cell'] : [])|merge('toggle' == column.type ? ['grid-toggle-cell'] : []) -%}
                     {#- With the preview toggle in it, the row's name is its value only: the cell names it -#}
-                    <{{ tag }}{% if isRowHeader %} scope="row"{% if column.id != previewColumnId %} id="{{ rowHeaderId }}"{% endif %}{% endif %} class="ps-grid__cell ps-grid__cell--{{ column.type|replace({'_': '-'}) }}{{ align ? ' ps-grid__cell--' ~ align }}{{ rowLink and (column.options.clickable ?? false) ? ' ps-grid__cell--clickable' }}"{% if rowLink and (column.options.clickable ?? false) %} data-ps-ref="grid-clickable-cell"{% endif %}>
+                    <{{ tag }}{% if isRowHeader %} scope="row"{% if column.id != previewColumnId %} id="{{ rowHeaderId }}"{% endif %}{% endif %} class="ps-grid__cell ps-grid__cell--{{ column.type|replace({'_': '-'}) }}{{ align ? ' ps-grid__cell--' ~ align }}{{ rowLink and (column.options.clickable ?? false) ? ' ps-grid__cell--clickable' }}"{% if cellRefs %} data-ps-ref="{{ cellRefs|join(' ') }}"{% endif %}>
                       {{- include([
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.id ~ '_' ~ column.type ~ '.html.twig',
                         '@PrestaShop/Admin/Component/Ui/Grid/cell/' ~ id ~ '_' ~ column.type ~ '.html.twig',

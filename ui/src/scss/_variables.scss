@@ -562,3 +562,8 @@ $border-radius-sm: 0;
 $border-radius-lg: 0;
 $border-radius-xl: 0;
 $border-radius-xxl: 0;
+
+// <twig:ui:Toast>: opaque, so the message reads over any page; <twig:ui:ToastStack>: its gap from the screen's edges
+$toast-background-color: var(--#{$prefix}body-bg);
+$ps-toast-stack-offset: 1rem;
+

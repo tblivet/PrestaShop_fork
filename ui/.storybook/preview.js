@@ -24,6 +24,7 @@ import initModalReturnFocus from '../src/js/components/modal-return-focus';
 import initPaginationJump from '../src/js/components/pagination-jump';
 import initQuickAccess from '../src/js/components/quick-access';
 import initScrollFade from '../src/js/components/scroll-fade';
+import initToasts from '../src/js/components/toast';
 import initTooltips from '../src/js/components/tooltips';
 import { addons } from '@storybook/preview-api';
 import { Controls, Description, Primary, Stories, Subtitle, Title } from '@storybook/blocks';
@@ -31,6 +32,7 @@ import { createElement, Fragment } from 'react';
 import { format } from 'prettier/standalone';
 import * as htmlPlugin from 'prettier/plugins/html';
 import announcer from '../src/stories/announcer';
+import { toastStack } from '../src/stories/toast';
 
 const SNIPPET_RENDERED = 'storybook/docs/snippet-rendered';
 
@@ -40,6 +42,9 @@ window.bootstrap = bootstrap;
 // The page's live region, outside the story root so it stays across stories, as the kit layouts place it
 document.body.insertAdjacentHTML('beforeend', announcer().html);
 initAnnouncer();
+// The page's toasts, as the kit layouts place them
+document.body.insertAdjacentHTML('beforeend', toastStack().html);
+initToasts(bootstrap.Toast);
 initAlertDismissFocus();
 initBusyButtons();
 initPasswordToggle();

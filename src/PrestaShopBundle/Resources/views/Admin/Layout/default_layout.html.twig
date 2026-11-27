@@ -175,6 +175,8 @@
   {{ include('@PrestaShop/Admin/Component/Layout/Ui/quick_access_modals.html.twig') }}
   {# What scripts tell screen readers (announcer.ts), in the page from the start so it is announced #}
   <twig:ui:Announcer/>
+  {# Where toast.ts shows the result of an action that does not reload the page #}
+  <twig:ui:ToastStack/>
   {# The one dialog every data-ps-confirm button or link asks through (confirm-dialog.ts) #}
   <twig:ui:ConfirmDialog/>
 {% else %}

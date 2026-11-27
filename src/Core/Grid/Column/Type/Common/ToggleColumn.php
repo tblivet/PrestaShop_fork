@@ -38,6 +38,7 @@ final class ToggleColumn extends AbstractColumn
                 'route_param_id' => '',
                 'route_param_name' => '',
                 'extra_route_params' => [],
+                'alignment' => 'center',
             ])
             ->setRequired([
                 'field',
@@ -51,6 +52,7 @@ final class ToggleColumn extends AbstractColumn
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('route_param_id', 'string')
             ->setAllowedTypes('extra_route_params', 'array')
+            ->setAllowedValues('alignment', self::ALIGNMENTS)
         ;
 
         $resolver->setNormalizer('route_param_name', static function (Options $options, $value) {
