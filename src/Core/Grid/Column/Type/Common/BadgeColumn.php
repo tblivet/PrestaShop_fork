@@ -39,7 +39,7 @@ final class BadgeColumn extends AbstractColumn
                 'empty_value' => '',
                 'clickable' => true,
                 'color_field' => '',
-                'alignment' => 'right',
+                'alignment' => 'end',
             ])
             ->setAllowedTypes('field', 'string')
             ->setAllowedTypes('empty_value', 'string')

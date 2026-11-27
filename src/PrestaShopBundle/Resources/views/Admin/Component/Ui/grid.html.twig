@@ -25,7 +25,7 @@
 {%- set rowCount = grid.data.records|length -%}
 {%- set paginated = grid.data.records_total > 10 or grid.pagination.offset > 0 -%}
 {%- set showName = grid.view_options.display_name ?? true -%}
-{%- set alignments = {right: 'end', center: 'center'} -%}
+{%- set alignments = {end: 'end', right: 'end', center: 'center'} -%}
 {%- set total = grid.data.records_total -%}
 {#- The count for screen readers: "1 result", "1234 results" -#}
 {%- set resultsWord = 1 == total ? 'result'|trans({}, 'Admin.Global') : 'results'|trans({}, 'Admin.Global') -%}
@@ -166,7 +166,7 @@
               {%- for column in grid.columns -%}
                 {%- set sort = 'list' == state ? this.sortState(column.id) : null -%}
                 {%- set align = alignments[column.options.alignment ?? ''] ?? null -%}
-                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ column.type in ['bulk_action', 'position_handle'] ? ' ps-grid__heading--select' }}{{ column.options.width is defined ? ' ps-grid__heading--width-' ~ column.options.width }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
+                <th scope="col" id="{{ id }}_col_{{ column.id }}" class="ps-grid__heading{{ column.type in ['bulk_action', 'position_handle'] ? ' ps-grid__heading--select' }}{{ (column.options.width ?? null) in ['narrow', 'wide'] ? ' ps-grid__heading--width-' ~ column.options.width }}{{ align ? ' ps-grid__heading--' ~ align }}"{% if sort %} aria-sort="{{ sort }}"{% endif %}>
                   {%- if 'position_handle' == column.type -%}
                     <span class="visually-hidden">{{ 'Move'|trans({}, 'Admin.Actions') }}</span>
                   {%- elseif 'bulk_action' == column.type -%}
@@ -207,7 +207,7 @@
                       <span class="visually-hidden">{{ 'Filters'|trans({}, 'Admin.Global') }}</span>
                     </th>
                   {%- else -%}
-                  <td class="ps-grid__filter{{ column.options.width is defined ? ' ps-grid__filter--width-' ~ column.options.width }}">
+                  <td class="ps-grid__filter{{ (column.options.width ?? null) in ['narrow', 'wide'] ? ' ps-grid__filter--width-' ~ column.options.width }}">
                     {%- if column.id == filterColumnId -%}
                       {#- At the end of the fields it applies, after them for the keyboard. Its icon is the filter row's.
                           Clear filters next to it when the row has no label cell -#}

@@ -61,7 +61,7 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     'format' => $this->languageContext->getDateTimeFormat(),
                     'clickable' => true,
                     'sortable' => false,
-                    'alignment' => 'left',
+                    'alignment' => 'start',
                 ])
             )
             ->add(
@@ -81,7 +81,7 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ->setOptions([
                         'field' => 'carrier',
                         'sortable' => false,
-                        'alignment' => 'left',
+                        'alignment' => 'start',
                     ])
             )
             ->add(
@@ -90,7 +90,7 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ->setOptions([
                         'field' => 'items',
                         'sortable' => false,
-                        'alignment' => 'right',
+                        'alignment' => 'end',
                     ])
             )
             ->add(
@@ -99,7 +99,7 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ->setOptions([
                         'field' => 'shipping_cost',
                         'sortable' => false,
-                        'alignment' => 'right',
+                        'alignment' => 'end',
                     ])
             )
             ->add(
@@ -108,7 +108,7 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ->setOptions([
                         'field' => 'weight',
                         'sortable' => false,
-                        'alignment' => 'left',
+                        'alignment' => 'start',
                     ])
             )
             ->add(
@@ -117,7 +117,7 @@ final class ShipmentGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ->setOptions([
                         'field' => 'tracking_number',
                         'sortable' => false,
-                        'alignment' => 'left',
+                        'alignment' => 'start',
                     ])
             )->add(
                 (new ActionColumn('actions'))

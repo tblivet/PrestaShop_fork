@@ -18,10 +18,10 @@ class ActionColumnTest extends TestCase
         $column = new ActionColumn('actions');
         $this->assertEquals('actions', $column->getId());
         $this->assertEquals('', $column->getName());
-        // The resolver doesn't call the parent resolver method so only actions option is available by default, not sure
-        // if it's relevant maybe this should be improved one day, but it seems to work as is
+        // The resolver doesn't call the parent resolver method: only its own options are available by default
         $this->assertEquals([
             'actions' => null,
+            'alignment' => 'end',
         ], $column->getOptions());
     }
 }

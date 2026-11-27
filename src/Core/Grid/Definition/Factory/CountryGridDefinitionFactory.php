@@ -70,7 +70,7 @@ final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'id_country',
-                        'width' => 'sm',
+                        'width' => 'narrow',
                     ])
             )
             ->add(
@@ -85,7 +85,7 @@ final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
                     ->setOptions([
                         'field' => 'iso_code',
-                        'width' => 'sm',
+                        'width' => 'narrow',
                     ])
             )
             ->add(
@@ -93,7 +93,7 @@ final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Call prefix', [], 'Admin.International.Feature'))
                     ->setOptions([
                         'field' => 'call_prefix',
-                        'width' => 'sm',
+                        'width' => 'narrow',
                     ])
             )
             ->add(

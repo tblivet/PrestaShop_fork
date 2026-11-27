@@ -1058,3 +1058,20 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - New: Admin.Global "This page is empty", "Go to the last page"; Admin.International.Feature "No countries yet", "Add the countries you sell to: customers pick one in their address, and taxes and carriers follow it."
 - No longer used by the pagination: Admin.Global "Page", "of %total%".
 - Countries, Zones and Customer service grids: "Export to SQL manager" → "Export to SQL Manager" (Admin.Actions, the existing string of the other grids and the kit).
+
+## Grid column options — 2026-11-27
+
+`AbstractColumn`, `ActionColumn`, `BadgeColumn`, `<twig:ui:Grid>`, the Bootstrap 4 grid templates (`Common/Grid/Blocks/table.html.twig`, `Columns/Content/badge.html.twig`, `business_entity_customers_count_badge.html.twig`, Product `shop_previews`, `tax_rule_grid_panel`).
+
+**Markup**
+- Kit: `ps-grid__heading--width-sm` → `--width-narrow`, `--width-lg` → `--width-wide`, `--width-md` removed; `ps-grid__filter--width-sm` → `--width-narrow`.
+- Kit: the row actions column has `ps-grid__heading--end` and `ps-grid__cell--end`.
+- Kit: the row header cell (`th scope="row"`) is no longer bold.
+
+**Behaviour**
+- Column option `width`: `sm | md | lg` → `narrow | default | wide` (only on this branch).
+- Column option `alignment`: `start | center | end` added, default `start` (was `left`); `left`, `right`, `justify` still accepted. `ActionColumn` now has the option, default `end`; `BadgeColumn`'s default is `end` (was `right`). Code reading `getOptions()['alignment']` gets `start`/`end` where it got `left`/`right` by default.
+
+**Old theme**
+- Nothing visible: the Bootstrap 4 templates turn `start`/`end` into `text-left`/`text-right`; the action column's cell gets `text-right`, as its content already had.
+

@@ -255,10 +255,13 @@ Every Bootstrap menu of the kit (`<twig:ui:DropdownMenu>`, the notifications pan
 Why: a menu inside a grid's scrolling table was cut by its `overflow`, its fade mask and its size container. In the top layer nothing around it can cut it, now or when a later style adds such a box; Shopify's admin menus do the same. Without the Popover API (before Chrome 114, Safari 17, Firefox 125) the attribute is ignored and the menu is as before.
 Left aside: Bootstrap's own `popperConfig` on each toggle (`data-bs-popper-config`), now redundant where present.
 
-## 47. Grid column widths: from their content, with an optional hint — 2026-11-26
+## 47. Grid columns: width from their content, an optional width and alignment — 2026-11-26, revised 2026-11-27
 
-By default a grid column is as wide as its heading and values: the filter row's text fields have `size="1"`, so they fill their cell without claiming a width (they used to split the table evenly). A definition can tune one column with the `width` option every column type takes (`AbstractColumn`, `setDefined`, no default): `sm` is as narrow as its content (an id, a code), at least `$ps-grid-column-sm-min-width` (3rem, its filter field too), `md` and `lg` are at least `$ps-grid-column-md-min-width` and `$ps-grid-column-lg-min-width`. The kit renders it as `ps-grid__heading--width-{sm|md|lg}`.
-Why: content-driven widths need no rule on column names or types, and a hint stays in the definition where the data is known. `max-width` is not offered: browsers ignore it on table cells; long values wrap.
+By default a grid column is as wide as its heading and values: the filter row's text fields have `size="1"`, so they fill their cell without claiming a width (they used to split the table evenly). A definition can tune one column with two options every column type takes (`AbstractColumn`):
+- `width` (`setDefined`, no default): `narrow` is as narrow as its content (an id, a code), at least `$ps-grid-column-narrow-min-width` (3rem, its filter field too); `wide` is at least `$ps-grid-column-wide-min-width` (16rem); `default`, or no option, keeps the content's width. The kit renders `ps-grid__heading--width-{narrow|wide}` and `ps-grid__filter--width-narrow`.
+- `alignment` (since 2021): `start` (default), `center`, `end`, in the reading direction. `left` and `right` stay accepted for existing definitions (the kit reads them as `start` and `end`, the Bootstrap 4 templates turn `start` and `end` into `text-left` and `text-right`); `justify` is accepted but ignored by the kit. `ActionColumn` is aligned to the `end`: the row's actions button sits at the row's end. The kit renders `ps-grid__heading--{center|end}` and `ps-grid__cell--{center|end}`.
+Why: content-driven widths need no rule on column names or types, and the hints stay in the definition where the data is known. Words a module developer reads without the docs (`narrow`, `wide`), rather than Bootstrap's `sm`/`md`/`lg`; logical `start`/`end` as the kit's CSS. `max-width` is not offered: browsers ignore it on table cells; long values wrap.
+The row's header (`th scope="row"`, the identifier column, else the first data column) keeps the normal font weight: it is there for screen readers, not to stand out.
 
 ## 48. Pagination: Previous, a field, Next; under the grid's table — 2026-11-26
 

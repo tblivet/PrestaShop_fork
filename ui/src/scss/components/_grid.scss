@@ -201,17 +201,13 @@ $component-name: ps-grid;
 
   // The fields of the filter row (Bootstrap's small ones), wide enough to type in
   // A column's width hint, its definition's width option; without it, a column is as wide as its heading and values
-  &__heading--width-sm {
+  &__heading--width-narrow {
     width: 1%;
-    min-width: $ps-grid-column-sm-min-width;
+    min-width: $ps-grid-column-narrow-min-width;
   }
 
-  &__heading--width-md {
-    min-width: $ps-grid-column-md-min-width;
-  }
-
-  &__heading--width-lg {
-    min-width: $ps-grid-column-lg-min-width;
+  &__heading--width-wide {
+    min-width: $ps-grid-column-wide-min-width;
   }
 
   // Its fields claim no width (size 1, grid.html.twig): a column is as wide as its heading and values, at least this
@@ -220,8 +216,8 @@ $component-name: ps-grid;
     vertical-align: top;
 
     // A narrow column's field, as narrow as the column
-    &--width-sm {
-      min-width: $ps-grid-column-sm-min-width;
+    &--width-narrow {
+      min-width: $ps-grid-column-narrow-min-width;
     }
   }
 
@@ -277,7 +273,9 @@ $component-name: ps-grid;
     box-shadow: inset $ps-grid-selected-line-width 0 0 var(--#{$prefix}oceanblue-500), inset 0 0 0 9999px var(--#{$prefix}table-bg-state);
   }
 
+  // The row's header (th scope="row", its id or name) is for screen readers: it looks like the other cells
   &__cell {
+    font-weight: $font-weight-normal;
     vertical-align: middle;
 
     &--end {

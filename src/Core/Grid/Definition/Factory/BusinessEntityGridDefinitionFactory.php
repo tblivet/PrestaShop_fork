@@ -110,7 +110,7 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                     ->setName($this->trans('Customers', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'customers_count',
-                        'alignment' => 'left',
+                        'alignment' => 'start',
                     ])
             )
             ->add(
@@ -118,7 +118,7 @@ final class BusinessEntityGridDefinitionFactory extends AbstractGridDefinitionFa
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'status_label',
-                        'alignment' => 'left',
+                        'alignment' => 'start',
                         'badge_type' => '',
                         'badge_type_field' => 'status_badge_type',
                     ])

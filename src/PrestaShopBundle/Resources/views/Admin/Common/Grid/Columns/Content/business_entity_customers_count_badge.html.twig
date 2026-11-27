@@ -8,7 +8,7 @@
  # with a leading icon, and unconditionally, because the shared badge template treats a "0" count as
  # empty and would render nothing.
  #}
-<div class="text-{{ column.options.alignment }}">
+<div class="text-{{ {start: 'left', end: 'right'}[column.options.alignment] ?? column.options.alignment }}">
   <span class="badge rounded">
     {{ record[column.options.field] }}
     <i class="material-icons">info</i>

@@ -28,7 +28,9 @@ final class ActionColumn extends AbstractColumn
         $resolver
             ->setDefaults([
                 'actions' => null,
+                'alignment' => 'end',
             ])
-            ->setAllowedTypes('actions', ['null', RowActionCollection::class]);
+            ->setAllowedTypes('actions', ['null', RowActionCollection::class])
+            ->setAllowedValues('alignment', self::ALIGNMENTS);
     }
 }
