@@ -21,6 +21,7 @@ import openInNew from '../../icons/material-symbols/open-in-new.svg?raw';
 import checkCircle from '../../icons/material-symbols/check-circle.svg?raw';
 import checkIcon from '../../icons/material-symbols/check.svg?raw';
 import inbox from '../../icons/material-symbols/inbox.svg?raw';
+import lastPage from '../../icons/material-symbols/last-page.svg?raw';
 import keyboardArrowUp from '../../icons/material-symbols/keyboard-arrow-up.svg?raw';
 import moreVert from '../../icons/material-symbols/more-vert.svg?raw';
 import print from '../../icons/material-symbols/print.svg?raw';
@@ -34,7 +35,7 @@ import unfoldMore from '../../icons/material-symbols/unfold-more.svg?raw';
 import badge from './badge';
 import check from './check';
 import dropdownMenu from './dropdown-menu';
-import emptyState from './empty-state';
+import emptyState, { emptyStateButton } from './empty-state';
 import modal from './modal';
 import pagination from './pagination';
 import uiIcon from './ui-icon';
@@ -286,7 +287,7 @@ const cell = (grid, column, record, rowHeaderId) => {
         type: 'submit', label: name, active: String(value) === String(current), attr: { form: `${grid.id}_grid_action_form`, formaction, name: 'value', value: String(value) },
       }));
 
-      return `<div class="dropdown"><button class="btn btn-outline-secondary btn-sm ps-button ps-grid__choice${color ? ` ps-grid__choice--ink-${inkOn(color)}` : ''}" type="button" data-ps-data-busy-label="Loading..."${color ? ` style="--psk-grid-choice-color: ${color}"` : ''} data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="${rowHeaderId}">`
+      return `<div class="dropdown"><button class="btn btn-outline-secondary btn-sm ps-button ps-grid__choice${color ? ` ps-grid__choice--ink-${inkOn(color)}` : ''}" type="button" data-ps-data-busy-label="Loading..."${color ? ` style="--ps-grid-choice-color: ${color}"` : ''} data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="${rowHeaderId}">`
         + `<span class="ps-button__label"><span class="visually-hidden">${escape(column.name)}: </span>${escape(label)}</span>${uiIcon(keyboardArrowDown, { size: 'lg' })}</button>${dropdownMenu({ items })}</div>`;
     }
     case 'bulk_action': {
@@ -322,7 +323,7 @@ const cell = (grid, column, record, rowHeaderId) => {
       const color = record[options.color_field];
 
       return badge({
-        label: escape(record[options.field]), variant: 'light', class: `ps-grid__badge ps-grid__badge--ink-${inkOn(color)}`, style: `--psk-grid-badge-color: ${color}`,
+        label: escape(record[options.field]), variant: 'light', class: `ps-grid__badge ps-grid__badge--ink-${inkOn(color)}`, style: `--ps-grid-badge-color: ${color}`,
       }).html;
     }
     case 'date_time': {
@@ -410,7 +411,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     'data-ps-data-error': 'The filters could not be cleared. Try again.',
   };
   const rowHeader = (fixture.columns.find((column) => column.type === 'identifier') ?? fixture.columns.find((column) => ['data', 'link', 'disableable_link'].includes(column.type)))?.id;
-  const subLevel = Math.min(headingLevel + 1, 6);
+  const subLevel = headingLevel + 1;
 
   const resultsWord = total === 1 ? 'result' : 'results';
   // The title is where sorting, pages and filters land (#{id}_grid_results)
@@ -424,7 +425,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
     : '';
   const header = embedded || (hideName && !listItems.length)
     ? `<h${headingLevel} ${titleAttributes} class="visually-hidden">${escape(fixture.name)}</h${headingLevel}>`
-    : `<header class="ps-grid__header card-header"><h${headingLevel} id="${id}_grid_results" class="ps-grid__title${hideName ? ' visually-hidden' : ''}" tabindex="-1" data-ps-ref="grid-results">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'oceanblue', pill: true }).html}</h${headingLevel}>${listActions}</header>`;
+    : `<header class="ps-grid__header card-header${hideName ? ' ps-grid__header--actions-only' : ''}"><h${headingLevel} id="${id}_grid_results" class="ps-grid__title${hideName ? ' visually-hidden' : ''}" tabindex="-1" data-ps-ref="grid-results">${escape(fixture.name)} ${badge({ label: `${total}<span class="visually-hidden"> ${resultsWord}</span>`, variant: 'oceanblue', pill: true }).html}</h${headingLevel}>${listActions}</header>`;
 
   let body;
 
@@ -508,6 +509,15 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
 
     let noMatch = '';
     let rows = '';
+    // Grid::getLastPageUrl(): a page past the last one (rows deleted since) says so under the table, with a way back
+    const pageCount = Math.ceil(total / limit);
+
+    if (state === 'list' && Math.floor(offset / limit) + 1 > pageCount) {
+      noMatch = emptyState({
+        title: 'This page is empty', icon: 'last_page', size: 'sm', headingLevel: subLevel, class: 'ps-grid__no-match',
+        actions: [emptyStateButton({ label: 'Go to the last page', variant: 'outline-secondary', href: url(fixture, { offset: (Math.max(pageCount, 1) - 1) * limit, limit }) })],
+      }, { last_page: lastPage }).html;
+    }
 
     if (state === 'no-match') {
       const actions = showReset ? [{ html: button({
@@ -546,7 +556,7 @@ export default function grid(fixture, { embedded = false, headingLevel = 2 } = {
   }
 
   // Under the table, in the card: the rows shown, the pages (Previous, a field to go to a page, Next), the rows per page
-  const paginated = state === 'list' && (total > 10 || offset > 0);
+  const paginated = state === 'list' && (total > 10 || offset > 0) && Math.floor(offset / limit) + 1 <= Math.ceil(total / limit);
   let pager = '';
 
   if (paginated) {

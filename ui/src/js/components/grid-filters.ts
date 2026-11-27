@@ -3,13 +3,13 @@
  * docs/licenses/LICENSE.txt file that was distributed with this source code.
  */
 import selectors from '../selectors';
-import { announce } from './announcer';
 import { setButtonBusy } from './busy-button';
 import { reloadTo } from './load-focus';
+import { showToast } from './toast';
 
 // A <twig:ui:Grid>'s Clear filters (grid.html.twig): posts the reset (data-ps-data-url), as the old grids did, then goes
 // to the list (data-ps-data-redirect) on its results summary (data-ps-data-fragment), which load-focus.ts focuses. The
-// button stays busy meanwhile; if the reset fails, it is back as it was and the page's Announcer says so
+// button stays busy meanwhile; if the reset fails, it is back as it was, keeps the focus, and a danger toast says so
 // (data-ps-data-error).
 export default function initGridFilters(): void {
   // Enter in a filter field sends Filter. The browser would send the form's first submit button: a bulk action or a
@@ -55,7 +55,8 @@ export default function initGridFilters(): void {
       }
     } catch {
       setButtonBusy(button, false);
-      announce(button.dataset.psDataError ?? '');
+      button.focus();
+      showToast({ type: 'danger', message: button.dataset.psDataError ?? '' });
     }
   });
 }

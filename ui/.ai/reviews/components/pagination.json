@@ -1,38 +1,43 @@
 {
   "component": "Pagination",
-  "date": "2026-11-25",
-  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/review-pagination-jump/index.html",
+  "date": "2026-11-27",
+  "report": "/private/tmp/claude-502/-Users-tBlivet-Sites-GitHub-PrestaShop-fork/1b6785b6-e5ac-4792-bba6-6c28f0142496/scratchpad/grid-review-2/index.html",
   "tests": {
     "unit": "pass",
     "integration": "pass",
     "storyMarkup": "pass"
   },
   "cases": {
-    "total": 17,
-    "captured": 17,
+    "total": 13,
+    "captured": 13,
     "skipped": []
   },
   "findings": {
     "blocker": 0,
-    "major": 2,
-    "minor": 1,
+    "major": 4,
+    "minor": 0,
     "suggestion": 0
   },
   "open": [
     {
       "severity": "major",
-      "title": "Default story accepts jumpUrl, perPage and links values that the component refuses, and Show code then gives Twig that throws",
-      "where": "ui/src/stories/components/Pagination.stories.js:49-59 (Default) and ui/src/stories/pagination.js:37-75; the rules are in Pagination.php:61-73"
+      "title": "pagination-jump.js selects its error message by a BEM class",
+      "where": "ui/src/js/components/pagination-jump.js:22 (added in 066f08569d5)"
     },
     {
       "severity": "major",
-      "title": "Jump field drops a non-number silently, with no error message",
-      "where": "ui/src/js/components/pagination-jump.js:24-31; pagination.html.twig:38-39 (with-jump and compact --jump stories)"
+      "title": "Render test never renders the jump field without perPage (the {page} URL case)",
+      "where": "tests/Integration/PrestaShopBundle/Twig/Component/Ui/PaginationComponentTest.php:60-71; pagination.html.twig:25"
     },
     {
-      "severity": "minor",
-      "title": "Focus ring is box-shadow only, so it disappears in forced colours mode",
-      "where": "ui/src/scss/_variables.scss:384-386 (Pagination block, no $pagination-focus-outline); ui/node_modules/bootstrap/scss/_pagination.scss:48-54"
+      "severity": "major",
+      "title": "Default story accepts current, label and links values the component refuses, and Show code then gives Twig that throws",
+      "where": "ui/src/stories/components/Pagination.stories.js:44-59; ui/src/stories/pagination.js:23-28; rules in Pagination.php:51-84"
+    },
+    {
+      "severity": "major",
+      "title": "The Go button breaks its label onto two lines ('G' / 'o') at 320px",
+      "where": "components-pagination--with-jump at 320px; ui/src/scss/components/_pagination.scss:42-47; _buttons.scss:65"
     }
   ]
 }

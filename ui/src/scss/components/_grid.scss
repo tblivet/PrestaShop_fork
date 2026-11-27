@@ -14,6 +14,11 @@ $component-name: ps-grid;
     display: flex;
     gap: map-get($spacers, 2);
     align-items: center;
+
+    &--actions-only {
+      background-color: transparent;
+      border-block-end: 0;
+    }
   }
 
   // At the end even when the title is for screen readers only; its icon larger than a button's, alone in the band
@@ -100,9 +105,13 @@ $component-name: ps-grid;
     font-weight: $font-weight-semibold;
   }
 
-  // A narrow grid (a phone): the bar on one line, the count smaller and Clear selection as its cross alone, its label
-  // kept for screen readers (Button's label, _buttons.scss)
+  // A narrow grid (a phone): the bar on one line, the count smaller, the gaps closer and Clear selection as its cross
+  // alone, its label kept for screen readers (Button's label, _buttons.scss)
   @container #{$component-name}-area (max-width: #{$ps-grid-bulk-narrow-max-width}) {
+    &__bulk {
+      gap: map-get($spacers, 2);
+    }
+
     &__selection {
       font-size: $font-size-sm;
     }
@@ -118,6 +127,15 @@ $component-name: ps-grid;
     flex-wrap: wrap;
     gap: map-get($spacers, 2);
     align-items: center;
+  }
+
+  // A quick filter's choices: whole words, the group wrapping on a narrow screen rather than breaking them
+  &__quick-filters {
+    flex-wrap: wrap;
+
+    .btn {
+      overflow-wrap: normal;
+    }
   }
 
   &__form {
@@ -304,7 +322,7 @@ $component-name: ps-grid;
 
   // A badge in the record's own colour (over its light variant), its text dark or light by their contrast with it
   &__badge {
-    background-color: var(--#{$prefix}grid-badge-color);
+    background-color: var(--ps-grid-badge-color);
 
     &--ink-dark {
       color: $gray-800;
@@ -322,11 +340,11 @@ $component-name: ps-grid;
 
     &--ink-dark,
     &--ink-light {
-      --#{$prefix}btn-bg: var(--#{$prefix}grid-choice-color);
-      --#{$prefix}btn-border-color: var(--#{$prefix}grid-choice-color);
-      --#{$prefix}btn-hover-bg: var(--#{$prefix}grid-choice-color);
+      --#{$prefix}btn-bg: var(--ps-grid-choice-color);
+      --#{$prefix}btn-border-color: var(--ps-grid-choice-color);
+      --#{$prefix}btn-hover-bg: var(--ps-grid-choice-color);
       --#{$prefix}btn-hover-border-color: var(--#{$prefix}btn-color);
-      --#{$prefix}btn-active-bg: var(--#{$prefix}grid-choice-color);
+      --#{$prefix}btn-active-bg: var(--ps-grid-choice-color);
       --#{$prefix}btn-active-border-color: var(--#{$prefix}btn-color);
     }
 
@@ -373,7 +391,7 @@ $component-name: ps-grid;
   &__swatch {
     width: 1rem;
     height: 1rem;
-    background-color: var(--#{$prefix}grid-swatch-color);
+    background-color: var(--ps-grid-swatch-color);
     border: var(--#{$prefix}border-width) solid var(--#{$prefix}border-color);
   }
 

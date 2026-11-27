@@ -12,8 +12,8 @@
 {%- elseif type in variants -%}
   <twig:ui:Badge :variant="type">{{ text }}</twig:ui:Badge>
 {%- elseif color -%}
-  {#- The colour through a custom property (the kit's psk- prefix), the text dark or light by its WCAG contrast -#}
-  <twig:ui:Badge variant="light" class="ps-grid__badge ps-grid__badge--ink-{{ component.inkOn(color) }}" style="--psk-grid-badge-color: {{ color }}">{{ text }}</twig:ui:Badge>
+  {#- The colour through a custom property of the grid (--ps-grid-badge-color), the text dark or light by its WCAG contrast -#}
+  <twig:ui:Badge variant="light" class="ps-grid__badge ps-grid__badge--ink-{{ component.inkOn(color) }}" style="--ps-grid-badge-color: {{ color }}">{{ text }}</twig:ui:Badge>
 {%- else -%}
   {{- text -}}
 {%- endif -%}

@@ -15,6 +15,8 @@ export default {
   kpiToRefresh: '[data-ps-ref="kpi"][data-ps-data-refresh-url]',
   kpiValue: '[data-ps-ref="kpi-value"]',
   paginationJump: '[data-ps-action~="pagination-jump"]',
+  // The jump field's message, made by pagination-jump.ts
+  paginationError: '[data-ps-target="pagination-error"]',
   // A <twig:ui:Grid>: its Clear filters, and the results summary its links land on
   gridResetFilters: '[data-ps-action~="grid-reset-filters"]',
   gridApplyFilters: '[data-ps-action~="grid-apply-filters"]',
@@ -28,6 +30,8 @@ export default {
   gridClearSelection: '[data-ps-action~="grid-clear-selection"]',
   gridBulkButton: '[data-ps-action~="grid-bulk-button"]',
   gridBulkModal: '[data-ps-action~="grid-bulk-modal"]',
+  // A checked row's input, added to the bulk modal's form when it is sent
+  gridBulkInput: '[data-ps-ref="grid-bulk-input"]',
   gridResults: '[data-ps-ref="grid-results"]',
   gridRowLink: '[data-ps-action~="grid-row-link"]',
   gridClickableCell: '[data-ps-ref~="grid-clickable-cell"]',
@@ -104,6 +108,10 @@ export default {
   tooltip: '[data-bs-toggle="tooltip"], [data-ps-action~="tooltip"]',
   dropdownTooltip: '[data-ps-action~="tooltip"]',
   scrollFade: '[data-ps-action~="scroll-fade"]',
+  // A kit menu (<twig:ui:DropdownMenu>, the notifications panel), beside its toggle: shown in the top layer
+  dropdownMenuOfToggle: ':scope > [popover]',
+  // What acts in a menu, so a click on it closes the menu
+  dropdownAction: 'a, button, [role="menuitem"]',
   openDropdownToggle: '[data-bs-toggle="dropdown"][aria-expanded="true"]',
   dropdownToggle: '[data-bs-toggle="dropdown"]',
 } as const;

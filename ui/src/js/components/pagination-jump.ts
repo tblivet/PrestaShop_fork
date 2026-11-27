@@ -16,15 +16,16 @@ export const jumpUrl = (template: string, page: number, perPage?: number | null)
 
 let errors = 0;
 
-// The message under the field, made once per form
+// The message under the field, made once per form (the component has no id to name it by in Twig)
 const errorOf = (form: HTMLFormElement): HTMLElement => {
-  let error = form.querySelector<HTMLElement>('.ps-pagination__error');
+  let error = form.querySelector<HTMLElement>(selectors.paginationError);
 
   if (!error) {
     errors += 1;
     error = document.createElement('span');
     error.id = `ps-pagination-error-${errors}`;
     error.className = 'invalid-tooltip ps-pagination__error';
+    error.dataset.psTarget = 'pagination-error';
     error.hidden = true;
     error.textContent = form.dataset.psDataInvalidMessage ?? '';
     form.append(error);

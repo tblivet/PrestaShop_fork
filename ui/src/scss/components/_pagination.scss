@@ -44,6 +44,12 @@ $component-name: ps-pagination;
     display: flex;
     gap: map-get($spacers, 2);
     align-items: center;
+
+    // Go on one line: a button breaks a word it has no room for (_buttons.scss), not this one
+    .btn {
+      flex-shrink: 0;
+      overflow-wrap: normal;
+    }
   }
 
   &__jump-field {

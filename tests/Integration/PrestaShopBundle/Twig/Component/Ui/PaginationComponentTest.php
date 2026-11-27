@@ -70,6 +70,14 @@ class PaginationComponentTest extends KernelTestCase
         $this->assertStringNotContainsString('ps-pagination__jump', $this->render('<twig:ui:Pagination :current="1" :links="{1: \'/p1\', 2: \'/p2\'}" label="Pages"/>'));
     }
 
+    public function testAFieldToGoToAPageWithoutRowsPerPage(): void
+    {
+        $html = $this->render('<twig:ui:Pagination :current="2" :links="{1: \'/p1\', 2: \'/p2\', 3: \'/p3\', 12: \'/p12\'}" label="Pages" jumpUrl="/orders?page={page}"/>');
+
+        $this->assertStringContainsString('<form class="ps-pagination__jump" data-ps-action="pagination-jump" data-ps-data-url="/orders?page={page}" data-ps-data-last="12" data-ps-data-invalid-message="Enter a page number from 1 to 12" novalidate>', $html);
+        $this->assertStringNotContainsString('data-ps-data-per-page', $html);
+    }
+
     public function testNothingForASinglePage(): void
     {
         $this->assertSame('', $this->render('<twig:ui:Pagination :current="1" :links="{1: \'/p1\'}" label="Pages"/>'));

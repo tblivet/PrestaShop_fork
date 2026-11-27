@@ -32,7 +32,7 @@ export default {
     },
   },
   argTypes: withDefaults({
-    current: { control: { type: 'number', min: 1 }, type: { name: 'number', required: true }, description: 'The page shown' },
+    current: { control: { type: 'number', min: 1, step: 1 }, type: { name: 'number', required: true }, description: 'The page shown' },
     links: { control: 'object', type: { name: 'object', required: true }, description: 'Page number => URL: the first, the last, the current page and its neighbours at least', table: { type: { summary: 'array<int, string>' } } },
     label: { control: 'text', type: { name: 'string', required: true }, description: 'Names the navigation' },
     jumpUrl: { control: 'text', description: 'The URL of any page, with {page}, or {offset} and perPage: a field to type the page to go to', table: { type: { summary: 'string' } } },
@@ -41,20 +41,23 @@ export default {
   args: { current: 3, links: pageLinks(3, 25), label: LABEL, ...PAGINATION_DEFAULTS },
 };
 
-// The links are rebuilt around the current page, up to the highest one given, and the jump props kept to what the
-// component accepts: whatever the controls, Show code gives Twig that renders
+// The links are rebuilt around the current page (a whole number), up to the highest one given, with the URLs given, the
+// label never empty and the jump props kept to what the component accepts: whatever the controls, Show code gives Twig
+// that renders
 export const Default = withTwig(({
   current, links, label, jumpUrl, perPage,
 }) => {
-  const total = Math.max(1, ...Object.keys(links ?? {}).map(Number));
-  const page = Math.min(Math.max(1, current), total);
+  const total = Math.max(1, ...Object.keys(links ?? {}).map(Number).filter(Number.isInteger));
+  const page = Math.min(Math.max(1, Math.trunc(Number(current) || 1)), total);
+  // Pagination.php refuses an empty label: the story's own then
+  const name = label?.trim() ? label : LABEL;
 
   // As Pagination.php accepts them: a jumpUrl with {page} or {offset}, an {offset} one with rows a page (50 if none)
   const url = jumpUrl && /\{(page|offset)\}/.test(jumpUrl) ? jumpUrl : null;
   const rows = url?.includes('{offset}') ? Math.max(1, Math.trunc(perPage || 50)) : null;
 
   return pagination({
-    current: page, links: pageLinks(page, total), label, jumpUrl: url, perPage: rows,
+    current: page, links: pageLinks(page, total, (number) => links?.[number] ?? `#page-${number}`), label: name, jumpUrl: url, perPage: rows,
   });
 });
 

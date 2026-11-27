@@ -63,6 +63,7 @@ class GridTest extends TestCase
         yield 'a filter form that is not a view' => [['grid' => ['filter_form' => []] + self::presentedArray()]];
         yield 'non boolean embedded' => [['embedded' => 'yes']];
         yield 'heading level 1' => [['headingLevel' => 1]];
+        yield 'heading level 6: none left for the empty states' => [['headingLevel' => 6]];
     }
 
     public function testTheState(): void

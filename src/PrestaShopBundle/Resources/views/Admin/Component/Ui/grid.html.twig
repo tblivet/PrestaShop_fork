@@ -62,7 +62,8 @@
   {%- if embedded or (showName is same as(false) and gridItems is empty) -%}
     <h{{ headingLevel }} id="{{ resultsId }}" class="visually-hidden" tabindex="-1" data-ps-ref="grid-results">{{ grid.name }}</h{{ headingLevel }}>
   {%- else -%}
-    <header class="ps-grid__header card-header">
+    {#- With the title for screen readers only, the band holds only the list's actions: no tint, no line under it -#}
+    <header class="ps-grid__header card-header{{ showName is same as(false) ? ' ps-grid__header--actions-only' }}">
       <h{{ headingLevel }} id="{{ resultsId }}" class="ps-grid__title{{ showName is same as(false) ? ' visually-hidden' }}" tabindex="-1" data-ps-ref="grid-results">
         {{- grid.name }} <twig:ui:Badge variant="oceanblue" pill>{{ total }}<span class="visually-hidden"> {{ resultsWord }}</span></twig:ui:Badge>
       </h{{ headingLevel }}>
@@ -85,7 +86,7 @@
           default -#}
       {%- set ownEmpty -%}
         {%- if empty|trim is empty -%}
-          {{- include('@PrestaShop/Admin/Component/Ui/Grid/empty/' ~ id ~ '.html.twig', {grid: grid, headingLevel: min(headingLevel + 1, 6)}, ignore_missing = true) -}}
+          {{- include('@PrestaShop/Admin/Component/Ui/Grid/empty/' ~ id ~ '.html.twig', {grid: grid, headingLevel: headingLevel + 1}, ignore_missing = true) -}}
         {%- endif -%}
       {%- endset -%}
       {%- if empty|trim is not empty -%}
@@ -93,7 +94,7 @@
       {%- elseif ownEmpty|trim is not empty -%}
         {{- ownEmpty -}}
       {%- else -%}
-        <twig:ui:EmptyState icon="inbox" :title="'No records found'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)"/>
+        <twig:ui:EmptyState icon="inbox" :title="'No records found'|trans({}, 'Admin.Global')" :headingLevel="headingLevel + 1"/>
       {%- endif -%}
     {%- else -%}
       {%- if ('list' == state and reorder) or toolbar|trim is not empty -%}
@@ -278,7 +279,7 @@
       {#- Under the table, not in it: a row of a table that scrolls sideways would put it out of sight on a phone -#}
       {%- set lastPageUrl = this.lastPageUrl -%}
       {%- if lastPageUrl -%}
-        <twig:ui:EmptyState class="ps-grid__no-match" size="sm" icon="last_page" :title="'This page is empty'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)">
+        <twig:ui:EmptyState class="ps-grid__no-match" size="sm" icon="last_page" :title="'This page is empty'|trans({}, 'Admin.Global')" :headingLevel="headingLevel + 1">
           <twig:block name="actions">
             <twig:ui:Button variant="outline-secondary" :href="lastPageUrl">{{ 'Go to the last page'|trans({}, 'Admin.Global') }}</twig:ui:Button>
           </twig:block>
@@ -286,7 +287,7 @@
       {%- endif -%}
       {%- if 'no-match' == state -%}
         {%- set clearFiltersHere = clearFilters ? clearFilters|merge({variant: 'outline-secondary'}) : null -%}
-        <twig:ui:EmptyState class="ps-grid__no-match" size="sm" icon="search_off" :title="'No results match these filters'|trans({}, 'Admin.Global')" :headingLevel="min(headingLevel + 1, 6)">
+        <twig:ui:EmptyState class="ps-grid__no-match" size="sm" icon="search_off" :title="'No results match these filters'|trans({}, 'Admin.Global')" :headingLevel="headingLevel + 1">
           <twig:block name="actions">
             {%- if clearFiltersHere -%}
               <twig:ui:Button {{ ...clearFiltersHere }}>{{ 'Clear filters'|trans({}, 'Admin.Actions') }}</twig:ui:Button>

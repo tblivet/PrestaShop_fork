@@ -15,8 +15,9 @@ const checkedIds = (grid: Element): string[] =>
     .map((box) => box.value);
 
 export default function initGridBulk(): void {
-  // The grid whose modal form is open
+  // The grid whose modal form is open, and that modal (the item's data-bs-target, as Bootstrap reads it)
   let modalGrid: Element | null = null;
+  let modal: Element | null = null;
 
   document.addEventListener('click', (event) => {
     const item =
@@ -30,6 +31,7 @@ export default function initGridBulk(): void {
     }
     if (item.matches(selectors.gridBulkModal)) {
       modalGrid = grid;
+      modal = item.dataset.bsTarget ? document.querySelector(item.dataset.bsTarget) : null;
 
       return;
     }
@@ -45,15 +47,16 @@ export default function initGridBulk(): void {
     'submit',
     (event) => {
       const form = event.target;
+      // Its prototype block, named by the form (data-bulk-inputs-id, as on the old grids)
       const block =
-        modalGrid && form instanceof HTMLFormElement && form.closest('.modal') && form.dataset.bulkInputsId
-          ? form.querySelector<HTMLElement>(`#${form.dataset.bulkInputsId}`)
+        modalGrid && form instanceof HTMLFormElement && modal?.contains(form) && form.dataset.bulkInputsId
+          ? document.getElementById(form.dataset.bulkInputsId)
           : null;
 
       if (!block || !modalGrid || !(form instanceof HTMLFormElement)) {
         return;
       }
-      form.querySelectorAll('[data-ps-ref="grid-bulk-input"]').forEach((input) => input.remove());
+      form.querySelectorAll(selectors.gridBulkInput).forEach((input) => input.remove());
       checkedIds(modalGrid).forEach((id) => {
         const template = document.createElement('template');
 

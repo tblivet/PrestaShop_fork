@@ -35,7 +35,8 @@ final class Grid
     /** As CommonController::paginationAction */
     public const LIMITS = [10, 20, 50, 100, 300, 1000];
 
-    public const HEADING_LEVELS = [2, 3, 4, 5, 6];
+    /** The title's level; its empty states' titles are one level under, so 6 is left to them */
+    public const HEADING_LEVELS = [2, 3, 4, 5];
 
     /** What the presented grid must hold */
     private const KEYS = ['id', 'name', 'columns', 'data', 'pagination', 'sorting', 'filter_form', 'column_filters', 'actions', 'attributes', 'form_prefix'];

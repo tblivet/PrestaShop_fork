@@ -1093,3 +1093,18 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 **Old theme**
 - Nothing: the Bootstrap 4 toggle posts a form and still gets the redirect; its cell was already centred.
 
+## Grid and Pagination: review fixes — 2026-11-27
+
+`grid.html.twig`, `Grid/cell/{badge,choice,color}.html.twig`, `Grid.php`, `_grid.scss`, `_pagination.scss`, `grid-bulk.ts`, `grid-filters.ts`, `pagination-jump.ts`, `dropdown-inside-click.ts`, `dropdown-top-layer.ts`.
+
+**Markup**
+- Grid cells: `--psk-grid-badge-color`, `--psk-grid-choice-color`, `--psk-grid-swatch-color` → `--ps-grid-badge-color`, `--ps-grid-choice-color`, `--ps-grid-swatch-color` (no longer tied to Bootstrap's prefix).
+- Grid with `display_name: false`: the header has `ps-grid__header--actions-only` (no tint, no line).
+- The pagination field's error has `data-ps-target="pagination-error"`.
+
+**Behaviour**
+- `<twig:ui:Grid>` `headingLevel` takes 2 to 5 (6 is refused: its empty states' titles are one level under).
+- Clear filters that fails: a danger toast says so and the button keeps the focus (was announced only).
+- Kit menus: a click on their padding, a divider or a heading keeps them open; the scripts find the menu by its `popover` attribute (no longer `.dropdown-menu`).
+- On a phone, the bulk bar's parts are closer; a quick filter's choices and the pagination's Go keep their words whole.
+

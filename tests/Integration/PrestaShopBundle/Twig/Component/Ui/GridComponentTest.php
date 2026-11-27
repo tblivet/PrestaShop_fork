@@ -86,10 +86,10 @@ class GridComponentTest extends KernelTestCase
     {
         $html = $this->render();
 
-        $this->assertStringContainsString('<button class="btn btn-outline-secondary btn-sm ps-button ps-grid__choice ps-grid__choice--ink-dark" type="button" data-ps-data-busy-label="Loading..." style="--psk-grid-choice-color: #3498D8" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="order_grid_rowhead_1"><span class="ps-button__label"><span class="visually-hidden">Status: </span>Payment accepted</span>', $html);
+        $this->assertStringContainsString('<button class="btn btn-outline-secondary btn-sm ps-button ps-grid__choice ps-grid__choice--ink-dark" type="button" data-ps-data-busy-label="Loading..." style="--ps-grid-choice-color: #3498D8" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config="{&quot;strategy&quot;:&quot;fixed&quot;}" aria-describedby="order_grid_rowhead_1"><span class="ps-button__label"><span class="visually-hidden">Status: </span>Payment accepted</span>', $html);
         $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" aria-current="true" form="order_grid_action_form" formaction="/sell/orders/list/1024/status" name="value" value="2">', $html);
         $this->assertStringContainsString('<button type="submit" class="dropdown-item ps-dropdown-menu__item" form="order_grid_action_form" formaction="/sell/orders/list/1024/status" name="value" value="5">', $html);
-        $this->assertStringContainsString('ps-grid__choice--ink-light" type="button" data-ps-data-busy-label="Loading..." style="--psk-grid-choice-color: #34209E"', $html);
+        $this->assertStringContainsString('ps-grid__choice--ink-light" type="button" data-ps-data-busy-label="Loading..." style="--ps-grid-choice-color: #34209E"', $html);
     }
 
     public function testAToggleIsASwitchNamedByItsColumnAndRow(): void
@@ -221,6 +221,22 @@ class GridComponentTest extends KernelTestCase
         $this->assertMatchesRegularExpression('#<a class="btn btn-primary ps-button" href="[^"]*/improve/international/countries/new[^"]*"#', $html);
     }
 
+    public function testAPagesEmptyBlockReplacesTheGridsOwnAndTheDefault(): void
+    {
+        $nothingYet = ['is_empty_state' => true, 'records' => [], 'records_total' => 0, 'pagination' => ['offset' => 0, 'limit' => 50]];
+        $block = '<twig:block name="empty"><p class="custom-empty">Import your first orders</p></twig:block>';
+
+        $html = $this->render($nothingYet, content: $block);
+        $this->assertStringContainsString('<p class="custom-empty">Import your first orders</p>', $html);
+        $this->assertStringNotContainsString('No records found', $html);
+        $this->assertStringNotContainsString('<table', $html);
+
+        $html = $this->render(['id' => 'country'] + $nothingYet, boot: false, content: $block);
+        $this->assertStringContainsString('<p class="custom-empty">Import your first orders</p>', $html);
+        $this->assertStringNotContainsString('No countries yet', $html);
+        $this->assertStringNotContainsString('No records found', $html);
+    }
+
     public function testAClickableCellCarriesItsHook(): void
     {
         $this->assertMatchesRegularExpression('#class="ps-grid__cell ps-grid__cell--[a-z-]+ ps-grid__cell--clickable" data-ps-ref="grid-clickable-cell"#', $this->render());
@@ -279,7 +295,7 @@ class GridComponentTest extends KernelTestCase
         $html = $this->render(['columns' => $columns, 'filters' => [], 'records' => $records, 'records_total' => 1, 'pagination' => ['offset' => 0, 'limit' => 50]]);
 
         $this->assertMatchesRegularExpression('#<span class="ps-grid__state ps-grid__state--on">\s*<svg[^>]*ps-grid__state-icon[^>]*>.*?</svg>Yes</span>#s', $html);
-        $this->assertStringContainsString('<span class="ps-grid__color"><span class="ps-grid__swatch" style="--psk-grid-swatch-color: #E74C3C"></span>Red</span>', $html);
+        $this->assertStringContainsString('<span class="ps-grid__color"><span class="ps-grid__swatch" style="--ps-grid-swatch-color: #E74C3C"></span>Red</span>', $html);
         $this->assertStringContainsString('Deleted customer', $html);
         $this->assertStringContainsString('<img class="ps-grid__image" src="/img/red.png" alt="Red">', $html);
         $this->assertMatchesRegularExpression('#<a class="btn btn-link btn-sm ps-button ps-icon-button" href="[^"]*/sell/orders/7/view[^"]*"[^>]*aria-label="View"#', $html);
@@ -288,12 +304,81 @@ class GridComponentTest extends KernelTestCase
         $this->assertMatchesRegularExpression('#ps-grid__cell--empty">\s*n/a\s*</td>#', $html);
     }
 
+    public function testAnAliasDisabledIsStruckThroughAndSaidSo(): void
+    {
+        $columns = [
+            ['id' => 'id', 'name' => 'ID', 'type' => 'identifier', 'options' => ['identifier_field' => 'id']],
+            ['id' => 'aliases', 'name' => 'Aliases', 'type' => 'aliases', 'options' => []],
+        ];
+        $records = [['id' => 1, 'aliases' => [['alias' => 'bloose', 'active' => true], ['alias' => 'blues', 'active' => false]]]];
+        $html = $this->render(['columns' => $columns, 'filters' => [], 'records' => $records, 'records_total' => 1, 'pagination' => ['offset' => 0, 'limit' => 50]]);
+
+        $this->assertMatchesRegularExpression('#bloose, <del>blues<span class="visually-hidden"> \(Disabled\)</span></del>#', $html);
+        $this->assertSame(1, substr_count($html, '<del>'));
+    }
+
+    public function testACurrencyNameSaysWhetherItIsUnofficialOrEdited(): void
+    {
+        $columns = [
+            ['id' => 'id', 'name' => 'ID', 'type' => 'identifier', 'options' => ['identifier_field' => 'id']],
+            ['id' => 'name', 'name' => 'Currency', 'type' => 'currency_name', 'options' => ['field' => 'name']],
+        ];
+        $records = [
+            ['id' => 1, 'name' => 'Euro', 'unofficial' => false, 'modified' => false],
+            ['id' => 2, 'name' => 'Bitcoin', 'unofficial' => true, 'modified' => false],
+            ['id' => 3, 'name' => 'Dollar', 'unofficial' => false, 'modified' => true],
+        ];
+        $html = $this->render(['columns' => $columns, 'filters' => [], 'records' => $records, 'records_total' => 3, 'pagination' => ['offset' => 0, 'limit' => 50]]);
+
+        $this->assertMatchesRegularExpression('#>\s*Euro\s*</td>#', $html);
+        $this->assertMatchesRegularExpression('#Bitcoin <svg[^>]*class="[^"]*ps-grid__mark[^"]*"[^>]*>.*?</svg>#s', $html);
+        $this->assertMatchesRegularExpression('#Bitcoin <svg[^>]*(aria-label="Unofficial"|role="img")[^>]*>#', $html);
+        $this->assertStringContainsString('Unofficial', $html);
+        $this->assertStringContainsString('Dollar <span class="ps-grid__note">(Edited)</span>', $html);
+        $this->assertSame(1, substr_count($html, 'ps-grid__note'));
+        $this->assertSame(1, substr_count($html, 'ps-grid__mark'));
+    }
+
+    public function testADiscountUsageOfNoLimitSaysUnlimited(): void
+    {
+        $columns = [
+            ['id' => 'id', 'name' => 'ID', 'type' => 'identifier', 'options' => ['identifier_field' => 'id']],
+            ['id' => 'usage', 'name' => 'Usage', 'type' => 'discount_usage', 'options' => ['quantity_used_field' => 'used', 'total_quantity_field' => 'total']],
+        ];
+        $records = [
+            ['id' => 1, 'used' => 3, 'total' => null],
+            ['id' => 2, 'used' => 5, 'total' => 10],
+        ];
+        $html = $this->render(['columns' => $columns, 'filters' => [], 'records' => $records, 'records_total' => 2, 'pagination' => ['offset' => 0, 'limit' => 50]]);
+
+        $this->assertStringContainsString('3 / <span aria-hidden="true">&#8734;</span><span class="visually-hidden">Unlimited</span>', $html);
+        $this->assertMatchesRegularExpression('#>\s*5 / 10\s*</td>#', $html);
+        $this->assertSame(1, substr_count($html, 'Unlimited'));
+    }
+
+    public function testAnEmployeesAvatarSaysNothingTheNameDoesNot(): void
+    {
+        $columns = [
+            ['id' => 'id', 'name' => 'ID', 'type' => 'identifier', 'options' => ['identifier_field' => 'id']],
+            ['id' => 'employee', 'name' => 'Employee', 'type' => 'employee_name_with_avatar', 'options' => ['field' => 'employee']],
+        ];
+        $records = [
+            ['id' => 1, 'employee' => 'J. Doe', 'image' => '/img/pr/default.jpg'],
+            ['id' => 2, 'employee' => null, 'image' => null],
+        ];
+        $html = $this->render(['columns' => $columns, 'filters' => [], 'records' => $records, 'records_total' => 2, 'pagination' => ['offset' => 0, 'limit' => 50]]);
+
+        $this->assertMatchesRegularExpression('#<span class="ps-grid__person"><img class="ps-grid__avatar" src="/img/pr/default\.jpg[^"]*" alt="" width="32" height="32" loading="lazy">J\. Doe</span>#', $html);
+        $this->assertSame(1, substr_count($html, 'ps-grid__avatar'));
+        $this->assertMatchesRegularExpression('#>\s*N/A\s*</td>#', $html);
+    }
+
     public function testARecordsColourBadgeReadsDarkOrLightText(): void
     {
         $html = $this->render(['columns' => $this->columns(fn (array $column): array => 'osname' === $column['id'] ? ['type' => 'badge', 'options' => ['field' => 'osname', 'color_field' => 'color']] + $column : $column)]);
 
-        $this->assertStringContainsString('<span class="badge ps-badge ps-badge--light ps-grid__badge ps-grid__badge--ink-dark" style="--psk-grid-badge-color: #3498D8">Payment accepted</span>', $html);
-        $this->assertStringContainsString('ps-grid__badge--ink-light" style="--psk-grid-badge-color: #34209E"', $html);
+        $this->assertStringContainsString('<span class="badge ps-badge ps-badge--light ps-grid__badge ps-grid__badge--ink-dark" style="--ps-grid-badge-color: #3498D8">Payment accepted</span>', $html);
+        $this->assertStringContainsString('ps-grid__badge--ink-light" style="--ps-grid-badge-color: #34209E"', $html);
     }
 
     public function testAPageOverridesACellOfItsGrid(): void
@@ -326,7 +411,7 @@ class GridComponentTest extends KernelTestCase
     {
         $html = $this->render(['view_options' => ['display_name' => false]]);
 
-        $this->assertMatchesRegularExpression('#<header class="ps-grid__header card-header">\s*<h2 id="order_grid_results" class="ps-grid__title visually-hidden" tabindex="-1" data-ps-ref="grid-results">Orders #', $html);
+        $this->assertMatchesRegularExpression('#<header class="ps-grid__header card-header ps-grid__header--actions-only">\s*<h2 id="order_grid_results" class="ps-grid__title visually-hidden" tabindex="-1" data-ps-ref="grid-results">Orders #', $html);
         $this->assertStringContainsString('ps-grid__list-actions', $html);
     }
 
@@ -460,7 +545,7 @@ class GridComponentTest extends KernelTestCase
         return array_map($change, $fixture['columns']);
     }
 
-    private function render(array $override = [], string $props = '', bool $boot = true, string $fixture = 'order-grid'): string
+    private function render(array $override = [], string $props = '', bool $boot = true, string $fixture = 'order-grid', string $content = ''): string
     {
         if ($boot) {
             self::bootKernel();
@@ -471,6 +556,8 @@ class GridComponentTest extends KernelTestCase
         $container->get('request_stack')->push($request);
         $grid = GridFixture::present($container->get('form.factory'), $fixture, $override);
 
-        return trim($container->get('twig')->createTemplate('<twig:ui:Grid :grid="orderGrid"' . $props . '/>')->render(['orderGrid' => $grid]));
+        $template = '' === $content ? '<twig:ui:Grid :grid="orderGrid"' . $props . '/>' : '<twig:ui:Grid :grid="orderGrid"' . $props . '>' . $content . '</twig:ui:Grid>';
+
+        return trim($container->get('twig')->createTemplate($template)->render(['orderGrid' => $grid]));
     }
 }
