@@ -6,6 +6,9 @@
 <twig:ui:EmptyState icon="public" :title="'No countries yet'|trans({}, 'Admin.International.Feature')" :headingLevel="headingLevel">
   {{ 'Add the countries you sell to: customers pick one in their address, and taxes and carriers follow it.'|trans({}, 'Admin.International.Feature') }}
   <twig:block name="actions">
-    <twig:ui:Button icon="add" :href="path('admin_countries_create')">{{ 'Add new country'|trans({}, 'Admin.International.Feature') }}</twig:ui:Button>
+    {#- Only for an employee who may create one -#}
+    {%- if is_granted('create', 'AdminCountries') -%}
+      <twig:ui:Button icon="add" :href="path('admin_countries_create')">{{ 'Add new country'|trans({}, 'Admin.International.Feature') }}</twig:ui:Button>
+    {%- endif -%}
   </twig:block>
 </twig:ui:EmptyState>

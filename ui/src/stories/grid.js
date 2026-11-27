@@ -388,7 +388,9 @@ const button = ({
  * @param {object} props embedded, headingLevel
  * @param {object} blocks the nodes ({html, twig}) of the blocks before, toolbar, empty, footer
  */
-export default function grid(fixture, { embedded = false, headingLevel = 2 } = {}, blocks = {}) {
+export default function grid(given, { embedded = false, headingLevel = 2 } = {}, blocks = {}) {
+  // Grid::postMount(): no check column without a bulk action to use
+  const fixture = bulkItems(given).length ? given : { ...given, columns: given.columns.filter((column) => column.type !== 'bulk_action') };
   const block = (name) => blocks[name]?.html ?? '';
   const { id } = fixture;
   const empty = fixture.is_empty_state;

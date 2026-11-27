@@ -1108,3 +1108,18 @@ Step 6 of the grid's build plan (`ui/.ai/designs/grid.md`). New `Grid.php`, `gri
 - Kit menus: a click on their padding, a divider or a heading keeps them open; the scripts find the menu by its `popover` attribute (no longer `.dropdown-menu`).
 - On a phone, the bulk bar's parts are closer; a quick filter's choices and the pagination's Go keep their words whole.
 
+## Grid: what the employee may not do is not offered — 2026-11-27
+
+`Grid.php`, `Grid/cell/{toggle,choice,position_handle}.html.twig`, `Grid/empty/country.html.twig`, `RouteAccessChecker` (new service).
+
+**Markup**
+- For an employee without the permission a route's `AdminSecurity` asks: its row, list and bulk actions are not rendered; with no bulk action left, no check column (`bulk_action` column, select all, row checks); a toggle column's switches are `disabled`; a choice column (Orders' status) is a badge (`ps-grid__badge`) instead of a menu; no position handles, no Rearrange.
+- A grid with no usable bulk action at all no longer renders its check column, whatever the employee.
+
+**Behaviour**
+- A clickable row does not follow a link the employee may not open.
+- Countries' empty state shows Add new country only with the `create` permission.
+
+**Old theme**
+- Nothing.
+

@@ -5,7 +5,11 @@
 {#- The record's choice (Orders' status) in its colour, a menu to change it: each choice posts value through the grid's
     action form. The column's name for screen readers: "Status: Payment accepted" -#}
 {%- set choice = component.choice(record, column) -%}
-{%- if choice -%}
+{%- if choice and choice.items is empty -%}
+  {#- Without the right to change it: the choice shown, as a badge cell is -#}
+  {%- set colored = choice.color is not null -%}
+  <twig:ui:Badge variant="light" class="ps-grid__badge{{ colored ? ' ps-grid__badge--ink-' ~ component.inkOn(choice.color) }}" {{ ...(colored ? {style: '--ps-grid-badge-color: ' ~ choice.color} : {}) }}><span class="visually-hidden">{{ column.name }}: </span>{{ choice.label }}</twig:ui:Badge>
+{%- elseif choice -%}
   {%- set colored = choice.color is not null -%}
   <div class="dropdown">
     <twig:ui:Button

@@ -17,6 +17,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PreviewColumn;
+use PrestaShopBundle\Security\Admin\RouteAccessChecker;
 use PrestaShopBundle\Twig\Component\Ui\Grid;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,12 +25,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
+use Tests\Unit\PrestaShopBundle\Security\Admin\RouteAccessCheckerTest;
 
 class GridTest extends TestCase
 {
@@ -259,6 +262,38 @@ class GridTest extends TestCase
         $this->assertSame('Show rates', $row[1]['label']);
     }
 
+    public function testWhatTheEmployeeMayNotDoIsLeftOut(): void
+    {
+        $actions = (new RowActionCollection())
+            ->add((new LinkRowAction('edit'))->setName('Edit')->setOptions(['route' => 'admin_orders_edit', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'clickable_row' => true]))
+            ->add((new SubmitRowAction('delete'))->setName('Delete')->setOptions(['route' => 'admin_orders_delete', 'route_param_name' => 'orderId', 'route_param_field' => 'id_order', 'method' => 'DELETE']));
+        $bulk = ['grid' => [], 'bulk' => [
+            ['id' => 'delete', 'name' => 'Delete selected', 'type' => 'submit', 'icon' => null, 'options' => ['submit_route' => 'admin_orders_bulk_delete', 'route_params' => []]],
+            ['id' => 'enable', 'name' => 'Enable selected', 'type' => 'submit', 'icon' => null, 'options' => ['submit_route' => 'admin_orders_bulk_enable', 'route_params' => []]],
+        ]];
+        $grid = $this->grid(['actions' => $bulk, 'columns' => [['id' => 'actions', 'type' => 'action', 'options' => ['actions' => $actions]]]], [], ['admin_orders_delete', 'admin_orders_bulk_delete', 'admin_orders_edit']);
+
+        $this->assertSame([], $grid->rowActions(['id_order' => 7], ['options' => ['actions' => $actions]]));
+        $this->assertNull($grid->rowLink(['id_order' => 7]), 'a row does not lead to a page the employee may not open');
+        $this->assertSame(['Enable selected'], array_column($grid->getBulkItems(), 'label'));
+        $this->assertFalse($grid->canToggle(['options' => ['route' => 'admin_orders_delete']]));
+        $this->assertTrue($grid->canToggle(['options' => ['route' => 'admin_orders_toggle']]));
+    }
+
+    public function testNoCheckColumnWithoutABulkActionTheEmployeeMayUse(): void
+    {
+        $columns = [['id' => 'orders_bulk', 'type' => 'bulk_action', 'options' => []], ['id' => 'reference', 'type' => 'data', 'options' => []]];
+        $bulk = ['grid' => [], 'bulk' => [['id' => 'delete', 'name' => 'Delete selected', 'type' => 'submit', 'icon' => null, 'options' => ['submit_route' => 'admin_orders_bulk_delete', 'route_params' => []]]]];
+
+        $allowed = $this->grid(['actions' => $bulk, 'columns' => $columns]);
+        $allowed->postMount();
+        $this->assertSame(['orders_bulk', 'reference'], array_column($allowed->grid['columns'], 'id'));
+
+        $denied = $this->grid(['actions' => $bulk, 'columns' => $columns], [], ['admin_orders_bulk_delete']);
+        $denied->postMount();
+        $this->assertSame(['reference'], array_column($denied->grid['columns'], 'id'));
+    }
+
     public function testARowsActionThatDoesNotApplyIsLeftOut(): void
     {
         $checker = $this->createMock(AccessibilityCheckerInterface::class);
@@ -368,9 +403,9 @@ class GridTest extends TestCase
         $this->assertSame('order', $params['grid']['id']);
     }
 
-    private function grid(array $override = [], array $query = []): Grid
+    private function grid(array $override = [], array $query = [], array $denied = []): Grid
     {
-        $grid = $this->component($query);
+        $grid = $this->component($query, $denied);
         $grid->grid = $override + self::presentedArray();
 
         return $grid;
@@ -404,7 +439,10 @@ class GridTest extends TestCase
         ];
     }
 
-    private function component(array $query = []): Grid
+    /**
+     * @param string[] $denied routes the employee may not use
+     */
+    private function component(array $query = [], array $denied = []): Grid
     {
         $request = new Request($query, [], ['_route' => 'admin_orders_index', '_route_params' => [], '_legacy_controller' => 'AdminOrders']);
         $requestStack = new RequestStack();
@@ -433,6 +471,10 @@ class GridTest extends TestCase
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
 
-        return new Grid($requestStack, $router, $icons, $tokens, $translator);
+        $authorization = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorization->method('isGranted')->willReturn(false);
+        $access = new RouteAccessChecker(RouteAccessCheckerTest::router(array_fill_keys($denied, 'deleteAction')), $authorization);
+
+        return new Grid($requestStack, $router, $icons, $tokens, $translator, $access);
     }
 }

@@ -4,9 +4,12 @@
  -#}
 {#- Moves the row (grid-position.ts): drag the handle, or Move up and Move down, named with the row ("Move up 2"). Each
     sends the page's positions as the old grids (positions[], through the grid's action form); not past the page -#}
+{#- Without the right to move the rows, no handle -#}
+{%- if component.canMove -%}
 {%- set rows = grid.data.records|length -%}
 <div class="ps-grid__position" data-ps-ref="grid-position" data-ps-data-id="{{ record[column.options.id_field] }}" data-ps-data-position="{{ record[column.options.position_field] }}" data-ps-data-url="{{ component.positionUpdateUrl(record, column) }}" data-ps-data-method="{{ column.options.update_method|upper }}">
   <span class="ps-grid__drag" data-ps-action="grid-drag" aria-hidden="true"><twig:ui:Icon name="drag_indicator"/></span>
   <twig:ui:IconButton icon="arrow_upward" :label="'Move up'|trans({}, 'Admin.Actions')" variant="link" size="sm" :aria-describedby="rowHeaderId" data-ps-action="grid-move" data-ps-data-direction="up" :disabled="rowIndex == 1"/>
   <twig:ui:IconButton icon="arrow_downward" :label="'Move down'|trans({}, 'Admin.Actions')" variant="link" size="sm" :aria-describedby="rowHeaderId" data-ps-action="grid-move" data-ps-data-direction="down" :disabled="rowIndex == rows"/>
 </div>
+{%- endif -%}

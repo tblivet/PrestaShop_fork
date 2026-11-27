@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Twig\Component\Ui;
 
+use PrestaShopBundle\Security\Admin\RouteAccessChecker;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -20,6 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\IconRegistryInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
@@ -78,6 +80,7 @@ final class Grid
         private readonly IconRegistryInterface $icons,
         private readonly CsrfTokenManagerInterface $csrfTokens,
         private readonly TranslatorInterface $translator,
+        private readonly RouteAccessChecker $access,
     ) {
     }
 
@@ -144,6 +147,17 @@ final class Grid
         ;
 
         return $resolver->resolve($data) + $data;
+    }
+
+    /**
+     * No check column when the employee may use none of the bulk actions: a check would lead nowhere
+     */
+    #[PostMount]
+    public function postMount(): void
+    {
+        if ([] === $this->getBulkItems()) {
+            $this->grid['columns'] = array_values(array_filter($this->grid['columns'], fn (array $column): bool => 'bulk_action' !== $column['type']));
+        }
     }
 
     /**
@@ -410,7 +424,7 @@ final class Grid
                 $other = $column['id'];
             }
         }
-        if (null === $position || null === $this->getReorderField()) {
+        if (null === $position || null === $this->getReorderField() || !$this->canMove()) {
             return null;
         }
         $active = null !== $this->getOrderingColumnId();
@@ -470,6 +484,9 @@ final class Grid
         $items = [];
         foreach ($this->grid['actions']['bulk'] as $action) {
             $options = $action['options'];
+            if (isset($options['submit_route']) && !$this->access->isGranted($options['submit_route'])) {
+                continue;
+            }
             $item = ['label' => $this->actionLabel($action['name'] ?? null, (string) $action['id']), 'icon' => $this->icon($action['icon'] ?? null)];
 
             switch ($action['type']) {
@@ -512,6 +529,10 @@ final class Grid
     {
         $items = [];
         foreach ($this->grid['actions']['grid'] as $action) {
+            $route = $action['options']['route'] ?? $action['options']['submit_route'] ?? null;
+            if (null !== $route && !$this->access->isGranted($route)) {
+                continue;
+            }
             $item = ['label' => (string) $action['name'], 'icon' => $this->icon($action['icon'] ?? null)];
 
             if ('link' === $action['type']) {
@@ -559,10 +580,10 @@ final class Grid
         $dangers = [];
 
         foreach ($column['options']['actions'] ?? [] as $action) {
-            if (!$action->isApplicable($record) || !in_array($action->getType(), ['link', 'submit'], true)) {
+            $options = $action->getOptions();
+            if (!$action->isApplicable($record) || !in_array($action->getType(), ['link', 'submit'], true) || !$this->access->isGranted($options['route'])) {
                 continue;
             }
-            $options = $action->getOptions();
             $id = (string) $action->getId();
             $url = $this->actionUrl($options, $record);
             $confirm = $this->confirmAttributes([
@@ -607,7 +628,7 @@ final class Grid
         foreach ($this->grid['columns'] as $column) {
             foreach ('action' === $column['type'] ? $column['options']['actions'] ?? [] : [] as $action) {
                 $options = $action->getOptions();
-                if ('link' === $action->getType() && ($options['clickable_row'] ?? false) && $action->isApplicable($record)) {
+                if ('link' === $action->getType() && ($options['clickable_row'] ?? false) && $action->isApplicable($record) && $this->access->isGranted($options['route'])) {
                     return empty($options['confirm_message']) ? $this->actionUrl($options, $record) : null;
                 }
             }
@@ -635,11 +656,16 @@ final class Grid
         }
         $url = $this->router->generate($options['route'], $parameters);
         $current = $record[$options['field']] ?? null;
+        // Without the right to change it, the choice is shown, not offered
+        $granted = $this->access->isGranted($options['route']);
         $label = '';
         $items = [];
         foreach ($choices as $name => $value) {
             $active = (string) $value === (string) $current;
             $label = $active ? (string) $name : $label;
+            if (!$granted) {
+                continue;
+            }
             $items[] = ['type' => 'submit', 'label' => (string) $name, 'active' => $active, 'attr' => [
                 'form' => $this->grid['id'] . '_grid_action_form',
                 'formaction' => $url,
@@ -687,6 +713,28 @@ final class Grid
     /**
      * Where a toggle cell posts (route_param_name from primary_field, extra_route_params from the record or as given)
      */
+    /**
+     * Whether the employee may flip a toggle column's switches; otherwise they show the value only
+     */
+    public function canToggle(array $column): bool
+    {
+        return $this->access->isGranted($column['options']['route']);
+    }
+
+    /**
+     * Whether the employee may move the rows (the position column's update route)
+     */
+    public function canMove(): bool
+    {
+        foreach ($this->grid['columns'] as $column) {
+            if ('position' === $column['type'] && isset($column['options']['update_route'])) {
+                return $this->access->isGranted($column['options']['update_route']);
+            }
+        }
+
+        return true;
+    }
+
     public function toggleUrl(array $record, array $column): string
     {
         $options = $column['options'];
